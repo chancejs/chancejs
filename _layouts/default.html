@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name=viewport content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <title>{{ page.title | replace:'&nbsp;',' ' | escape }}</title>
+  {% if page.description %}
+  <meta name=description content="{{ page.description | escape }}">
+  {% endif %}
+  <link rel=stylesheet href=style.css>
+
+  <meta name=apple-mobile-web-app-capable content=yes>
+  <meta name=apple-mobile-web-app-status-bar-style content=white>
+  <meta name=format-detection content="telephone=no">
+
+  <link rel=apple-touch-icon-precomposed href=icon.png>
+  <link rel=icon type=image/png href=favicon.png>
+</head>
+<body>
+
+  {{ content }}
+
+</body>
+</html>
