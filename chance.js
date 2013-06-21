@@ -8,6 +8,11 @@
     var chance = {
         VERSION: 0.1,
 
+        // Building Blocks/Basics
+        bool: function() {
+            return Math.random()*100 < 50;
+        },
+
         str: function (length) {
             var text = "";
             var possible = "abcdefghijklmnopqrstuvwxyz";
