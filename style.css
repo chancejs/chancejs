@@ -2,7 +2,7 @@
 body {
   font-size: 14px;
   line-height: 22px;
-  background: #fff;
+  background: #ecf0f1;
   color: #000;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
@@ -20,7 +20,8 @@ body {
   max-width: 500%;
 }
 #sidebar {
-  background: #f3eaff;
+  color: #ecf0f1;
+  background: #c0392b;
   position: fixed;
   top: 0; left: 0; bottom: 0;
   width: 200px;
@@ -28,12 +29,11 @@ body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 15px 0 30px 30px;
-  border-right: 1px solid #d4b4ff;
-  background: -webkit-gradient(linear, left top, right top, from(transparent), color-stop(0.92, transparent), color-stop(0.9201, rgba(212, 180, 255, 0.0)), to(rgba(212, 180, 255, 0.3))), #f3eaff;
+  border-right: 1px solid #e74c3c;
 }
 a.toc_title, a.toc_title:visited {
   display: block;
-  color: black;
+  color: #ecf0f1;
   font-weight: bold;
   margin-top: 15px;
   text-decoration: underline;
@@ -61,11 +61,11 @@ ul.toc_section {
 }
 .toc_section li:before { 
   content: "▹ ";
-  color: #b01df9;
+  color: #f1c40f;
 }
 .toc_section li a {
   text-decoration: underline;
-  color: black;
+  color: #ecf0f1;
 }
 .container {
   max-width: 690px;
@@ -75,10 +75,10 @@ p {
   margin: 20px 0;
 }
 a, a:visited {
-  color: #724dff;
+  color: #c0392b;
 }
 a:active, a:hover {
-  color: #6180f4;
+  color: #c0392b;
 }
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
@@ -122,7 +122,7 @@ code, pre, tt {
   font: normal 12px/18px Monaco, Consolas, "Lucida Console", monospace; 
 }
 pre {
-  background: #f8f8ff;
+  background: #fdf6e3;
   border: 2px solid #eee;
   padding: 10px;
   -webkit-border-radius: 5px;
@@ -145,7 +145,7 @@ pre.signature .return {
   color: gray;
 }
 code {
-  background-color: #f8f8ff;
+  background: #fdf6e3;
   padding: 1px 3px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
