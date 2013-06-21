@@ -23,7 +23,7 @@ require.config({
 
 require(['mocha', 'chai'], function (mocha, chai) {
     var assert = chai.assert;
-    require(['Chance', 'test.basic.js'], function (chance) {
+    require(['test.basic.js'], function () {
         mocha.reporter('html');
 
         // Start runner

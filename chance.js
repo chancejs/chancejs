@@ -5,7 +5,7 @@
 
 (function() {
 
-    var chance = {
+    var Chance = {
         VERSION: 0.1,
 
         // Building Blocks/Basics
@@ -29,15 +29,15 @@
     // CommonJS module
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
-            exports = module.exports = chance;
+            exports = module.exports = Chance;
         }
-        exports.chance = chance;
+        exports.Chance = Chance;
     }
 
     // Register as a named AMD module
     if (typeof define === 'function' && define.amd) {
-        define('chance', [], function() {
-            return chance;
+        define('Chance', [], function() {
+            return Chance;
         });
     }
 
