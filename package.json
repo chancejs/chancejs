@@ -1,0 +1,40 @@
+{
+  "name": "Chance",
+  "version": "0.1.0",
+  "homepage": "http://chancejs.com",
+  "author": {
+    "name": "Victor Quinn",
+    "email": "mail@victorquinn.com",
+    "url": "http://victorquinn.com"
+  },
+  "bugs": {
+    "url": "https://github.com/victorquinn/chancejs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/victorquinn/chancejs.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://chancejs.com/license/"
+    }
+  ],
+  "devDependencies": {
+    "chai": "*",
+    "grunt": "*",
+    "grunt-mocha-phantomjs": "*",
+    "grunt-shell": "*",
+    "jslint": "*",
+    "mocha": "*",
+    "mocha-phantomjs": "*",
+    "phantomjs": "*",
+    "requirejs": "*",
+    "uglify-js": "1.2.6"
+  },
+  "keywords": [
+    "random",
+    "generator",
+    "test"
+  ]
+}
