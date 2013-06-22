@@ -25,6 +25,8 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 // Note: In very extreme circumstances this test may fail as, by its
                 // nature it's random. But it's a low enough percentage that I'm
                 // willing to accept it.
+                // Award to anyone that calculates the actual probability of this
+                // test failing and submits a pull request adding it to this comment!
                 expect(true_count).to.be.above(200);
                 expect(true_count).to.be.below(800);
             });
@@ -53,6 +55,21 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(positive_count).to.be.above(200);
                 expect(positive_count).to.be.below(800);
             });
+
+            it("can take a negative min and obey it", function () {
+                _(1000).times(function () {
+                    integer = chance.integer({min: -25});
+                    expect(integer).to.be.above(-26);
+                });
+            });
+
+            it("can take a negative min and negative max and obey both", function () {
+                _(1000).times(function () {
+                    integer = chance.integer({min: -25, max: -1});
+                    expect(integer).to.be.above(-26);
+                    expect(integer).to.be.below(0);
+                });
+            });
         });
 
         describe("Natural", function () {
@@ -73,6 +90,28 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
 
                 expect(positive_count).to.equal(1000);
+            });
+
+            it("can take just a min and obey it", function () {
+                _(1000).times(function () {
+                    natural = chance.natural({min: 9007199254740991});
+                    expect(natural).to.be.above(9007199254740990);
+                });
+            });
+
+            it("can take just a max and obey it", function () {
+                _(1000).times(function () {
+                    natural = chance.natural({max: 100});
+                    expect(natural).to.be.below(101);
+                });
+            });
+
+            it("can take both a max and min and obey them both", function () {
+                _(1000).times(function () {
+                    natural = chance.natural({min: 90, max: 100});
+                    expect(natural).to.be.below(101);
+                    expect(natural).to.be.above(89);
+                });
             });
         });
     });
