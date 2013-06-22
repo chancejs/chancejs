@@ -111,6 +111,23 @@ github_url: https://github.com/victorquinn/chancejs
   });
 {% endhighlight %}
 
+<!--
+  <p>
+    It can also be used in <a href="http://nodejs.org">Node.js</a>
+  </p>
+
+{% highlight bash %}
+  npm install chance
+{% endhighlight %}
+
+{% highlight js %}
+  require(['Chance'], function(Chance) {
+    // Use Chance here.
+  });
+{% endhighlight %}
+
+-->
+
   <section id=documentation>
     <hr>
     <h2 id="basics">Basics</h2>
@@ -150,22 +167,36 @@ github_url: https://github.com/victorquinn/chancejs
     {% endfor %}
   </section>
 
+  <h2 id="thanks">Acknowledgements & Thanks</h2>
   <p>
-      This documentation is based on the layout of the
-      <a href="https://zeptojs.com">Zepto.js</a> which itself is based on the layout of the
-      <a href="https://github.com/documentcloud/backbone/">Backbone.js</a>
-      documentation, which is released under the
-      <a href="https://github.com/documentcloud/backbone/blob/master/LICENSE">MIT license</a>.
-    </p>
-
-    <p>
-      <small>
-        &copy; 2013 <a href="http://victorquinn.com">Victor Quinn</a><br>
-        Chance and this documentation are released under the terms of the <a href="{{ page.github_url }}/blob/master/MIT-LICENSE">MIT license</a>.
-      </small>
-    </p>
-
+    This documentation is based on the layout of the
+    <a href="https://zeptojs.com">Zepto.js</a> which itself is based on the layout of the
+    <a href="https://github.com/documentcloud/backbone/">Backbone.js</a>
+    documentation, which is released under the
+    <a href="https://github.com/documentcloud/backbone/blob/master/LICENSE">MIT license</a>.
+  </p>
+  <p>
+    Thank you to <a href="https://github.com/banksean">Sean McCullough</a> for your <a href="https://gist.github.com/banksean/300494">Mersenne Twister gist</a> on which almost the entirety of this library is dependent. And to Takuji Nishimura and Makoto Matsumoto who wrote the original C version on which Sean's JavaScript gist is based.
+  </p>
+  <p>
+    <small>
+      &copy; 2013 <a href="http://victorquinn.com">Victor Quinn</a><br>
+      Chance and this documentation are released under the terms of the <a href="{{ page.github_url }}/blob/master/MIT-LICENSE">MIT license</a>.
+    </small>
+  </p>
 </div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
+<script src="chance.js"></script>
+<script>
+  // Expose Chance to the global namespace so it can be played with
+  // on this page.
+  var Chance;
+  require(['Chance'], function(c) {
+    Chance = new c();
+  });
+</script>
+
 
 <script src="zepto.min.js"></script>
 <script src="touch.js"></script>
@@ -250,10 +281,11 @@ github_url: https://github.com/victorquinn/chancejs
   // For retina screens, use a hi-res version of the tour image.
   // We're swapping this out on-demand (not an ideal solution)
   // to avoid rendering bugs on iOS.
+  /*
   $('#tour > img')[0].src =
     ('devicePixelRatio' in window && devicePixelRatio > 1) ?
     'intro2x.jpg' : 'intro.jpg'
-
+  */
   var tour = $('#tour'), tourSlides = tour.children(),
       tourSlide = 0, tourSlidesTotal = 5
 
