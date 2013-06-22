@@ -253,6 +253,22 @@ p.compat a {
   color: #000 !important;
 }
 
+.pullquote:before {
+    padding: 0;
+    border: none;
+    content: attr(data-pullquote);
+    font-style: italic;
+    float: right;
+    width: 320px;
+    margin: 10px -170px 18px 28px;
+    position: relative;
+    top: 5px;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: Georgia, Times, serif;
+    color: #BD362F;
+}
+
 @media only screen and (device-width: 768px) {
   /* this solves scrolling issues and taps not being recognized specifically on ipad */
   .container {
