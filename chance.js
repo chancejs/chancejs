@@ -7,9 +7,15 @@
 
     // Constructor
     var Chance = function (seed) {
-        if (seed === undefined) {
-            seed = new Date().getTime();
+        if (seed !== undefined) {
+            this.seed = seed;
         }
+        this.mt = new MersenneTwister(seed);
+    };
+
+    // Wrap the MersenneTwister
+    Chance.prototype.random = function () {
+        return this.mt.random(this.seed);
     };
 
     // Building Blocks/Basics
@@ -24,7 +30,7 @@
 
     Chance.prototype.integer = function () {
         // 9007199254740992 is the max integer number.
-        var num = Math.floor(Math.random() * 9007199254740992);
+        var num = this.natural();
         return this.bool() ? num : num * -1;
     };
 

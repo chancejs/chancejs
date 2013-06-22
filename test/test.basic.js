@@ -3,10 +3,11 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         expect = chai.expect;
 
     describe("Basics", function () {
-        var bool, integer, natural;
+        var bool, integer, natural, chance = new Chance();
+
         describe("Bool", function () {
             it("returns a random boolean", function () {
-                bool = Chance.bool();
+                bool = chance.bool();
                 assert.isBoolean(bool);
                 assert.isNotNumber(bool);
                 assert.isNotString(bool);
@@ -15,7 +16,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("is within the bounds of what we'd call random", function () {
                 var true_count = 0;
                 _(1000).times(function () {
-                    bool = Chance.bool();
+                    bool = chance.bool();
                     if (bool) {
                         true_count++;
                     }
@@ -31,7 +32,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
         describe("Integer", function () {
             it("returns a random integer", function () {
-                integer = Chance.integer();
+                integer = chance.integer();
                 assert.isNotBoolean(integer);
                 assert.isNumber(integer);
                 assert.isNotString(integer);
@@ -40,7 +41,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("is sometimes negative, sometimes positive", function () {
                 var positive_count = 0;
                 _(1000).times(function () {
-                    integer = Chance.integer();
+                    integer = chance.integer();
                     if (integer > 0) {
                         positive_count++;
                     }
@@ -56,7 +57,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
         describe("Natural", function () {
             it("returns a random natural", function () {
-                natural = Chance.natural();
+                natural = chance.natural();
                 assert.isNotBoolean(natural);
                 assert.isNumber(natural);
                 assert.isNotString(natural);
@@ -65,7 +66,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("is always positive", function () {
                 var positive_count = 0;
                 _(1000).times(function () {
-                    natural = Chance.natural();
+                    natural = chance.natural();
                     if (natural > 0) {
                         positive_count++;
                     }
@@ -75,4 +76,34 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
     });
+
+    describe("Seed", function () {
+        var seed, chance1, chance2;
+
+        describe("random", function () {
+            it("does not return repeatable results if no seed provided", function (done) {
+                chance1 = new Chance();
+                // Wait 5 ms before creating chance2 else sometimes they happen on the same
+                // tick and end up with the same seed!
+                setTimeout(function () {
+                    chance2 = new Chance();
+                    _(1000).times(function () {
+                        expect(chance1.random()).to.not.equal(chance2.random());
+                    });
+                    done();
+                }, 5);
+            });
+
+            it("returns repeatable results if seed provided on the Chance object", function () {
+                seed = new Date().getTime();
+                chance1 = new Chance(seed);
+                chance2 = new Chance(seed);
+
+                _(1000).times(function () {
+                    expect(chance1.random()).to.equal(chance2.random());
+                });
+            });
+        });
+    });
+
 });
