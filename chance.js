@@ -60,12 +60,12 @@
     };
 
     // Dice - For all the board game geeks out there, myself included ;)
-    Chance.prototype.d4 = function () { return this.natural(1, 4); };
-    Chance.prototype.d6 = function () { return this.natural(1, 6); };
-    Chance.prototype.d8 = function () { return this.natural(1, 8); };
-    Chance.prototype.d10 = function () { return this.natural(1, 10); };
-    Chance.prototype.d12 = function () { return this.natural(1, 12); };
-    Chance.prototype.d20 = function () { return this.natural(1, 20); };
+    Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
+    Chance.prototype.d6 = function () { return this.natural({min: 1, max: 6}); };
+    Chance.prototype.d8 = function () { return this.natural({min: 1, max: 8}); };
+    Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
+    Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
+    Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
 
 
 
