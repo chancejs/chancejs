@@ -20,26 +20,61 @@
 
     // Building Blocks/Basics
     Chance.prototype.bool = function () {
-        return Math.random() * 100 < 50;
+        return this.random() * 100 < 50;
     };
 
-    Chance.prototype.natural = function () {
+    // NOTE the max and min are INCLUDED in the range. So:
+    //
+    // chance.natural({min: 1, max: 3});
+    //
+    // would return either 1, 2, or 3.
+
+    Chance.prototype.natural = function (options) {
+        options = options || {};
+        options.min = options.min || 0;
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
-        return Math.floor(Math.random() * 9007199254740992);
+        options.max = options.max || 9007199254740992;
+
+        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
     };
 
-    Chance.prototype.integer = function () {
-        var num = this.natural();
-        return this.bool() ? num : num * -1;
+    Chance.prototype.integer = function (options) {
+        var num, range;
+
+        options = options || {};
+        options.min = options.min || -9007199254740992;
+        options.max = options.max || 9007199254740992;
+
+        // Greatest of absolute value of either max or min so we know we're
+        // including the entire search domain.
+        range = Math.max(Math.abs(options.min), Math.abs(options.min));
+
+        // Probably a better way to do this...
+        do {
+            num = this.natural({min: 0, max: range});
+            num = this.bool() ? num : num * -1;
+        } while (num < options.min || num > options.max);
+
+        return num;
     };
+
+    // Dice - For all the board game geeks out there, myself included ;)
+    Chance.prototype.d4 = function () { return this.natural(1, 4); };
+    Chance.prototype.d6 = function () { return this.natural(1, 6); };
+    Chance.prototype.d8 = function () { return this.natural(1, 8); };
+    Chance.prototype.d10 = function () { return this.natural(1, 10); };
+    Chance.prototype.d12 = function () { return this.natural(1, 12); };
+    Chance.prototype.d20 = function () { return this.natural(1, 20); };
+
+
 
     Chance.prototype.str = function (length) {
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz";
 
         for (var i = 0; i < length; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
+            text += possible.charAt(Math.floor(this.random() * possible.length));
         }
 
         return text;
