@@ -39,6 +39,10 @@ github_url: https://github.com/victorquinn/chancejs
   <a class=toc_title href="#address">Address</a>
   {% assign posts = site.categories.address %}
   {% include methods_sidebar.html %}
+
+  <a class=toc_title href="#miscellaneous">Miscellaneous</a>
+  {% assign posts = site.categories.miscellaneous %}
+  {% include methods_sidebar.html %}
 </aside>
 
 <div class="container">
@@ -151,6 +155,10 @@ github_url: https://github.com/victorquinn/chancejs
 
     <h2 id="address">Address methods</h2>
     {% assign posts = site.categories.address %}
+    {% include methods_full.html %}
+
+    <h2 id="miscellaneous">Miscellaneous methods</h2>
+    {% assign posts = site.categories.miscellaneous %}
     {% include methods_full.html %}
 
     <hr>
