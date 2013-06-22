@@ -12,11 +12,11 @@
         bool: function () {
             return Math.random() * 100 < 50;
         },
-        natural: function() {
+        natural: function () {
             // 9007199254740992 is the max integer number.
             return Math.floor(Math.random() * 9007199254740992);
         },
-        integer: function() {
+        integer: function () {
             // 9007199254740992 is the max integer number.
             var num = Math.floor(Math.random() * 9007199254740992);
             return this.bool() ? num : num * -1;
