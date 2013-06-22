@@ -24,12 +24,12 @@
     };
 
     Chance.prototype.natural = function () {
-        // 9007199254740992 is the max integer number.
+        // 9007199254740992 (2^53) is the max integer number in JavaScript
+        // See: http://vq.io/132sa2j
         return Math.floor(Math.random() * 9007199254740992);
     };
 
     Chance.prototype.integer = function () {
-        // 9007199254740992 is the max integer number.
         var num = this.natural();
         return this.bool() ? num : num * -1;
     };
@@ -188,6 +188,13 @@
         define('Chance', [], function () {
             return Chance;
         });
+    }
+
+    // If there is a window object, that at least has a document property,
+    // instantiate and define chance on the window
+    if (typeof window === "object" && typeof window.document === "object") {
+        window.Chance = Chance;
+        window.chance = new Chance();
     }
 
 })();
