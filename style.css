@@ -300,7 +300,8 @@ p.compat a {
     z-index: 1000;
     border-right: none;
     border-left: 1px solid #d4b4ff;
-    background: -webkit-gradient(linear, right top, left top, from(transparent), color-stop(0.92, transparent), color-stop(0.9201, rgba(212, 180, 255, 0.0)), to(rgba(212, 180, 255, 0.3))), #f3eaff;
+    color: #ecf0f1;
+    background: #c0392b;
   }
   .navigating #sidebar {
     -webkit-transform: translateX(0);
@@ -313,7 +314,7 @@ p.compat a {
     line-height: 25px;
     text-align: center;
     border-radius: 3px;
-    background: #b01df9;
+    background: #BD362F;
     color: #fff;
     text-shadow: 0px -1px rgba(0,0,0,0.5);
     padding: 3px 4px;

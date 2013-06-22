@@ -17,6 +17,7 @@ github_url: https://github.com/victorquinn/chancejs
 
   <ul class=toc_section>
     <li><a href="#download">Download</a></li>
+    <li><a href="#todo">Todo</a></li>
     <li><a href="#changelog">Change Log</a></li>
     <li><a href="#thanks">Acknowledgements</a></li>
   </ul>
@@ -42,8 +43,18 @@ github_url: https://github.com/victorquinn/chancejs
   <h1><img src=logo.png alt=Chance.js></h1>
 
   <p>
-    <b>Chance</b> is a minimalist generator of random strings, numbers, etc. to help
+    <b>Chance</b> is a minimalist generator of random* strings, numbers, etc. to help
     reduce some monotony particularly while writing automated tests.
+  </p>
+  <p>
+    * Of course true mathematicians out there would say that this ought to be
+    considered as only generating pseudo-random things, not true random. For that
+    we'd need some external entropy, not depending on JavaScript's Math.random(),
+    blah, blah, blah. However, for most practical uses of this library for which
+    it was created and intended, such as generating random names and addresses for
+    automated tests, our random is good enough. But it should probably NOT be used
+    for any cryptographic applications requiring true-random. See
+    <a href="http://vq.io/12hBd84">Wikipedia's article</a> for more info.
   </p>
   <p>
     Chance is open source software and is released under the
@@ -106,6 +117,20 @@ github_url: https://github.com/victorquinn/chancejs
     <h2 id="address">Address methods</h2>
     {% assign posts = site.categories.address %}
     {% include methods_full.html %}
+
+    <hr>
+    <h2 id="todo">Todo</h2>
+    <ul>
+      {% for todo in site.categories.todo %}
+      <li>
+        <article class=todo id="todo-{{ todo.title }}">
+          <p>
+            <strong>{{ todo.title }}</strong> - {{ todo.content }}
+          </p>
+        </article>
+      </li>
+      {% endfor %}
+    </ul>
 
     <hr>
     <h2 id="changelog">Change Log</h2>
