@@ -46,6 +46,7 @@ github_url: https://github.com/victorquinn/chancejs
     <b>Chance</b> is a minimalist generator of random* strings, numbers, etc. to help
     reduce some monotony particularly while writing automated tests.
   </p>
+  <p><em>This is very much a work in progress</em></p>
   <p>
     * Of course true mathematicians out there would say that this ought to be
     considered as only generating pseudo-random things, not true random. For that
@@ -69,10 +70,12 @@ github_url: https://github.com/victorquinn/chancejs
       <a href="chance.js" class="download">chance.js v{{ page.version }} (for development)</a>
       <!-- – <i>54.6k uncompressed, lots of comments</i> -->
     </li>
+    <!-- 
     <li>
       <a href="chance.min.js" class="download">chance.min.js v{{ page.version }} (for production)</a>
-      <!-- – <i>9.7k when gzipped</i> -->
+      – <i>9.7k when gzipped</i>
     </li>
+    -->
   </ul>
   
   <p>
@@ -93,7 +96,7 @@ github_url: https://github.com/victorquinn/chancejs
   </p>
 
 {% highlight html %}
-<script src=chance.min.js></script>
+<script src=chance.js></script>
 ...
 <script src=mycooltests.js></script>
 {% endhighlight %}
@@ -271,5 +274,19 @@ github_url: https://github.com/victorquinn/chancejs
 </script>
 
 <script>
-  <!-- Analytics tracking here -->
+ var GoSquared = {};
+  GoSquared.acct = "GSN-070194-V";
+  (function(w){
+    function gs(){
+      w._gstc_lt = +new Date;
+      var d = document, g = d.createElement("script");
+      g.type = "text/javascript";
+      g.src = "//d1l6p2sc9645hc.cloudfront.net/tracker.js";
+      var s = d.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(g, s);
+    }
+    w.addEventListener ?
+      w.addEventListener("load", gs, false) :
+      w.attachEvent("onload", gs);
+  })(window);
 </script>
