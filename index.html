@@ -24,6 +24,10 @@ github_url: https://github.com/victorquinn/chancejs
 
   <hr>
 
+  <a class=toc_title href="#usage">Usage</a>
+  {% assign posts = site.categories.usage %}
+  {% include methods_sidebar.html %}
+
   <a class=toc_title href="#basics">Basics</a>
   {% assign posts = site.categories.basics %}
   {% include methods_sidebar.html %}
@@ -107,9 +111,15 @@ github_url: https://github.com/victorquinn/chancejs
 
 {% highlight js %}
   require(['Chance'], function(Chance) {
-    // Use Chance here.
+    // Instantiate
+    var chance = new Chance();
+
+    // Then just use it:
+    var my_random_integer = chance.integer();
   });
 {% endhighlight %}
+
+
 
 <!--
   <p>
@@ -130,6 +140,11 @@ github_url: https://github.com/victorquinn/chancejs
 
   <section id=documentation>
     <hr>
+
+    <h2 id="usage">Usage</h2>
+    {% assign posts = site.categories.usage %}
+    {% include methods_full.html %}
+
     <h2 id="basics">Basics</h2>
     {% assign posts = site.categories.basics %}
     {% include methods_full.html %}
@@ -188,15 +203,6 @@ github_url: https://github.com/victorquinn/chancejs
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
 <script src="chance.js"></script>
-<script>
-  // Expose Chance to the global namespace so it can be played with
-  // on this page.
-  var Chance;
-  require(['Chance'], function(c) {
-    Chance = new c();
-  });
-</script>
-
 
 <script src="zepto.min.js"></script>
 <script src="touch.js"></script>
