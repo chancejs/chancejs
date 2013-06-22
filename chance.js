@@ -3,13 +3,13 @@
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
 
-(function() {
+(function () {
 
     var Chance = {
         VERSION: 0.1,
 
         // Building Blocks/Basics
-        bool: function() {
+        bool: function () {
             return Math.random() * 100 < 50;
         },
 
@@ -36,7 +36,7 @@
 
     // Register as a named AMD module
     if (typeof define === 'function' && define.amd) {
-        define('Chance', [], function() {
+        define('Chance', [], function () {
             return Chance;
         });
     }

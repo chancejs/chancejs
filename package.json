@@ -21,16 +21,19 @@
     }
   ],
   "devDependencies": {
-    "chai": "*",
+    "chai": "1.5",
     "grunt": "*",
+    "grunt-contrib-jshint": "~0.1.1",
     "grunt-mocha-phantomjs": "*",
+    "grunt-contrib-watch": "*",
     "grunt-shell": "*",
     "jslint": "*",
-    "mocha": "*",
+    "mocha": "1.8",
     "mocha-phantomjs": "*",
-    "phantomjs": "*",
+    "phantomjs": "1.9",
     "requirejs": "*",
-    "uglify-js": "1.2.6"
+    "uglify-js": "1.2.6",
+    "underscore": "*"
   },
   "keywords": [
     "random",

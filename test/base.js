@@ -1,13 +1,17 @@
 require.config({
     paths: {
         'Chance': '../chance',
-        'mocha': '../node_modules/mocha/mocha',
         'chai': '../node_modules/chai/chai',
+        'mocha': '../node_modules/mocha/mocha',
+        'underscore': '../node_modules/underscore/underscore',
 
         // Test libraries
         'test.basic.js': 'test.basic'
     },
     shim: {
+        'underscore': {
+            exports: '_'
+        },
         'mocha': {
             init: function () {
                 this.mocha.setup({
