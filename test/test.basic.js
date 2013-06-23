@@ -99,8 +99,40 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("can take both a max and min and obey them both", function () {
                 _(1000).times(function () {
                     natural = chance.natural({min: 90, max: 100});
-                    expect(natural).to.be.below(101);
-                    expect(natural).to.be.above(89);
+                    expect(natural).to.be.within(89, 101);
+                });
+            });
+        });
+
+        describe("Character", function () {
+            it("returns a character", function () {
+                character = chance.character();
+                expect(character).to.be.a('string');
+                expect(character).to.have.length(1);
+            });
+
+            it("pulls only from pool, when specified", function () {
+                var pool = 'abcde';
+                _(1000).times(function () {
+                    character = chance.character({pool: pool});
+                    expect(character).to.match(/[abcde]/);
+                });
+            });
+        });
+
+        describe("String", function () {
+            it("returns a string", function () {
+                string = chance.string();
+                expect(string).to.be.a('string');
+            });
+
+            it("obeys length, when specified", function () {
+                var length;
+                _(1000).times(function () {
+                    // Generate a random length from 1-25
+                    length = chance.natural({min: 1, max: 25});
+                    string = chance.string({length: length});
+                    expect(string).to.have.length(length);
                 });
             });
         });
