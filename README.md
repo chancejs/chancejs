@@ -29,13 +29,13 @@ Chance instantiates itself onto the window. This means that in the simplest case
 
 Chance also includes an AMD define so it can be used with RequireJS.
 
-   require(['Chance'], function(Chance) {
-       // Instantiate
-       var chance = new Chance();
+    require(['Chance'], function(Chance) {
+        // Instantiate
+        var chance = new Chance();
        
-       // Then just use it:
-       var my_random_integer = chance.integer();
-   });
+        // Then just use it:
+        var my_random_integer = chance.integer();
+    });
 
 
 ### Node.js
