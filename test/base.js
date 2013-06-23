@@ -3,10 +3,7 @@ require.config({
         'Chance': '../chance',
         'chai': '../node_modules/chai/chai',
         'mocha': '../node_modules/mocha/mocha',
-        'underscore': '../node_modules/underscore/underscore',
-
-        // Test libraries
-        'test.basic.js': 'test.basic'
+        'underscore': '../node_modules/underscore/underscore'
     },
     shim: {
         'underscore': {
@@ -27,7 +24,7 @@ require.config({
 
 require(['mocha', 'chai'], function (mocha, chai) {
     var assert = chai.assert;
-    require(['test.basic.js', 'test.misc.js', 'test.address.js'], function () {
+    require(['test.basic', 'test.text', 'test.address', 'test.misc'], function () {
         mocha.reporter('html');
 
         // Start runner

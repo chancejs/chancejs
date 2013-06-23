@@ -62,6 +62,7 @@
 
     Chance.prototype.character = function (options) {
         options = options || {};
+
         var lower = "abcdefghijklmnopqrstuvwxyz",
             upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             numbers = "0123456789",
@@ -73,8 +74,9 @@
 
     Chance.prototype.string = function (options) {
         options = options || {};
+
         var length = options.length || this.natural({min: 5, max: 20}),
-            text = "",
+            text = '',
             pool = options.pool;
 
         for (var i = 0; i < length; i++) {
@@ -84,6 +86,65 @@
     };
 
     // -- End Basics --
+
+    // -- Text --
+
+    Chance.prototype.syllable = function (options) {
+        options = options || {};
+
+        var length = options.length || this.natural({min: 2, max: 3}),
+            consanants = 'bcdfghjklmnprstvwz', // consonants except hard to speak ones
+            vowels = 'aeiou', // vowels
+            all = consanants + vowels, // all
+            text = '',
+            chr, pool;
+
+        // I'm sure there's a more elegant way to do this, but this works
+        // decently well.
+        for (var i = 0; i < length; i++) {
+            if (i === 0) {
+                // First character can be anything
+                chr = this.character({pool: all});
+            } else if (consanants.indexOf(chr) === -1) {
+                // Last charcter was a vowel, now we want a consanant
+                chr = this.character({pool: consanants});
+            } else {
+                // Last charcter was a consanant, now we want a vowel
+                chr = this.character({pool: vowels});
+            }
+
+            text += chr;
+        }
+
+        return text;
+    };
+
+    Chance.prototype.word = function (options) {
+        options = options || {};
+
+        if (options.syllables && options.length) {
+            throw new RangeError("Chance: Cannot specify both syllables AND length.");
+        }
+
+        var syllables = options.syllables || this.natural({min: 1, max: 4}),
+            text = '';
+
+        if (options.length) {
+            // Either bound word by length
+            do {
+                text += this.syllable();
+            } while (text.length < options.length);
+            text = text.substring(0, options.length);
+        } else {
+            // Or by number of syllables
+            for (var i = 0; i < syllables; i++) {
+                text += this.syllable();
+            }
+        }
+        return text;
+    };
+
+    // -- End Text --
 
     // -- Address --
 
