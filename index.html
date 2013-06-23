@@ -30,6 +30,10 @@ github_url: https://github.com/victorquinn/chancejs
   {% assign posts = site.categories.basics %}
   {% include methods_sidebar.html %}
 
+  <a class=toc_title href="#text">Text</a>
+  {% assign posts = site.categories.text %}
+  {% include methods_sidebar.html %}
+
   <a class=toc_title href="#name">Name</a>
   {% assign posts = site.categories.name %}
   {% include methods_sidebar.html %}
@@ -96,6 +100,10 @@ github_url: https://github.com/victorquinn/chancejs
 
     <h2 id="basics">Basics</h2>
     {% assign posts = site.categories.basics %}
+    {% include methods_full.html %}
+
+    <h2 id="text">Text</h2>
+    {% assign posts = site.categories.text %}
     {% include methods_full.html %}
 
     <h2 id="address">Address methods</h2>

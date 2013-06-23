@@ -18,7 +18,8 @@
         return this.mt.random(this.seed);
     };
 
-    // Building Blocks/Basics
+    // -- Basics --
+
     Chance.prototype.bool = function () {
         return this.random() * 100 < 50;
     };
@@ -61,20 +62,21 @@
 
     Chance.prototype.character = function (options) {
         options = options || {};
+
         var lower = "abcdefghijklmnopqrstuvwxyz",
             upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             numbers = "0123456789",
             chars = "!@#$%^&*()",
             pool = options.pool || (lower + upper + numbers + chars);
 
-        // Refactor this to use this.natural()
-        return pool.charAt(Math.floor(this.random() * pool.length));
+        return pool.charAt(this.natural({max: (pool.length - 1)}));
     };
 
     Chance.prototype.string = function (options) {
         options = options || {};
+
         var length = options.length || this.natural({min: 5, max: 20}),
-            text = "",
+            text = '',
             pool = options.pool;
 
         for (var i = 0; i < length; i++) {
@@ -83,26 +85,68 @@
         return text;
     };
 
+    // -- End Basics --
 
-    // Address
-    // Note: only returning US zip codes, internationalization will be a whole
-    // other beast to tackle at some point.
-    Chance.prototype.zip = function (options) {
-        var zip = "";
+    // -- Text --
 
-        for (var i = 0; i < 5; i++) {
-            zip += this.natural({min: 0, max: 9}).toString();
+    Chance.prototype.syllable = function (options) {
+        options = options || {};
+
+        var length = options.length || this.natural({min: 2, max: 3}),
+            consanants = 'bcdfghjklmnprstvwz', // consonants except hard to speak ones
+            vowels = 'aeiou', // vowels
+            all = consanants + vowels, // all
+            text = '',
+            chr, pool;
+
+        // I'm sure there's a more elegant way to do this, but this works
+        // decently well.
+        for (var i = 0; i < length; i++) {
+            if (i === 0) {
+                // First character can be anything
+                chr = this.character({pool: all});
+            } else if (consanants.indexOf(chr) === -1) {
+                // Last charcter was a vowel, now we want a consanant
+                chr = this.character({pool: consanants});
+            } else {
+                // Last charcter was a consanant, now we want a vowel
+                chr = this.character({pool: vowels});
+            }
+
+            text += chr;
         }
 
-        if (options && options.plusfour === true) {
-            zip += '-';
-            for (i = 0; i < 4; i++) {
-                zip += this.natural({min: 0, max: 9}).toString();
+        return text;
+    };
+
+    Chance.prototype.word = function (options) {
+        options = options || {};
+
+        if (options.syllables && options.length) {
+            throw new RangeError("Chance: Cannot specify both syllables AND length.");
+        }
+
+        var syllables = options.syllables || this.natural({min: 1, max: 4}),
+            text = '';
+
+        if (options.length) {
+            // Either bound word by length
+            do {
+                text += this.syllable();
+            } while (text.length < options.length);
+            text = text.substring(0, options.length);
+        } else {
+            // Or by number of syllables
+            for (var i = 0; i < syllables; i++) {
+                text += this.syllable();
             }
         }
-
-        return zip;
+        return text;
     };
+
+    // -- End Text --
+
+    // -- Address --
 
     // Street Suffix
     Chance.prototype.street_suffixes = function () {
@@ -227,7 +271,28 @@
         return state;
     };
 
-    // Miscellaneous
+    // Note: only returning US zip codes, internationalization will be a whole
+    // other beast to tackle at some point.
+    Chance.prototype.zip = function (options) {
+        var zip = "";
+
+        for (var i = 0; i < 5; i++) {
+            zip += this.natural({min: 0, max: 9}).toString();
+        }
+
+        if (options && options.plusfour === true) {
+            zip += '-';
+            for (i = 0; i < 4; i++) {
+                zip += this.natural({min: 0, max: 9}).toString();
+            }
+        }
+
+        return zip;
+    };
+
+    // -- End Address --
+
+    // -- Miscellaneous --
 
     // Dice - For all the board game geeks out there, myself included ;)
     Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
@@ -248,12 +313,13 @@
         return guid;
     };
 
-
-    Chance.prototype.VERSION = "0.2.0";
-
     Chance.prototype.mersenne_twister = function (seed) {
         return new MersenneTwister(seed);
     };
+
+    // -- End Miscellaneous --
+
+    Chance.prototype.VERSION = "0.2.0";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
