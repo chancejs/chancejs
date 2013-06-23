@@ -3,7 +3,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         expect = chai.expect;
 
     describe("Address", function () {
-        var zip, chance = new Chance();
+        var zip, suffix, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
@@ -21,6 +21,40 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip)).to.be.true;
                 });
             });
+        });
+
+        describe("Street", function () {
+            it("street suffixes returns the suffix array", function () {
+                suffixes = chance.street_suffixes();
+                expect(suffixes).to.be.an('array');
+            });
+
+            it("street suffixes are short", function () {
+                _(1000).times(function () {
+                    suffixes = chance.street_suffixes();
+                    expect(suffixes[0].length).to.be.below(5);
+                });
+            });
+
+            it("full street suffixes returns the suffix array", function () {
+                suffixes = chance.street_suffixes({full: true});
+                expect(suffixes).to.be.an('array');
+            });
+
+            it("full street suffixes are longish", function () {
+                _(1000).times(function () {
+                    suffixes = chance.street_suffixes();
+                    expect(suffixes[0].length).to.be.above(2);
+                });
+            });
+
+            it("street suffix returns a single suffix", function () {
+                _(1000).times(function () {
+                    suffix = chance.street_suffix();
+                    expect(suffix.length).to.be.below(5);
+                });
+            });
+
         });
     });
 });

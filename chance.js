@@ -79,6 +79,32 @@
         return zip;
     };
 
+    // Street Suffix
+    Chance.prototype.street_suffixes = function (options) {
+        var suffixes = [];
+        if (options && options.full) {
+            suffixes = ['Avenue', 'Boulevard', 'Center', 'Circle', 'Court', 'Drive',
+                        'Extension', 'Glen', 'Grove', 'Heights', 'Highway', 'Junction',
+                        'Key', 'Lane', 'Loop', 'Manor', 'Mill', 'Park', 'Parkway', 'Pass',
+                        'Path', 'Pike', 'Place', 'Plaza', 'Point', 'Ridge', 'River', 'Road',
+                        'Square', 'Street', 'Terrace', 'Trail', 'Turnpike', 'View', 'Way'];
+        } else {
+            suffixes = ['Ave', 'Blvd', 'Ctr', 'Cir', 'Ct', 'Dr', 'Ext', 'Gln', 'Grv',
+                        'Hts', 'Hwy', 'Jct', 'Key', 'Ln', 'Loop', 'Mnr', 'Mill', 'Park',
+                        'Pkwy', 'Pass', 'Path', 'Pike', 'Pl', 'Plz', 'Pt', 'Rdg', 'Riv',
+                        'Rd', 'Sq', 'St', 'Ter', 'Trl', 'Tpke', 'Vw', 'Way'];
+        }
+        return suffixes;
+    };
+
+    Chance.prototype.street_suffix = function (options) {
+        // These are the most common suffixes.
+        var suffixes = this.street_suffixes(options),
+            suffix = suffixes[this.natural({max: suffixes.length - 1})];
+        return suffix;
+    };
+
+
     // Dice - For all the board game geeks out there, myself included ;)
     Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
     Chance.prototype.d6 = function () { return this.natural({min: 1, max: 6}); };
