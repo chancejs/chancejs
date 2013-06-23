@@ -1,7 +1,7 @@
 {
   "name": "chance",
-  "version": "0.1.1",
-  "description": "ChanceJS - Random generator helper for JavaScript",
+  "version": "0.2",
+  "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
   "bugs": {
@@ -35,6 +35,10 @@
   "keywords": [
     "random",
     "generator",
-    "test"
+    "test",
+    "mersenne",
+    "name",
+    "address",
+    "dice"
   ]
 }
