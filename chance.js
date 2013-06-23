@@ -59,6 +59,26 @@
         return num;
     };
 
+    // Address
+    // Note: only returning US zip codes, internationalization will be a whole
+    // other beast to tackle at some point.
+    Chance.prototype.zip = function (options) {
+        var zip = "";
+
+        for (var i = 0; i < 5; i++) {
+            zip += this.natural({min: 0, max: 9}).toString();
+        }
+
+        if (options && options.plusfour === true) {
+            zip += '-';
+            for (i = 0; i < 4; i++) {
+                zip += this.natural({min: 0, max: 9}).toString();
+            }
+        }
+
+        return zip;
+    };
+
     // Dice - For all the board game geeks out there, myself included ;)
     Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
     Chance.prototype.d6 = function () { return this.natural({min: 1, max: 6}); };
@@ -66,7 +86,6 @@
     Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
-
 
 
     Chance.prototype.str = function (length) {
