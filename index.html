@@ -49,20 +49,10 @@ github_url: https://github.com/victorquinn/chancejs
   <h1><img src=logo.png alt=Chance.js></h1>
 
   <p>
-    <b>Chance</b> is a minimalist generator of random* strings, numbers, etc. to help
+    <b>Chance</b> is a minimalist generator of random <a href="#true-random">[1]</a> strings, numbers, etc. to help
     reduce some monotony particularly while writing automated tests.
   </p>
   <p><em>This is very much a work in progress</em></p>
-  <p>
-    * Of course true mathematicians out there would say that this ought to be
-    considered as only generating pseudo-random things, not true random. For that
-    we'd need some external entropy, not depending on JavaScript's Math.random(),
-    blah, blah, blah. However, for most practical uses of this library for which
-    it was created and intended, such as generating random names and addresses for
-    automated tests, our random is good enough. But it should probably NOT be used
-    for any cryptographic applications requiring true-random. See
-    <a href="http://vq.io/12hBd84">Wikipedia's article</a> for more info.
-  </p>
   <p>
     Chance is open source software and is released under the
     developer and business-friendly
@@ -205,6 +195,20 @@ github_url: https://github.com/victorquinn/chancejs
       Chance and this documentation are released under the terms of the <a href="{{ page.github_url }}/blob/master/MIT-LICENSE">MIT license</a>.
     </small>
   </p>
+
+  <footer>
+    <p id="true-random">
+      [1] - Of course true mathematicians out there would say that this ought to be
+      considered as only generating pseudo-random things, not true random. For that
+      we'd need some external entropy, not depending on a Mersenne Twister,
+      blah, blah, blah. However, for most practical uses of this library for which
+      it was created and intended, such as generating random names and addresses for
+      automated tests, our random is good enough. But it should probably NOT be used
+      for any cryptographic applications requiring true-random. See
+      <a href="http://vq.io/12hBd84">Wikipedia's article</a> for more info.
+    </p>
+
+  </footer>
 </div>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>

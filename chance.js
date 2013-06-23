@@ -59,6 +59,31 @@
         return num;
     };
 
+    Chance.prototype.character = function (options) {
+        options = options || {};
+        var lower = "abcdefghijklmnopqrstuvwxyz",
+            upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            numbers = "0123456789",
+            chars = "!@#$%^&*()",
+            pool = options.pool || (lower + upper + numbers + chars);
+
+        // Refactor this to use this.natural()
+        return pool.charAt(Math.floor(this.random() * pool.length));
+    };
+
+    Chance.prototype.string = function (options) {
+        options = options || {};
+        var length = options.length || this.natural({min: 5, max: 20}),
+            text = "",
+            pool = options.pool;
+
+        for (var i = 0; i < length; i++) {
+            text += this.character({pool: pool});
+        }
+        return text;
+    };
+
+
     // Address
     // Note: only returning US zip codes, internationalization will be a whole
     // other beast to tackle at some point.
@@ -187,17 +212,6 @@
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
 
-
-    Chance.prototype.str = function (length) {
-        var text = "";
-        var possible = "abcdefghijklmnopqrstuvwxyz";
-
-        for (var i = 0; i < length; i++) {
-            text += possible.charAt(Math.floor(this.random() * possible.length));
-        }
-
-        return text;
-    };
 
     Chance.prototype.VERSION = 0.1;
 

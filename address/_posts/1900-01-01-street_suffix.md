@@ -19,6 +19,6 @@ Can optionally specify that it ought to return a full suffix.
 
 {% highlight js %}
   chance.street_suffixes({full: true});
-  => 'Trail'
+  => 'Street'
 {% endhighlight %}
 
