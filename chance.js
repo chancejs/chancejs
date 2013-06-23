@@ -126,7 +126,7 @@
             throw new RangeError("Chance: Cannot specify both syllables AND length.");
         }
 
-        var syllables = options.syllables || this.natural({min: 1, max: 4}),
+        var syllables = options.syllables || this.natural({min: 1, max: 3}),
             text = '';
 
         if (options.length) {
@@ -142,6 +142,39 @@
             }
         }
         return text;
+    };
+
+    // Could get smarter about this than generating random words and
+    // chaining them together. Such as: http://vq.io/1a5ceOh
+    Chance.prototype.sentence = function (options) {
+        options = options || {};
+
+        var words = options.words || this.natural({min: 12, max: 18}),
+            text = '', word_array = [];
+
+        for (var i = 0; i < words; i++) {
+            word_array.push(this.word());
+        }
+
+        text = word_array.join(' ');
+
+        // Capitalize first letter of sentence, add period at end
+        text = text.charAt(0).toUpperCase() + text.substr(1) + '.';
+
+        return text;
+    };
+
+    Chance.prototype.paragraph = function (options) {
+        options = options || {};
+
+        var sentences = options.sentences || this.natural({min: 3, max: 7}),
+            sentence_array = [];
+
+        for (var i = 0; i < sentences; i++) {
+            sentence_array.push(this.sentence());
+        }
+
+        return sentence_array.join(' ');
     };
 
     // -- End Text --

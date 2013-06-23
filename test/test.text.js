@@ -2,9 +2,9 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Text", function () {
-        var syllable, word, chance = new Chance();
+        var syllable, word, sentence, paragraph, chance = new Chance();
 
-        describe("Word", function () {
+        describe("Syllable", function () {
             it("returns a random syllable", function () {
                 _(1000).times(function () {
                     syllable = chance.syllable();
@@ -19,7 +19,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     word = chance.word();
                     expect(word).to.be.a('string');
-                    expect(syllable).to.have.length.within(2, 12);
+                    expect(syllable).to.have.length.within(2, 9);
                 });
             });
 
@@ -46,6 +46,48 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     // try/catch block. So we have to create an anonymous
                     // function to pass along for it to do that.
                     expect(function () { chance.word({syllables: 3, length: 20 }); }).to.throw(RangeError);
+                });
+            });
+        });
+
+        describe("Sentence", function () {
+            it("returns a random sentence", function () {
+                _(1000).times(function () {
+                    sentence = chance.sentence();
+                    expect(sentence).to.be.a('string');
+                    expect(sentence.split(' ')).to.have.length.within(12, 18);
+                });
+            });
+
+            it("will obey bounds", function () {
+                _(1000).times(function () {
+                    sentence = chance.sentence({words: 5});
+                    expect(sentence).to.be.a('string');
+                    expect(sentence.split(' ')).to.have.length(5);
+                });
+            });
+        });
+
+        describe("Paragraph", function () {
+            it("returns a random paragraph", function () {
+                _(1000).times(function () {
+                    paragraph = chance.paragraph();
+                    expect(paragraph).to.be.a('string');
+                    // Have to account for the fact that the period at the end will add
+                    // to the count of sentences. This is the fault of our hackish way
+                    // of detecting sentences -- by splitting on '.'
+                    expect(paragraph.split('.')).to.have.length.within(3, 8);
+                });
+            });
+
+            it("will obey bounds", function () {
+                _(1000).times(function () {
+                    paragraph = chance.paragraph({sentences: 5});
+                    expect(paragraph).to.be.a('string');
+                    // Have to account for the fact that the period at the end will add
+                    // to the count of sentences. This is the fault of our hackish way
+                    // of detecting sentences -- by splitting on '.'
+                    expect(paragraph.split('.')).to.have.length(6);
                 });
             });
         });
