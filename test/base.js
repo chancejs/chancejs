@@ -27,7 +27,7 @@ require.config({
 
 require(['mocha', 'chai'], function (mocha, chai) {
     var assert = chai.assert;
-    require(['test.basic.js', 'test.misc.js'], function () {
+    require(['test.basic.js', 'test.misc.js', 'test.address.js'], function () {
         mocha.reporter('html');
 
         // Start runner

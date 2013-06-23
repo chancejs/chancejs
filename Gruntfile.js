@@ -4,6 +4,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         jshint: {
             options: {
+                es5: true,
                 curly: true,
                 eqeqeq: true,
                 expr: true,
