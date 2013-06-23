@@ -30,28 +30,25 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
 
             it("street suffixes are short", function () {
-                _(1000).times(function () {
-                    suffixes = chance.street_suffixes();
-                    expect(suffixes[0].length).to.be.below(5);
+                suffixes = chance.street_suffixes();
+                _.each(suffixes, function (suffix) {
+                    expect(suffix.abbreviation).to.have.length.below(5);
                 });
             });
 
-            it("full street suffixes returns the suffix array", function () {
-                suffixes = chance.street_suffixes({full: true});
-                expect(suffixes).to.be.an('array');
-            });
-
             it("full street suffixes are longish", function () {
-                _(1000).times(function () {
-                    suffixes = chance.street_suffixes();
-                    expect(suffixes[0].length).to.be.above(2);
+                suffixes = chance.street_suffixes();
+                _.each(suffixes, function (suffix) {
+                    expect(suffix.name).to.have.length.above(2);
                 });
             });
 
             it("street suffix returns a single suffix", function () {
                 _(1000).times(function () {
                     suffix = chance.street_suffix();
-                    expect(suffix.length).to.be.below(5);
+                    expect(suffix).to.be.an('object');
+                    expect(suffix.name).to.be.a('string');
+                    expect(suffix.abbreviation).to.be.a('string');
                 });
             });
 
