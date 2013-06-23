@@ -10,7 +10,7 @@
         if (seed !== undefined) {
             this.seed = seed;
         }
-        this.mt = new MersenneTwister(seed);
+        this.mt = this.mersenne_twister(seed);
     };
 
     // Wrap the MersenneTwister
@@ -105,21 +105,44 @@
     };
 
     // Street Suffix
-    Chance.prototype.street_suffixes = function (options) {
-        var suffixes = [];
-        if (options && options.full) {
-            suffixes = ['Avenue', 'Boulevard', 'Center', 'Circle', 'Court', 'Drive',
-                        'Extension', 'Glen', 'Grove', 'Heights', 'Highway', 'Junction',
-                        'Key', 'Lane', 'Loop', 'Manor', 'Mill', 'Park', 'Parkway', 'Pass',
-                        'Path', 'Pike', 'Place', 'Plaza', 'Point', 'Ridge', 'River', 'Road',
-                        'Square', 'Street', 'Terrace', 'Trail', 'Turnpike', 'View', 'Way'];
-        } else {
-            suffixes = ['Ave', 'Blvd', 'Ctr', 'Cir', 'Ct', 'Dr', 'Ext', 'Gln', 'Grv',
-                        'Hts', 'Hwy', 'Jct', 'Key', 'Ln', 'Loop', 'Mnr', 'Mill', 'Park',
-                        'Pkwy', 'Pass', 'Path', 'Pike', 'Pl', 'Plz', 'Pt', 'Rdg', 'Riv',
-                        'Rd', 'Sq', 'St', 'Ter', 'Trl', 'Tpke', 'Vw', 'Way'];
-        }
-        return suffixes;
+    Chance.prototype.street_suffixes = function () {
+        return [
+            {name: 'Avenue', abbreviation: 'Ave'},
+            {name: 'Boulevard', abbreviation: 'Blvd'},
+            {name: 'Center', abbreviation: 'Ctr'},
+            {name: 'Circle', abbreviation: 'Cir'},
+            {name: 'Court', abbreviation: 'Ct'},
+            {name: 'Drive', abbreviation: 'Dr'},
+            {name: 'Extension', abbreviation: 'Ext'},
+            {name: 'Glen', abbreviation: 'Gln'},
+            {name: 'Grove', abbreviation: 'Grv'},
+            {name: 'Heights', abbreviation: 'Hts'},
+            {name: 'Highway', abbreviation: 'Hwy'},
+            {name: 'Junction', abbreviation: 'Jct'},
+            {name: 'Key', abbreviation: 'Key'},
+            {name: 'Lane', abbreviation: 'Ln'},
+            {name: 'Loop', abbreviation: 'Loop'},
+            {name: 'Manor', abbreviation: 'Mnr'},
+            {name: 'Mill', abbreviation: 'Mill'},
+            {name: 'Park', abbreviation: 'Park'},
+            {name: 'Parkway', abbreviation: 'Pkwy'},
+            {name: 'Pass', abbreviation: 'Pass'},
+            {name: 'Path', abbreviation: 'Path'},
+            {name: 'Pike', abbreviation: 'Pike'},
+            {name: 'Place', abbreviation: 'Pl'},
+            {name: 'Plaza', abbreviation: 'Plz'},
+            {name: 'Point', abbreviation: 'Pt'},
+            {name: 'Ridge', abbreviation: 'Rdg'},
+            {name: 'River', abbreviation: 'Riv'},
+            {name: 'Road', abbreviation: 'Rd'},
+            {name: 'Square', abbreviation: 'Sq'},
+            {name: 'Street', abbreviation: 'St'},
+            {name: 'Terrace', abbreviation: 'Ter'},
+            {name: 'Trail', abbreviation: 'Trl'},
+            {name: 'Turnpike', abbreviation: 'Tpke'},
+            {name: 'View', abbreviation: 'Vw'},
+            {name: 'Way', abbreviation: 'Way'}
+        ];
     };
 
     Chance.prototype.street_suffix = function (options) {
@@ -131,67 +154,67 @@
 
     Chance.prototype.states = function () {
         return [
-            { name: "Alabama", abbreviation: "AL" },
-            { name: "Alaska", abbreviation: "AK" },
-            { name: "American Samoa", abbreviation: "AS" },
-            { name: "Arizona", abbreviation: "AZ" },
-            { name: "Arkansas", abbreviation: "AR" },
-            { name: "Armed Forces Europe", abbreviation: "AE" },
-            { name: "Armed Forces Pacific", abbreviation: "AP" },
-            { name: "Armed Forces the Americas", abbreviation: "AA" },
-            { name: "California", abbreviation: "CA" },
-            { name: "Colorado", abbreviation: "CO" },
-            { name: "Connecticut", abbreviation: "CT" },
-            { name: "Delaware", abbreviation: "DE" },
-            { name: "District of Columbia", abbreviation: "DC" },
-            { name: "Federated States of Micronesia", abbreviation: "FM" },
-            { name: "Florida", abbreviation: "FL" },
-            { name: "Georgia", abbreviation: "GA" },
-            { name: "Guam", abbreviation: "GU" },
-            { name: "Hawaii", abbreviation: "HI" },
-            { name: "Idaho", abbreviation: "ID" },
-            { name: "Illinois", abbreviation: "IL" },
-            { name: "Indiana", abbreviation: "IN" },
-            { name: "Iowa", abbreviation: "IA" },
-            { name: "Kansas", abbreviation: "KS" },
-            { name: "Kentucky", abbreviation: "KY" },
-            { name: "Louisiana", abbreviation: "LA" },
-            { name: "Maine", abbreviation: "ME" },
-            { name: "Marshall Islands", abbreviation: "MH" },
-            { name: "Maryland", abbreviation: "MD" },
-            { name: "Massachusetts", abbreviation: "MA" },
-            { name: "Michigan", abbreviation: "MI" },
-            { name: "Minnesota", abbreviation: "MN" },
-            { name: "Mississippi", abbreviation: "MS" },
-            { name: "Missouri", abbreviation: "MO" },
-            { name: "Montana", abbreviation: "MT" },
-            { name: "Nebraska", abbreviation: "NE" },
-            { name: "Nevada", abbreviation: "NV" },
-            { name: "New Hampshire", abbreviation: "NH" },
-            { name: "New Jersey", abbreviation: "NJ" },
-            { name: "New Mexico", abbreviation: "NM" },
-            { name: "New York", abbreviation: "NY" },
-            { name: "North Carolina", abbreviation: "NC" },
-            { name: "North Dakota", abbreviation: "ND" },
-            { name: "Northern Mariana Islands", abbreviation: "MP" },
-            { name: "Ohio", abbreviation: "OH" },
-            { name: "Oklahoma", abbreviation: "OK" },
-            { name: "Oregon", abbreviation: "OR" },
-            { name: "Pennsylvania", abbreviation: "PA" },
-            { name: "Puerto Rico", abbreviation: "PR" },
-            { name: "Rhode Island", abbreviation: "RI" },
-            { name: "South Carolina", abbreviation: "SC" },
-            { name: "South Dakota", abbreviation: "SD" },
-            { name: "Tennessee", abbreviation: "TN" },
-            { name: "Texas", abbreviation: "TX" },
-            { name: "Utah", abbreviation: "UT" },
-            { name: "Vermont", abbreviation: "VT" },
-            { name: "Virgin Islands, U.S.", abbreviation: "VI" },
-            { name: "Virginia", abbreviation: "VA" },
-            { name: "Washington", abbreviation: "WA" },
-            { name: "West Virginia", abbreviation: "WV" },
-            { name: "Wisconsin", abbreviation: "WI" },
-            { name: "Wyoming", abbreviation: "WY" }
+            {name: 'Alabama', abbreviation: 'AL'},
+            {name: 'Alaska', abbreviation: 'AK'},
+            {name: 'American Samoa', abbreviation: 'AS'},
+            {name: 'Arizona', abbreviation: 'AZ'},
+            {name: 'Arkansas', abbreviation: 'AR'},
+            {name: 'Armed Forces Europe', abbreviation: 'AE'},
+            {name: 'Armed Forces Pacific', abbreviation: 'AP'},
+            {name: 'Armed Forces the Americas', abbreviation: 'AA'},
+            {name: 'California', abbreviation: 'CA'},
+            {name: 'Colorado', abbreviation: 'CO'},
+            {name: 'Connecticut', abbreviation: 'CT'},
+            {name: 'Delaware', abbreviation: 'DE'},
+            {name: 'District of Columbia', abbreviation: 'DC'},
+            {name: 'Federated States of Micronesia', abbreviation: 'FM'},
+            {name: 'Florida', abbreviation: 'FL'},
+            {name: 'Georgia', abbreviation: 'GA'},
+            {name: 'Guam', abbreviation: 'GU'},
+            {name: 'Hawaii', abbreviation: 'HI'},
+            {name: 'Idaho', abbreviation: 'ID'},
+            {name: 'Illinois', abbreviation: 'IL'},
+            {name: 'Indiana', abbreviation: 'IN'},
+            {name: 'Iowa', abbreviation: 'IA'},
+            {name: 'Kansas', abbreviation: 'KS'},
+            {name: 'Kentucky', abbreviation: 'KY'},
+            {name: 'Louisiana', abbreviation: 'LA'},
+            {name: 'Maine', abbreviation: 'ME'},
+            {name: 'Marshall Islands', abbreviation: 'MH'},
+            {name: 'Maryland', abbreviation: 'MD'},
+            {name: 'Massachusetts', abbreviation: 'MA'},
+            {name: 'Michigan', abbreviation: 'MI'},
+            {name: 'Minnesota', abbreviation: 'MN'},
+            {name: 'Mississippi', abbreviation: 'MS'},
+            {name: 'Missouri', abbreviation: 'MO'},
+            {name: 'Montana', abbreviation: 'MT'},
+            {name: 'Nebraska', abbreviation: 'NE'},
+            {name: 'Nevada', abbreviation: 'NV'},
+            {name: 'New Hampshire', abbreviation: 'NH'},
+            {name: 'New Jersey', abbreviation: 'NJ'},
+            {name: 'New Mexico', abbreviation: 'NM'},
+            {name: 'New York', abbreviation: 'NY'},
+            {name: 'North Carolina', abbreviation: 'NC'},
+            {name: 'North Dakota', abbreviation: 'ND'},
+            {name: 'Northern Mariana Islands', abbreviation: 'MP'},
+            {name: 'Ohio', abbreviation: 'OH'},
+            {name: 'Oklahoma', abbreviation: 'OK'},
+            {name: 'Oregon', abbreviation: 'OR'},
+            {name: 'Pennsylvania', abbreviation: 'PA'},
+            {name: 'Puerto Rico', abbreviation: 'PR'},
+            {name: 'Rhode Island', abbreviation: 'RI'},
+            {name: 'South Carolina', abbreviation: 'SC'},
+            {name: 'South Dakota', abbreviation: 'SD'},
+            {name: 'Tennessee', abbreviation: 'TN'},
+            {name: 'Texas', abbreviation: 'TX'},
+            {name: 'Utah', abbreviation: 'UT'},
+            {name: 'Vermont', abbreviation: 'VT'},
+            {name: 'Virgin Islands, U.S.', abbreviation: 'VI'},
+            {name: 'Virginia', abbreviation: 'VA'},
+            {name: 'Washington', abbreviation: 'WA'},
+            {name: 'West Virginia', abbreviation: 'WV'},
+            {name: 'Wisconsin', abbreviation: 'WI'},
+            {name: 'Wyoming', abbreviation: 'WY'}
         ];
     };
 
@@ -226,7 +249,11 @@
     };
 
 
-    Chance.prototype.VERSION = 0.1;
+    Chance.prototype.VERSION = "0.2.0";
+
+    Chance.prototype.mersenne_twister = function (seed) {
+        return new MersenneTwister(seed);
+    };
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
