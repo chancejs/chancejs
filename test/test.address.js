@@ -3,7 +3,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         expect = chai.expect;
 
     describe("Address", function () {
-        var zip, suffix, chance = new Chance();
+        var zip, suffix, state, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
@@ -55,6 +55,26 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+        });
+
+        describe("State", function () {
+            it("states() returns an array of states", function () {
+                expect(chance.states()).to.be.an('array');
+            });
+
+            it("state() returns a random (short) state name", function () {
+                _(1000).times(function () {
+                    state = chance.state();
+                    expect(state.length).to.be.below(3);
+                });
+            });
+
+            it("state({full: true}) returns a random (long) state name", function () {
+                _(1000).times(function () {
+                    state = chance.state({full: true});
+                    expect(state.length).to.be.above(2);
+                });
+            });
         });
     });
 });
