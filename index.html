@@ -87,49 +87,6 @@ github_url: https://github.com/victorquinn/chancejs
     </li>
   </ul>
 
-  <p>
-    Include Chance with a script tag before writing any tests
-  </p>
-
-{% highlight html %}
-<script src=chance.js></script>
-...
-<script src=mycooltests.js></script>
-{% endhighlight %}
-
-  <p>
-    Or load Chance with <a href="http://requirejs.org">RequireJS</a>
-  </p>
-
-{% highlight js %}
-  require(['Chance'], function(Chance) {
-    // Instantiate
-    var chance = new Chance();
-
-    // Then just use it:
-    var my_random_integer = chance.integer();
-  });
-{% endhighlight %}
-
-
-
-<!--
-  <p>
-    It can also be used in <a href="http://nodejs.org">Node.js</a>
-  </p>
-
-{% highlight bash %}
-  npm install chance
-{% endhighlight %}
-
-{% highlight js %}
-  require(['Chance'], function(Chance) {
-    // Use Chance here.
-  });
-{% endhighlight %}
-
--->
-
   <section id=documentation>
     <hr>
 
