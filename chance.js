@@ -204,6 +204,8 @@
         return state;
     };
 
+    // Miscellaneous
+
     // Dice - For all the board game geeks out there, myself included ;)
     Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
     Chance.prototype.d6 = function () { return this.natural({min: 1, max: 6}); };
@@ -211,6 +213,17 @@
     Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
+
+    // Guid
+    Chance.prototype.guid = function () {
+        var guid_pool = "ABCDEF1234567890",
+            guid = this.string({pool: guid_pool, length: 8}) + '-' +
+                   this.string({pool: guid_pool, length: 4}) + '-' +
+                   this.string({pool: guid_pool, length: 4}) + '-' +
+                   this.string({pool: guid_pool, length: 4}) + '-' +
+                   this.string({pool: guid_pool, length: 12});
+        return guid;
+    };
 
 
     Chance.prototype.VERSION = 0.1;
