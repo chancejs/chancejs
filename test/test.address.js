@@ -24,9 +24,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         });
 
         describe("Street", function () {
+            // Test helpers
+
             it("street suffixes returns the suffix array", function () {
                 suffixes = chance.street_suffixes();
                 expect(suffixes).to.be.an('array');
+                _.each(suffixes, function (suffix) {
+                    expect(suffix).to.have.keys('name', 'abbreviation');
+                });
+
             });
 
             it("street suffixes are short", function () {
@@ -51,7 +57,6 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(suffix.abbreviation).to.be.a('string');
                 });
             });
-
         });
 
         describe("State", function () {
