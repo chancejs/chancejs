@@ -1,12 +1,9 @@
 {
-  "name": "Chance",
+  "name": "chance",
   "version": "0.1.0",
+  "description": "ChanceJS - Random generator helper for JavaScript",
   "homepage": "http://chancejs.com",
-  "author": {
-    "name": "Victor Quinn",
-    "email": "mail@victorquinn.com",
-    "url": "http://victorquinn.com"
-  },
+  "author": "Victor Quinn <mail@victorquinn.com>",
   "bugs": {
     "url": "https://github.com/victorquinn/chancejs/issues"
   },
