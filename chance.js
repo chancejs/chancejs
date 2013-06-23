@@ -18,7 +18,8 @@
         return this.mt.random(this.seed);
     };
 
-    // Building Blocks/Basics
+    // -- Basics --
+
     Chance.prototype.bool = function () {
         return this.random() * 100 < 50;
     };
@@ -67,8 +68,7 @@
             chars = "!@#$%^&*()",
             pool = options.pool || (lower + upper + numbers + chars);
 
-        // Refactor this to use this.natural()
-        return pool.charAt(Math.floor(this.random() * pool.length));
+        return pool.charAt(this.natural({max: (pool.length - 1)}));
     };
 
     Chance.prototype.string = function (options) {
@@ -83,26 +83,9 @@
         return text;
     };
 
+    // -- End Basics --
 
-    // Address
-    // Note: only returning US zip codes, internationalization will be a whole
-    // other beast to tackle at some point.
-    Chance.prototype.zip = function (options) {
-        var zip = "";
-
-        for (var i = 0; i < 5; i++) {
-            zip += this.natural({min: 0, max: 9}).toString();
-        }
-
-        if (options && options.plusfour === true) {
-            zip += '-';
-            for (i = 0; i < 4; i++) {
-                zip += this.natural({min: 0, max: 9}).toString();
-            }
-        }
-
-        return zip;
-    };
+    // -- Address --
 
     // Street Suffix
     Chance.prototype.street_suffixes = function () {
@@ -227,7 +210,28 @@
         return state;
     };
 
-    // Miscellaneous
+    // Note: only returning US zip codes, internationalization will be a whole
+    // other beast to tackle at some point.
+    Chance.prototype.zip = function (options) {
+        var zip = "";
+
+        for (var i = 0; i < 5; i++) {
+            zip += this.natural({min: 0, max: 9}).toString();
+        }
+
+        if (options && options.plusfour === true) {
+            zip += '-';
+            for (i = 0; i < 4; i++) {
+                zip += this.natural({min: 0, max: 9}).toString();
+            }
+        }
+
+        return zip;
+    };
+
+    // -- End Address --
+
+    // -- Miscellaneous --
 
     // Dice - For all the board game geeks out there, myself included ;)
     Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
@@ -248,12 +252,13 @@
         return guid;
     };
 
-
-    Chance.prototype.VERSION = "0.2.0";
-
     Chance.prototype.mersenne_twister = function (seed) {
         return new MersenneTwister(seed);
     };
+
+    // -- End Miscellaneous --
+
+    Chance.prototype.VERSION = "0.2.0";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
