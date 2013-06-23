@@ -1,16 +1,13 @@
 define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai, _) {
-    var assert = chai.assert,
-        expect = chai.expect;
+    var expect = chai.expect;
 
     describe("Basics", function () {
-        var bool, integer, natural, chance = new Chance();
+        var bool, integer, natural, character, string, chance = new Chance();
 
         describe("Bool", function () {
             it("returns a random boolean", function () {
                 bool = chance.bool();
-                assert.isBoolean(bool);
-                assert.isNotNumber(bool);
-                assert.isNotString(bool);
+                expect(bool).to.be.a('boolean');
             });
 
             it("is within the bounds of what we'd call random", function () {
@@ -27,17 +24,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 // willing to accept it.
                 // Award to anyone that calculates the actual probability of this
                 // test failing and submits a pull request adding it to this comment!
-                expect(true_count).to.be.above(200);
-                expect(true_count).to.be.below(800);
+                expect(true_count).to.be.within(200, 800);
             });
         });
 
         describe("Integer", function () {
             it("returns a random integer", function () {
                 integer = chance.integer();
-                assert.isNotBoolean(integer);
-                assert.isNumber(integer);
-                assert.isNotString(integer);
+                expect(integer).to.be.a('number');
             });
 
             it("is sometimes negative, sometimes positive", function () {
@@ -52,8 +46,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 // Note: In very extreme circumstances this test may fail as, by its
                 // nature it's random. But it's a low enough percentage that I'm
                 // willing to accept it.
-                expect(positive_count).to.be.above(200);
-                expect(positive_count).to.be.below(800);
+                expect(positive_count).to.be.within(200, 800);
             });
 
             it("can take a negative min and obey it", function () {
@@ -66,8 +59,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("can take a negative min and negative max and obey both", function () {
                 _(1000).times(function () {
                     integer = chance.integer({min: -25, max: -1});
-                    expect(integer).to.be.above(-26);
-                    expect(integer).to.be.below(0);
+                    expect(integer).to.be.within(-26, 0);
                 });
             });
         });
@@ -75,9 +67,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         describe("Natural", function () {
             it("returns a random natural", function () {
                 natural = chance.natural();
-                assert.isNotBoolean(natural);
-                assert.isNumber(natural);
-                assert.isNotString(natural);
+                expect(natural).to.be.a('number');
             });
 
             it("is always positive", function () {
