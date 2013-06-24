@@ -181,13 +181,21 @@
 
     // -- Address --
 
-    // Address
     Chance.prototype.address = function (options) {
         options = options || {};
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
     };
 
-    // Street
+    Chance.prototype.phone = function (options) {
+        options = options || {};
+        return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
+    };
+
+    Chance.prototype.areacode = function (options) {
+        // Don't want area codes to start with 1
+        return '(' + this.natural({min: 2, max: 9}) + this.natural({min: 10, max: 98}) + ')';
+    };
+
     Chance.prototype.street = function (options) {
         options = options || {};
 
@@ -200,7 +208,6 @@
         return street;
     };
 
-    // Street Suffix
     Chance.prototype.street_suffixes = function () {
         return [
             {name: 'Avenue', abbreviation: 'Ave'},

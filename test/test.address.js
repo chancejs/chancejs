@@ -3,7 +3,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         expect = chai.expect;
 
     describe("Address", function () {
-        var zip, suffix, suffixes, state, address, chance = new Chance();
+        var zip, suffix, suffixes, state, address, phone, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
@@ -92,6 +92,26 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     address = chance.address({short_suffix: true});
                     expect(address.split(' ')[2].length).to.be.below(5);
+                });
+            });
+        });
+
+        describe("Phone Number", function () {
+            it("areacode() looks right", function () {
+                expect(chance.areacode()).to.be.an('string');
+                _(1000).times(function () {
+                    expect(chance.areacode()).to.match(/\(([0-9]{3})\)/);
+                });
+            });
+
+            it("phone() returns a string", function () {
+                expect(chance.phone()).to.be.an('string');
+            });
+
+            it("phone() looks like an actual phone number", function () {
+                _(1000).times(function () {
+                    console.log(chance.phone());
+                    expect(chance.phone()).to.match(/\(([0-9]{3})\)?[\-. ]?([0-9]{3})[\-. ]?([0-9]{4})/);
                 });
             });
         });
