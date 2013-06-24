@@ -1,6 +1,6 @@
 {
   "name": "chance",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
