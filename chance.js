@@ -1,4 +1,4 @@
-//  Chance.js 0.1
+//  Chance.js 0.2.1
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -181,6 +181,25 @@
 
     // -- Address --
 
+    // Address
+    Chance.prototype.address = function (options) {
+        options = options || {};
+        return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
+    };
+
+    // Street
+    Chance.prototype.street = function (options) {
+        options = options || {};
+
+        var street = this.word({syllables: 2});
+        street = street.charAt(0).toUpperCase() + street.substr(1);
+        street += ' ';
+        street += options.short_suffix ?
+            this.street_suffix().abbreviation :
+            this.street_suffix().name;
+        return street;
+    };
+
     // Street Suffix
     Chance.prototype.street_suffixes = function () {
         return [
@@ -352,7 +371,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.2.0";
+    Chance.prototype.VERSION = "0.2.1";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
