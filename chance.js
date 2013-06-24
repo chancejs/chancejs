@@ -85,6 +85,10 @@
         return text;
     };
 
+    Chance.prototype.capitalize = function (word) {
+        return word.charAt(0).toUpperCase() + word.substr(1);
+    };
+
     // -- End Basics --
 
     // -- Text --
@@ -159,7 +163,7 @@
         text = word_array.join(' ');
 
         // Capitalize first letter of sentence, add period at end
-        text = text.charAt(0).toUpperCase() + text.substr(1) + '.';
+        text = this.capitalize(text) + '.';
 
         return text;
     };
@@ -186,6 +190,11 @@
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
     };
 
+    Chance.prototype.city = function (options) {
+        options = options || {};
+        return this.capitalize(this.word({syllables: 3}));
+    };
+
     Chance.prototype.phone = function (options) {
         options = options || {};
         return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
@@ -200,7 +209,7 @@
         options = options || {};
 
         var street = this.word({syllables: 2});
-        street = street.charAt(0).toUpperCase() + street.substr(1);
+        street = this.capitalize(street);
         street += ' ';
         street += options.short_suffix ?
             this.street_suffix().abbreviation :

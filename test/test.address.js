@@ -98,21 +98,26 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
         describe("Phone Number", function () {
             it("areacode() looks right", function () {
-                expect(chance.areacode()).to.be.an('string');
+                expect(chance.areacode()).to.be.a('string');
                 _(1000).times(function () {
                     expect(chance.areacode()).to.match(/\(([0-9]{3})\)/);
                 });
             });
 
             it("phone() returns a string", function () {
-                expect(chance.phone()).to.be.an('string');
+                expect(chance.phone()).to.be.a('string');
             });
 
             it("phone() looks like an actual phone number", function () {
                 _(1000).times(function () {
-                    console.log(chance.phone());
                     expect(chance.phone()).to.match(/\(([0-9]{3})\)?[\-. ]?([0-9]{3})[\-. ]?([0-9]{4})/);
                 });
+            });
+        });
+
+        describe("City", function () {
+            it("city() looks right", function () {
+                expect(chance.city()).to.be.a('string');
             });
         });
     });
