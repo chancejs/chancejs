@@ -45,6 +45,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(die).to.be.within(1, 20);
             });
         });
+
+        it("returns a properly bounded d100", function () {
+            _(1000).times(function () {
+                die = chance.d100();
+                expect(die).to.be.within(1, 100);
+            });
+        });
     });
 
     describe("Guid", function () {
