@@ -93,6 +93,77 @@
 
     // -- Text --
 
+    Chance.prototype.prefixes = function () {
+        return [
+            {name: 'Doctor', abbreviation: 'Dr.'},
+            {name: 'Miss', abbreviation: 'Miss'},
+            {name: 'Misses', abbreviation: 'Mrs.'},
+            {name: 'Mister', abbreviation: 'Mr.'}
+        ];
+    };
+
+    Chance.prototype.prefix = function (options) {
+        options = options || {};
+        return options.abbreviation ?
+            this.prefixes()[this.natural({max: this.prefixes().length - 1})].abbreviation :
+            this.prefixes()[this.natural({max: this.prefixes().length - 1})].name;
+    };
+
+    Chance.prototype.name = function (options) {
+        options = options || {};
+
+        var first = this.capitalize(this.word()),
+            last = this.capitalize(this.word()),
+            name;
+
+        if (options.middle) {
+            name = first + ' ' + this.capitalize(this.word()) + ' ' + last;
+        } else if (options.middle_initial) {
+            name = first + ' ' + this.capitalize(this.character('abcdefghijklmnopqrstuvwxyz')) + ' ' + last;
+        } else {
+            name = first + ' ' + last;
+        }
+
+        if (options.prefix) {
+            name = this.prefix() + ' ' + name;
+        }
+
+        return name;
+    };
+
+    Chance.prototype.paragraph = function (options) {
+        options = options || {};
+
+        var sentences = options.sentences || this.natural({min: 3, max: 7}),
+            sentence_array = [];
+
+        for (var i = 0; i < sentences; i++) {
+            sentence_array.push(this.sentence());
+        }
+
+        return sentence_array.join(' ');
+    };
+
+    // Could get smarter about this than generating random words and
+    // chaining them together. Such as: http://vq.io/1a5ceOh
+    Chance.prototype.sentence = function (options) {
+        options = options || {};
+
+        var words = options.words || this.natural({min: 12, max: 18}),
+            text = '', word_array = [];
+
+        for (var i = 0; i < words; i++) {
+            word_array.push(this.word());
+        }
+
+        text = word_array.join(' ');
+
+        // Capitalize first letter of sentence, add period at end
+        text = this.capitalize(text) + '.';
+
+        return text;
+    };
+
     Chance.prototype.syllable = function (options) {
         options = options || {};
 
@@ -146,39 +217,6 @@
             }
         }
         return text;
-    };
-
-    // Could get smarter about this than generating random words and
-    // chaining them together. Such as: http://vq.io/1a5ceOh
-    Chance.prototype.sentence = function (options) {
-        options = options || {};
-
-        var words = options.words || this.natural({min: 12, max: 18}),
-            text = '', word_array = [];
-
-        for (var i = 0; i < words; i++) {
-            word_array.push(this.word());
-        }
-
-        text = word_array.join(' ');
-
-        // Capitalize first letter of sentence, add period at end
-        text = this.capitalize(text) + '.';
-
-        return text;
-    };
-
-    Chance.prototype.paragraph = function (options) {
-        options = options || {};
-
-        var sentences = options.sentences || this.natural({min: 3, max: 7}),
-            sentence_array = [];
-
-        for (var i = 0; i < sentences; i++) {
-            sentence_array.push(this.sentence());
-        }
-
-        return sentence_array.join(' ');
     };
 
     // -- End Text --
