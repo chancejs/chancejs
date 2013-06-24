@@ -62,6 +62,9 @@ github_url: https://github.com/victorquinn/chancejs
     developer and business-friendly
     <a href="{{ page.github_url }}/blob/master/MIT-LICENSE">MIT license</a>.
   </p>
+  <p>
+    <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://chancejs.com/" data-text="Chance - Utility library to generate random things for JavaScript" data-count="horizontal" data-via="victorquinn">Tweet</a>
+  </p>
 
   <h3 id=download>Download Chance</h3>
 
@@ -284,8 +287,7 @@ github_url: https://github.com/victorquinn/chancejs
   if (/^(localhost|chancejs)|\.(dev|local)$/.test(location.hostname) && $.os.iphone && !/Simulator/.test(navigator.userAgent))
     injectScript('livereload.js')
 
-  if (/\.com$/.test(location.hostname))
-    injectScript('http://platform.twitter.com/widgets.js')
+  injectScript('http://platform.twitter.com/widgets.js')
 </script>
 
 <script>
