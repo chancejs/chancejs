@@ -3,7 +3,7 @@ title: "Chance.js: Utility library to generate anything random for JavaScript"
 layout: default
 description: >
   Utility library to generate anything random for JavaScript
-version: 0.2
+version: 0.3.0
 github_url: https://github.com/victorquinn/chancejs
 ---
 
@@ -106,6 +106,10 @@ github_url: https://github.com/victorquinn/chancejs
     {% assign posts = site.categories.text %}
     {% include methods_full.html %}
 
+    <h2 id="text">Name</h2>
+    {% assign posts = site.categories.name %}
+    {% include methods_full.html %}
+
     <h2 id="address">Address methods</h2>
     {% assign posts = site.categories.address %}
     {% include methods_full.html %}
@@ -162,8 +166,8 @@ github_url: https://github.com/victorquinn/chancejs
   </p>
 
   <footer>
-    <p id="true-random">
-      [1] - Of course true mathematicians out there would say that this ought to be
+    <p>
+      <a id="true-random">[1]</a> - Of course true mathematicians out there would say that this ought to be
       considered as only generating pseudo-random things, not true random. For that
       we'd need some external entropy, not depending on a Mersenne Twister,
       blah, blah, blah. However, for most practical uses of this library for which
@@ -172,11 +176,9 @@ github_url: https://github.com/victorquinn/chancejs
       for any cryptographic applications requiring true-random. See
       <a href="http://vq.io/12hBd84">Wikipedia's article</a> for more info.
     </p>
-
   </footer>
 </div>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
 <script src="chance.js"></script>
 
 <script src="zepto.min.js"></script>
@@ -257,7 +259,7 @@ github_url: https://github.com/victorquinn/chancejs
 
   // change the title of the page so bookmarks have a better default
   if ($.os.ios || $.os.android)
-    document.title = 'Zepto Docs'
+    document.title = 'Chance Docs'
 
   // For retina screens, use a hi-res version of the tour image.
   // We're swapping this out on-demand (not an ideal solution)
@@ -279,7 +281,7 @@ github_url: https://github.com/victorquinn/chancejs
   tour.on('click swipeLeft', function(){ advanceTourSlide(+1) })
       .on('swipeRight', function(){ advanceTourSlide(-1) })
 
-  if (/^localhost|\.(dev|local)$/.test(location.hostname) && $.os.iphone && !/Simulator/.test(navigator.userAgent))
+  if (/^(localhost|chancejs)|\.(dev|local)$/.test(location.hostname) && $.os.iphone && !/Simulator/.test(navigator.userAgent))
     injectScript('livereload.js')
 
   if (/\.com$/.test(location.hostname))
