@@ -66,8 +66,31 @@
         var lower = "abcdefghijklmnopqrstuvwxyz",
             upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             numbers = "0123456789",
-            chars = "!@#$%^&*()",
-            pool = options.pool || (lower + upper + numbers + chars);
+            symbols = "!@#$%^&*()[]",
+            letters, pool;
+
+        if (options.alpha && options.symbols) {
+            throw new RangeError("Chance: Cannot specify both alpha and symbols.");
+        }
+
+
+        if (options.casing === 'lower') {
+            letters = lower;
+        } else if (options.casing === 'upper') {
+            letters = upper;
+        } else {
+            letters = lower + upper;
+        }
+
+        if (options.pool) {
+            pool = options.pool;
+        } else if (options.alpha) {
+            pool = letters;
+        } else if (options.symbols) {
+            pool = symbols;
+        } else {
+            pool = letters + numbers + symbols;
+        }
 
         return pool.charAt(this.natural({max: (pool.length - 1)}));
     };
@@ -104,9 +127,9 @@
 
     Chance.prototype.prefix = function (options) {
         options = options || {};
-        return options.abbreviation ?
-            this.prefixes()[this.natural({max: this.prefixes().length - 1})].abbreviation :
-            this.prefixes()[this.natural({max: this.prefixes().length - 1})].name;
+        return options.full ?
+            this.prefixes()[this.natural({max: this.prefixes().length - 1})].name :
+            this.prefixes()[this.natural({max: this.prefixes().length - 1})].abbreviation;
     };
 
     Chance.prototype.name = function (options) {
@@ -119,7 +142,7 @@
         if (options.middle) {
             name = first + ' ' + this.capitalize(this.word()) + ' ' + last;
         } else if (options.middle_initial) {
-            name = first + ' ' + this.capitalize(this.character('abcdefghijklmnopqrstuvwxyz')) + ' ' + last;
+            name = first + ' ' + this.capitalize(this.character({alpha: true, casing: 'upper'})) + '. ' + last;
         } else {
             name = first + ' ' + last;
         }

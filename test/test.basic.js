@@ -118,6 +118,33 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(character).to.match(/[abcde]/);
                 });
             });
+
+            it("allows only alpha", function () {
+                _(1000).times(function () {
+                    character = chance.character({alpha: true});
+                    expect(character).to.match(/[a-zA-Z]/);
+                });
+
+                expect(function () { chance.character({alpha: true, symbols: true}); }).to.throw(RangeError);
+            });
+
+            it("obeys case", function () {
+                _(1000).times(function () {
+                    character = chance.character({alpha: true});
+                    expect(character).to.match(/[a-zA-Z]/);
+                });
+
+                _(1000).times(function () {
+                    character = chance.character({alpha: true, casing: 'upper'});
+                    expect(character).to.match(/[A-Z]/);
+                });
+
+                _(1000).times(function () {
+                    character = chance.character({alpha: true, casing: 'lower'});
+                    expect(character).to.match(/[a-z]/);
+                });
+            });
+
         });
 
         describe("String", function () {
