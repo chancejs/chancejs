@@ -136,8 +136,8 @@
     Chance.prototype.name_prefix = function (options) {
         options = options || {};
         return options.full ?
-            this.name_prefixes()[this.natural({max: this.name_prefixes().length - 1})].name :
-            this.name_prefixes()[this.natural({max: this.name_prefixes().length - 1})].abbreviation;
+            this.pick(this.name_prefixes()).name :
+            this.pick(this.name_prefixes()).abbreviation;
     };
 
     Chance.prototype.name = function (options) {
@@ -287,6 +287,7 @@
     };
 
     Chance.prototype.street_suffixes = function () {
+        // These are the most common suffixes.
         return [
             {name: 'Avenue', abbreviation: 'Ave'},
             {name: 'Boulevard', abbreviation: 'Blvd'},
@@ -327,10 +328,7 @@
     };
 
     Chance.prototype.street_suffix = function (options) {
-        // These are the most common suffixes.
-        var suffixes = this.street_suffixes(options),
-            suffix = suffixes[this.natural({max: suffixes.length - 1})];
-        return suffix;
+        return this.pick(this.street_suffixes(options));
     };
 
     Chance.prototype.states = function () {
@@ -400,12 +398,9 @@
     };
 
     Chance.prototype.state = function (options) {
-        var states = this.states(),
-            state = (options && options.full) ?
-              states[this.natural({max: states.length - 1})].name :
-              states[this.natural({max: states.length - 1})].abbreviation;
-
-        return state;
+        return (options && options.full) ?
+            this.pick(this.states()).name :
+            this.pick(this.states()).abbreviation;
     };
 
     // Note: only returning US zip codes, internationalization will be a whole
