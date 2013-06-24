@@ -108,15 +108,23 @@
         return text;
     };
 
+    // -- End Basics --
+
+    // -- Helpers --
+
     Chance.prototype.capitalize = function (word) {
         return word.charAt(0).toUpperCase() + word.substr(1);
     };
 
-    // -- End Basics --
+    Chance.prototype.pick = function (arr) {
+        return arr[this.natural({max: arr.length - 1})];
+    };
+
+    // -- End Helpers --
 
     // -- Text --
 
-    Chance.prototype.prefixes = function () {
+    Chance.prototype.name_prefixes = function () {
         return [
             {name: 'Doctor', abbreviation: 'Dr.'},
             {name: 'Miss', abbreviation: 'Miss'},
@@ -125,11 +133,11 @@
         ];
     };
 
-    Chance.prototype.prefix = function (options) {
+    Chance.prototype.name_prefix = function (options) {
         options = options || {};
         return options.full ?
-            this.prefixes()[this.natural({max: this.prefixes().length - 1})].name :
-            this.prefixes()[this.natural({max: this.prefixes().length - 1})].abbreviation;
+            this.name_prefixes()[this.natural({max: this.name_prefixes().length - 1})].name :
+            this.name_prefixes()[this.natural({max: this.name_prefixes().length - 1})].abbreviation;
     };
 
     Chance.prototype.name = function (options) {
@@ -142,7 +150,7 @@
         if (options.middle) {
             name = first + ' ' + this.capitalize(this.word()) + ' ' + last;
         } else if (options.middle_initial) {
-            name = first + ' ' + this.capitalize(this.character({alpha: true, casing: 'upper'})) + '. ' + last;
+            name = first + ' ' + this.character({alpha: true, casing: 'upper'}) + '. ' + last;
         } else {
             name = first + ' ' + last;
         }

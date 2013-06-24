@@ -34,10 +34,10 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
         });
 
-        describe("prefix()", function () {
+        describe("name_prefix()", function () {
             it("returns a random prefix", function () {
                 _(1000).times(function () {
-                    prefix = chance.prefix();
+                    prefix = chance.name_prefix();
                     expect(prefix).to.be.a('string');
                     expect(prefix).to.have.length.below(5);
                 });
@@ -45,7 +45,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
             it("can get full prefix", function () {
                 _(1000).times(function () {
-                    prefix = chance.prefix({full: true});
+                    prefix = chance.name_prefix({full: true});
                     expect(prefix).to.be.a('string');
                     expect(prefix).to.have.length.above(3);
                 });
