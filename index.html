@@ -42,6 +42,10 @@ github_url: https://github.com/victorquinn/chancejs
   {% assign posts = site.categories.address %}
   {% include methods_sidebar.html %}
 
+  <a class=toc_title href="#helpers">Helpers</a>
+  {% assign posts = site.categories.helpers %}
+  {% include methods_sidebar.html %}
+
   <a class=toc_title href="#miscellaneous">Miscellaneous</a>
   {% assign posts = site.categories.miscellaneous %}
   {% include methods_sidebar.html %}
@@ -117,8 +121,8 @@ github_url: https://github.com/victorquinn/chancejs
     {% assign posts = site.categories.name %}
     {% include methods_full.html %}
 
-    <h2 id="address">Address methods</h2>
-    {% assign posts = site.categories.address %}
+    <h2 id="helpers">Helpers</h2>
+    {% assign posts = site.categories.helpers %}
     {% include methods_full.html %}
 
     <h2 id="miscellaneous">Miscellaneous methods</h2>

@@ -1,14 +1,14 @@
 ---
-title: prefix
+title: name_prefix
 signature: |
-    chance.prefix()
-    chance.prefix({full: true})
+    chance.name_prefix()
+    chance.name_prefix({full: true})
 ---
 
 Generate a random name prefix
 
 {% highlight js %}
-  Chance.prefix();
+  chance.name_prefix();
   => 'Mrs.'
 {% endhighlight %}
 
@@ -17,6 +17,6 @@ By default, returns the shorter version.
 Optionally get back the full version.
 
 {% highlight js %}
-  Chance.prefix({full: true});
+  chance.name_prefix({full: true});
   => 'Mister'
 {% endhighlight %}

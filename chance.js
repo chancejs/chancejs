@@ -108,15 +108,23 @@
         return text;
     };
 
+    // -- End Basics --
+
+    // -- Helpers --
+
     Chance.prototype.capitalize = function (word) {
         return word.charAt(0).toUpperCase() + word.substr(1);
     };
 
-    // -- End Basics --
+    Chance.prototype.pick = function (arr) {
+        return arr[this.natural({max: arr.length - 1})];
+    };
+
+    // -- End Helpers --
 
     // -- Text --
 
-    Chance.prototype.prefixes = function () {
+    Chance.prototype.name_prefixes = function () {
         return [
             {name: 'Doctor', abbreviation: 'Dr.'},
             {name: 'Miss', abbreviation: 'Miss'},
@@ -125,11 +133,11 @@
         ];
     };
 
-    Chance.prototype.prefix = function (options) {
+    Chance.prototype.name_prefix = function (options) {
         options = options || {};
         return options.full ?
-            this.prefixes()[this.natural({max: this.prefixes().length - 1})].name :
-            this.prefixes()[this.natural({max: this.prefixes().length - 1})].abbreviation;
+            this.pick(this.name_prefixes()).name :
+            this.pick(this.name_prefixes()).abbreviation;
     };
 
     Chance.prototype.name = function (options) {
@@ -142,7 +150,7 @@
         if (options.middle) {
             name = first + ' ' + this.capitalize(this.word()) + ' ' + last;
         } else if (options.middle_initial) {
-            name = first + ' ' + this.capitalize(this.character({alpha: true, casing: 'upper'})) + '. ' + last;
+            name = first + ' ' + this.character({alpha: true, casing: 'upper'}) + '. ' + last;
         } else {
             name = first + ' ' + last;
         }
@@ -279,6 +287,7 @@
     };
 
     Chance.prototype.street_suffixes = function () {
+        // These are the most common suffixes.
         return [
             {name: 'Avenue', abbreviation: 'Ave'},
             {name: 'Boulevard', abbreviation: 'Blvd'},
@@ -319,10 +328,7 @@
     };
 
     Chance.prototype.street_suffix = function (options) {
-        // These are the most common suffixes.
-        var suffixes = this.street_suffixes(options),
-            suffix = suffixes[this.natural({max: suffixes.length - 1})];
-        return suffix;
+        return this.pick(this.street_suffixes(options));
     };
 
     Chance.prototype.states = function () {
@@ -392,12 +398,9 @@
     };
 
     Chance.prototype.state = function (options) {
-        var states = this.states(),
-            state = (options && options.full) ?
-              states[this.natural({max: states.length - 1})].name :
-              states[this.natural({max: states.length - 1})].abbreviation;
-
-        return state;
+        return (options && options.full) ?
+            this.pick(this.states()).name :
+            this.pick(this.states()).abbreviation;
     };
 
     // Note: only returning US zip codes, internationalization will be a whole
