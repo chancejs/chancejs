@@ -3,7 +3,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         expect = chai.expect;
 
     describe("Address", function () {
-        var zip, suffix, state, chance = new Chance();
+        var zip, suffix, suffixes, state, address, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
@@ -24,8 +24,6 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         });
 
         describe("Street", function () {
-            // Test helpers
-
             it("street suffixes returns the suffix array", function () {
                 suffixes = chance.street_suffixes();
                 expect(suffixes).to.be.an('array');
@@ -75,6 +73,25 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     state = chance.state({full: true});
                     expect(state.length).to.be.above(2);
+                });
+            });
+        });
+
+        describe("Address", function () {
+            it("address() returns a string", function () {
+                expect(chance.address()).to.be.an('string');
+            });
+
+            it("address() starts with a number", function () {
+                _(1000).times(function () {
+                    expect(chance.address()).to.match(/[0-9]+.+/);
+                });
+            });
+
+            it("address() can take short_suffix arg and obey it", function () {
+                _(1000).times(function () {
+                    address = chance.address({short_suffix: true});
+                    expect(address.split(' ')[2].length).to.be.below(5);
                 });
             });
         });

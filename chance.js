@@ -181,6 +181,25 @@
 
     // -- Address --
 
+    // Address
+    Chance.prototype.address = function (options) {
+        options = options || {};
+        return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
+    };
+
+    // Street
+    Chance.prototype.street = function (options) {
+        options = options || {};
+
+        var street = this.word({syllables: 2});
+        street = street.charAt(0).toUpperCase() + street.substr(1);
+        street += ' ';
+        street += options.short_suffix ?
+            this.street_suffix().abbreviation :
+            this.street_suffix().name;
+        return street;
+    };
+
     // Street Suffix
     Chance.prototype.street_suffixes = function () {
         return [
