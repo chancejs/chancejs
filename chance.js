@@ -407,6 +407,7 @@
     Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
+    Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
 
     // Guid
     Chance.prototype.guid = function () {
