@@ -1,4 +1,4 @@
-//  Chance.js 0.3.0
+//  Chance.js 0.3.1
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -44,8 +44,8 @@
         var num, range;
 
         options = options || {};
-        options.min = options.min || -9007199254740992;
-        options.max = options.max || 9007199254740992;
+        options.min = (typeof options.min !== "undefined") ? options.min : -9007199254740992;
+        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
 
         // Greatest of absolute value of either max or min so we know we're
         // including the entire search domain.
@@ -258,11 +258,30 @@
 
     // -- Web --
 
-    Chance.prototype.tlds = function() {
-        return ['com', 'org', 'edu', 'gov', 'co.uk', '.net', '.io'];
+    Chance.prototype.domain = function (options) {
+        options = options || {};
+        return this.word() + '.' + (options.tld || this.tld());
     };
 
-    Chance.prototype.tld = function() {
+    Chance.prototype.email = function (options) {
+        options = options || {};
+        return this.word() + '@' + (options.domain || this.domain());
+    };
+
+    Chance.prototype.ip = function () {
+        // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
+        // this should probably be updated to account for that rare as it may be
+        return this.natural({max: 255}) + '.' +
+               this.natural({max: 255}) + '.' +
+               this.natural({max: 255}) + '.' +
+               this.natural({max: 255});
+    };
+
+    Chance.prototype.tlds = function () {
+        return ['com', 'org', 'edu', 'gov', 'co.uk', 'net', 'io'];
+    };
+
+    Chance.prototype.tld = function () {
         return this.pick(this.tlds());
     };
 
@@ -468,7 +487,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.3.0";
+    Chance.prototype.VERSION = "0.3.1";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
