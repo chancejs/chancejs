@@ -49,6 +49,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(positive_count).to.be.within(200, 800);
             });
 
+            it("can take a zero min and obey it", function () {
+                _(1000).times(function () {
+                    integer = chance.integer({min: 0});
+                    expect(integer).to.be.above(0);
+                });
+            });
+
             it("can take a negative min and obey it", function () {
                 _(1000).times(function () {
                     integer = chance.integer({min: -25});

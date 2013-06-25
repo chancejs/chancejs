@@ -44,7 +44,7 @@
         var num, range;
 
         options = options || {};
-        options.min = (typeof options.max !== "undefined") ? options.min : -9007199254740992;
+        options.min = (typeof options.min !== "undefined") ? options.min : -9007199254740992;
         options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
 
         // Greatest of absolute value of either max or min so we know we're
