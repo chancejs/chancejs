@@ -124,44 +124,6 @@
 
     // -- Text --
 
-    Chance.prototype.name_prefixes = function () {
-        return [
-            {name: 'Doctor', abbreviation: 'Dr.'},
-            {name: 'Miss', abbreviation: 'Miss'},
-            {name: 'Misses', abbreviation: 'Mrs.'},
-            {name: 'Mister', abbreviation: 'Mr.'}
-        ];
-    };
-
-    Chance.prototype.name_prefix = function (options) {
-        options = options || {};
-        return options.full ?
-            this.pick(this.name_prefixes()).name :
-            this.pick(this.name_prefixes()).abbreviation;
-    };
-
-    Chance.prototype.name = function (options) {
-        options = options || {};
-
-        var first = this.capitalize(this.word()),
-            last = this.capitalize(this.word()),
-            name;
-
-        if (options.middle) {
-            name = first + ' ' + this.capitalize(this.word()) + ' ' + last;
-        } else if (options.middle_initial) {
-            name = first + ' ' + this.character({alpha: true, casing: 'upper'}) + '. ' + last;
-        } else {
-            name = first + ' ' + last;
-        }
-
-        if (options.prefix) {
-            name = this.prefix() + ' ' + name;
-        }
-
-        return name;
-    };
-
     Chance.prototype.paragraph = function (options) {
         options = options || {};
 
@@ -251,6 +213,60 @@
     };
 
     // -- End Text --
+
+    // -- Name --
+
+    Chance.prototype.name = function (options) {
+        options = options || {};
+
+        var first = this.capitalize(this.word()),
+            last = this.capitalize(this.word()),
+            name;
+
+        if (options.middle) {
+            name = first + ' ' + this.capitalize(this.word()) + ' ' + last;
+        } else if (options.middle_initial) {
+            name = first + ' ' + this.character({alpha: true, casing: 'upper'}) + '. ' + last;
+        } else {
+            name = first + ' ' + last;
+        }
+
+        if (options.prefix) {
+            name = this.prefix() + ' ' + name;
+        }
+
+        return name;
+    };
+
+    Chance.prototype.name_prefixes = function () {
+        return [
+            {name: 'Doctor', abbreviation: 'Dr.'},
+            {name: 'Miss', abbreviation: 'Miss'},
+            {name: 'Misses', abbreviation: 'Mrs.'},
+            {name: 'Mister', abbreviation: 'Mr.'}
+        ];
+    };
+
+    Chance.prototype.name_prefix = function (options) {
+        options = options || {};
+        return options.full ?
+            this.pick(this.name_prefixes()).name :
+            this.pick(this.name_prefixes()).abbreviation;
+    };
+
+    // -- End Name --
+
+    // -- Web --
+
+    Chance.prototype.tlds = function() {
+        return ['com', 'org', 'edu', 'gov', 'co.uk', '.net', '.io'];
+    };
+
+    Chance.prototype.tld = function() {
+        return this.pick(this.tlds());
+    };
+
+    // -- End Web --
 
     // -- Address --
 
