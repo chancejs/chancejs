@@ -258,11 +258,30 @@
 
     // -- Web --
 
-    Chance.prototype.tlds = function() {
+    Chance.prototype.domain = function (options) {
+        options = options || {};
+        return this.word() + '.' + (options.tld || this.tld());
+    };
+
+    Chance.prototype.email = function (options) {
+        options = options || {};
+        return this.word() + '@' + (options.domain || this.domain());
+    };
+
+    Chance.prototype.ip = function () {
+        // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
+        // this should probably be updated to account for that rare as it may be
+        return this.natural({max: 255}) + '.' +
+               this.natural({max: 255}) + '.' +
+               this.natural({max: 255}) + '.' +
+               this.natural({max: 255});
+    };
+
+    Chance.prototype.tlds = function () {
         return ['com', 'org', 'edu', 'gov', 'co.uk', 'net', 'io'];
     };
 
-    Chance.prototype.tld = function() {
+    Chance.prototype.tld = function () {
         return this.pick(this.tlds());
     };
 
