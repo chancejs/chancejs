@@ -256,6 +256,18 @@
 
     // -- End Name --
 
+    // -- Web --
+
+    Chance.prototype.tlds = function() {
+        return ['com', 'org', 'edu', 'gov', 'co.uk', '.net', '.io'];
+    };
+
+    Chance.prototype.tld = function() {
+        return this.pick(this.tlds());
+    };
+
+    // -- End Web --
+
     // -- Address --
 
     Chance.prototype.address = function (options) {
