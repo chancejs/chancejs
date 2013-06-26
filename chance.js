@@ -49,7 +49,7 @@
 
         // Greatest of absolute value of either max or min so we know we're
         // including the entire search domain.
-        range = Math.max(Math.abs(options.min), Math.abs(options.min));
+        range = Math.max(Math.abs(options.min), Math.abs(options.max));
 
         // Probably a better way to do this...
         do {
