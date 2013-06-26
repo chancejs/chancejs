@@ -32,6 +32,9 @@
     "uglify-js": "1.2.6",
     "underscore": "*"
   },
+  "scripts": {
+    "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
+  },
   "keywords": [
     "random",
     "generator",
