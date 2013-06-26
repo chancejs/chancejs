@@ -69,6 +69,19 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(integer).to.be.within(-26, 0);
                 });
             });
+
+            it("can take a min with absolute value less than the max and return in range above", function () {
+                var count = 0;
+                _(1000).times(function () {
+                    // With a range this large we'd expect most values to be
+                    // greater than 1 if this works correctly.
+                    integer = chance.integer({min: -1, max: 1000000});
+                    if (Math.abs(integer) < 2) {
+                        count++;
+                    }
+                });
+                expect(count).to.not.be.above(900);
+            });
         });
 
         describe("Natural", function () {
