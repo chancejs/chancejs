@@ -61,6 +61,8 @@
     };
     
     Chance.prototype.normal = function(options) {
+        options = options || {};
+        
         // The Marsaglia Polar method
         var s, u, v, norm,
             mean = options.mean || 0,
