@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Basics", function () {
-        var bool, integer, natural, character, string, chance = new Chance();
+        var bool, integer, natural, floating, character, string, temp, chance = new Chance();
 
         describe("Bool", function () {
             it("returns a random boolean", function () {
@@ -136,6 +136,40 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
             it("throws an error if min > max", function () {
                 expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
+            });
+        });
+
+        describe("Floating", function () {
+            it("returns a random floating", function () {
+                floating = chance.floating();
+                expect(floating).to.be.a('number');
+            });
+
+            it("can take both a max and min and obey them both", function () {
+                _(1000).times(function () {
+                    floating = chance.floating({min: 90, max: 100});
+                    expect(floating).to.be.within(90, 100);
+                });
+            });
+
+            it("won't take fixed + min that would be out of range", function () {
+                expect(function () { chance.floating({fixed: 13, min: -9007199254740992}); }).to.throw(RangeError);
+            });
+
+            it("won't take fixed + max that would be out of range", function () {
+                expect(function () { chance.floating({fixed: 13, max: 9007199254740992}); }).to.throw(RangeError);
+            });
+
+            it("can take fixed and obey it", function () {
+                _(1000).times(function () {
+                    floating = chance.floating({fixed: 3});
+                    temp = parseFloat(floating.toFixed(3));
+                    expect(floating).to.equal(temp);
+                });
+            });
+
+            it("won't take both fixed and precision", function () {
+                expect(function () { chance.floating({fixed: 2, precision: 8}); }).to.throw(RangeError);
             });
         });
 

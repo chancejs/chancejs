@@ -64,6 +64,36 @@
         return num;
     };
 
+    // Note, wanted to use "float" or "double" but those are both JS reserved words.
+    Chance.prototype.floating = function (options) {
+        var num, range, buffer;
+
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 2;
+        fixed = Math.pow(10, options.fixed);
+
+        if (options.min && options.fixed && options.min < (-9007199254740992 / fixed)) {
+            throw new RangeError("Chance: Min specified is out of range with fixed. Min" +
+                                 "should be, at least, " + (-9007199254740992 / fixed));
+        } else if (options.max && options.fixed && options.max > (9007199254740992 / fixed)) {
+            throw new RangeError("Chance: Max specified is out of range with fixed. Max" +
+                                 "should be, at most, " + (9007199254740992 / fixed));
+        }
+        options.min = (typeof options.min !== "undefined") ? options.min : -9007199254740992 / fixed;
+        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992 / fixed;
+
+        // Todo - Make this work!
+        // options.precision = (typeof options.precision !== "undefined") ? options.precision : false;
+
+        if (options.fixed && options.precision) {
+            throw new RangeError("Chance: Cannot specify both fixed and precision.");
+        }
+
+        num = this.integer({min: options.min * fixed, max: options.max * fixed});
+
+        return parseFloat((num / fixed).toFixed(options.fixed));
+    };
+
     Chance.prototype.character = function (options) {
         options = options || {};
 
