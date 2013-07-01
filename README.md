@@ -44,7 +44,7 @@ Chance also includes an AMD define so it can be used with RequireJS.
 
 And it can be used in Node.js.
 
-    var Chance = require('Chance'),
+    var Chance = require('chance'),
         chance = new Chance();
         
     // Get a random zip code
