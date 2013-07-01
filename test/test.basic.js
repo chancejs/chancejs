@@ -122,6 +122,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(natural).to.be.within(89, 101);
                 });
             });
+
+            it("works with both bounds 0", function () {
+                _(1000).times(function () {
+                    natural = chance.natural({min: 0, max: 0});
+                    expect(natural).to.equal(0);
+                });
+            });
         });
 
         describe("Character", function () {
