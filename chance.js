@@ -1,4 +1,4 @@
-//  Chance.js 0.3.1
+//  Chance.js 0.3.2
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -32,10 +32,10 @@
 
     Chance.prototype.natural = function (options) {
         options = options || {};
-        options.min = options.min || 0;
+        options.min = (typeof options.min !== "undefined") ? options.min : 0;
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
-        options.max = options.max || 9007199254740992;
+        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
 
         return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
     };
@@ -216,11 +216,20 @@
 
     // -- Name --
 
+    // Perhaps make this more intelligent at some point
+    Chance.prototype.first = function (options) {
+        return this.capitalize(this.word());
+    };
+
+    Chance.prototype.last = function (options) {
+        return this.capitalize(this.word());
+    };
+
     Chance.prototype.name = function (options) {
         options = options || {};
 
-        var first = this.capitalize(this.word()),
-            last = this.capitalize(this.word()),
+        var first = this.first(),
+            last = this.last(),
             name;
 
         if (options.middle) {
@@ -245,6 +254,11 @@
             {name: 'Misses', abbreviation: 'Mrs.'},
             {name: 'Mister', abbreviation: 'Mr.'}
         ];
+    };
+
+    // Alias for name_prefix
+    Chance.prototype.prefix = function (options) {
+        return this.name_prefix(options);
     };
 
     Chance.prototype.name_prefix = function (options) {
@@ -487,7 +501,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.3.1";
+    Chance.prototype.VERSION = "0.3.2";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
