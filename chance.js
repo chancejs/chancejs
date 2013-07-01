@@ -216,11 +216,20 @@
 
     // -- Name --
 
+    // Perhaps make this more intelligent at some point
+    Chance.prototype.first = function (options) {
+        return this.capitalize(this.word());
+    };
+
+    Chance.prototype.last = function (options) {
+        return this.capitalize(this.word());
+    };
+
     Chance.prototype.name = function (options) {
         options = options || {};
 
-        var first = this.capitalize(this.word()),
-            last = this.capitalize(this.word()),
+        var first = this.first(),
+            last = this.last(),
             name;
 
         if (options.middle) {
@@ -245,6 +254,11 @@
             {name: 'Misses', abbreviation: 'Mrs.'},
             {name: 'Mister', abbreviation: 'Mr.'}
         ];
+    };
+
+    // Alias for name_prefix
+    Chance.prototype.prefix = function (options) {
+        return this.name_prefix(options);
     };
 
     Chance.prototype.name_prefix = function (options) {
