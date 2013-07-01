@@ -319,8 +319,11 @@
     };
 
     Chance.prototype.areacode = function (options) {
+        options = options || {};
+        options.parens = (typeof options.parens !== "undefined") ? options.parens : true;
         // Don't want area codes to start with 1
-        return '(' + this.natural({min: 2, max: 9}) + this.natural({min: 10, max: 98}) + ')';
+        var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 10, max: 98}).toString();
+        return options.parens ? '(' + areacode + ')' : areacode;
     };
 
     Chance.prototype.street = function (options) {
