@@ -502,10 +502,25 @@
     };
 
     Chance.prototype.cc_types = function () {
+        // http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
         return [
-            {name: "Visa", prefix: '4', length: 16},
             {name: "American Express", prefix: '34', length: 15},
-            {name: "Mastercard", prefix: '51', length: 16}
+            {name: "Bankcard", prefix: '5610', length: 16},
+            {name: "China UnionPay", prefix: '62', length: 16},
+            {name: "Diners Club Carte Blanche", prefix: '300', length: 14},
+            {name: "Diners Club enRoute", prefix: '2014', length: 15},
+            {name: "Diners Club International", prefix: '36', length: 14},
+            {name: "Diners Club United States & Canada", prefix: '54', length: 16},
+            {name: "Discover Card", prefix: '6011', length: 16},
+            {name: "InstaPayment", prefix: '637', length: 16},
+            {name: "JCB", prefix: '3528', length: 16},
+            {name: "Laser", prefix: '6304', length: 16},
+            {name: "Maestro", prefix: '5018', length: 16},
+            {name: "Mastercard", prefix: '51', length: 16},
+            {name: "Solo", prefix: '6334', length: 16},
+            {name: "Switch", prefix: '4903', length: 16},
+            {name: "Visa", prefix: '4', length: 16},
+            {name: "Visa Electron", prefix: '4026', length: 16},
         ];
     };
 
