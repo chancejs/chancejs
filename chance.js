@@ -478,17 +478,16 @@
     Chance.prototype.cc_number = function (options) {
         options = options || {};
 
-        var length = options.length || 16,
-            prefix = "4",
-            number = prefix,
+        var type = this.cc_type({ raw: true }),
+            number = type.prefix,
             last = null,
-            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            to_generate = type.length - type.prefix.length - 1;
 
         // Generates n - 1 digits
-        for (var i = 0; i < length - 1; i++) {
+        for (var i = 0; i < to_generate - 1; i++) {
             number = number + this.integer({min: 0, max: 9}).toString();
         }
-
 
         // Generates the last digit according to Luhn algorithm
         do {
