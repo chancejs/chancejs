@@ -498,6 +498,18 @@
         return number + last;
     };
 
+    Chance.prototype.cc_types = function () {
+        return [
+            {type: "Visa", prefix: '4', length: 16},
+            {type: "American Express", prefix: '34', length: 15},
+            {type: "Mastercard", prefix: '51', length: 16}
+        ];
+    };
+
+    Chance.prototype.cc_type = function () {
+        return this.pick(this.cc_types()).type;
+    };
+
     // -- End Credit Card
 
     // -- Miscellaneous --
