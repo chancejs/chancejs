@@ -509,8 +509,10 @@
         ];
     };
 
-    Chance.prototype.cc_type = function () {
-        return this.pick(this.cc_types()).type;
+    Chance.prototype.cc_type = function (options) {
+        return (options && options.raw) ?
+            this.pick(this.cc_types()) :
+            this.pick(this.cc_types()).type;
     };
 
     // -- End Credit Card
