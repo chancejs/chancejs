@@ -473,6 +473,33 @@
 
     // -- End Address --
 
+    // -- Credit Card --
+
+    Chance.prototype.cc_number = function (options) {
+        options = options || {};
+
+        var length = options.length || 16,
+            prefix = "4",
+            number = prefix,
+            last = null,
+            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+        // Generates n - 1 digits
+        for (var i = 0; i < length - 1; i++) {
+            number = number + this.integer({min: 0, max: 9}).toString();
+        }
+
+
+        // Generates the last digit according to Luhn algorithm
+        do {
+            last = digits.splice(0, 1);
+        } while (!this.luhn_check(number + last));
+
+        return number + last;
+    };
+
+    // -- End Credit Card
+
     // -- Miscellaneous --
 
     // Dice - For all the board game geeks out there, myself included ;)
