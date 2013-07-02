@@ -499,6 +499,14 @@
         return new MersenneTwister(seed);
     };
 
+    Chance.prototype.luhn_check = function (num) {
+        var luhnArr = [[0, 2, 4, 6, 8, 1, 3, 5, 7, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]], sum = 0;
+        num.toString().replace(/\D+/g, "").replace(/[\d]/g, function (c, p, o) {
+            sum += luhnArr[(o.length - p) & 1][parseInt(c, 10)];
+        });
+        return (sum % 10 === 0) && (sum > 0);
+    };
+
     // -- End Miscellaneous --
 
     Chance.prototype.VERSION = "0.3.2";
