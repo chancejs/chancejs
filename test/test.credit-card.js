@@ -33,6 +33,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(type).to.have.property('length').with.a('number');
                 });
             });
+
+            it("cc_type() can take a name arg and obey to it", function () {
+                _(1000).times(function () {
+                    type = chance.cc_type({ name: "Visa", raw: true });
+                    expect(type.name).to.equal("Visa");
+                });
+            });
         });
 
         describe("Number", function () {
