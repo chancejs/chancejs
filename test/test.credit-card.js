@@ -13,6 +13,19 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("Types", function () {
+            it("cc_types() returns an array of credit card types", function () {
+                expect(chance.cc_types()).to.be.an('array');
+            });
+
+            it("cc_type() returns a random credit card type", function () {
+                _(1000).times(function () {
+                    type = chance.cc_type();
+                    expect(type).to.be.a("string");
+                });
+            });
+        });
+
         describe("Number", function () {
 
             it("passes the Luhn algorithm", function () {
