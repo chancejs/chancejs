@@ -28,7 +28,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("cc_type() can take a raw arg and obey it", function () {
                 _(1000).times(function () {
                     type = chance.cc_type({ raw: true });
-                    expect(type).to.have.property('type').with.a('string');
+                    expect(type).to.have.property('name').with.a('string');
                     expect(type).to.have.property('prefix').with.a('string');
                     expect(type).to.have.property('length').with.a('number');
                 });

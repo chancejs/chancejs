@@ -499,16 +499,16 @@
 
     Chance.prototype.cc_types = function () {
         return [
-            {type: "Visa", prefix: '4', length: 16},
-            {type: "American Express", prefix: '34', length: 15},
-            {type: "Mastercard", prefix: '51', length: 16}
+            {name: "Visa", prefix: '4', length: 16},
+            {name: "American Express", prefix: '34', length: 15},
+            {name: "Mastercard", prefix: '51', length: 16}
         ];
     };
 
     Chance.prototype.cc_type = function (options) {
         return (options && options.raw) ?
             this.pick(this.cc_types()) :
-            this.pick(this.cc_types()).type;
+            this.pick(this.cc_types()).name;
     };
 
     // -- End Credit Card
