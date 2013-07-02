@@ -13,6 +13,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("Number", function () {
+
+            it("passes the Luhn algorithm", function () {
+                _(1000).times(function () {
+                    number = chance.cc_number();
+                    expect(chance.luhn_check(number)).to.equal(true);
+                });
+            });
+
+        });
+
     });
 
 });
