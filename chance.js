@@ -478,14 +478,18 @@
     Chance.prototype.cc_number = function (options) {
         options = options || {};
 
-        var type = this.cc_type({ raw: true }),
-            number = type.prefix,
+        var type, number, to_generate,
             last = null,
-            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            to_generate = type.length - type.prefix.length - 1;
+            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+        type = (options.type) ?
+                    this.cc_type({ name: options.type, raw: true }) :
+                    this.cc_type({ raw: true });
+        number = type.prefix;
+        to_generate = type.length - type.prefix.length - 1;
 
         // Generates n - 1 digits
-        for (var i = 0; i < to_generate - 1; i++) {
+        for (var i = 0; i < to_generate; i++) {
             number = number + this.integer({min: 0, max: 9}).toString();
         }
 
