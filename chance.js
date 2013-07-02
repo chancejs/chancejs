@@ -509,9 +509,27 @@
     };
 
     Chance.prototype.cc_type = function (options) {
+        options = options || {};
+        var types = this.cc_types(),
+            type = null;
+
+        if (options.name) {
+            for (var i = 0; i < types.length; i++) {
+                if (types[i].name === options.name) {
+                    type = types[i];
+                    break;
+                }
+            }
+            if (type === null) {
+                throw new Error("Credit card type '" + options.name + "'' is not suppoted");
+            }
+        } else {
+            type = this.pick(types);
+        }
+
         return (options && options.raw) ?
-            this.pick(this.cc_types()) :
-            this.pick(this.cc_types()).name;
+            type :
+            type.name;
     };
 
     // -- End Credit Card
