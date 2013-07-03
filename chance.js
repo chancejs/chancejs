@@ -546,9 +546,7 @@
             type = this.pick(types);
         }
 
-        return (options && options.raw) ?
-            type :
-            type.name;
+        return options.raw ? type : type.name;
     };
 
     // -- End Credit Card
