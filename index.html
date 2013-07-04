@@ -46,6 +46,10 @@ github_url: https://github.com/victorquinn/chancejs
   {% assign posts = site.categories.address %}
   {% include methods_sidebar.html %}
 
+  <a class=toc_title href="#finance">Finance</a>
+  {% assign posts = site.categories.finance %}
+  {% include methods_sidebar.html %}
+
   <a class=toc_title href="#helpers">Helpers</a>
   {% assign posts = site.categories.helpers %}
   {% include methods_sidebar.html %}
@@ -131,6 +135,10 @@ github_url: https://github.com/victorquinn/chancejs
 
     <h2 id="text">Address</h2>
     {% assign posts = site.categories.address %}
+    {% include methods_full.html %}
+
+    <h2 id="text">Finance</h2>
+    {% assign posts = site.categories.finance %}
     {% include methods_full.html %}
 
     <h2 id="helpers">Helpers</h2>

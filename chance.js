@@ -473,6 +473,81 @@
 
     // -- End Address --
 
+    // -- Credit Card --
+
+    Chance.prototype.cc = function (options) {
+        options = options || {};
+
+        var type, number, to_generate,
+            last = null,
+            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+        type = (options.type) ?
+                    this.cc_type({ name: options.type, raw: true }) :
+                    this.cc_type({ raw: true });
+        number = type.prefix;
+        to_generate = type.length - type.prefix.length - 1;
+
+        // Generates n - 1 digits
+        for (var i = 0; i < to_generate; i++) {
+            number = number + this.integer({min: 0, max: 9}).toString();
+        }
+
+        // Generates the last digit according to Luhn algorithm
+        do {
+            last = digits.splice(0, 1);
+        } while (!this.luhn_check(number + last));
+
+        return number + last;
+    };
+
+    Chance.prototype.cc_types = function () {
+        // http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
+        return [
+            {name: "American Express", prefix: '34', length: 15},
+            {name: "Bankcard", prefix: '5610', length: 16},
+            {name: "China UnionPay", prefix: '62', length: 16},
+            {name: "Diners Club Carte Blanche", prefix: '300', length: 14},
+            {name: "Diners Club enRoute", prefix: '2014', length: 15},
+            {name: "Diners Club International", prefix: '36', length: 14},
+            {name: "Diners Club United States & Canada", prefix: '54', length: 16},
+            {name: "Discover Card", prefix: '6011', length: 16},
+            {name: "InstaPayment", prefix: '637', length: 16},
+            {name: "JCB", prefix: '3528', length: 16},
+            {name: "Laser", prefix: '6304', length: 16},
+            {name: "Maestro", prefix: '5018', length: 16},
+            {name: "Mastercard", prefix: '51', length: 16},
+            {name: "Solo", prefix: '6334', length: 16},
+            {name: "Switch", prefix: '4903', length: 16},
+            {name: "Visa", prefix: '4', length: 16},
+            {name: "Visa Electron", prefix: '4026', length: 16}
+        ];
+    };
+
+    Chance.prototype.cc_type = function (options) {
+        options = options || {};
+        var types = this.cc_types(),
+            type = null;
+
+        if (options.name) {
+            for (var i = 0; i < types.length; i++) {
+                if (types[i].name === options.name) {
+                    type = types[i];
+                    break;
+                }
+            }
+            if (type === null) {
+                throw new Error("Credit card type '" + options.name + "'' is not suppoted");
+            }
+        } else {
+            type = this.pick(types);
+        }
+
+        return options.raw ? type : type.name;
+    };
+
+    // -- End Credit Card
+
     // -- Miscellaneous --
 
     // Dice - For all the board game geeks out there, myself included ;)
@@ -497,6 +572,14 @@
 
     Chance.prototype.mersenne_twister = function (seed) {
         return new MersenneTwister(seed);
+    };
+
+    Chance.prototype.luhn_check = function (num) {
+        var luhnArr = [[0, 2, 4, 6, 8, 1, 3, 5, 7, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]], sum = 0;
+        num.toString().replace(/\D+/g, "").replace(/[\d]/g, function (c, p, o) {
+            sum += luhnArr[(o.length - p) & 1][parseInt(c, 10)];
+        });
+        return (sum % 10 === 0) && (sum > 0);
     };
 
     // -- End Miscellaneous --
