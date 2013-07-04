@@ -46,15 +46,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
             it("passes the Luhn algorithm", function () {
                 _(1000).times(function () {
-                    number = chance.cc_number();
+                    number = chance.cc();
                     expect(chance.luhn_check(number)).to.equal(true);
                 });
             });
 
-            it("cc_number() can take a type arg and obey to it", function () {
+            it("cc() can take a type arg and obey to it", function () {
                 _(1000).times(function () {
                     type = chance.cc_type({ raw: true });
-                    number = chance.cc_number({ type: type.name });
+                    number = chance.cc({ type: type.name });
                     expect(number).to.have.length(type.length);
                 });
             });

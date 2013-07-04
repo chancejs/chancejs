@@ -478,7 +478,7 @@
 
     // -- Credit Card --
 
-    Chance.prototype.cc_number = function (options) {
+    Chance.prototype.cc = function (options) {
         options = options || {};
 
         var type, number, to_generate,
@@ -523,7 +523,7 @@
             {name: "Solo", prefix: '6334', length: 16},
             {name: "Switch", prefix: '4903', length: 16},
             {name: "Visa", prefix: '4', length: 16},
-            {name: "Visa Electron", prefix: '4026', length: 16},
+            {name: "Visa Electron", prefix: '4026', length: 16}
         ];
     };
 
