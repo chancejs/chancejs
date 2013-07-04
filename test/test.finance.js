@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Credit Card", function () {
-        var type, number, month, year, chance = new Chance();
+        var type, number, exp, month, year, chance = new Chance();
 
         describe("Luhn Check", function () {
             it("checks if number passes Luhn algorithm", function () {
@@ -69,6 +69,24 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
         describe("Expiration", function () {
+            it("exp() looks correct", function () {
+                _(1000).times(function () {
+                    exp = chance.exp();
+                    expect(exp).to.be.a('string');
+                    expect(exp).to.have.length(7);
+                    expect(exp).to.match(/([0-9]{2})\/([0-9]{4})/);
+                });
+            });
+
+            it("exp() will respect object argument", function () {
+                _(1000).times(function () {
+                    exp = chance.exp({raw: true});
+                    expect(exp).to.be.an('object');
+                    expect(exp).to.have.property('month').with.a('string');
+                    expect(exp).to.have.property('year').with.a('string');
+                });
+            });
+
             it("exp_month() returns a numeric month with leading 0", function () {
                 _(1000).times(function () {
                     month = chance.exp_month();

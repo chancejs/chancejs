@@ -22,7 +22,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("year() returns a year, default between today and a century after", function () {
             _(1000).times(function () {
                 year = chance.year();
-                expect(year).to.be.a('number');
+                expect(year).to.be.a('string');
                 expect(year).to.be.within(new Date().getFullYear(), new Date().getFullYear() + 100);
             });
         });
@@ -30,7 +30,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("year() returns a year, can specify min and max", function () {
             _(1000).times(function () {
                 year = chance.year({min: 2500, max: 2600});
-                expect(year).to.be.a('number');
+                expect(year).to.be.a('string');
                 expect(year).to.be.within(2500, 2600);
             });
         });
@@ -38,7 +38,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("year() returns a year, can specify just min", function () {
             _(1000).times(function () {
                 year = chance.year({min: 2500});
-                expect(year).to.be.a('number');
+                expect(year).to.be.a('string');
                 expect(year).to.be.above(2499);
             });
         });

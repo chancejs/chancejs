@@ -513,7 +513,7 @@
         // Default to one century after current year as max if none specified
         options.max = (typeof options.max !== "undefined") ? options.max : options.min + 100;
 
-        return this.natural({min: options.min, max: options.max});
+        return this.natural({min: options.min, max: options.max}).toString();
     };
 
     // -- End Time
@@ -592,8 +592,37 @@
         return options.raw ? type : type.name;
     };
 
+    Chance.prototype.exp = function (options) {
+        options = options || {};
+        var exp = {};
+
+        exp.year = this.exp_year();
+
+        // If the year is this year, need to ensure month is greater than the
+        // current month or this expiration will not be valid
+        if (exp.year === (new Date().getFullYear())) {
+            exp.month = this.exp_month({future: true});
+        } else {
+            exp.month = this.exp_month();
+        }
+
+        return options.raw ? exp : exp.month + '/' + exp.year;
+    };
+
     Chance.prototype.exp_month = function (options) {
-        return this.month({raw: true}).numeric;
+        options = options || {};
+        var month, month_int;
+
+        if (options.future) {
+            do {
+                month = this.month({raw: true}).numeric;
+                month_int = parseInt(month, 10);
+            } while (month_int < new Date().getMonth());
+        } else {
+            month = this.month({raw: true}).numeric;
+        }
+
+        return month;
     };
 
     Chance.prototype.exp_year = function (options) {
