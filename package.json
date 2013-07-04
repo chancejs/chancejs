@@ -27,9 +27,9 @@
     "grunt-shell": "*",
     "jslint": "*",
     "mocha": "1.8",
-    "mocha-phantomjs": "*",
-    "phantomjs": "1.9",
-    "requirejs": "*",
+    "mocha-phantomjs": "2.0.3",
+    "phantomjs": "1.9.0-2",
+    "requirejs": "2.1.6",
     "uglify-js": "1.2.6",
     "underscore": "*"
   },
