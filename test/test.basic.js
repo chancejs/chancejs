@@ -49,6 +49,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(positive_count).to.be.within(200, 800);
             });
 
+            it("can take a zero min and obey it", function () {
+                _(1000).times(function () {
+                    integer = chance.integer({min: 0});
+                    expect(integer).to.be.above(0);
+                });
+            });
+
             it("can take a negative min and obey it", function () {
                 _(1000).times(function () {
                     integer = chance.integer({min: -25});
@@ -61,6 +68,23 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     integer = chance.integer({min: -25, max: -1});
                     expect(integer).to.be.within(-26, 0);
                 });
+            });
+
+            it("can take a min with absolute value less than the max and return in range above", function () {
+                var count = 0;
+                _(1000).times(function () {
+                    // With a range this large we'd expect most values to be
+                    // greater than 1 if this works correctly.
+                    integer = chance.integer({min: -1, max: 1000000});
+                    if (Math.abs(integer) < 2) {
+                        count++;
+                    }
+                });
+                expect(count).to.not.be.above(900);
+            });
+
+            it("throws an error if min > max", function () {
+                expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
             });
         });
 
@@ -101,6 +125,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     natural = chance.natural({min: 90, max: 100});
                     expect(natural).to.be.within(89, 101);
                 });
+            });
+
+            it("works with both bounds 0", function () {
+                _(1000).times(function () {
+                    natural = chance.natural({min: 0, max: 0});
+                    expect(natural).to.equal(0);
+                });
+            });
+
+            it("throws an error if min > max", function () {
+                expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
             });
         });
 

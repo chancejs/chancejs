@@ -24,7 +24,7 @@ require.config({
 
 require(['mocha', 'chai'], function (mocha, chai) {
     var assert = chai.assert;
-    require(['test.basic', 'test.text', 'test.address', 'test.misc', 'test.name', 'test.helpers'], function () {
+    require(['test.basic', 'test.text', 'test.address', 'test.misc', 'test.web', 'test.name', 'test.helpers', 'test.finance', 'test.time'], function () {
         mocha.reporter('html');
 
         // Start runner

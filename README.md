@@ -1,5 +1,7 @@
 # Chance
 
+[![Build Status](https://travis-ci.org/victorquinn/chancejs.png)](https://travis-ci.org/victorquinn/chancejs)
+
 Chance - Random generator helper for JavaScript
 
 Homepage: [http://chancejs.com](http://chancejs.com)
@@ -42,7 +44,7 @@ Chance also includes an AMD define so it can be used with RequireJS.
 
 And it can be used in Node.js.
 
-    var Chance = require('Chance'),
+    var Chance = require('chance'),
         chance = new Chance();
         
     // Get a random zip code

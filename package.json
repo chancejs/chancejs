@@ -1,6 +1,7 @@
 {
   "name": "chance",
-  "version": "0.3.0",
+  "version": "0.3.3",
+  "main": "./chance.js",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
@@ -26,11 +27,14 @@
     "grunt-shell": "*",
     "jslint": "*",
     "mocha": "1.8",
-    "mocha-phantomjs": "*",
-    "phantomjs": "1.9",
-    "requirejs": "*",
+    "mocha-phantomjs": "2.0.3",
+    "phantomjs": "1.9.0-2",
+    "requirejs": "2.1.6",
     "uglify-js": "1.2.6",
     "underscore": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
   },
   "keywords": [
     "random",

@@ -104,6 +104,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+            it("areacode({parens: false}) looks right", function () {
+                _(1000).times(function () {
+                    expect(chance.areacode()).to.be.a('string');
+                    expect(chance.areacode()).to.match(/([0-9]{3})/);
+                });
+            });
+
             it("phone() returns a string", function () {
                 expect(chance.phone()).to.be.a('string');
             });
