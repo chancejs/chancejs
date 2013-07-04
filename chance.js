@@ -37,6 +37,10 @@
         // See: http://vq.io/132sa2j
         options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
 
+        if (options.min > options.max) {
+            throw new RangeError("Chance: Min cannot be greater than Max.");
+        }
+
         return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
     };
 
@@ -475,6 +479,44 @@
     };
 
     // -- End Address --
+
+    // -- Time
+
+    Chance.prototype.month = function (options) {
+        options = options || {};
+        var month = this.pick(this.months());
+        return options.raw ? month : month.name;
+    };
+
+    Chance.prototype.months = function () {
+        return [
+            {name: 'January', short_name: 'Jan', numeric: '01'},
+            {name: 'February', short_name: 'Feb', numeric: '02'},
+            {name: 'March', short_name: 'Mar', numeric: '03'},
+            {name: 'April', short_name: 'Apr', numeric: '04'},
+            {name: 'May', short_name: 'May', numeric: '05'},
+            {name: 'June', short_name: 'Jun', numeric: '06'},
+            {name: 'July', short_name: 'Jul', numeric: '07'},
+            {name: 'August', short_name: 'Aug', numeric: '08'},
+            {name: 'September', short_name: 'Sep', numeric: '09'},
+            {name: 'October', short_name: 'Oct', numeric: '10'},
+            {name: 'November', short_name: 'Nov', numeric: '11'},
+            {name: 'December', short_name: 'Dec', numeric: '12'}
+        ];
+    };
+
+    Chance.prototype.year = function (options) {
+        options = options || {};
+
+        // Default to current year as min if none specified
+        options.min = (typeof options.min !== "undefined") ? options.min : new Date().getFullYear();
+        // Default to one century after current year as max if none specified
+        options.max = (typeof options.max !== "undefined") ? options.max : options.min + 100;
+
+        return this.natural({min: options.min, max: options.max});
+    };
+
+    // -- End Time
 
     // -- Credit Card --
 

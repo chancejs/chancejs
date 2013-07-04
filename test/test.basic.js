@@ -82,6 +82,10 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
                 expect(count).to.not.be.above(900);
             });
+
+            it("throws an error if min > max", function () {
+                expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
+            });
         });
 
         describe("Natural", function () {
@@ -128,6 +132,10 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     natural = chance.natural({min: 0, max: 0});
                     expect(natural).to.equal(0);
                 });
+            });
+
+            it("throws an error if min > max", function () {
+                expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
             });
         });
 
