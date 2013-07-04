@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Credit Card", function () {
-        var type, number, chance = new Chance();
+        var type, number, month, year, chance = new Chance();
 
         describe("Luhn Check", function () {
             it("checks if number passes Luhn algorithm", function () {
@@ -65,6 +65,22 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     type = chance.cc_type({ raw: true });
                     number = chance.cc({ type: type.short_name });
                     expect(number).to.have.length(type.length);
+                });
+            });
+        });
+        describe("Expiration", function () {
+            it("exp_month() returns a numeric month with leading 0", function () {
+                _(1000).times(function () {
+                    month = chance.exp_month();
+                    expect(month).to.be.a('string');
+                    expect(month).to.have.length(2);
+                });
+            });
+
+            it("exp_year() returns an expiration year", function () {
+                _(1000).times(function () {
+                    year = chance.exp_year();
+                    expect(year).to.be.within(new Date().getFullYear(), new Date().getFullYear() + 10);
                 });
             });
         });

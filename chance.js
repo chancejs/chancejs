@@ -518,7 +518,7 @@
 
     // -- End Time
 
-    // -- Credit Card --
+    // -- Finance --
 
     Chance.prototype.cc = function (options) {
         options = options || {};
@@ -592,7 +592,15 @@
         return options.raw ? type : type.name;
     };
 
-    // -- End Credit Card
+    Chance.prototype.exp_month = function (options) {
+        return this.month({raw: true}).numeric;
+    };
+
+    Chance.prototype.exp_year = function (options) {
+        return this.year({max: new Date().getFullYear() + 10});
+    };
+
+    // -- End Finance
 
     // -- Miscellaneous --
 
