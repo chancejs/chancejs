@@ -1,4 +1,4 @@
-//  Chance.js 0.3.2
+//  Chance.js 0.3.3
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -36,6 +36,10 @@
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
         options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
+
+        if (options.min > options.max) {
+            throw new RangeError("Chance: Min cannot be greater than Max.");
+        }
 
         return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
     };
@@ -319,8 +323,11 @@
     };
 
     Chance.prototype.areacode = function (options) {
+        options = options || {};
+        options.parens = (typeof options.parens !== "undefined") ? options.parens : true;
         // Don't want area codes to start with 1
-        return '(' + this.natural({min: 2, max: 9}) + this.natural({min: 10, max: 98}) + ')';
+        var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 10, max: 98}).toString();
+        return options.parens ? '(' + areacode + ')' : areacode;
     };
 
     Chance.prototype.street = function (options) {
@@ -473,12 +480,50 @@
 
     // -- End Address --
 
-    // -- Credit Card --
+    // -- Time
+
+    Chance.prototype.month = function (options) {
+        options = options || {};
+        var month = this.pick(this.months());
+        return options.raw ? month : month.name;
+    };
+
+    Chance.prototype.months = function () {
+        return [
+            {name: 'January', short_name: 'Jan', numeric: '01'},
+            {name: 'February', short_name: 'Feb', numeric: '02'},
+            {name: 'March', short_name: 'Mar', numeric: '03'},
+            {name: 'April', short_name: 'Apr', numeric: '04'},
+            {name: 'May', short_name: 'May', numeric: '05'},
+            {name: 'June', short_name: 'Jun', numeric: '06'},
+            {name: 'July', short_name: 'Jul', numeric: '07'},
+            {name: 'August', short_name: 'Aug', numeric: '08'},
+            {name: 'September', short_name: 'Sep', numeric: '09'},
+            {name: 'October', short_name: 'Oct', numeric: '10'},
+            {name: 'November', short_name: 'Nov', numeric: '11'},
+            {name: 'December', short_name: 'Dec', numeric: '12'}
+        ];
+    };
+
+    Chance.prototype.year = function (options) {
+        options = options || {};
+
+        // Default to current year as min if none specified
+        options.min = (typeof options.min !== "undefined") ? options.min : new Date().getFullYear();
+        // Default to one century after current year as max if none specified
+        options.max = (typeof options.max !== "undefined") ? options.max : options.min + 100;
+
+        return this.natural({min: options.min, max: options.max}).toString();
+    };
+
+    // -- End Time
+
+    // -- Finance --
 
     Chance.prototype.cc = function (options) {
         options = options || {};
 
-        var type, number, to_generate,
+        var type, number, to_generate, type_name,
             last = null,
             digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
@@ -504,23 +549,23 @@
     Chance.prototype.cc_types = function () {
         // http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
         return [
-            {name: "American Express", prefix: '34', length: 15},
-            {name: "Bankcard", prefix: '5610', length: 16},
-            {name: "China UnionPay", prefix: '62', length: 16},
-            {name: "Diners Club Carte Blanche", prefix: '300', length: 14},
-            {name: "Diners Club enRoute", prefix: '2014', length: 15},
-            {name: "Diners Club International", prefix: '36', length: 14},
-            {name: "Diners Club United States & Canada", prefix: '54', length: 16},
-            {name: "Discover Card", prefix: '6011', length: 16},
-            {name: "InstaPayment", prefix: '637', length: 16},
-            {name: "JCB", prefix: '3528', length: 16},
-            {name: "Laser", prefix: '6304', length: 16},
-            {name: "Maestro", prefix: '5018', length: 16},
-            {name: "Mastercard", prefix: '51', length: 16},
-            {name: "Solo", prefix: '6334', length: 16},
-            {name: "Switch", prefix: '4903', length: 16},
-            {name: "Visa", prefix: '4', length: 16},
-            {name: "Visa Electron", prefix: '4026', length: 16}
+            {name: "American Express", short_name: 'amex', prefix: '34', length: 15},
+            {name: "Bankcard", short_name: 'bankcard', prefix: '5610', length: 16},
+            {name: "China UnionPay", short_name: 'chinaunion', prefix: '62', length: 16},
+            {name: "Diners Club Carte Blanche", short_name: 'dccarte', prefix: '300', length: 14},
+            {name: "Diners Club enRoute", short_name: 'dcenroute', prefix: '2014', length: 15},
+            {name: "Diners Club International", short_name: 'dcintl', prefix: '36', length: 14},
+            {name: "Diners Club United States & Canada", short_name: 'dcusc', prefix: '54', length: 16},
+            {name: "Discover Card", short_name: 'discover', prefix: '6011', length: 16},
+            {name: "InstaPayment", short_name: 'instapay', prefix: '637', length: 16},
+            {name: "JCB", short_name: 'jcb', prefix: '3528', length: 16},
+            {name: "Laser", short_name: 'laser', prefix: '6304', length: 16},
+            {name: "Maestro", short_name: 'maestro', prefix: '5018', length: 16},
+            {name: "Mastercard", short_name: 'mc', prefix: '51', length: 16},
+            {name: "Solo", short_name: 'solo', prefix: '6334', length: 16},
+            {name: "Switch", short_name: 'switch', prefix: '4903', length: 16},
+            {name: "Visa", short_name: 'visa', prefix: '4', length: 16},
+            {name: "Visa Electron", short_name: 'electron', prefix: '4026', length: 16}
         ];
     };
 
@@ -531,7 +576,8 @@
 
         if (options.name) {
             for (var i = 0; i < types.length; i++) {
-                if (types[i].name === options.name) {
+                // Accept either name or short_name to specify card type
+                if (types[i].name === options.name || types[i].short_name === options.name) {
                     type = types[i];
                     break;
                 }
@@ -546,7 +592,44 @@
         return options.raw ? type : type.name;
     };
 
-    // -- End Credit Card
+    Chance.prototype.exp = function (options) {
+        options = options || {};
+        var exp = {};
+
+        exp.year = this.exp_year();
+
+        // If the year is this year, need to ensure month is greater than the
+        // current month or this expiration will not be valid
+        if (exp.year === (new Date().getFullYear())) {
+            exp.month = this.exp_month({future: true});
+        } else {
+            exp.month = this.exp_month();
+        }
+
+        return options.raw ? exp : exp.month + '/' + exp.year;
+    };
+
+    Chance.prototype.exp_month = function (options) {
+        options = options || {};
+        var month, month_int;
+
+        if (options.future) {
+            do {
+                month = this.month({raw: true}).numeric;
+                month_int = parseInt(month, 10);
+            } while (month_int < new Date().getMonth());
+        } else {
+            month = this.month({raw: true}).numeric;
+        }
+
+        return month;
+    };
+
+    Chance.prototype.exp_year = function (options) {
+        return this.year({max: new Date().getFullYear() + 10});
+    };
+
+    // -- End Finance
 
     // -- Miscellaneous --
 
@@ -584,7 +667,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.3.2";
+    Chance.prototype.VERSION = "0.3.3";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
