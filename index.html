@@ -46,6 +46,10 @@ github_url: https://github.com/victorquinn/chancejs
   {% assign posts = site.categories.address %}
   {% include methods_sidebar.html %}
 
+  <a class=toc_title href="#time">Time</a>
+  {% assign posts = site.categories.time %}
+  {% include methods_sidebar.html %}
+
   <a class=toc_title href="#finance">Finance</a>
   {% assign posts = site.categories.finance %}
   {% include methods_sidebar.html %}
@@ -137,6 +141,10 @@ github_url: https://github.com/victorquinn/chancejs
     {% assign posts = site.categories.address %}
     {% include methods_full.html %}
 
+    <h2 id="text">Time</h2>
+    {% assign posts = site.categories.time %}
+    {% include methods_full.html %}
+
     <h2 id="text">Finance</h2>
     {% assign posts = site.categories.finance %}
     {% include methods_full.html %}
@@ -188,6 +196,9 @@ github_url: https://github.com/victorquinn/chancejs
   </p>
   <p>
     Thank you to <a href="https://github.com/banksean">Sean McCullough</a> for your <a href="https://gist.github.com/banksean/300494">Mersenne Twister gist</a> on which almost the entirety of this library is dependent. And to Takuji Nishimura and Makoto Matsumoto who wrote the original C version on which Sean's JavaScript gist is based.
+  </p>
+  <p>
+    And of course a monster thank you to all of the <a href="https://github.com/victorquinn/chancejs/graphs/contributors">Contributors</a> to this project!
   </p>
   <p>
     <small>
