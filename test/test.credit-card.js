@@ -29,6 +29,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     type = chance.cc_type({ raw: true });
                     expect(type).to.have.property('name').with.a('string');
+                    expect(type).to.have.property('short_name').with.a('string');
                     expect(type).to.have.property('prefix').with.a('string');
                     expect(type).to.have.property('length').with.a('number');
                 });
@@ -59,8 +60,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+            it("cc() can take a short_name type arg and obey to it", function () {
+                _(1000).times(function () {
+                    type = chance.cc_type({ raw: true });
+                    number = chance.cc({ type: type.short_name });
+                    expect(number).to.have.length(type.length);
+                });
+            });
         });
-
     });
-
 });
