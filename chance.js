@@ -484,8 +484,8 @@
 
     Chance.prototype.hour = function (options) {
         options = options || {};
-        var max = options.
-        return this.natural({min: 1, max: 12});
+        var max = options.twentyfour ? 24 : 12;
+        return this.natural({min: 1, max: max});
     };
 
     Chance.prototype.minute = function (options) {

@@ -16,7 +16,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             _(1000).times(function () {
                 minute = chance.minute();
                 expect(minute).to.be.a('number');
-                expect(minute).to.be.within(1, 59);
+                expect(minute).to.be.within(0, 59);
             });
         });
 
