@@ -160,6 +160,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(function () { chance.floating({fixed: 13, max: 9007199254740992}); }).to.throw(RangeError);
             });
 
+            it("obeys the fixed parameter, when present", function () {
+                _(100).times(function () {
+                    floating = chance.floating({fixed: 4});
+                    floating = floating.toString().split('.')[1] ? floating.toString().split('.')[1] : '';
+                    expect(floating).to.have.length.below(5);
+                });
+            });
+
             it("can take fixed and obey it", function () {
                 _(1000).times(function () {
                     floating = chance.floating({fixed: 3});

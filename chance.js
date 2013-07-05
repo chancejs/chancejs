@@ -65,12 +65,21 @@
     };
 
     // Note, wanted to use "float" or "double" but those are both JS reserved words.
+
+    // Note, fixed means N OR LESS digits after the decimal. This because
+    // It could be 14.9000 but in JavaScript, when this is cast as a number,
+    // the trailing zeroes are dropped. Left to the consumer if trailing zeroes are
+    // needed
     Chance.prototype.floating = function (options) {
         var num, range, buffer;
 
         options = options || {};
         options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 2;
         fixed = Math.pow(10, options.fixed);
+
+        if (options.fixed && options.precision) {
+            throw new RangeError("Chance: Cannot specify both fixed and precision.");
+        }
 
         if (options.min && options.fixed && options.min < (-9007199254740992 / fixed)) {
             throw new RangeError("Chance: Min specified is out of range with fixed. Min" +
@@ -85,13 +94,10 @@
         // Todo - Make this work!
         // options.precision = (typeof options.precision !== "undefined") ? options.precision : false;
 
-        if (options.fixed && options.precision) {
-            throw new RangeError("Chance: Cannot specify both fixed and precision.");
-        }
-
         num = this.integer({min: options.min * fixed, max: options.max * fixed});
+        num_fixed = (num / fixed).toFixed(options.fixed);
 
-        return parseFloat((num / fixed).toFixed(options.fixed));
+        return parseFloat(num_fixed);
     };
 
     Chance.prototype.character = function (options) {
@@ -342,22 +348,39 @@
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
     };
 
-    Chance.prototype.city = function (options) {
-        options = options || {};
-        return this.capitalize(this.word({syllables: 3}));
-    };
-
-    Chance.prototype.phone = function (options) {
-        options = options || {};
-        return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
-    };
-
     Chance.prototype.areacode = function (options) {
         options = options || {};
         options.parens = (typeof options.parens !== "undefined") ? options.parens : true;
         // Don't want area codes to start with 1
         var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 10, max: 98}).toString();
         return options.parens ? '(' + areacode + ')' : areacode;
+    };
+
+    Chance.prototype.city = function (options) {
+        options = options || {};
+        return this.capitalize(this.word({syllables: 3}));
+    };
+
+    Chance.prototype.coordinates = function (options) {
+        options = options || {};
+        return this.latitude() + ', ' + this.longitude();
+    };
+
+    Chance.prototype.latitude = function (options) {
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        return this.floating({min: -90, max: 90, fixed: options.fixed});
+    };
+
+    Chance.prototype.longitude = function (options) {
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        return this.floating({min: 0, max: 180, fixed: options.fixed});
+    };
+
+    Chance.prototype.phone = function (options) {
+        options = options || {};
+        return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
     };
 
     Chance.prototype.street = function (options) {
@@ -687,6 +710,24 @@
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
     Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
+
+    Chance.prototype.dollar = function (options) {
+        options = options || {};
+
+        // By default, a somewhat more sane max for dollar than all available numbers
+        options.max = (typeof options.max !== "undefined") ? options.max : 10000;
+
+        var dollar = this.floating({min: 0, max: options.max, fixed: 2}).toString(),
+            cents = dollar.split('.')[1];
+
+        if (cents === undefined) {
+            dollar += '.00';
+        } else if (cents.length < 2) {
+            dollar = dollar + '0';
+        }
+
+        return '$' + dollar;
+    };
 
     // Guid
     Chance.prototype.guid = function () {

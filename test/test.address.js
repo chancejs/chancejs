@@ -3,7 +3,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         expect = chai.expect;
 
     describe("Address", function () {
-        var zip, suffix, suffixes, state, address, phone, chance = new Chance();
+        var zip, suffix, suffixes, state, address, phone, coordinates, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
@@ -125,6 +125,39 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         describe("City", function () {
             it("city() looks right", function () {
                 expect(chance.city()).to.be.a('string');
+            });
+        });
+
+        describe("Latitude", function () {
+            it("latitude() looks right", function () {
+                expect(chance.latitude()).to.be.a('number');
+            });
+
+            it("latitude() is in the right range", function () {
+                _(1000).times(function () {
+                    expect(chance.latitude()).to.be.within(-90, 90);
+                });
+            });
+        });
+
+        describe("Longitude", function () {
+            it("longitude() looks right", function () {
+                expect(chance.longitude()).to.be.a('number');
+            });
+
+            it("longitude() is in the right range", function () {
+                _(1000).times(function () {
+                    expect(chance.longitude()).to.be.within(0, 180);
+                });
+            });
+        });
+
+        describe("Coordinates", function () {
+            it("coordinates() looks about right", function () {
+                _(1000).times(function () {
+                    expect(chance.coordinates()).to.be.a('string');
+                    expect(chance.coordinates().split(',')).to.have.length(2);
+                });
             });
         });
     });
