@@ -50,3 +50,11 @@ And it can be used in Node.js.
     // Get a random zip code
     chance.zip();
 
+
+## Author
+### Victor Quinn
+[http://victorquinn.com](http://victorquinn.com)
+
+Please feel free to reach out to me if you have any questions or suggestions.
+
+This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
