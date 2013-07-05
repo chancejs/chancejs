@@ -482,6 +482,17 @@
 
     // -- Time
 
+    Chance.prototype.hour = function (options) {
+        options = options || {};
+        var max = options.
+        return this.natural({min: 1, max: 12});
+    };
+
+    Chance.prototype.minute = function (options) {
+        options = options || {};
+        return this.natural({min: 0, max: 59});
+    };
+
     Chance.prototype.month = function (options) {
         options = options || {};
         var month = this.pick(this.months());
@@ -503,6 +514,11 @@
             {name: 'November', short_name: 'Nov', numeric: '11'},
             {name: 'December', short_name: 'Dec', numeric: '12'}
         ];
+    };
+
+    Chance.prototype.timestamp = function (options) {
+        options = options || {};
+        return this.natural({min: 1, max: new Date().getTime()});
     };
 
     Chance.prototype.year = function (options) {

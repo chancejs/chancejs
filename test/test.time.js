@@ -2,7 +2,23 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Time", function () {
-        var month, year, chance = new Chance();
+        var hour, minute, time, timestamp, month, year, chance = new Chance();
+
+        it("hour() returns a hour", function () {
+            _(1000).times(function () {
+                hour = chance.hour();
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(1, 12);
+            });
+        });
+
+        it("minute() returns a minute", function () {
+            _(1000).times(function () {
+                minute = chance.minute();
+                expect(minute).to.be.a('number');
+                expect(minute).to.be.within(1, 59);
+            });
+        });
 
         it("month() returns a month", function () {
             _(1000).times(function () {
@@ -16,6 +32,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 month = chance.month({raw: true});
                 expect(month).to.not.be.a('string');
                 expect(month).to.be.an('object');
+            });
+        });
+
+        it("timestamp() returns a timestamp", function () {
+            _(1000).times(function () {
+                timestamp = chance.timestamp();
+                expect(timestamp).to.be.a('number');
+                expect(timestamp).to.be.within(1, new Date().getTime());
             });
         });
 
