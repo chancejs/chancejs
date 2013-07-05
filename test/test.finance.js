@@ -68,6 +68,28 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
+
+        describe("Dollar", function () {
+            var dollar, chance = new Chance();
+
+            it("returns a proper dollar amount", function () {
+                _(1000).times(function () {
+                    dollar = chance.dollar();
+                    expect(dollar).to.match(/\$[0-9]+\.[0-9]+/);
+                    dollar = parseFloat(dollar.substring(1, dollar.length));
+                    expect(dollar).to.be.below(10001);
+                });
+            });
+
+            it("obeys min and max", function () {
+                _(1000).times(function () {
+                    dollar = chance.dollar({max: 20});
+                    dollar = parseFloat(dollar.substring(1, dollar.length));
+                    expect(dollar).to.not.be.above(20);
+                });
+            });
+        });
+
         describe("Expiration", function () {
             it("exp() looks correct", function () {
                 _(1000).times(function () {

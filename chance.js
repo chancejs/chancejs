@@ -661,6 +661,25 @@
         return options.raw ? type : type.name;
     };
 
+    Chance.prototype.dollar = function (options) {
+        options = options || {};
+
+        // By default, a somewhat more sane max for dollar than all available numbers
+        options.max = (typeof options.max !== "undefined") ? options.max : 10000;
+        options.min = (typeof options.min !== "undefined") ? options.min : 0;
+
+        var dollar = this.floating({min: options.min, max: options.max, fixed: 2}).toString(),
+            cents = dollar.split('.')[1];
+
+        if (cents === undefined) {
+            dollar += '.00';
+        } else if (cents.length < 2) {
+            dollar = dollar + '0';
+        }
+
+        return '$' + dollar;
+    };
+
     Chance.prototype.exp = function (options) {
         options = options || {};
         var exp = {};
@@ -710,24 +729,6 @@
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
     Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
-
-    Chance.prototype.dollar = function (options) {
-        options = options || {};
-
-        // By default, a somewhat more sane max for dollar than all available numbers
-        options.max = (typeof options.max !== "undefined") ? options.max : 10000;
-
-        var dollar = this.floating({min: 0, max: options.max, fixed: 2}).toString(),
-            cents = dollar.split('.')[1];
-
-        if (cents === undefined) {
-            dollar += '.00';
-        } else if (cents.length < 2) {
-            dollar = dollar + '0';
-        }
-
-        return '$' + dollar;
-    };
 
     // Guid
     Chance.prototype.guid = function () {
