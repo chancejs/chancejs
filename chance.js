@@ -499,6 +499,16 @@
         return zip;
     };
 
+    Chance.prototype.postal = function(options) {
+        // Postal District
+        var pd = this.character({pool:"XVTSRPNKLMHJGECBA"});
+        // Forward Sortation Area (FSA)
+        var fsa = pd + this.natural({max: 9}) + this.character({alpha: true, casing: "upper"});
+        // Local Delivery Unut (LDU)
+        var ldu = this.natural({max: 9}) + this.character({alpha: true, casing: "upper"}) + this.natural({max: 9}); 
+
+        return fsa + " " + ldu;
+    };
     // -- End Address --
 
     // -- Miscellaneous --
