@@ -1,5 +1,7 @@
 # Chance
 
+![Chance Logo](http://chancejs.com/logo.png)
+
 [![Build Status](https://travis-ci.org/victorquinn/chancejs.png)](https://travis-ci.org/victorquinn/chancejs)
 
 Chance - Random generator helper for JavaScript
