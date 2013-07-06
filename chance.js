@@ -422,61 +422,10 @@
             this.pick(this.provinces()).abbreviation;
     };
 
-    Chance.prototype.street = function (options) {
-        options = options || {};
-
-        var street = this.word({syllables: 2});
-        street = this.capitalize(street);
-        street += ' ';
-        street += options.short_suffix ?
-            this.street_suffix().abbreviation :
-            this.street_suffix().name;
-        return street;
-    };
-
-    Chance.prototype.street_suffixes = function () {
-        // These are the most common suffixes.
-        return [
-            {name: 'Avenue', abbreviation: 'Ave'},
-            {name: 'Boulevard', abbreviation: 'Blvd'},
-            {name: 'Center', abbreviation: 'Ctr'},
-            {name: 'Circle', abbreviation: 'Cir'},
-            {name: 'Court', abbreviation: 'Ct'},
-            {name: 'Drive', abbreviation: 'Dr'},
-            {name: 'Extension', abbreviation: 'Ext'},
-            {name: 'Glen', abbreviation: 'Gln'},
-            {name: 'Grove', abbreviation: 'Grv'},
-            {name: 'Heights', abbreviation: 'Hts'},
-            {name: 'Highway', abbreviation: 'Hwy'},
-            {name: 'Junction', abbreviation: 'Jct'},
-            {name: 'Key', abbreviation: 'Key'},
-            {name: 'Lane', abbreviation: 'Ln'},
-            {name: 'Loop', abbreviation: 'Loop'},
-            {name: 'Manor', abbreviation: 'Mnr'},
-            {name: 'Mill', abbreviation: 'Mill'},
-            {name: 'Park', abbreviation: 'Park'},
-            {name: 'Parkway', abbreviation: 'Pkwy'},
-            {name: 'Pass', abbreviation: 'Pass'},
-            {name: 'Path', abbreviation: 'Path'},
-            {name: 'Pike', abbreviation: 'Pike'},
-            {name: 'Place', abbreviation: 'Pl'},
-            {name: 'Plaza', abbreviation: 'Plz'},
-            {name: 'Point', abbreviation: 'Pt'},
-            {name: 'Ridge', abbreviation: 'Rdg'},
-            {name: 'River', abbreviation: 'Riv'},
-            {name: 'Road', abbreviation: 'Rd'},
-            {name: 'Square', abbreviation: 'Sq'},
-            {name: 'Street', abbreviation: 'St'},
-            {name: 'Terrace', abbreviation: 'Ter'},
-            {name: 'Trail', abbreviation: 'Trl'},
-            {name: 'Turnpike', abbreviation: 'Tpke'},
-            {name: 'View', abbreviation: 'Vw'},
-            {name: 'Way', abbreviation: 'Way'}
-        ];
-    };
-
-    Chance.prototype.street_suffix = function (options) {
-        return this.pick(this.street_suffixes(options));
+    Chance.prototype.state = function (options) {
+        return (options && options.full) ?
+            this.pick(this.states()).name :
+            this.pick(this.states()).abbreviation;
     };
 
     Chance.prototype.states = function () {
@@ -545,10 +494,61 @@
         ];
     };
 
-    Chance.prototype.state = function (options) {
-        return (options && options.full) ?
-            this.pick(this.states()).name :
-            this.pick(this.states()).abbreviation;
+    Chance.prototype.street = function (options) {
+        options = options || {};
+
+        var street = this.word({syllables: 2});
+        street = this.capitalize(street);
+        street += ' ';
+        street += options.short_suffix ?
+            this.street_suffix().abbreviation :
+            this.street_suffix().name;
+        return street;
+    };
+
+    Chance.prototype.street_suffix = function (options) {
+        return this.pick(this.street_suffixes(options));
+    };
+
+    Chance.prototype.street_suffixes = function () {
+        // These are the most common suffixes.
+        return [
+            {name: 'Avenue', abbreviation: 'Ave'},
+            {name: 'Boulevard', abbreviation: 'Blvd'},
+            {name: 'Center', abbreviation: 'Ctr'},
+            {name: 'Circle', abbreviation: 'Cir'},
+            {name: 'Court', abbreviation: 'Ct'},
+            {name: 'Drive', abbreviation: 'Dr'},
+            {name: 'Extension', abbreviation: 'Ext'},
+            {name: 'Glen', abbreviation: 'Gln'},
+            {name: 'Grove', abbreviation: 'Grv'},
+            {name: 'Heights', abbreviation: 'Hts'},
+            {name: 'Highway', abbreviation: 'Hwy'},
+            {name: 'Junction', abbreviation: 'Jct'},
+            {name: 'Key', abbreviation: 'Key'},
+            {name: 'Lane', abbreviation: 'Ln'},
+            {name: 'Loop', abbreviation: 'Loop'},
+            {name: 'Manor', abbreviation: 'Mnr'},
+            {name: 'Mill', abbreviation: 'Mill'},
+            {name: 'Park', abbreviation: 'Park'},
+            {name: 'Parkway', abbreviation: 'Pkwy'},
+            {name: 'Pass', abbreviation: 'Pass'},
+            {name: 'Path', abbreviation: 'Path'},
+            {name: 'Pike', abbreviation: 'Pike'},
+            {name: 'Place', abbreviation: 'Pl'},
+            {name: 'Plaza', abbreviation: 'Plz'},
+            {name: 'Point', abbreviation: 'Pt'},
+            {name: 'Ridge', abbreviation: 'Rdg'},
+            {name: 'River', abbreviation: 'Riv'},
+            {name: 'Road', abbreviation: 'Rd'},
+            {name: 'Square', abbreviation: 'Sq'},
+            {name: 'Street', abbreviation: 'St'},
+            {name: 'Terrace', abbreviation: 'Ter'},
+            {name: 'Trail', abbreviation: 'Trl'},
+            {name: 'Turnpike', abbreviation: 'Tpke'},
+            {name: 'View', abbreviation: 'Vw'},
+            {name: 'Way', abbreviation: 'Way'}
+        ];
     };
 
     // Note: only returning US zip codes, internationalization will be a whole
