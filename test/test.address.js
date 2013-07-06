@@ -77,6 +77,24 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("Province", function () {
+            it("provinces() returns an array of provinces", function () {
+                expect(chance.provinces()).to.be.an('array');
+            });
+
+            it("province() returns a random (short) province name", function () {
+                _(1000).times(function () {
+                    expect(chance.province()).to.be.below(3);
+                });
+            });
+
+            it("province({full: true}) returns a random (long) province name", function () {
+                _(1000).times(function () {
+                    expect(chance.province({full: true})).to.have.length.above(2);
+                });
+            });
+        });
+
         describe("Address", function () {
             it("address() returns a string", function () {
                 expect(chance.address()).to.be.an('string');
