@@ -380,6 +380,34 @@
         return this.pick(this.street_suffixes(options));
     };
 
+    Chance.prototype.provinces = function() {
+        return [
+            {name: 'Alberta', abbreviation: 'AB'},
+            {name: 'British Columbia', abbreviation: 'BC'},
+            {name: 'Manitoba', abbreviation: 'MB'},
+            {name: 'New Brunswick', abbreviation: 'NB'},
+            {name: 'Newfoundland and Labrador', abbreviation: 'NL'},
+            {name: 'Nova Scotia', abbreviation: 'NS'},
+            {name: 'Ontario', abbreviation: 'ON'},
+            {name: 'Prince Edward Island', abbreviation: 'PE'},
+            {name: 'Quebec', abbreviation: 'QC'},
+            {name: 'Saskatchewan', abbreviation: 'SK'},
+
+            // The case could be made that the following are not actually provinces
+            // since they are technically considered "territories" however they all
+            // look the same on an envelope!
+            {name: 'Northwest Territories', abbreviation: 'NT'},
+            {name: 'Nunavut', abbreviation: 'NU'},
+            {name: 'Yukon', abbreviation: 'YT'}
+        ]
+    };
+
+    Chance.prototype.province = function (options) {
+        return (options && options.full) ?
+            this.pick(this.provinces()).name :
+            this.pick(this.provinces()).abbreviation;
+    };
+
     Chance.prototype.states = function () {
         return [
             {name: 'Alabama', abbreviation: 'AL'},
