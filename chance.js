@@ -74,7 +74,7 @@
             v = this.random() * 2 - 1;
         
             s = u * u + v * v;
-        } while (s < 1);
+        } while (s => 1);
         
         // Compute the standard normal variate
         norm = u * Math.sqrt(-2 * Math.log(s) / s);
