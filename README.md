@@ -1,6 +1,6 @@
 # Chance
 
-![Chance Logo](http://chancejs.com/logo.png)
+[![Chance Logo](http://chancejs.com/logo.png)](http://chancejs.com)
 
 [![Build Status](https://travis-ci.org/victorquinn/chancejs.png)](https://travis-ci.org/victorquinn/chancejs)
 

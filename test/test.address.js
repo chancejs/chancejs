@@ -84,7 +84,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
             it("province() returns a random (short) province name", function () {
                 _(1000).times(function () {
-                    expect(chance.province()).to.be.below(3);
+                    expect(chance.province()).to.have.length.below(3);
                 });
             });
 

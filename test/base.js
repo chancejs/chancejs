@@ -24,15 +24,12 @@ require.config({
 
 require(['mocha', 'chai'], function (mocha, chai) {
     var assert = chai.assert;
-    require(['test.basic', 'test.text', 'test.address', 'test.misc', 'test.web', 'test.name', 'test.helpers', 'test.finance', 'test.time'], function () {
+    require(['test.address', 'test.basic', 'test.finance', 'test.helpers', 'test.misc', 'test.name', 'test.text', 'test.time', 'test.web'], function () {
         mocha.reporter('html');
 
         // Start runner
-        if (window.mochaPhantomJS) {
-            mochaPhantomJS.run();
-        } else {
-            mocha.run();
-        }
+        if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+        else { mocha.run(); }
     });
 }, function (err) {
     console.log(err);
