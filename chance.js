@@ -322,6 +322,10 @@
         return this.word() + '@' + (options.domain || this.domain());
     };
 
+    Chance.prototype.fbid = function (options) {
+        return this.natural().toString();
+    };
+
     Chance.prototype.ip = function () {
         // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
         // this should probably be updated to account for that rare as it may be
@@ -337,6 +341,10 @@
 
     Chance.prototype.tld = function () {
         return this.pick(this.tlds());
+    };
+
+    Chance.prototype.twitter = function (options) {
+        return '@' + this.word();
     };
 
     // -- End Web --
