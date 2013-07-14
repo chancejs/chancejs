@@ -63,6 +63,29 @@
 
         return num;
     };
+    
+    Chance.prototype.normal = function(options) {
+        options = options || {};
+        
+        // The Marsaglia Polar method
+        var s, u, v, norm,
+            mean = options.mean || 0,
+            dev = (typeof options.dev !== 'undefined') ? options.dev : 1;
+        
+        do {
+            // U and V are from the uniform distribution on (-1, 1)
+            u = this.random() * 2 - 1;
+            v = this.random() * 2 - 1;
+        
+            s = u * u + v * v;
+        } while (s >= 1);
+        
+        // Compute the standard normal variate
+        norm = u * Math.sqrt(-2 * Math.log(s) / s);
+        
+        // Shape and scale
+        return dev * norm + mean;
+    };
 
     // Note, wanted to use "float" or "double" but those are both JS reserved words.
 
