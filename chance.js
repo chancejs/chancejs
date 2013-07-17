@@ -20,8 +20,12 @@
 
     // -- Basics --
 
-    Chance.prototype.bool = function () {
-        return this.random() * 100 < 50;
+    Chance.prototype.bool = function (options) {
+        options = options || {};
+        // likelihood of success (true)
+        options.likelihood = (typeof options.likelihood !== "undefined") ? options.likelihood : 50;
+
+        return this.random() * 100 < options.likelihood;
     };
 
     // NOTE the max and min are INCLUDED in the range. So:
