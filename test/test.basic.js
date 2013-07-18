@@ -26,6 +26,33 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 // test failing and submits a pull request adding it to this comment!
                 expect(true_count).to.be.within(200, 800);
             });
+
+            it("takes and obeys likelihood", function () {
+                var true_count = 0;
+                _(1000).times(function () {
+                    if (chance.bool({likelihood: 30})) {
+                        true_count++;
+                    }
+                });
+
+                // Expect it to average around 300
+                expect(true_count).to.be.within(200, 400);
+
+                true_count = 0;
+                _(1000).times(function () {
+                    if (chance.bool({likelihood: 99})) {
+                        true_count++;
+                    }
+                });
+
+                // Expect it to average at 990
+                expect(true_count).to.be.above(900);
+            });
+
+            it("throws an error if likelihood < 0 or > 100", function () {
+                expect(function () { chance.bool({likelihood: -23}); }).to.throw(RangeError);
+                expect(function () { chance.bool({likelihood: 7933}); }).to.throw(RangeError);
+            });
         });
 
         describe("Integer", function () {

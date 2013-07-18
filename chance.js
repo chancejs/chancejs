@@ -32,6 +32,10 @@
         // likelihood of success (true)
         options.likelihood = (typeof options.likelihood !== "undefined") ? options.likelihood : 50;
 
+        if (options.likelihood < 0 || options.likelihood > 100) {
+            throw new RangeError("Chance: Likelihood accepts values from 0 to 100.");
+        }
+
         return this.random() * 100 < options.likelihood;
     };
 
