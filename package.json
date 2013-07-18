@@ -23,6 +23,7 @@
     "grunt": "*",
     "grunt-contrib-jshint": "~0.1.1",
     "grunt-mocha-phantomjs": "*",
+    "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
     "grunt-shell": "*",
     "jslint": "*",
