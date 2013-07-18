@@ -39,7 +39,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             _(1000).times(function () {
                 timestamp = chance.timestamp();
                 expect(timestamp).to.be.a('number');
-                expect(timestamp).to.be.within(1, new Date().getTime());
+                expect(timestamp).to.be.within(1, parseInt(new Date().getTime() / 1000, 10));
             });
         });
 

@@ -79,7 +79,7 @@
         return num;
     };
     
-    Chance.prototype.normal = function(options) {
+    Chance.prototype.normal = function (options) {
         options = options || {};
         
         // The Marsaglia Polar method
@@ -112,7 +112,7 @@
         var num, range, buffer;
 
         options = options || {};
-        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 2;
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 4;
         fixed = Math.pow(10, options.fixed);
 
         if (options.fixed && options.precision) {
@@ -361,7 +361,7 @@
     };
 
     Chance.prototype.fbid = function (options) {
-        return this.natural().toString();
+        return '10000' + this.natural({max: 100000000000}).toString();
     };
 
     Chance.prototype.ip = function () {
@@ -409,7 +409,7 @@
 
     Chance.prototype.coordinates = function (options) {
         options = options || {};
-        return this.latitude() + ', ' + this.longitude();
+        return this.latitude(options) + ', ' + this.longitude(options);
     };
 
     Chance.prototype.latitude = function (options) {
@@ -620,6 +620,11 @@
 
     // -- Time
 
+    Chance.prototype.ampm = function (options) {
+        options = options || {};
+        return this.bool() ? 'am' : 'pm';
+    };
+
     Chance.prototype.hour = function (options) {
         options = options || {};
         var max = options.twentyfour ? 24 : 12;
@@ -654,9 +659,14 @@
         ];
     };
 
+    Chance.prototype.second = function (options) {
+        options = options || {};
+        return this.natural({min: 0, max: 59});
+    };
+
     Chance.prototype.timestamp = function (options) {
         options = options || {};
-        return this.natural({min: 1, max: new Date().getTime()});
+        return this.natural({min: 1, max: parseInt(new Date().getTime() / 1000, 10)});
     };
 
     Chance.prototype.year = function (options) {
