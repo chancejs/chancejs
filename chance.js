@@ -8,14 +8,21 @@
     // Constructor
     var Chance = function (seed) {
         if (seed !== undefined) {
-            this.seed = seed;
+            // If we were passed a generator rather than a seed, use it.
+            if (typeof seed === 'function') {
+                this.random = seed;
+            } else {
+                this.seed = seed;
+            }
         }
-        this.mt = this.mersenne_twister(seed);
-    };
 
-    // Wrap the MersenneTwister
-    Chance.prototype.random = function () {
-        return this.mt.random(this.seed);
+        // If no generator function was provided, use our MT
+        if (typeof this.random === 'undefined') {
+            this.mt = this.mersenne_twister(seed);
+            this.random = function () {
+                return this.mt.random(this.seed);
+            };
+        }
     };
 
     // -- Basics --

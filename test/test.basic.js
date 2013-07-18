@@ -269,6 +269,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
-    });
 
+        describe("arbitrary function", function () {
+            it("will take an arbitrary function for random, use it", function () {
+                var chance = new Chance(function () { return 123; });
+                _(1000).times(function () {
+                    expect(chance.random()).to.equal(123);
+                });
+            });
+        });
+    });
 });
