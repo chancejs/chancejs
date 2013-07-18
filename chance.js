@@ -1,4 +1,4 @@
-//  Chance.js 0.3.3
+//  Chance.js 0.4.0
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -8,20 +8,35 @@
     // Constructor
     var Chance = function (seed) {
         if (seed !== undefined) {
-            this.seed = seed;
+            // If we were passed a generator rather than a seed, use it.
+            if (typeof seed === 'function') {
+                this.random = seed;
+            } else {
+                this.seed = seed;
+            }
         }
-        this.mt = this.mersenne_twister(seed);
-    };
 
-    // Wrap the MersenneTwister
-    Chance.prototype.random = function () {
-        return this.mt.random(this.seed);
+        // If no generator function was provided, use our MT
+        if (typeof this.random === 'undefined') {
+            this.mt = this.mersenne_twister(seed);
+            this.random = function () {
+                return this.mt.random(this.seed);
+            };
+        }
     };
 
     // -- Basics --
 
-    Chance.prototype.bool = function () {
-        return this.random() * 100 < 50;
+    Chance.prototype.bool = function (options) {
+        options = options || {};
+        // likelihood of success (true)
+        options.likelihood = (typeof options.likelihood !== "undefined") ? options.likelihood : 50;
+
+        if (options.likelihood < 0 || options.likelihood > 100) {
+            throw new RangeError("Chance: Likelihood accepts values from 0 to 100.");
+        }
+
+        return this.random() * 100 < options.likelihood;
     };
 
     // NOTE the max and min are INCLUDED in the range. So:
@@ -62,6 +77,65 @@
         } while (num < options.min || num > options.max);
 
         return num;
+    };
+    
+    Chance.prototype.normal = function (options) {
+        options = options || {};
+        
+        // The Marsaglia Polar method
+        var s, u, v, norm,
+            mean = options.mean || 0,
+            dev = (typeof options.dev !== 'undefined') ? options.dev : 1;
+        
+        do {
+            // U and V are from the uniform distribution on (-1, 1)
+            u = this.random() * 2 - 1;
+            v = this.random() * 2 - 1;
+        
+            s = u * u + v * v;
+        } while (s >= 1);
+        
+        // Compute the standard normal variate
+        norm = u * Math.sqrt(-2 * Math.log(s) / s);
+        
+        // Shape and scale
+        return dev * norm + mean;
+    };
+
+    // Note, wanted to use "float" or "double" but those are both JS reserved words.
+
+    // Note, fixed means N OR LESS digits after the decimal. This because
+    // It could be 14.9000 but in JavaScript, when this is cast as a number,
+    // the trailing zeroes are dropped. Left to the consumer if trailing zeroes are
+    // needed
+    Chance.prototype.floating = function (options) {
+        var num, range, buffer;
+
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 4;
+        fixed = Math.pow(10, options.fixed);
+
+        if (options.fixed && options.precision) {
+            throw new RangeError("Chance: Cannot specify both fixed and precision.");
+        }
+
+        if (options.min && options.fixed && options.min < (-9007199254740992 / fixed)) {
+            throw new RangeError("Chance: Min specified is out of range with fixed. Min" +
+                                 "should be, at least, " + (-9007199254740992 / fixed));
+        } else if (options.max && options.fixed && options.max > (9007199254740992 / fixed)) {
+            throw new RangeError("Chance: Max specified is out of range with fixed. Max" +
+                                 "should be, at most, " + (9007199254740992 / fixed));
+        }
+        options.min = (typeof options.min !== "undefined") ? options.min : -9007199254740992 / fixed;
+        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992 / fixed;
+
+        // Todo - Make this work!
+        // options.precision = (typeof options.precision !== "undefined") ? options.precision : false;
+
+        num = this.integer({min: options.min * fixed, max: options.max * fixed});
+        num_fixed = (num / fixed).toFixed(options.fixed);
+
+        return parseFloat(num_fixed);
     };
 
     Chance.prototype.character = function (options) {
@@ -286,6 +360,10 @@
         return this.word() + '@' + (options.domain || this.domain());
     };
 
+    Chance.prototype.fbid = function (options) {
+        return '10000' + this.natural({max: 100000000000}).toString();
+    };
+
     Chance.prototype.ip = function () {
         // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
         // this should probably be updated to account for that rare as it may be
@@ -303,6 +381,10 @@
         return this.pick(this.tlds());
     };
 
+    Chance.prototype.twitter = function (options) {
+        return '@' + this.word();
+    };
+
     // -- End Web --
 
     // -- Address --
@@ -310,16 +392,6 @@
     Chance.prototype.address = function (options) {
         options = options || {};
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
-    };
-
-    Chance.prototype.city = function (options) {
-        options = options || {};
-        return this.capitalize(this.word({syllables: 3}));
-    };
-
-    Chance.prototype.phone = function (options) {
-        options = options || {};
-        return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
     };
 
     Chance.prototype.areacode = function (options) {
@@ -330,61 +402,76 @@
         return options.parens ? '(' + areacode + ')' : areacode;
     };
 
-    Chance.prototype.street = function (options) {
+    Chance.prototype.city = function (options) {
         options = options || {};
-
-        var street = this.word({syllables: 2});
-        street = this.capitalize(street);
-        street += ' ';
-        street += options.short_suffix ?
-            this.street_suffix().abbreviation :
-            this.street_suffix().name;
-        return street;
+        return this.capitalize(this.word({syllables: 3}));
     };
 
-    Chance.prototype.street_suffixes = function () {
-        // These are the most common suffixes.
+    Chance.prototype.coordinates = function (options) {
+        options = options || {};
+        return this.latitude(options) + ', ' + this.longitude(options);
+    };
+
+    Chance.prototype.latitude = function (options) {
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        return this.floating({min: -90, max: 90, fixed: options.fixed});
+    };
+
+    Chance.prototype.longitude = function (options) {
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        return this.floating({min: 0, max: 180, fixed: options.fixed});
+    };
+
+    Chance.prototype.phone = function (options) {
+        options = options || {};
+        return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
+    };
+
+    Chance.prototype.postal = function (options) {
+        // Postal District
+        var pd = this.character({pool: "XVTSRPNKLMHJGECBA"});
+        // Forward Sortation Area (FSA)
+        var fsa = pd + this.natural({max: 9}) + this.character({alpha: true, casing: "upper"});
+        // Local Delivery Unut (LDU)
+        var ldu = this.natural({max: 9}) + this.character({alpha: true, casing: "upper"}) + this.natural({max: 9});
+
+        return fsa + " " + ldu;
+    };
+
+    Chance.prototype.provinces = function () {
         return [
-            {name: 'Avenue', abbreviation: 'Ave'},
-            {name: 'Boulevard', abbreviation: 'Blvd'},
-            {name: 'Center', abbreviation: 'Ctr'},
-            {name: 'Circle', abbreviation: 'Cir'},
-            {name: 'Court', abbreviation: 'Ct'},
-            {name: 'Drive', abbreviation: 'Dr'},
-            {name: 'Extension', abbreviation: 'Ext'},
-            {name: 'Glen', abbreviation: 'Gln'},
-            {name: 'Grove', abbreviation: 'Grv'},
-            {name: 'Heights', abbreviation: 'Hts'},
-            {name: 'Highway', abbreviation: 'Hwy'},
-            {name: 'Junction', abbreviation: 'Jct'},
-            {name: 'Key', abbreviation: 'Key'},
-            {name: 'Lane', abbreviation: 'Ln'},
-            {name: 'Loop', abbreviation: 'Loop'},
-            {name: 'Manor', abbreviation: 'Mnr'},
-            {name: 'Mill', abbreviation: 'Mill'},
-            {name: 'Park', abbreviation: 'Park'},
-            {name: 'Parkway', abbreviation: 'Pkwy'},
-            {name: 'Pass', abbreviation: 'Pass'},
-            {name: 'Path', abbreviation: 'Path'},
-            {name: 'Pike', abbreviation: 'Pike'},
-            {name: 'Place', abbreviation: 'Pl'},
-            {name: 'Plaza', abbreviation: 'Plz'},
-            {name: 'Point', abbreviation: 'Pt'},
-            {name: 'Ridge', abbreviation: 'Rdg'},
-            {name: 'River', abbreviation: 'Riv'},
-            {name: 'Road', abbreviation: 'Rd'},
-            {name: 'Square', abbreviation: 'Sq'},
-            {name: 'Street', abbreviation: 'St'},
-            {name: 'Terrace', abbreviation: 'Ter'},
-            {name: 'Trail', abbreviation: 'Trl'},
-            {name: 'Turnpike', abbreviation: 'Tpke'},
-            {name: 'View', abbreviation: 'Vw'},
-            {name: 'Way', abbreviation: 'Way'}
+            {name: 'Alberta', abbreviation: 'AB'},
+            {name: 'British Columbia', abbreviation: 'BC'},
+            {name: 'Manitoba', abbreviation: 'MB'},
+            {name: 'New Brunswick', abbreviation: 'NB'},
+            {name: 'Newfoundland and Labrador', abbreviation: 'NL'},
+            {name: 'Nova Scotia', abbreviation: 'NS'},
+            {name: 'Ontario', abbreviation: 'ON'},
+            {name: 'Prince Edward Island', abbreviation: 'PE'},
+            {name: 'Quebec', abbreviation: 'QC'},
+            {name: 'Saskatchewan', abbreviation: 'SK'},
+
+            // The case could be made that the following are not actually provinces
+            // since they are technically considered "territories" however they all
+            // look the same on an envelope!
+            {name: 'Northwest Territories', abbreviation: 'NT'},
+            {name: 'Nunavut', abbreviation: 'NU'},
+            {name: 'Yukon', abbreviation: 'YT'}
         ];
     };
 
-    Chance.prototype.street_suffix = function (options) {
-        return this.pick(this.street_suffixes(options));
+    Chance.prototype.province = function (options) {
+        return (options && options.full) ?
+            this.pick(this.provinces()).name :
+            this.pick(this.provinces()).abbreviation;
+    };
+
+    Chance.prototype.state = function (options) {
+        return (options && options.full) ?
+            this.pick(this.states()).name :
+            this.pick(this.states()).abbreviation;
     };
 
     Chance.prototype.states = function () {
@@ -453,10 +540,61 @@
         ];
     };
 
-    Chance.prototype.state = function (options) {
-        return (options && options.full) ?
-            this.pick(this.states()).name :
-            this.pick(this.states()).abbreviation;
+    Chance.prototype.street = function (options) {
+        options = options || {};
+
+        var street = this.word({syllables: 2});
+        street = this.capitalize(street);
+        street += ' ';
+        street += options.short_suffix ?
+            this.street_suffix().abbreviation :
+            this.street_suffix().name;
+        return street;
+    };
+
+    Chance.prototype.street_suffix = function (options) {
+        return this.pick(this.street_suffixes(options));
+    };
+
+    Chance.prototype.street_suffixes = function () {
+        // These are the most common suffixes.
+        return [
+            {name: 'Avenue', abbreviation: 'Ave'},
+            {name: 'Boulevard', abbreviation: 'Blvd'},
+            {name: 'Center', abbreviation: 'Ctr'},
+            {name: 'Circle', abbreviation: 'Cir'},
+            {name: 'Court', abbreviation: 'Ct'},
+            {name: 'Drive', abbreviation: 'Dr'},
+            {name: 'Extension', abbreviation: 'Ext'},
+            {name: 'Glen', abbreviation: 'Gln'},
+            {name: 'Grove', abbreviation: 'Grv'},
+            {name: 'Heights', abbreviation: 'Hts'},
+            {name: 'Highway', abbreviation: 'Hwy'},
+            {name: 'Junction', abbreviation: 'Jct'},
+            {name: 'Key', abbreviation: 'Key'},
+            {name: 'Lane', abbreviation: 'Ln'},
+            {name: 'Loop', abbreviation: 'Loop'},
+            {name: 'Manor', abbreviation: 'Mnr'},
+            {name: 'Mill', abbreviation: 'Mill'},
+            {name: 'Park', abbreviation: 'Park'},
+            {name: 'Parkway', abbreviation: 'Pkwy'},
+            {name: 'Pass', abbreviation: 'Pass'},
+            {name: 'Path', abbreviation: 'Path'},
+            {name: 'Pike', abbreviation: 'Pike'},
+            {name: 'Place', abbreviation: 'Pl'},
+            {name: 'Plaza', abbreviation: 'Plz'},
+            {name: 'Point', abbreviation: 'Pt'},
+            {name: 'Ridge', abbreviation: 'Rdg'},
+            {name: 'River', abbreviation: 'Riv'},
+            {name: 'Road', abbreviation: 'Rd'},
+            {name: 'Square', abbreviation: 'Sq'},
+            {name: 'Street', abbreviation: 'St'},
+            {name: 'Terrace', abbreviation: 'Ter'},
+            {name: 'Trail', abbreviation: 'Trl'},
+            {name: 'Turnpike', abbreviation: 'Tpke'},
+            {name: 'View', abbreviation: 'Vw'},
+            {name: 'Way', abbreviation: 'Way'}
+        ];
     };
 
     // Note: only returning US zip codes, internationalization will be a whole
@@ -482,6 +620,22 @@
 
     // -- Time
 
+    Chance.prototype.ampm = function (options) {
+        options = options || {};
+        return this.bool() ? 'am' : 'pm';
+    };
+
+    Chance.prototype.hour = function (options) {
+        options = options || {};
+        var max = options.twentyfour ? 24 : 12;
+        return this.natural({min: 1, max: max});
+    };
+
+    Chance.prototype.minute = function (options) {
+        options = options || {};
+        return this.natural({min: 0, max: 59});
+    };
+
     Chance.prototype.month = function (options) {
         options = options || {};
         var month = this.pick(this.months());
@@ -503,6 +657,16 @@
             {name: 'November', short_name: 'Nov', numeric: '11'},
             {name: 'December', short_name: 'Dec', numeric: '12'}
         ];
+    };
+
+    Chance.prototype.second = function (options) {
+        options = options || {};
+        return this.natural({min: 0, max: 59});
+    };
+
+    Chance.prototype.timestamp = function (options) {
+        options = options || {};
+        return this.natural({min: 1, max: parseInt(new Date().getTime() / 1000, 10)});
     };
 
     Chance.prototype.year = function (options) {
@@ -592,6 +756,25 @@
         return options.raw ? type : type.name;
     };
 
+    Chance.prototype.dollar = function (options) {
+        options = options || {};
+
+        // By default, a somewhat more sane max for dollar than all available numbers
+        options.max = (typeof options.max !== "undefined") ? options.max : 10000;
+        options.min = (typeof options.min !== "undefined") ? options.min : 0;
+
+        var dollar = this.floating({min: options.min, max: options.max, fixed: 2}).toString(),
+            cents = dollar.split('.')[1];
+
+        if (cents === undefined) {
+            dollar += '.00';
+        } else if (cents.length < 2) {
+            dollar = dollar + '0';
+        }
+
+        return '$' + dollar;
+    };
+
     Chance.prototype.exp = function (options) {
         options = options || {};
         var exp = {};
@@ -667,7 +850,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.3.3";
+    Chance.prototype.VERSION = "0.4.0";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
