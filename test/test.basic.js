@@ -160,6 +160,8 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(natural).to.equal(0);
                 });
             });
+<<<<<<< HEAD
+=======
 
             it("throws an error if min > max", function () {
                 expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
@@ -206,6 +208,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("won't take both fixed and precision", function () {
                 expect(function () { chance.floating({fixed: 2, precision: 8}); }).to.throw(RangeError);
             });
+>>>>>>> release/0.4.0
         });
 
         describe("Character", function () {
