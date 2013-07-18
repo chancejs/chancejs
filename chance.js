@@ -1,4 +1,4 @@
-//  Chance.js 0.3.2
+//  Chance.js 0.4.0
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -8,20 +8,35 @@
     // Constructor
     var Chance = function (seed) {
         if (seed !== undefined) {
-            this.seed = seed;
+            // If we were passed a generator rather than a seed, use it.
+            if (typeof seed === 'function') {
+                this.random = seed;
+            } else {
+                this.seed = seed;
+            }
         }
-        this.mt = this.mersenne_twister(seed);
-    };
 
-    // Wrap the MersenneTwister
-    Chance.prototype.random = function () {
-        return this.mt.random(this.seed);
+        // If no generator function was provided, use our MT
+        if (typeof this.random === 'undefined') {
+            this.mt = this.mersenne_twister(seed);
+            this.random = function () {
+                return this.mt.random(this.seed);
+            };
+        }
     };
 
     // -- Basics --
 
-    Chance.prototype.bool = function () {
-        return this.random() * 100 < 50;
+    Chance.prototype.bool = function (options) {
+        options = options || {};
+        // likelihood of success (true)
+        options.likelihood = (typeof options.likelihood !== "undefined") ? options.likelihood : 50;
+
+        if (options.likelihood < 0 || options.likelihood > 100) {
+            throw new RangeError("Chance: Likelihood accepts values from 0 to 100.");
+        }
+
+        return this.random() * 100 < options.likelihood;
     };
 
     // NOTE the max and min are INCLUDED in the range. So:
@@ -36,6 +51,10 @@
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
         options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
+
+        if (options.min > options.max) {
+            throw new RangeError("Chance: Min cannot be greater than Max.");
+        }
 
         return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
     };
@@ -58,6 +77,65 @@
         } while (num < options.min || num > options.max);
 
         return num;
+    };
+    
+    Chance.prototype.normal = function (options) {
+        options = options || {};
+        
+        // The Marsaglia Polar method
+        var s, u, v, norm,
+            mean = options.mean || 0,
+            dev = (typeof options.dev !== 'undefined') ? options.dev : 1;
+        
+        do {
+            // U and V are from the uniform distribution on (-1, 1)
+            u = this.random() * 2 - 1;
+            v = this.random() * 2 - 1;
+        
+            s = u * u + v * v;
+        } while (s >= 1);
+        
+        // Compute the standard normal variate
+        norm = u * Math.sqrt(-2 * Math.log(s) / s);
+        
+        // Shape and scale
+        return dev * norm + mean;
+    };
+
+    // Note, wanted to use "float" or "double" but those are both JS reserved words.
+
+    // Note, fixed means N OR LESS digits after the decimal. This because
+    // It could be 14.9000 but in JavaScript, when this is cast as a number,
+    // the trailing zeroes are dropped. Left to the consumer if trailing zeroes are
+    // needed
+    Chance.prototype.floating = function (options) {
+        var num, range, buffer;
+
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 4;
+        fixed = Math.pow(10, options.fixed);
+
+        if (options.fixed && options.precision) {
+            throw new RangeError("Chance: Cannot specify both fixed and precision.");
+        }
+
+        if (options.min && options.fixed && options.min < (-9007199254740992 / fixed)) {
+            throw new RangeError("Chance: Min specified is out of range with fixed. Min" +
+                                 "should be, at least, " + (-9007199254740992 / fixed));
+        } else if (options.max && options.fixed && options.max > (9007199254740992 / fixed)) {
+            throw new RangeError("Chance: Max specified is out of range with fixed. Max" +
+                                 "should be, at most, " + (9007199254740992 / fixed));
+        }
+        options.min = (typeof options.min !== "undefined") ? options.min : -9007199254740992 / fixed;
+        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992 / fixed;
+
+        // Todo - Make this work!
+        // options.precision = (typeof options.precision !== "undefined") ? options.precision : false;
+
+        num = this.integer({min: options.min * fixed, max: options.max * fixed});
+        num_fixed = (num / fixed).toFixed(options.fixed);
+
+        return parseFloat(num_fixed);
     };
 
     Chance.prototype.character = function (options) {
@@ -282,6 +360,10 @@
         return this.word() + '@' + (options.domain || this.domain());
     };
 
+    Chance.prototype.fbid = function (options) {
+        return '10000' + this.natural({max: 100000000000}).toString();
+    };
+
     Chance.prototype.ip = function () {
         // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
         // this should probably be updated to account for that rare as it may be
@@ -299,6 +381,10 @@
         return this.pick(this.tlds());
     };
 
+    Chance.prototype.twitter = function (options) {
+        return '@' + this.word();
+    };
+
     // -- End Web --
 
     // -- Address --
@@ -308,9 +394,34 @@
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
     };
 
+    Chance.prototype.areacode = function (options) {
+        options = options || {};
+        options.parens = (typeof options.parens !== "undefined") ? options.parens : true;
+        // Don't want area codes to start with 1
+        var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 10, max: 98}).toString();
+        return options.parens ? '(' + areacode + ')' : areacode;
+    };
+
     Chance.prototype.city = function (options) {
         options = options || {};
         return this.capitalize(this.word({syllables: 3}));
+    };
+
+    Chance.prototype.coordinates = function (options) {
+        options = options || {};
+        return this.latitude(options) + ', ' + this.longitude(options);
+    };
+
+    Chance.prototype.latitude = function (options) {
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        return this.floating({min: -90, max: 90, fixed: options.fixed});
+    };
+
+    Chance.prototype.longitude = function (options) {
+        options = options || {};
+        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        return this.floating({min: 0, max: 180, fixed: options.fixed});
     };
 
     Chance.prototype.phone = function (options) {
@@ -318,66 +429,49 @@
         return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
     };
 
-    Chance.prototype.areacode = function (options) {
-        // Don't want area codes to start with 1
-        return '(' + this.natural({min: 2, max: 9}) + this.natural({min: 10, max: 98}) + ')';
+    Chance.prototype.postal = function (options) {
+        // Postal District
+        var pd = this.character({pool: "XVTSRPNKLMHJGECBA"});
+        // Forward Sortation Area (FSA)
+        var fsa = pd + this.natural({max: 9}) + this.character({alpha: true, casing: "upper"});
+        // Local Delivery Unut (LDU)
+        var ldu = this.natural({max: 9}) + this.character({alpha: true, casing: "upper"}) + this.natural({max: 9});
+
+        return fsa + " " + ldu;
     };
 
-    Chance.prototype.street = function (options) {
-        options = options || {};
-
-        var street = this.word({syllables: 2});
-        street = this.capitalize(street);
-        street += ' ';
-        street += options.short_suffix ?
-            this.street_suffix().abbreviation :
-            this.street_suffix().name;
-        return street;
-    };
-
-    Chance.prototype.street_suffixes = function () {
-        // These are the most common suffixes.
+    Chance.prototype.provinces = function () {
         return [
-            {name: 'Avenue', abbreviation: 'Ave'},
-            {name: 'Boulevard', abbreviation: 'Blvd'},
-            {name: 'Center', abbreviation: 'Ctr'},
-            {name: 'Circle', abbreviation: 'Cir'},
-            {name: 'Court', abbreviation: 'Ct'},
-            {name: 'Drive', abbreviation: 'Dr'},
-            {name: 'Extension', abbreviation: 'Ext'},
-            {name: 'Glen', abbreviation: 'Gln'},
-            {name: 'Grove', abbreviation: 'Grv'},
-            {name: 'Heights', abbreviation: 'Hts'},
-            {name: 'Highway', abbreviation: 'Hwy'},
-            {name: 'Junction', abbreviation: 'Jct'},
-            {name: 'Key', abbreviation: 'Key'},
-            {name: 'Lane', abbreviation: 'Ln'},
-            {name: 'Loop', abbreviation: 'Loop'},
-            {name: 'Manor', abbreviation: 'Mnr'},
-            {name: 'Mill', abbreviation: 'Mill'},
-            {name: 'Park', abbreviation: 'Park'},
-            {name: 'Parkway', abbreviation: 'Pkwy'},
-            {name: 'Pass', abbreviation: 'Pass'},
-            {name: 'Path', abbreviation: 'Path'},
-            {name: 'Pike', abbreviation: 'Pike'},
-            {name: 'Place', abbreviation: 'Pl'},
-            {name: 'Plaza', abbreviation: 'Plz'},
-            {name: 'Point', abbreviation: 'Pt'},
-            {name: 'Ridge', abbreviation: 'Rdg'},
-            {name: 'River', abbreviation: 'Riv'},
-            {name: 'Road', abbreviation: 'Rd'},
-            {name: 'Square', abbreviation: 'Sq'},
-            {name: 'Street', abbreviation: 'St'},
-            {name: 'Terrace', abbreviation: 'Ter'},
-            {name: 'Trail', abbreviation: 'Trl'},
-            {name: 'Turnpike', abbreviation: 'Tpke'},
-            {name: 'View', abbreviation: 'Vw'},
-            {name: 'Way', abbreviation: 'Way'}
+            {name: 'Alberta', abbreviation: 'AB'},
+            {name: 'British Columbia', abbreviation: 'BC'},
+            {name: 'Manitoba', abbreviation: 'MB'},
+            {name: 'New Brunswick', abbreviation: 'NB'},
+            {name: 'Newfoundland and Labrador', abbreviation: 'NL'},
+            {name: 'Nova Scotia', abbreviation: 'NS'},
+            {name: 'Ontario', abbreviation: 'ON'},
+            {name: 'Prince Edward Island', abbreviation: 'PE'},
+            {name: 'Quebec', abbreviation: 'QC'},
+            {name: 'Saskatchewan', abbreviation: 'SK'},
+
+            // The case could be made that the following are not actually provinces
+            // since they are technically considered "territories" however they all
+            // look the same on an envelope!
+            {name: 'Northwest Territories', abbreviation: 'NT'},
+            {name: 'Nunavut', abbreviation: 'NU'},
+            {name: 'Yukon', abbreviation: 'YT'}
         ];
     };
 
-    Chance.prototype.street_suffix = function (options) {
-        return this.pick(this.street_suffixes(options));
+    Chance.prototype.province = function (options) {
+        return (options && options.full) ?
+            this.pick(this.provinces()).name :
+            this.pick(this.provinces()).abbreviation;
+    };
+
+    Chance.prototype.state = function (options) {
+        return (options && options.full) ?
+            this.pick(this.states()).name :
+            this.pick(this.states()).abbreviation;
     };
 
     Chance.prototype.states = function () {
@@ -446,10 +540,61 @@
         ];
     };
 
-    Chance.prototype.state = function (options) {
-        return (options && options.full) ?
-            this.pick(this.states()).name :
-            this.pick(this.states()).abbreviation;
+    Chance.prototype.street = function (options) {
+        options = options || {};
+
+        var street = this.word({syllables: 2});
+        street = this.capitalize(street);
+        street += ' ';
+        street += options.short_suffix ?
+            this.street_suffix().abbreviation :
+            this.street_suffix().name;
+        return street;
+    };
+
+    Chance.prototype.street_suffix = function (options) {
+        return this.pick(this.street_suffixes(options));
+    };
+
+    Chance.prototype.street_suffixes = function () {
+        // These are the most common suffixes.
+        return [
+            {name: 'Avenue', abbreviation: 'Ave'},
+            {name: 'Boulevard', abbreviation: 'Blvd'},
+            {name: 'Center', abbreviation: 'Ctr'},
+            {name: 'Circle', abbreviation: 'Cir'},
+            {name: 'Court', abbreviation: 'Ct'},
+            {name: 'Drive', abbreviation: 'Dr'},
+            {name: 'Extension', abbreviation: 'Ext'},
+            {name: 'Glen', abbreviation: 'Gln'},
+            {name: 'Grove', abbreviation: 'Grv'},
+            {name: 'Heights', abbreviation: 'Hts'},
+            {name: 'Highway', abbreviation: 'Hwy'},
+            {name: 'Junction', abbreviation: 'Jct'},
+            {name: 'Key', abbreviation: 'Key'},
+            {name: 'Lane', abbreviation: 'Ln'},
+            {name: 'Loop', abbreviation: 'Loop'},
+            {name: 'Manor', abbreviation: 'Mnr'},
+            {name: 'Mill', abbreviation: 'Mill'},
+            {name: 'Park', abbreviation: 'Park'},
+            {name: 'Parkway', abbreviation: 'Pkwy'},
+            {name: 'Pass', abbreviation: 'Pass'},
+            {name: 'Path', abbreviation: 'Path'},
+            {name: 'Pike', abbreviation: 'Pike'},
+            {name: 'Place', abbreviation: 'Pl'},
+            {name: 'Plaza', abbreviation: 'Plz'},
+            {name: 'Point', abbreviation: 'Pt'},
+            {name: 'Ridge', abbreviation: 'Rdg'},
+            {name: 'River', abbreviation: 'Riv'},
+            {name: 'Road', abbreviation: 'Rd'},
+            {name: 'Square', abbreviation: 'Sq'},
+            {name: 'Street', abbreviation: 'St'},
+            {name: 'Terrace', abbreviation: 'Ter'},
+            {name: 'Trail', abbreviation: 'Trl'},
+            {name: 'Turnpike', abbreviation: 'Tpke'},
+            {name: 'View', abbreviation: 'Vw'},
+            {name: 'Way', abbreviation: 'Way'}
+        ];
     };
 
     // Note: only returning US zip codes, internationalization will be a whole
@@ -472,6 +617,202 @@
     };
 
     // -- End Address --
+
+    // -- Time
+
+    Chance.prototype.ampm = function (options) {
+        options = options || {};
+        return this.bool() ? 'am' : 'pm';
+    };
+
+    Chance.prototype.hour = function (options) {
+        options = options || {};
+        var max = options.twentyfour ? 24 : 12;
+        return this.natural({min: 1, max: max});
+    };
+
+    Chance.prototype.minute = function (options) {
+        options = options || {};
+        return this.natural({min: 0, max: 59});
+    };
+
+    Chance.prototype.month = function (options) {
+        options = options || {};
+        var month = this.pick(this.months());
+        return options.raw ? month : month.name;
+    };
+
+    Chance.prototype.months = function () {
+        return [
+            {name: 'January', short_name: 'Jan', numeric: '01'},
+            {name: 'February', short_name: 'Feb', numeric: '02'},
+            {name: 'March', short_name: 'Mar', numeric: '03'},
+            {name: 'April', short_name: 'Apr', numeric: '04'},
+            {name: 'May', short_name: 'May', numeric: '05'},
+            {name: 'June', short_name: 'Jun', numeric: '06'},
+            {name: 'July', short_name: 'Jul', numeric: '07'},
+            {name: 'August', short_name: 'Aug', numeric: '08'},
+            {name: 'September', short_name: 'Sep', numeric: '09'},
+            {name: 'October', short_name: 'Oct', numeric: '10'},
+            {name: 'November', short_name: 'Nov', numeric: '11'},
+            {name: 'December', short_name: 'Dec', numeric: '12'}
+        ];
+    };
+
+    Chance.prototype.second = function (options) {
+        options = options || {};
+        return this.natural({min: 0, max: 59});
+    };
+
+    Chance.prototype.timestamp = function (options) {
+        options = options || {};
+        return this.natural({min: 1, max: parseInt(new Date().getTime() / 1000, 10)});
+    };
+
+    Chance.prototype.year = function (options) {
+        options = options || {};
+
+        // Default to current year as min if none specified
+        options.min = (typeof options.min !== "undefined") ? options.min : new Date().getFullYear();
+        // Default to one century after current year as max if none specified
+        options.max = (typeof options.max !== "undefined") ? options.max : options.min + 100;
+
+        return this.natural({min: options.min, max: options.max}).toString();
+    };
+
+    // -- End Time
+
+    // -- Finance --
+
+    Chance.prototype.cc = function (options) {
+        options = options || {};
+
+        var type, number, to_generate, type_name,
+            last = null,
+            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+        type = (options.type) ?
+                    this.cc_type({ name: options.type, raw: true }) :
+                    this.cc_type({ raw: true });
+        number = type.prefix;
+        to_generate = type.length - type.prefix.length - 1;
+
+        // Generates n - 1 digits
+        for (var i = 0; i < to_generate; i++) {
+            number = number + this.integer({min: 0, max: 9}).toString();
+        }
+
+        // Generates the last digit according to Luhn algorithm
+        do {
+            last = digits.splice(0, 1);
+        } while (!this.luhn_check(number + last));
+
+        return number + last;
+    };
+
+    Chance.prototype.cc_types = function () {
+        // http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
+        return [
+            {name: "American Express", short_name: 'amex', prefix: '34', length: 15},
+            {name: "Bankcard", short_name: 'bankcard', prefix: '5610', length: 16},
+            {name: "China UnionPay", short_name: 'chinaunion', prefix: '62', length: 16},
+            {name: "Diners Club Carte Blanche", short_name: 'dccarte', prefix: '300', length: 14},
+            {name: "Diners Club enRoute", short_name: 'dcenroute', prefix: '2014', length: 15},
+            {name: "Diners Club International", short_name: 'dcintl', prefix: '36', length: 14},
+            {name: "Diners Club United States & Canada", short_name: 'dcusc', prefix: '54', length: 16},
+            {name: "Discover Card", short_name: 'discover', prefix: '6011', length: 16},
+            {name: "InstaPayment", short_name: 'instapay', prefix: '637', length: 16},
+            {name: "JCB", short_name: 'jcb', prefix: '3528', length: 16},
+            {name: "Laser", short_name: 'laser', prefix: '6304', length: 16},
+            {name: "Maestro", short_name: 'maestro', prefix: '5018', length: 16},
+            {name: "Mastercard", short_name: 'mc', prefix: '51', length: 16},
+            {name: "Solo", short_name: 'solo', prefix: '6334', length: 16},
+            {name: "Switch", short_name: 'switch', prefix: '4903', length: 16},
+            {name: "Visa", short_name: 'visa', prefix: '4', length: 16},
+            {name: "Visa Electron", short_name: 'electron', prefix: '4026', length: 16}
+        ];
+    };
+
+    Chance.prototype.cc_type = function (options) {
+        options = options || {};
+        var types = this.cc_types(),
+            type = null;
+
+        if (options.name) {
+            for (var i = 0; i < types.length; i++) {
+                // Accept either name or short_name to specify card type
+                if (types[i].name === options.name || types[i].short_name === options.name) {
+                    type = types[i];
+                    break;
+                }
+            }
+            if (type === null) {
+                throw new Error("Credit card type '" + options.name + "'' is not suppoted");
+            }
+        } else {
+            type = this.pick(types);
+        }
+
+        return options.raw ? type : type.name;
+    };
+
+    Chance.prototype.dollar = function (options) {
+        options = options || {};
+
+        // By default, a somewhat more sane max for dollar than all available numbers
+        options.max = (typeof options.max !== "undefined") ? options.max : 10000;
+        options.min = (typeof options.min !== "undefined") ? options.min : 0;
+
+        var dollar = this.floating({min: options.min, max: options.max, fixed: 2}).toString(),
+            cents = dollar.split('.')[1];
+
+        if (cents === undefined) {
+            dollar += '.00';
+        } else if (cents.length < 2) {
+            dollar = dollar + '0';
+        }
+
+        return '$' + dollar;
+    };
+
+    Chance.prototype.exp = function (options) {
+        options = options || {};
+        var exp = {};
+
+        exp.year = this.exp_year();
+
+        // If the year is this year, need to ensure month is greater than the
+        // current month or this expiration will not be valid
+        if (exp.year === (new Date().getFullYear())) {
+            exp.month = this.exp_month({future: true});
+        } else {
+            exp.month = this.exp_month();
+        }
+
+        return options.raw ? exp : exp.month + '/' + exp.year;
+    };
+
+    Chance.prototype.exp_month = function (options) {
+        options = options || {};
+        var month, month_int;
+
+        if (options.future) {
+            do {
+                month = this.month({raw: true}).numeric;
+                month_int = parseInt(month, 10);
+            } while (month_int < new Date().getMonth());
+        } else {
+            month = this.month({raw: true}).numeric;
+        }
+
+        return month;
+    };
+
+    Chance.prototype.exp_year = function (options) {
+        return this.year({max: new Date().getFullYear() + 10});
+    };
+
+    // -- End Finance
 
     // -- Miscellaneous --
 
@@ -499,9 +840,17 @@
         return new MersenneTwister(seed);
     };
 
+    Chance.prototype.luhn_check = function (num) {
+        var luhnArr = [[0, 2, 4, 6, 8, 1, 3, 5, 7, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]], sum = 0;
+        num.toString().replace(/\D+/g, "").replace(/[\d]/g, function (c, p, o) {
+            sum += luhnArr[(o.length - p) & 1][parseInt(c, 10)];
+        });
+        return (sum % 10 === 0) && (sum > 0);
+    };
+
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.3.2";
+    Chance.prototype.VERSION = "0.4.0";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {

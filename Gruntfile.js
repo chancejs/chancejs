@@ -35,14 +35,22 @@ module.exports = function (grunt) {
                 }
             }
         },
+        uglify: {
+            my_target: {
+                files: {
+                    'chance.min.js': ['chance.js']
+                }
+            }
+        },
         watch: {
             options: { livereload: true },
             files: js_files,
-            tasks: ['jshint', 'shell:mocha-phantomjs']
+            tasks: ['jshint', 'shell:mocha-phantomjs', 'uglify']
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-shell');
 
