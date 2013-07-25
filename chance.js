@@ -199,13 +199,20 @@
     };
 
     Chance.prototype.shuffle = function (arr) {
-        for (var i = arr.length - 1; i > 0; i--) {
-            var j = this.natural({max: i + 1}),
-            temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
+        var new_array = [],
+            j = 0,
+            length = Number(arr.length);
+
+        for (var i = 0; i < length; i++) {
+            // Pick a random index from the array
+            j = this.natural({max: arr.length - 1});
+            // Add it to the new array
+            new_array[i] = arr[j];
+            // Remove that element from the original array
+            arr.splice(j, 1);
         }
-        return arr;
+
+        return new_array;
     };
 
     // -- End Helpers --
