@@ -1,4 +1,4 @@
-//  Chance.js 0.4.0
+//  Chance.js 0.4.1
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -388,6 +388,16 @@
                this.natural({max: 255}) + '.' +
                this.natural({max: 255}) + '.' +
                this.natural({max: 255});
+    };
+
+    Chance.prototype.ipv6 = function () {
+        var hex_pool = "0123456789abcdef",
+            ip_addr = "";
+
+        for (var i = 0; i < 8; i++) {
+            ip_addr += this.string({pool: hex_pool, length: 4}) + ':';
+        }
+        return ip_addr.substr(0, ip_addr.length - 1);
     };
 
     Chance.prototype.tlds = function () {
@@ -889,7 +899,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.4.0";
+    Chance.prototype.VERSION = "0.4.1";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {

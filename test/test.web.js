@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Web", function () {
-        var tld, domain, email, ip, twitter, chance = new Chance();
+        var tld, domain, email, ip, ipv6, twitter, chance = new Chance();
 
         it("tld() returns a tld", function () {
             _(1000).times(function () {
@@ -55,6 +55,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 ip = chance.ip();
                 expect(ip).to.be.a('string');
                 expect(ip.split('.')).to.have.length(4);
+            });
+        });
+
+        it("ipv6() returns what looks like an IP address (v6)", function () {
+            _(1000).times(function () {
+                ipv6 = chance.ipv6();
+                expect(ipv6).to.be.a('string');
+                expect(ipv6.split(':')).to.have.length(8);
             });
         });
 
