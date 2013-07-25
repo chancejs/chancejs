@@ -118,14 +118,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("areacode() looks right", function () {
                 expect(chance.areacode()).to.be.a('string');
                 _(1000).times(function () {
-                    expect(chance.areacode()).to.match(/\(([0-9]{3})\)/);
+                    expect(chance.areacode()).to.match(/^\(([2-9][0-8][0-9])\)$/);
                 });
             });
 
             it("areacode({parens: false}) looks right", function () {
                 _(1000).times(function () {
-                    expect(chance.areacode()).to.be.a('string');
-                    expect(chance.areacode()).to.match(/([0-9]{3})/);
+                    expect(chance.areacode({parens: false})).to.be.a('string');
+                    expect(chance.areacode({parens: false})).to.match(/^([2-9][0-8][0-9])$/);
                 });
             });
 
@@ -135,7 +135,21 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
             it("phone() looks like an actual phone number", function () {
                 _(1000).times(function () {
-                    expect(chance.phone()).to.match(/\(([0-9]{3})\)?[\-. ]?([0-9]{3})[\-. ]?([0-9]{4})/);
+                    expect(chance.phone()).to.match(/^\(([2-9][0-8][0-9])\)?[\-. ]?([2-9][0-9]{2,2})[\-. ]?([0-9]{4,4})$/);
+                });
+            });
+
+            it('phone({formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({formatted : false})).to.be.a('string');
+                    expect(chance.phone({formatted : false})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
+                });
+            });
+
+            it('phone({formatted: false, parens: true}) is unformatted', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({formatted : false, parens: true})).to.be.a('string');
+                    expect(chance.phone({formatted : false, parens: true})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
                 });
             });
         });

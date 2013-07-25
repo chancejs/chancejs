@@ -426,9 +426,14 @@
 
     Chance.prototype.phone = function (options) {
         options = options || {};
+        options.formatted = (typeof options.formatted !== "undefined") ? options.formatted : true;
+        if (!options.formatted) {
+            options.parens = false;
+        }
+        var areacode = this.areacode(options).toString();
         var exchange = this.natural({min: 2, max: 9}).toString() + this.natural({min: 0, max: 9}).toString() + this.natural({min: 0, max: 9}).toString();
         var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
-        return this.areacode() + ' ' + exchange + '-' + subscriber;
+        return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
     };
 
     Chance.prototype.postal = function (options) {
