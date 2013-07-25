@@ -63,6 +63,9 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("rpg() appears to work as expected", function () {
             _(1000).times(function () {
                 expect(function () { chance.rpg(); }).to.throw(Error);
+                expect(function () { chance.rpg("3"); }).to.throw(Error);
+                expect(function () { chance.rpg("hd23"); }).to.throw(Error);
+                expect(function () { chance.rpg("3d23d2"); }).to.throw(Error);
                 dice = chance.rpg('5d20');
                 expect(dice).to.be.an.array;
                 expect(dice).to.have.length(5);
