@@ -23,5 +23,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
+
+        describe("shuffle()", function () {
+            it("returns an array of the same size", function () {
+                arr = ['a', 'b', 'c', 'd'];
+                _(1000).times(function () {
+                    expect(chance.shuffle(arr)).to.have.length(4);
+                });
+            });
+        });
+
     });
 });
