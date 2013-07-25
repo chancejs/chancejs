@@ -478,6 +478,24 @@
             this.pick(this.provinces()).abbreviation;
     };
 
+    Chance.prototype.radio = function (options) {
+        // Initial Letter (Typically Designated by Side of Mississippi River)
+        options = options || {};
+        options.side = ((typeof options.side !== "undefined") ? options.side : "?").toLowerCase();
+        switch (options.side) {
+        	case "east":
+        	case "e":
+        		var fl = "W"; break;
+        	case "west":
+        	case "w":
+        		var fl = "K"; break;
+      		default:
+      			var fl = this.character({pool: "KW"}); break;
+        }
+        
+        return fl + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
+    };
+
     Chance.prototype.state = function (options) {
         return (options && options.full) ?
             this.pick(this.states()).name :
