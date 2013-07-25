@@ -1,4 +1,4 @@
-//  Chance.js 0.4.0
+//  Chance.js 0.4.1
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -877,12 +877,12 @@
         if (thrown === null) {
             throw new Error("A type of die roll must be included");
         } else {
-        		var bits = thrown.toLowerCase().split("d"),
-        		rolls = [];
-        		for (i = bits[0]; i > 0; i--) {
-        				rolls[i-1] = this.natural({min: 1, max: bits[1]});
-        		}
-        		return rolls;
+            var bits = thrown.toLowerCase().split("d"),
+            rolls = [];
+            for (var i = bits[0]; i > 0; i--) {
+                rolls[i - 1] = this.natural({min: 1, max: bits[1]});
+            }
+            return rolls;
         }
     };
 
@@ -911,7 +911,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.4.0";
+    Chance.prototype.VERSION = "0.4.1";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
