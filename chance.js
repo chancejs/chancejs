@@ -1,4 +1,4 @@
-//  Chance.js 0.4.0
+//  Chance.js 0.4.2
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -198,6 +198,22 @@
         return arr[this.natural({max: arr.length - 1})];
     };
 
+    Chance.prototype.shuffle = function (arr) {
+        var new_array = [],
+            j = 0,
+            length = Number(arr.length);
+
+        for (var i = 0; i < length; i++) {
+            // Pick a random index from the array
+            j = this.natural({max: arr.length - 1});
+            // Remove it from the array and add it to the new array
+            new_array[i] = arr.splice(j, 1);
+            
+        }
+
+        return new_array;
+    };
+
     // -- End Helpers --
 
     // -- Text --
@@ -373,6 +389,16 @@
                this.natural({max: 255});
     };
 
+    Chance.prototype.ipv6 = function () {
+        var hex_pool = "0123456789abcdef",
+            ip_addr = "";
+
+        for (var i = 0; i < 8; i++) {
+            ip_addr += this.string({pool: hex_pool, length: 4}) + ':';
+        }
+        return ip_addr.substr(0, ip_addr.length - 1);
+    };
+
     Chance.prototype.tlds = function () {
         return ['com', 'org', 'edu', 'gov', 'co.uk', 'net', 'io'];
     };
@@ -466,6 +492,28 @@
         return (options && options.full) ?
             this.pick(this.provinces()).name :
             this.pick(this.provinces()).abbreviation;
+    };
+
+    Chance.prototype.radio = function (options) {
+        // Initial Letter (Typically Designated by Side of Mississippi River)
+        options = options || {};
+        options.side = ((typeof options.side !== "undefined") ? options.side : "?").toLowerCase();
+        var fl = "";
+        switch (options.side) {
+        case "east":
+        case "e":
+            fl = "W";
+            break;
+        case "west":
+        case "w":
+            fl = "K";
+            break;
+        default:
+            fl = this.character({pool: "KW"});
+            break;
+        }
+        
+        return fl + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
     };
 
     Chance.prototype.state = function (options) {
@@ -823,7 +871,24 @@
     Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
+    Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
     Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
+    Chance.prototype.rpg = function (thrown) {
+        if (thrown === null) {
+            throw new Error("A type of die roll must be included");
+        } else {
+            var bits = thrown.toLowerCase().split("d"),
+                rolls = [];
+
+            if (bits.length !== 2 || !parseInt(bits[0], 10) || !parseInt(bits[1], 10)) {
+                throw new Error("Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
+            }
+            for (var i = bits[0]; i > 0; i--) {
+                rolls[i - 1] = this.natural({min: 1, max: bits[1]});
+            }
+            return rolls;
+        }
+    };
 
     // Guid
     Chance.prototype.guid = function () {
@@ -850,7 +915,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.4.0";
+    Chance.prototype.VERSION = "0.4.2";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
