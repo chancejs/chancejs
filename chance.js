@@ -206,10 +206,9 @@
         for (var i = 0; i < length; i++) {
             // Pick a random index from the array
             j = this.natural({max: arr.length - 1});
-            // Add it to the new array
-            new_array[i] = arr[j];
-            // Remove that element from the original array
-            arr.splice(j, 1);
+            // Remove it from the array and add it to the new array
+            new_array[i] = arr.splice(j, 1);
+            
         }
 
         return new_array;
