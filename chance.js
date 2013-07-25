@@ -1,4 +1,4 @@
-//  Chance.js 0.4.1
+//  Chance.js 0.4.2
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -206,10 +206,9 @@
         for (var i = 0; i < length; i++) {
             // Pick a random index from the array
             j = this.natural({max: arr.length - 1});
-            // Add it to the new array
-            new_array[i] = arr[j];
-            // Remove that element from the original array
-            arr.splice(j, 1);
+            // Remove it from the array and add it to the new array
+            new_array[i] = arr.splice(j, 1);
+            
         }
 
         return new_array;
@@ -872,7 +871,24 @@
     Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
+    Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
     Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
+    Chance.prototype.rpg = function (thrown) {
+        if (thrown === null) {
+            throw new Error("A type of die roll must be included");
+        } else {
+            var bits = thrown.toLowerCase().split("d"),
+                rolls = [];
+
+            if (bits.length !== 2 || !parseInt(bits[0], 10) || !parseInt(bits[1], 10)) {
+                throw new Error("Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
+            }
+            for (var i = bits[0]; i > 0; i--) {
+                rolls[i - 1] = this.natural({min: 1, max: bits[1]});
+            }
+            return rolls;
+        }
+    };
 
     // Guid
     Chance.prototype.guid = function () {
@@ -899,7 +915,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.4.1";
+    Chance.prototype.VERSION = "0.4.2";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
