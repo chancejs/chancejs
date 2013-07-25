@@ -871,7 +871,20 @@
     Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
     Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
+    Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
     Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
+    Chance.prototype.rpg = function (thrown) {
+        if (thrown === null) {
+            throw new Error("A type of die roll must be included");
+        } else {
+        		var bits = thrown.toLowerCase().split("d"),
+        		rolls = [];
+        		for (i = bits[0]; i > 0; i--) {
+        				rolls[i-1] = this.natural({min: 1, max: bits[1]});
+        		}
+        		return rolls;
+        }
+    };
 
     // Guid
     Chance.prototype.guid = function () {
