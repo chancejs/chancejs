@@ -179,7 +179,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
             it("longitude() is in the right range", function () {
                 _(1000).times(function () {
-                    expect(chance.longitude()).to.be.within(0, 180);
+                    expect(chance.longitude()).to.be.within(-180, 180);
                 });
             });
         });
