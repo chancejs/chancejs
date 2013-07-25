@@ -199,12 +199,12 @@
     };
 
     Chance.prototype.shuffle = function (arr) {
-    		for (var i = arr.length - 1; i > 0; i--) {
-    				var j = this.natural({max: i + 1}),
-    				temp = arr[i];
-    				arr[i] = arr[j];
-    				arr[j] = temp;
-    		}
+        for (var i = arr.length - 1; i > 0; i--) {
+            var j = this.natural({max: i + 1}),
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
         return arr;
     };
 
@@ -482,15 +482,19 @@
         // Initial Letter (Typically Designated by Side of Mississippi River)
         options = options || {};
         options.side = ((typeof options.side !== "undefined") ? options.side : "?").toLowerCase();
+        var fl = "";
         switch (options.side) {
-        	case "east":
-        	case "e":
-        		var fl = "W"; break;
-        	case "west":
-        	case "w":
-        		var fl = "K"; break;
-      		default:
-      			var fl = this.character({pool: "KW"}); break;
+        case "east":
+        case "e":
+            fl = "W";
+            break;
+        case "west":
+        case "w":
+            fl = "K";
+            break;
+        default:
+            fl = this.character({pool: "KW"});
+            break;
         }
         
         return fl + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
