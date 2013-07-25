@@ -373,6 +373,15 @@
                this.natural({max: 255});
     };
 
+    Chance.prototype.ipv6 = function () {
+        var hex_pool = "0123456789abcdef",
+        var ip_addr = "";
+        for(i = 0; i < 8; i++){
+            ip_addr += this.string({pool: hex_pool, length: 4}) + ':';
+        }
+        return ip_addr.substr(0, ip_addr.length-1)
+    };
+
     Chance.prototype.tlds = function () {
         return ['com', 'org', 'edu', 'gov', 'co.uk', 'net', 'io'];
     };
