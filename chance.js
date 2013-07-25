@@ -199,7 +199,7 @@
     };
 
     Chance.prototype.shuffle = function (arr) {
-    		for (var i = arr.length - 1; i > 0; j--) {
+    		for (var i = arr.length - 1; i > 0; i--) {
     				var j = this.natural({max: i + 1}),
     				temp = arr[i];
     				arr[i] = arr[j];
