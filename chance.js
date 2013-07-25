@@ -199,11 +199,11 @@
     };
 
     Chance.prototype.shuffle = function (arr) {
-    		for (var i = arr.length - 1; i > 0; i--) {
-    				var j = this.natural({max: i + 1}),
-    				temp = arr[i];
-    				arr[i] = arr[j];
-    				arr[j] = temp;
+    		for (var j = arr.length - 1; j > 0; j--) {
+    				var i = this.natural({max: i + 1}),
+    				temp = arr[j];
+    				arr[j] = arr[i];
+    				arr[i] = temp;
     		}
         return arr;
     };
