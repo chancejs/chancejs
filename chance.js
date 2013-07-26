@@ -902,6 +902,16 @@
         return guid;
     };
 
+    // Hash
+    Chance.prototype.hash = function (options) {
+        options = options || {};
+        var pool = "abcdef1234567890";
+
+        options.length = (typeof options.length !== 'undefined') ? options.length : 40;
+
+        return this.string({pool: pool, length: options.length});
+    };
+
     Chance.prototype.mersenne_twister = function (seed) {
         return new MersenneTwister(seed);
     };

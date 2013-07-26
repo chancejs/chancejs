@@ -95,4 +95,24 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
     });
+
+    describe("Hash", function () {
+        var hash, length, chance = new Chance();
+
+        it("returns a proper hash", function () {
+            _(1000).times(function () {
+                hash = chance.hash();
+                expect(hash).to.match(/([0-9a-f]){40}/);
+                expect(hash).to.have.length(40);
+            });
+        });
+
+        it("obeys length, if supplied", function () {
+            _(1000).times(function () {
+                length = chance.natural({min: 1, max: 64});
+                hash = chance.hash({length: length});
+                expect(hash).to.have.length(length);
+            });
+        });
+    });
 });
