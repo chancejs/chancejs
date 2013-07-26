@@ -74,6 +74,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
+
+        it("rpg() will take and obey a sum", function () {
+            var rpg = 0;
+            _(1000).times(function () {
+                rpg = chance.rpg('4d20', {sum: true});
+                expect(rpg).to.be.a.number;
+                expect(rpg).to.be.within(4, 80);
+            });
+        });
     });
 
     describe("Guid", function () {
