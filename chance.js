@@ -6,6 +6,9 @@
 (function () {
 
     // Constructor
+
+    var MAX_INT = 9007199254740992;
+    var MIN_INT = -MAX_INT;
     var Chance = function (seed) {
         if (seed !== undefined) {
             // If we were passed a generator rather than a seed, use it.
@@ -28,13 +31,14 @@
     // -- Basics --
 
     Chance.prototype.bool = function (options) {
-        options = options || {};
-        // likelihood of success (true)
-        options.likelihood = (typeof options.likelihood !== "undefined") ? options.likelihood : 50;
 
-        if (options.likelihood < 0 || options.likelihood > 100) {
-            throw new RangeError("Chance: Likelihood accepts values from 0 to 100.");
-        }
+        // likelihood of success (true)
+        options = initOptions(options, {likelihood : 50});
+
+        testRange(
+            options.likelihood < 0 || options.likelihood > 100,
+            "Chance: Likelihood accepts values from 0 to 100."
+        );
 
         return this.random() * 100 < options.likelihood;
     };
@@ -46,15 +50,12 @@
     // would return either 1, 2, or 3.
 
     Chance.prototype.natural = function (options) {
-        options = options || {};
-        options.min = (typeof options.min !== "undefined") ? options.min : 0;
+
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
-        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
+        options = initOptions(options, {min : 0, max : MAX_INT});
 
-        if (options.min > options.max) {
-            throw new RangeError("Chance: Min cannot be greater than Max.");
-        }
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
         return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
     };
@@ -62,9 +63,7 @@
     Chance.prototype.integer = function (options) {
         var num, range;
 
-        options = options || {};
-        options.min = (typeof options.min !== "undefined") ? options.min : -9007199254740992;
-        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992;
+        options = initOptions(options, {min : MIN_INT, max : MAX_INT});
 
         // Greatest of absolute value of either max or min so we know we're
         // including the entire search domain.
@@ -78,26 +77,26 @@
 
         return num;
     };
-    
+
     Chance.prototype.normal = function (options) {
-        options = options || {};
-        
+        options = initOptions(options, {mean : 0, dev : 1});
+
         // The Marsaglia Polar method
         var s, u, v, norm,
-            mean = options.mean || 0,
-            dev = (typeof options.dev !== 'undefined') ? options.dev : 1;
-        
+            mean = options.mean,
+            dev = options.dev;
+
         do {
             // U and V are from the uniform distribution on (-1, 1)
             u = this.random() * 2 - 1;
             v = this.random() * 2 - 1;
-        
+
             s = u * u + v * v;
         } while (s >= 1);
-        
+
         // Compute the standard normal variate
         norm = u * Math.sqrt(-2 * Math.log(s) / s);
-        
+
         // Shape and scale
         return dev * norm + mean;
     };
@@ -111,35 +110,39 @@
     Chance.prototype.floating = function (options) {
         var num, range, buffer;
 
-        options = options || {};
-        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 4;
-        fixed = Math.pow(10, options.fixed);
+        options = initOptions(options, {fixed : 4});
+        var fixed = Math.pow(10, options.fixed);
 
-        if (options.fixed && options.precision) {
-            throw new RangeError("Chance: Cannot specify both fixed and precision.");
-        }
+        testRange(
+            options.fixed && options.precision,
+            "Chance: Cannot specify both fixed and precision."
+        );
 
-        if (options.min && options.fixed && options.min < (-9007199254740992 / fixed)) {
-            throw new RangeError("Chance: Min specified is out of range with fixed. Min" +
-                                 "should be, at least, " + (-9007199254740992 / fixed));
-        } else if (options.max && options.fixed && options.max > (9007199254740992 / fixed)) {
-            throw new RangeError("Chance: Max specified is out of range with fixed. Max" +
-                                 "should be, at most, " + (9007199254740992 / fixed));
-        }
-        options.min = (typeof options.min !== "undefined") ? options.min : -9007199254740992 / fixed;
-        options.max = (typeof options.max !== "undefined") ? options.max : 9007199254740992 / fixed;
+        var max = MAX_INT / fixed;
+        var min = -max;
+
+        testRange(
+            options.min && options.fixed && options.min < min,
+            "Chance: Min specified is out of range with fixed. Min should be, at least, " + min
+        );
+        testRange(
+            options.max && options.fixed && options.max > max,
+            "Chance: Max specified is out of range with fixed. Max should be, at most, " + max
+        );
+
+        options = initOptions(options, {min : min, max : max});
 
         // Todo - Make this work!
         // options.precision = (typeof options.precision !== "undefined") ? options.precision : false;
 
         num = this.integer({min: options.min * fixed, max: options.max * fixed});
-        num_fixed = (num / fixed).toFixed(options.fixed);
+        var num_fixed = (num / fixed).toFixed(options.fixed);
 
         return parseFloat(num_fixed);
     };
 
     Chance.prototype.character = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var lower = "abcdefghijklmnopqrstuvwxyz",
             upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -147,9 +150,10 @@
             symbols = "!@#$%^&*()[]",
             letters, pool;
 
-        if (options.alpha && options.symbols) {
-            throw new RangeError("Chance: Cannot specify both alpha and symbols.");
-        }
+        testRange(
+            options.alpha && options.symbols,
+            "Chance: Cannot specify both alpha and symbols."
+        );
 
 
         if (options.casing === 'lower') {
@@ -174,7 +178,7 @@
     };
 
     Chance.prototype.string = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var length = options.length || this.natural({min: 5, max: 20}),
             text = '',
@@ -208,7 +212,7 @@
             j = this.natural({max: arr.length - 1});
             // Remove it from the array and add it to the new array
             new_array[i] = arr.splice(j, 1);
-            
+
         }
 
         return new_array;
@@ -219,7 +223,7 @@
     // -- Text --
 
     Chance.prototype.paragraph = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var sentences = options.sentences || this.natural({min: 3, max: 7}),
             sentence_array = [];
@@ -234,7 +238,7 @@
     // Could get smarter about this than generating random words and
     // chaining them together. Such as: http://vq.io/1a5ceOh
     Chance.prototype.sentence = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var words = options.words || this.natural({min: 12, max: 18}),
             text = '', word_array = [];
@@ -252,7 +256,7 @@
     };
 
     Chance.prototype.syllable = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var length = options.length || this.natural({min: 2, max: 3}),
             consanants = 'bcdfghjklmnprstvwz', // consonants except hard to speak ones
@@ -282,11 +286,12 @@
     };
 
     Chance.prototype.word = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
-        if (options.syllables && options.length) {
-            throw new RangeError("Chance: Cannot specify both syllables AND length.");
-        }
+        testRange(
+            options.syllables && options.length,
+            "Chance: Cannot specify both syllables AND length."
+        );
 
         var syllables = options.syllables || this.natural({min: 1, max: 3}),
             text = '';
@@ -320,7 +325,7 @@
     };
 
     Chance.prototype.name = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var first = this.first(),
             last = this.last(),
@@ -356,7 +361,7 @@
     };
 
     Chance.prototype.name_prefix = function (options) {
-        options = options || {};
+        options = initOptions(options);
         return options.full ?
             this.pick(this.name_prefixes()).name :
             this.pick(this.name_prefixes()).abbreviation;
@@ -367,16 +372,16 @@
     // -- Web --
 
     Chance.prototype.domain = function (options) {
-        options = options || {};
+        options = initOptions(options);
         return this.word() + '.' + (options.tld || this.tld());
     };
 
     Chance.prototype.email = function (options) {
-        options = options || {};
+        options = initOptions(options);
         return this.word() + '@' + (options.domain || this.domain());
     };
 
-    Chance.prototype.fbid = function (options) {
+    Chance.prototype.fbid = function () {
         return '10000' + this.natural({max: 100000000000}).toString();
     };
 
@@ -407,7 +412,7 @@
         return this.pick(this.tlds());
     };
 
-    Chance.prototype.twitter = function (options) {
+    Chance.prototype.twitter = function () {
         return '@' + this.word();
     };
 
@@ -416,46 +421,41 @@
     // -- Address --
 
     Chance.prototype.address = function (options) {
-        options = options || {};
+        options = initOptions(options);
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
     };
 
     Chance.prototype.areacode = function (options) {
-        options = options || {};
-        options.parens = (typeof options.parens !== "undefined") ? options.parens : true;
+        options = initOptions(options, {parens : true});
         // Don't want area codes to start with 1
         var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 10, max: 98}).toString();
         return options.parens ? '(' + areacode + ')' : areacode;
     };
 
-    Chance.prototype.city = function (options) {
-        options = options || {};
+    Chance.prototype.city = function () {
         return this.capitalize(this.word({syllables: 3}));
     };
 
     Chance.prototype.coordinates = function (options) {
-        options = options || {};
+        options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options);
     };
 
     Chance.prototype.latitude = function (options) {
-        options = options || {};
-        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        options = initOptions(options, {fixed : 5});
         return this.floating({min: -90, max: 90, fixed: options.fixed});
     };
 
     Chance.prototype.longitude = function (options) {
-        options = options || {};
-        options.fixed = (typeof options.fixed !== "undefined") ? options.fixed : 5;
+        options = initOptions(options, {fixed : 5});
         return this.floating({min: 0, max: 180, fixed: options.fixed});
     };
 
-    Chance.prototype.phone = function (options) {
-        options = options || {};
+    Chance.prototype.phone = function () {
         return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
     };
 
-    Chance.prototype.postal = function (options) {
+    Chance.prototype.postal = function () {
         // Postal District
         var pd = this.character({pool: "XVTSRPNKLMHJGECBA"});
         // Forward Sortation Area (FSA)
@@ -496,10 +496,9 @@
 
     Chance.prototype.radio = function (options) {
         // Initial Letter (Typically Designated by Side of Mississippi River)
-        options = options || {};
-        options.side = ((typeof options.side !== "undefined") ? options.side : "?").toLowerCase();
+        options = initOptions(options, {side : "?"});
         var fl = "";
-        switch (options.side) {
+        switch (options.side.toLowerCase()) {
         case "east":
         case "e":
             fl = "W";
@@ -512,7 +511,7 @@
             fl = this.character({pool: "KW"});
             break;
         }
-        
+
         return fl + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
     };
 
@@ -589,7 +588,7 @@
     };
 
     Chance.prototype.street = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var street = this.word({syllables: 2});
         street = this.capitalize(street);
@@ -668,24 +667,22 @@
 
     // -- Time
 
-    Chance.prototype.ampm = function (options) {
-        options = options || {};
+    Chance.prototype.ampm = function () {
         return this.bool() ? 'am' : 'pm';
     };
 
     Chance.prototype.hour = function (options) {
-        options = options || {};
+        options = initOptions(options);
         var max = options.twentyfour ? 24 : 12;
         return this.natural({min: 1, max: max});
     };
 
-    Chance.prototype.minute = function (options) {
-        options = options || {};
+    Chance.prototype.minute = function () {
         return this.natural({min: 0, max: 59});
     };
 
     Chance.prototype.month = function (options) {
-        options = options || {};
+        options = initOptions(options);
         var month = this.pick(this.months());
         return options.raw ? month : month.name;
     };
@@ -707,25 +704,22 @@
         ];
     };
 
-    Chance.prototype.second = function (options) {
-        options = options || {};
+    Chance.prototype.second = function () {
         return this.natural({min: 0, max: 59});
     };
 
-    Chance.prototype.timestamp = function (options) {
-        options = options || {};
+    Chance.prototype.timestamp = function () {
         return this.natural({min: 1, max: parseInt(new Date().getTime() / 1000, 10)});
     };
 
     Chance.prototype.year = function (options) {
-        options = options || {};
-
         // Default to current year as min if none specified
-        options.min = (typeof options.min !== "undefined") ? options.min : new Date().getFullYear();
+        options = initOptions(options, {min: new Date().getFullYear()});
+
         // Default to one century after current year as max if none specified
         options.max = (typeof options.max !== "undefined") ? options.max : options.min + 100;
 
-        return this.natural({min: options.min, max: options.max}).toString();
+        return this.natural(options).toString();
     };
 
     // -- End Time
@@ -733,7 +727,7 @@
     // -- Finance --
 
     Chance.prototype.cc = function (options) {
-        options = options || {};
+        options = initOptions(options);
 
         var type, number, to_generate, type_name,
             last = null,
@@ -782,7 +776,7 @@
     };
 
     Chance.prototype.cc_type = function (options) {
-        options = options || {};
+        options = initOptions(options);
         var types = this.cc_types(),
             type = null;
 
@@ -805,11 +799,8 @@
     };
 
     Chance.prototype.dollar = function (options) {
-        options = options || {};
-
         // By default, a somewhat more sane max for dollar than all available numbers
-        options.max = (typeof options.max !== "undefined") ? options.max : 10000;
-        options.min = (typeof options.min !== "undefined") ? options.min : 0;
+        options = initOptions(options, {max : 10000, min : 0});
 
         var dollar = this.floating({min: options.min, max: options.max, fixed: 2}).toString(),
             cents = dollar.split('.')[1];
@@ -824,7 +815,7 @@
     };
 
     Chance.prototype.exp = function (options) {
-        options = options || {};
+        options = initOptions(options);
         var exp = {};
 
         exp.year = this.exp_year();
@@ -841,7 +832,7 @@
     };
 
     Chance.prototype.exp_month = function (options) {
-        options = options || {};
+        options = initOptions(options);
         var month, month_int;
 
         if (options.future) {
@@ -874,7 +865,7 @@
     Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
     Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
     Chance.prototype.rpg = function (thrown, options) {
-        options = options || {};
+        options = initOptions(options);
         if (thrown === null) {
             throw new Error("A type of die roll must be included");
         } else {
@@ -904,10 +895,8 @@
 
     // Hash
     Chance.prototype.hash = function (options) {
-        options = options || {};
+        options = initOptions(options, {length : 40});
         var pool = "abcdef1234567890";
-
-        options.length = (typeof options.length !== 'undefined') ? options.length : 40;
 
         return this.string({pool: pool, length: options.length});
     };
@@ -939,7 +928,7 @@
         this.MATRIX_A = 0x9908b0df;   /* constant vector a */
         this.UPPER_MASK = 0x80000000; /* most significant w-r bits */
         this.LOWER_MASK = 0x7fffffff; /* least significant r bits */
-        
+
         this.mt = new Array(this.N); /* the array for the state vector */
         this.mti = this.N + 1; /* mti==N + 1 means mt[N] is not initialized */
 
@@ -1078,4 +1067,22 @@
         window.chance = new Chance();
     }
 
+    function initOptions(options, defaults) {
+        options || (options = {});
+        if (!defaults) {
+            return options;
+        }
+        for (var i in defaults) {
+            if (typeof options[i] === 'undefined') {
+                options[i] = defaults[i];
+            }
+        }
+        return options;
+    }
+
+    function testRange(test, errorMessage) {
+        if (test) {
+            throw new RangeError(errorMessage);
+        }
+    }
 })();
