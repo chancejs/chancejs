@@ -74,6 +74,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
+
+        it("rpg() will take and obey a sum", function () {
+            var rpg = 0;
+            _(1000).times(function () {
+                rpg = chance.rpg('4d20', {sum: true});
+                expect(rpg).to.be.a.number;
+                expect(rpg).to.be.within(4, 80);
+            });
+        });
     });
 
     describe("Guid", function () {
@@ -83,6 +92,26 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             _(1000).times(function () {
                 guid = chance.guid();
                 expect(guid).to.match(/([0-9a-fA-F]){8}(-([0-9a-fA-F]){4}){3}-([0-9a-fA-F]){12}/);
+            });
+        });
+    });
+
+    describe("Hash", function () {
+        var hash, length, chance = new Chance();
+
+        it("returns a proper hash", function () {
+            _(1000).times(function () {
+                hash = chance.hash();
+                expect(hash).to.match(/([0-9a-f]){40}/);
+                expect(hash).to.have.length(40);
+            });
+        });
+
+        it("obeys length, if supplied", function () {
+            _(1000).times(function () {
+                length = chance.natural({min: 1, max: 64});
+                hash = chance.hash({length: length});
+                expect(hash).to.have.length(length);
             });
         });
     });

@@ -873,7 +873,8 @@
     Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
     Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
     Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
-    Chance.prototype.rpg = function (thrown) {
+    Chance.prototype.rpg = function (thrown, options) {
+        options = options || {};
         if (thrown === null) {
             throw new Error("A type of die roll must be included");
         } else {
@@ -886,7 +887,7 @@
             for (var i = bits[0]; i > 0; i--) {
                 rolls[i - 1] = this.natural({min: 1, max: bits[1]});
             }
-            return rolls;
+            return (typeof options.sum !== 'undefined' && options.sum) ? rolls.reduce(function (p, c, i, a) { return p + c; }) : rolls;
         }
     };
 
@@ -899,6 +900,16 @@
                    this.string({pool: guid_pool, length: 4}) + '-' +
                    this.string({pool: guid_pool, length: 12});
         return guid;
+    };
+
+    // Hash
+    Chance.prototype.hash = function (options) {
+        options = options || {};
+        var pool = "abcdef1234567890";
+
+        options.length = (typeof options.length !== 'undefined') ? options.length : 40;
+
+        return this.string({pool: pool, length: options.length});
     };
 
     Chance.prototype.mersenne_twister = function (seed) {
