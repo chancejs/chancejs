@@ -370,6 +370,41 @@
     // -- End Name --
 
     // -- Web --
+    
+    Chance.prototype.color = function (options) {
+        options = options || {};
+        options.format = options.format || this.pick(["hex", "shorthex", "rgb"]);
+        
+    		switch (options.format) {
+    				case "hex":
+								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
+                   var codepair = this.string({pool: "ABCDEF0123456789", length: 2});
+                   return "#"+codepair+codepair+codepair
+								} else {
+									return "#" + this.string({pool: "ABCDEF0123456789", length: 6});
+								}
+								break;
+    				case "shorthex":
+								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
+                   var codepair = this.string({pool: "ABCDEF0123456789", length: 1});
+                   return "#"+codepair+codepair+codepair
+								} else {
+									return "#" + this.string({pool: "ABCDEF0123456789", length: 3});
+								}
+								break;
+    				case "rgb":
+								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
+                   var codenum = this.natural({min: 0, max: 255});
+                   return "rgb("+codenum+","+codenum+","+codenum+")";
+								} else {
+                   return "rgb("+this.natural({min: 0, max: 255})+","+this.natural({min: 0, max: 255})+","+this.natural({min: 0, max: 255})+")";
+								}
+								break;
+						default:
+                throw new Error("Invalid format provided. Please provide one of 'hex', 'shorthex', or 'rgb'");
+								breeak;
+    		}
+    };
 
     Chance.prototype.domain = function (options) {
         options = initOptions(options);
