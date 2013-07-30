@@ -9,6 +9,10 @@
 
     var MAX_INT = 9007199254740992;
     var MIN_INT = -MAX_INT;
+    var NUMBERS = '0123456789';
+    var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
+    var CHARS_UPPER = CHARS_LOWER.toUpperCase();
+    var HEX_POOL  = NUMBERS + "abcdef";
     var Chance = function (seed) {
         if (seed !== undefined) {
             // If we were passed a generator rather than a seed, use it.
@@ -53,7 +57,7 @@
 
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
-        options = initOptions(options, {min : 0, max : MAX_INT});
+        options = initOptions(options, {min: 0, max: MAX_INT});
 
         testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
@@ -71,7 +75,7 @@
 
         // Probably a better way to do this...
         do {
-            num = this.natural({min: 0, max: range});
+            num = this.natural({max: range});
             num = this.bool() ? num : num * -1;
         } while (num < options.min || num > options.max);
 
@@ -108,7 +112,7 @@
     // the trailing zeroes are dropped. Left to the consumer if trailing zeroes are
     // needed
     Chance.prototype.floating = function (options) {
-        var num, range, buffer;
+        var num, range;
 
         options = initOptions(options, {fixed : 4});
         var fixed = Math.pow(10, options.fixed);
@@ -144,10 +148,7 @@
     Chance.prototype.character = function (options) {
         options = initOptions(options);
 
-        var lower = "abcdefghijklmnopqrstuvwxyz",
-            upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            numbers = "0123456789",
-            symbols = "!@#$%^&*()[]",
+        var symbols = "!@#$%^&*()[]",
             letters, pool;
 
         testRange(
@@ -157,11 +158,11 @@
 
 
         if (options.casing === 'lower') {
-            letters = lower;
+            letters = CHARS_LOWER;
         } else if (options.casing === 'upper') {
-            letters = upper;
+            letters = CHARS_UPPER;
         } else {
-            letters = lower + upper;
+            letters = CHARS_LOWER + CHARS_UPPER;
         }
 
         if (options.pool) {
@@ -171,7 +172,7 @@
         } else if (options.symbols) {
             pool = symbols;
         } else {
-            pool = letters + numbers + symbols;
+            pool = letters + NUMBERS + symbols;
         }
 
         return pool.charAt(this.natural({max: (pool.length - 1)}));
@@ -241,7 +242,7 @@
         options = initOptions(options);
 
         var words = options.words || this.natural({min: 12, max: 18}),
-            text = '', word_array = [];
+            text, word_array = [];
 
         for (var i = 0; i < words; i++) {
             word_array.push(this.word());
@@ -263,7 +264,7 @@
             vowels = 'aeiou', // vowels
             all = consanants + vowels, // all
             text = '',
-            chr, pool;
+            chr;
 
         // I'm sure there's a more elegant way to do this, but this works
         // decently well.
@@ -316,11 +317,11 @@
     // -- Name --
 
     // Perhaps make this more intelligent at some point
-    Chance.prototype.first = function (options) {
+    Chance.prototype.first = function () {
         return this.capitalize(this.word());
     };
 
-    Chance.prototype.last = function (options) {
+    Chance.prototype.last = function () {
         return this.capitalize(this.word());
     };
 
@@ -370,40 +371,34 @@
     // -- End Name --
 
     // -- Web --
-    
+
     Chance.prototype.color = function (options) {
-        options = options || {};
-        options.format = options.format || this.pick(["hex", "shorthex", "rgb"]);
-        
-    		switch (options.format) {
-    				case "hex":
-								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
-                   var codepair = this.string({pool: "ABCDEF0123456789", length: 2});
-                   return "#"+codepair+codepair+codepair
-								} else {
-									return "#" + this.string({pool: "ABCDEF0123456789", length: 6});
-								}
-								break;
-    				case "shorthex":
-								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
-                   var codepair = this.string({pool: "ABCDEF0123456789", length: 1});
-                   return "#"+codepair+codepair+codepair
-								} else {
-									return "#" + this.string({pool: "ABCDEF0123456789", length: 3});
-								}
-								break;
-    				case "rgb":
-								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
-                   var codenum = this.natural({min: 0, max: 255});
-                   return "rgb("+codenum+","+codenum+","+codenum+")";
-								} else {
-                   return "rgb("+this.natural({min: 0, max: 255})+","+this.natural({min: 0, max: 255})+","+this.natural({min: 0, max: 255})+")";
-								}
-								break;
-						default:
-                throw new Error("Invalid format provided. Please provide one of 'hex', 'shorthex', or 'rgb'");
-								breeak;
-    		}
+
+        function gray(value, delimiter) {
+            return [value, value, value].join(delimiter || '');
+        }
+
+        initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb'])});
+        var isGrayscale = options.grayscale;
+
+        if (options.format === 'hex') {
+            return '#' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
+        }
+
+        if (options.format === 'shorthex') {
+            return '#' + (isGrayscale ? gray(this.hash({length: 1})) : this.hash({length: 3}));
+        }
+
+        if (options.format === 'rgb') {
+            if (isGrayscale) {
+                return 'rgb(' + gray(this.natural({max: 255}), ',') + ')';
+            } else {
+                return 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
+            }
+        }
+
+        throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", or "rgb"');
+
     };
 
     Chance.prototype.domain = function (options) {
@@ -430,11 +425,10 @@
     };
 
     Chance.prototype.ipv6 = function () {
-        var hex_pool = "0123456789abcdef",
-            ip_addr = "";
+        var ip_addr = "";
 
         for (var i = 0; i < 8; i++) {
-            ip_addr += this.string({pool: hex_pool, length: 4}) + ':';
+            ip_addr += this.hash({length: 4}) + ':';
         }
         return ip_addr.substr(0, ip_addr.length - 1);
     };
@@ -634,8 +628,8 @@
         return street;
     };
 
-    Chance.prototype.street_suffix = function (options) {
-        return this.pick(this.street_suffixes(options));
+    Chance.prototype.street_suffix = function () {
+        return this.pick(this.street_suffixes());
     };
 
     Chance.prototype.street_suffixes = function () {
@@ -685,13 +679,13 @@
         var zip = "";
 
         for (var i = 0; i < 5; i++) {
-            zip += this.natural({min: 0, max: 9}).toString();
+            zip += this.natural({max: 9}).toString();
         }
 
         if (options && options.plusfour === true) {
             zip += '-';
             for (i = 0; i < 4; i++) {
-                zip += this.natural({min: 0, max: 9}).toString();
+                zip += this.natural({max: 9}).toString();
             }
         }
 
@@ -713,7 +707,7 @@
     };
 
     Chance.prototype.minute = function () {
-        return this.natural({min: 0, max: 59});
+        return this.natural({max: 59});
     };
 
     Chance.prototype.month = function (options) {
@@ -740,7 +734,7 @@
     };
 
     Chance.prototype.second = function () {
-        return this.natural({min: 0, max: 59});
+        return this.natural({max: 59});
     };
 
     Chance.prototype.timestamp = function () {
@@ -764,7 +758,7 @@
     Chance.prototype.cc = function (options) {
         options = initOptions(options);
 
-        var type, number, to_generate, type_name,
+        var type, number, to_generate,
             last = null,
             digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
@@ -882,7 +876,7 @@
         return month;
     };
 
-    Chance.prototype.exp_year = function (options) {
+    Chance.prototype.exp_year = function () {
         return this.year({max: new Date().getFullYear() + 10});
     };
 
@@ -913,26 +907,23 @@
             for (var i = bits[0]; i > 0; i--) {
                 rolls[i - 1] = this.natural({min: 1, max: bits[1]});
             }
-            return (typeof options.sum !== 'undefined' && options.sum) ? rolls.reduce(function (p, c, i, a) { return p + c; }) : rolls;
+            return (typeof options.sum !== 'undefined' && options.sum) ? rolls.reduce(function (p, c) { return p + c; }) : rolls;
         }
     };
 
     // Guid
     Chance.prototype.guid = function () {
-        var guid_pool = "ABCDEF1234567890",
-            guid = this.string({pool: guid_pool, length: 8}) + '-' +
-                   this.string({pool: guid_pool, length: 4}) + '-' +
-                   this.string({pool: guid_pool, length: 4}) + '-' +
-                   this.string({pool: guid_pool, length: 4}) + '-' +
-                   this.string({pool: guid_pool, length: 12});
-        return guid;
+        return this.hash({casing: 'upper', length: 8}) + '-' +
+            this.hash({casing: 'upper', length: 4}) + '-' +
+            this.hash({casing: 'upper', length: 4}) + '-' +
+            this.hash({casing: 'upper', length: 4}) + '-' +
+            this.hash({casing: 'upper', length: 12});
     };
 
     // Hash
     Chance.prototype.hash = function (options) {
-        options = initOptions(options, {length : 40});
-        var pool = "abcdef1234567890";
-
+        options = initOptions(options, {length : 40, casing: 'lower'});
+        var pool = options.casing === 'upper' ? HEX_POOL.toUpperCase() : HEX_POOL;
         return this.string({pool: pool, length: options.length});
     };
 
