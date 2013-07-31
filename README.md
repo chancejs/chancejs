@@ -29,6 +29,21 @@ Chance instantiates itself onto the window. This means that in the simplest case
 
 [More info](http://chancejs.com#browser)
 
+### Bower
+
+It can also be used with [Bower](http://bower.io)
+
+    bower install chance
+
+then in the HTML of your app:
+
+    <!-- Load Chance -->
+    <script type="text/javascript" src="components/chance/chance.min.js"></script>
+    <script>
+        // Use Chance immediately!
+        alert(chance.string());
+    </script>
+
 ### RequireJS
 
 Chance also includes an AMD define so it can be used with RequireJS.
