@@ -1,4 +1,4 @@
-//  Chance.js 0.4.2
+//  Chance.js 0.4.3
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -956,7 +956,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.4.2";
+    Chance.prototype.VERSION = "0.4.3";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
