@@ -764,27 +764,23 @@
     Chance.prototype.cc = function (options) {
         options = initOptions(options);
 
-        var type, number, to_generate, type_name,
-            last = null,
-            digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        var type, number, to_generate, type_name;
 
         type = (options.type) ?
                     this.cc_type({ name: options.type, raw: true }) :
                     this.cc_type({ raw: true });
-        number = type.prefix;
+        number = type.prefix.split("");
         to_generate = type.length - type.prefix.length - 1;
 
         // Generates n - 1 digits
         for (var i = 0; i < to_generate; i++) {
-            number = number + this.integer({min: 0, max: 9}).toString();
+            number.push(this.integer({min: 0, max: 9}));
         }
 
         // Generates the last digit according to Luhn algorithm
-        do {
-            last = digits.splice(0, 1);
-        } while (!this.luhn_check(number + last));
+        number.push(this.luhn_calculate(number.join("")));
 
-        return number + last;
+        return number.join("");
     };
 
     Chance.prototype.cc_types = function () {
@@ -941,11 +937,25 @@
     };
 
     Chance.prototype.luhn_check = function (num) {
-        var luhnArr = [[0, 2, 4, 6, 8, 1, 3, 5, 7, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]], sum = 0;
-        num.toString().replace(/\D+/g, "").replace(/[\d]/g, function (c, p, o) {
-            sum += luhnArr[(o.length - p) & 1][parseInt(c, 10)];
-        });
-        return (sum % 10 === 0) && (sum > 0);
+        var str = num.toString();
+        var checkDigit = +str.substring(str.length - 1);
+        return checkDigit == this.luhn_calculate(+str.substring(0, str.length - 1));
+    };
+
+    Chance.prototype.luhn_calculate = function (num) {
+        var digits = num.toString().split("").reverse();
+        var sum = 0;
+        for (var i = 0, l = digits.length; l > i; ++i) {
+            var digit = +digits[i];
+            if (i % 2 == 0) {
+                digit *= 2;
+                if (digit > 9) {
+                    digit -= 9;
+                }
+            }
+            sum += digit;
+        }
+        return (sum * 9) % 10;
     };
 
     // -- End Miscellaneous --
