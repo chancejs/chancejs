@@ -1,0 +1,17 @@
+{
+    "name": "chance",
+    "version": "0.4.2",
+    "main": "chance.min.js",
+    "ignore": ["node_modules"],
+    "description": "Chance - Utility library to generate anything random",
+    "homepage": "http://chancejs.com",
+    "keywords": [
+        "chance",
+        "random",
+        "generator"
+    ],
+    "author": {
+        "name": "Victor Quinn",
+        "web": "http://victorquinn.com"
+    }
+}

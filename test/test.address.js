@@ -3,7 +3,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         expect = chai.expect;
 
     describe("Address", function () {
-        var zip, suffix, suffixes, state, address, phone, chance = new Chance();
+        var zip, suffix, suffixes, state, address, phone, coordinates, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
@@ -77,6 +77,24 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("Province", function () {
+            it("provinces() returns an array of provinces", function () {
+                expect(chance.provinces()).to.be.an('array');
+            });
+
+            it("province() returns a random (short) province name", function () {
+                _(1000).times(function () {
+                    expect(chance.province()).to.have.length.below(3);
+                });
+            });
+
+            it("province({full: true}) returns a random (long) province name", function () {
+                _(1000).times(function () {
+                    expect(chance.province({full: true})).to.have.length.above(2);
+                });
+            });
+        });
+
         describe("Address", function () {
             it("address() returns a string", function () {
                 expect(chance.address()).to.be.an('string');
@@ -100,7 +118,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             it("areacode() looks right", function () {
                 expect(chance.areacode()).to.be.a('string');
                 _(1000).times(function () {
-                    expect(chance.areacode()).to.match(/\(([0-9]{3})\)/);
+                    expect(chance.areacode()).to.match(/^\(([2-9][0-8][0-9])\)$/);
+                });
+            });
+
+            it("areacode({parens: false}) looks right", function () {
+                _(1000).times(function () {
+                    expect(chance.areacode({parens: false})).to.be.a('string');
+                    expect(chance.areacode({parens: false})).to.match(/^([2-9][0-8][0-9])$/);
                 });
             });
 
@@ -110,7 +135,21 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
             it("phone() looks like an actual phone number", function () {
                 _(1000).times(function () {
-                    expect(chance.phone()).to.match(/\(([0-9]{3})\)?[\-. ]?([0-9]{3})[\-. ]?([0-9]{4})/);
+                    expect(chance.phone()).to.match(/^\(([2-9][0-8][0-9])\)?[\-. ]?([2-9][0-9]{2,2})[\-. ]?([0-9]{4,4})$/);
+                });
+            });
+
+            it('phone({formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({formatted : false})).to.be.a('string');
+                    expect(chance.phone({formatted : false})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
+                });
+            });
+
+            it('phone({formatted: false, parens: true}) is unformatted', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({formatted : false, parens: true})).to.be.a('string');
+                    expect(chance.phone({formatted : false, parens: true})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
                 });
             });
         });
@@ -118,6 +157,39 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         describe("City", function () {
             it("city() looks right", function () {
                 expect(chance.city()).to.be.a('string');
+            });
+        });
+
+        describe("Latitude", function () {
+            it("latitude() looks right", function () {
+                expect(chance.latitude()).to.be.a('number');
+            });
+
+            it("latitude() is in the right range", function () {
+                _(1000).times(function () {
+                    expect(chance.latitude()).to.be.within(-90, 90);
+                });
+            });
+        });
+
+        describe("Longitude", function () {
+            it("longitude() looks right", function () {
+                expect(chance.longitude()).to.be.a('number');
+            });
+
+            it("longitude() is in the right range", function () {
+                _(1000).times(function () {
+                    expect(chance.longitude()).to.be.within(-180, 180);
+                });
+            });
+        });
+
+        describe("Coordinates", function () {
+            it("coordinates() looks about right", function () {
+                _(1000).times(function () {
+                    expect(chance.coordinates()).to.be.a('string');
+                    expect(chance.coordinates().split(',')).to.have.length(2);
+                });
             });
         });
     });

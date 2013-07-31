@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Web", function () {
-        var tld, domain, email, ip, chance = new Chance();
+        var tld, domain, email, ip, ipv6, twitter, chance = new Chance();
 
         it("tld() returns a tld", function () {
             _(1000).times(function () {
@@ -44,11 +44,102 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("fbid() returns what looks like a Facebook id", function () {
+            _(1000).times(function () {
+                expect(chance.fbid()).to.be.a('string');
+            });
+        });
+
         it("ip() returns what looks like an IP address", function () {
             _(1000).times(function () {
                 ip = chance.ip();
                 expect(ip).to.be.a('string');
                 expect(ip.split('.')).to.have.length(4);
+            });
+        });
+
+        it("ipv6() returns what looks like an IP address (v6)", function () {
+            _(1000).times(function () {
+                ipv6 = chance.ipv6();
+                expect(ipv6).to.be.a('string');
+                expect(ipv6.split(':')).to.have.length(8);
+            });
+        });
+
+        it("twitter() returns what looks like a Twitter handle", function () {
+            _(1000).times(function () {
+                twitter = chance.twitter();
+                expect(twitter).to.be.a('string');
+                expect(twitter).to.match(/\@[A-Za-z]+/m);
+            });
+        });
+
+        describe('color', function () {
+
+            it("({format: 'hex'}) returns what looks a hex color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'hex'});
+                    expect(color).to.be.a('string');
+                    expect(color).to.have.length(7);
+                    expect(color).to.match(/#[a-z0-9]+/m);
+                });
+            });
+
+            it("({format: 'hex', grayScale: true}) returns what looks a gray scale hex color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'hex', grayscale: true});
+                    expect(color).to.be.a('string');
+                    expect(color).to.have.length(7);
+                    expect(color).to.match(/#[a-z0-9]+/m);
+                    expect(color.slice(1, 3)).to.equal(color.slice(3, 5));
+                    expect(color.slice(1, 3)).to.equal(color.slice(5, 7));
+                });
+            });
+
+            it("({format: 'shorthex'}) returns what looks a short hex color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'shorthex'});
+                    expect(color).to.be.a('string');
+                    expect(color).to.have.length(4);
+                    expect(color).to.match(/#[a-z0-9]+/m);
+                });
+            });
+
+            it("({format: 'shorthex', grayScale: true}) returns what looks a gray scale short hex color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'shorthex', grayscale: true});
+                    expect(color).to.be.a('string');
+                    expect(color).to.have.length(4);
+                    expect(color).to.match(/#[a-z0-9]+/m);
+                    expect(color.slice(1, 2)).to.equal(color.slice(2, 3));
+                    expect(color.slice(1, 2)).to.equal(color.slice(3, 4));
+                });
+            });
+
+            it("({format: 'rgb'}) returns what looks a rgb color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'rgb'});
+                    expect(color).to.be.a('string');
+                    var matchColors = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+                    var match = matchColors.exec(color);
+                    expect(match).to.have.length.of(4);
+                    expect(match[1]).to.be.within(0, 255);
+                    expect(match[2]).to.be.within(0, 255);
+                    expect(match[3]).to.be.within(0, 255);
+                });
+            });
+
+            it("({format: 'rgb', grayScale: true}) returns what looks a gray scale rgb color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'rgb', grayscale: true});
+                    expect(color).to.be.a('string');
+                    var matchColors = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+                    var match = matchColors.exec(color);
+                    expect(match).to.have.length.of(4);
+                    expect(match[1]).to.be.within(0, 255);
+                    expect(match[1]).to.equal(match[2]);
+                    expect(match[1]).to.equal(match[3]);
+                });
             });
         });
     });

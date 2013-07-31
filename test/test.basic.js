@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Basics", function () {
-        var bool, integer, natural, character, string, chance = new Chance();
+        var bool, integer, natural, floating, character, string, temp, chance = new Chance();
 
         describe("Bool", function () {
             it("returns a random boolean", function () {
@@ -25,6 +25,33 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 // Award to anyone that calculates the actual probability of this
                 // test failing and submits a pull request adding it to this comment!
                 expect(true_count).to.be.within(200, 800);
+            });
+
+            it("takes and obeys likelihood", function () {
+                var true_count = 0;
+                _(1000).times(function () {
+                    if (chance.bool({likelihood: 30})) {
+                        true_count++;
+                    }
+                });
+
+                // Expect it to average around 300
+                expect(true_count).to.be.within(200, 400);
+
+                true_count = 0;
+                _(1000).times(function () {
+                    if (chance.bool({likelihood: 99})) {
+                        true_count++;
+                    }
+                });
+
+                // Expect it to average at 990
+                expect(true_count).to.be.above(900);
+            });
+
+            it("throws an error if likelihood < 0 or > 100", function () {
+                expect(function () { chance.bool({likelihood: -23}); }).to.throw(RangeError);
+                expect(function () { chance.bool({likelihood: 7933}); }).to.throw(RangeError);
             });
         });
 
@@ -82,6 +109,10 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
                 expect(count).to.not.be.above(900);
             });
+
+            it("throws an error if min > max", function () {
+                expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
+            });
         });
 
         describe("Natural", function () {
@@ -128,6 +159,52 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     natural = chance.natural({min: 0, max: 0});
                     expect(natural).to.equal(0);
                 });
+            });
+
+            it("throws an error if min > max", function () {
+                expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
+            });
+        });
+
+        describe("Floating", function () {
+            it("returns a random floating", function () {
+                floating = chance.floating();
+                expect(floating).to.be.a('number');
+            });
+
+            it("can take both a max and min and obey them both", function () {
+                _(1000).times(function () {
+                    floating = chance.floating({min: 90, max: 100});
+                    expect(floating).to.be.within(90, 100);
+                });
+            });
+
+            it("won't take fixed + min that would be out of range", function () {
+                expect(function () { chance.floating({fixed: 13, min: -9007199254740992}); }).to.throw(RangeError);
+            });
+
+            it("won't take fixed + max that would be out of range", function () {
+                expect(function () { chance.floating({fixed: 13, max: 9007199254740992}); }).to.throw(RangeError);
+            });
+
+            it("obeys the fixed parameter, when present", function () {
+                _(100).times(function () {
+                    floating = chance.floating({fixed: 4});
+                    floating = floating.toString().split('.')[1] ? floating.toString().split('.')[1] : '';
+                    expect(floating).to.have.length.below(5);
+                });
+            });
+
+            it("can take fixed and obey it", function () {
+                _(1000).times(function () {
+                    floating = chance.floating({fixed: 3});
+                    temp = parseFloat(floating.toFixed(3));
+                    expect(floating).to.equal(temp);
+                });
+            });
+
+            it("won't take both fixed and precision", function () {
+                expect(function () { chance.floating({fixed: 2, precision: 8}); }).to.throw(RangeError);
             });
         });
 
@@ -219,6 +296,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
-    });
 
+        describe("arbitrary function", function () {
+            it("will take an arbitrary function for random, use it", function () {
+                var chance = new Chance(function () { return 123; });
+                _(1000).times(function () {
+                    expect(chance.random()).to.equal(123);
+                });
+            });
+        });
+    });
 });
