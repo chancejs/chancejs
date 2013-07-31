@@ -372,38 +372,37 @@
     // -- Web --
     
     Chance.prototype.color = function (options) {
-        options = options || {};
-        options.format = options.format || this.pick(["hex", "shorthex", "rgb"]);
-        
-    		switch (options.format) {
-    				case "hex":
-								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
-                   var codepair = this.string({pool: "ABCDEF0123456789", length: 2});
-                   return "#"+codepair+codepair+codepair
-								} else {
-									return "#" + this.string({pool: "ABCDEF0123456789", length: 6});
-								}
-								break;
-    				case "shorthex":
-								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
-                   var codepair = this.string({pool: "ABCDEF0123456789", length: 1});
-                   return "#"+codepair+codepair+codepair
-								} else {
-									return "#" + this.string({pool: "ABCDEF0123456789", length: 3});
-								}
-								break;
-    				case "rgb":
-								if (typeof options.grayscale !== 'undefined' && options.grayscale) {
-                   var codenum = this.natural({min: 0, max: 255});
-                   return "rgb("+codenum+","+codenum+","+codenum+")";
-								} else {
-                   return "rgb("+this.natural({min: 0, max: 255})+","+this.natural({min: 0, max: 255})+","+this.natural({min: 0, max: 255})+")";
-								}
-								break;
-						default:
-                throw new Error("Invalid format provided. Please provide one of 'hex', 'shorthex', or 'rgb'");
-								breeak;
-    		}
+        options = initOptions(options, {format: this.pick(["hex", "shorthex", "rgb"])});
+        var codepair, codenum;
+
+        switch (options.format) {
+        case "hex":
+            if (typeof options.grayscale !== 'undefined' && options.grayscale) {
+                codepair = this.string({pool: "ABCDEF0123456789", length: 2});
+                return "#" + codepair + codepair + codepair;
+            } else {
+                return "#" + this.string({pool: "ABCDEF0123456789", length: 6});
+            }
+            break;
+        case "shorthex":
+            if (typeof options.grayscale !== 'undefined' && options.grayscale) {
+                codepair = this.string({pool: "ABCDEF0123456789", length: 1});
+                return "#" + codepair + codepair + codepair;
+            } else {
+                return "#" + this.string({pool: "ABCDEF0123456789", length: 3});
+            }
+            break;
+        case "rgb":
+            if (typeof options.grayscale !== 'undefined' && options.grayscale) {
+                codenum = this.natural({min: 0, max: 255});
+                return "rgb(" + codenum + "," + codenum + "," + codenum + ")";
+            } else {
+                return "rgb(" + this.natural({min: 0, max: 255}) + "," + this.natural({min: 0, max: 255}) + "," + this.natural({min: 0, max: 255}) + ")";
+            }
+            break;
+        default:
+            throw new Error("Invalid format provided. Please provide one of 'hex', 'shorthex', or 'rgb'");
+        }
     };
 
     Chance.prototype.domain = function (options) {
@@ -462,8 +461,8 @@
 
     Chance.prototype.areacode = function (options) {
         options = initOptions(options, {parens : true});
-        // Don't want area codes to start with 1
-        var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 10, max: 98}).toString();
+        // Don't want area codes to start with 1, or have a 9 as the second digit
+        var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 0, max: 8}).toString() + this.natural({min: 0, max: 9}).toString();
         return options.parens ? '(' + areacode + ')' : areacode;
     };
 
@@ -486,8 +485,15 @@
         return this.floating({min: 0, max: 180, fixed: options.fixed});
     };
 
-    Chance.prototype.phone = function () {
-        return this.areacode() + ' ' + this.natural({min: 200, max: 999}) + '-' + this.natural({min: 1000, max: 9999});
+    Chance.prototype.phone = function (options) {
+        options = initOptions(options, {formatted : true});
+        if (!options.formatted) {
+            options.parens = false;
+        }
+        var areacode = this.areacode(options).toString();
+        var exchange = this.natural({min: 2, max: 9}).toString() + this.natural({min: 0, max: 9}).toString() + this.natural({min: 0, max: 9}).toString();
+        var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
+        return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
     };
 
     Chance.prototype.postal = function () {
@@ -939,7 +945,7 @@
     Chance.prototype.luhn_check = function (num) {
         var str = num.toString();
         var checkDigit = +str.substring(str.length - 1);
-        return checkDigit == this.luhn_calculate(+str.substring(0, str.length - 1));
+        return checkDigit === this.luhn_calculate(+str.substring(0, str.length - 1));
     };
 
     Chance.prototype.luhn_calculate = function (num) {
@@ -947,7 +953,7 @@
         var sum = 0;
         for (var i = 0, l = digits.length; l > i; ++i) {
             var digit = +digits[i];
-            if (i % 2 == 0) {
+            if (i % 2 === 0) {
                 digit *= 2;
                 if (digit > 9) {
                     digit -= 9;
