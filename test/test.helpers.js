@@ -30,6 +30,9 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     expect(chance.shuffle(_.clone(arr))).to.have.length(5);
                     expect(chance.shuffle(_.clone(arr))).to.contain('a');
+                    var arr2 = _.clone(arr);
+                    chance.shuffle(arr2);
+                    expect(arr2).to.not.be.empty;
                 });
             });
         });
