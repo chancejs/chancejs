@@ -204,17 +204,18 @@
     };
 
     Chance.prototype.shuffle = function (arr) {
-        var new_array = [],
+        var old_array = arr.slice(0),
+            new_array = [],
             j = 0,
-            length = Number(arr.length);
+            length = Number(old_array.length);
 
         for (var i = 0; i < length; i++) {
             // Pick a random index from the array
-            j = this.natural({max: arr.length - 1});
+            j = this.natural({max: old_array.length - 1});
             // Add it to the new array
-            new_array[i] = arr[j];
+            new_array[i] = old_array[j];
             // Remove that element from the original array
-            arr.splice(j, 1);
+            old_array.splice(j, 1);
         }
 
         return new_array;
