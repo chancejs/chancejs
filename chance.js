@@ -199,8 +199,12 @@
         return word.charAt(0).toUpperCase() + word.substr(1);
     };
 
-    Chance.prototype.pick = function (arr) {
-        return arr[this.natural({max: arr.length - 1})];
+    Chance.prototype.pick = function (arr, count) {
+        if (!count || count === 1) {
+            return arr[this.natural({max: arr.length - 1})];
+        } else {
+            return this.shuffle(arr).slice(0, count);
+        }
     };
 
     Chance.prototype.shuffle = function (arr) {
