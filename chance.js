@@ -5,14 +5,15 @@
 
 (function () {
 
-    // Constructor
-
+    // Constants
     var MAX_INT = 9007199254740992;
     var MIN_INT = -MAX_INT;
     var NUMBERS = '0123456789';
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
+
+    // Constructor
     var Chance = function (seed) {
         if (seed !== undefined) {
             // If we were passed a generator rather than a seed, use it.
@@ -32,6 +33,26 @@
         }
     };
 
+    // Random helper functions
+    function initOptions(options, defaults) {
+        options || (options = {});
+        if (!defaults) {
+            return options;
+        }
+        for (var i in defaults) {
+            if (typeof options[i] === 'undefined') {
+                options[i] = defaults[i];
+            }
+        }
+        return options;
+    }
+
+    function testRange(test, errorMessage) {
+        if (test) {
+            throw new RangeError(errorMessage);
+        }
+    }
+
     // -- Basics --
 
     Chance.prototype.bool = function (options) {
@@ -47,62 +68,37 @@
         return this.random() * 100 < options.likelihood;
     };
 
-    // NOTE the max and min are INCLUDED in the range. So:
-    //
-    // chance.natural({min: 1, max: 3});
-    //
-    // would return either 1, 2, or 3.
+    Chance.prototype.character = function (options) {
+        options = initOptions(options);
 
-    Chance.prototype.natural = function (options) {
+        var symbols = "!@#$%^&*()[]",
+            letters, pool;
 
-        // 9007199254740992 (2^53) is the max integer number in JavaScript
-        // See: http://vq.io/132sa2j
-        options = initOptions(options, {min: 0, max: MAX_INT});
+        testRange(
+            options.alpha && options.symbols,
+            "Chance: Cannot specify both alpha and symbols."
+        );
 
-        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
-        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
-    };
+        if (options.casing === 'lower') {
+            letters = CHARS_LOWER;
+        } else if (options.casing === 'upper') {
+            letters = CHARS_UPPER;
+        } else {
+            letters = CHARS_LOWER + CHARS_UPPER;
+        }
 
-    Chance.prototype.integer = function (options) {
-        var num, range;
+        if (options.pool) {
+            pool = options.pool;
+        } else if (options.alpha) {
+            pool = letters;
+        } else if (options.symbols) {
+            pool = symbols;
+        } else {
+            pool = letters + NUMBERS + symbols;
+        }
 
-        options = initOptions(options, {min : MIN_INT, max : MAX_INT});
-
-        // Greatest of absolute value of either max or min so we know we're
-        // including the entire search domain.
-        range = Math.max(Math.abs(options.min), Math.abs(options.max));
-
-        // Probably a better way to do this...
-        do {
-            num = this.natural({max: range});
-            num = this.bool() ? num : num * -1;
-        } while (num < options.min || num > options.max);
-
-        return num;
-    };
-
-    Chance.prototype.normal = function (options) {
-        options = initOptions(options, {mean : 0, dev : 1});
-
-        // The Marsaglia Polar method
-        var s, u, v, norm,
-            mean = options.mean,
-            dev = options.dev;
-
-        do {
-            // U and V are from the uniform distribution on (-1, 1)
-            u = this.random() * 2 - 1;
-            v = this.random() * 2 - 1;
-
-            s = u * u + v * v;
-        } while (s >= 1);
-
-        // Compute the standard normal variate
-        norm = u * Math.sqrt(-2 * Math.log(s) / s);
-
-        // Shape and scale
-        return dev * norm + mean;
+        return pool.charAt(this.natural({max: (pool.length - 1)}));
     };
 
     // Note, wanted to use "float" or "double" but those are both JS reserved words.
@@ -145,37 +141,62 @@
         return parseFloat(num_fixed);
     };
 
-    Chance.prototype.character = function (options) {
-        options = initOptions(options);
+    Chance.prototype.integer = function (options) {
+        var num, range;
 
-        var symbols = "!@#$%^&*()[]",
-            letters, pool;
+        options = initOptions(options, {min : MIN_INT, max : MAX_INT});
 
-        testRange(
-            options.alpha && options.symbols,
-            "Chance: Cannot specify both alpha and symbols."
-        );
+        // Greatest of absolute value of either max or min so we know we're
+        // including the entire search domain.
+        range = Math.max(Math.abs(options.min), Math.abs(options.max));
 
+        // Probably a better way to do this...
+        do {
+            num = this.natural({max: range});
+            num = this.bool() ? num : num * -1;
+        } while (num < options.min || num > options.max);
 
-        if (options.casing === 'lower') {
-            letters = CHARS_LOWER;
-        } else if (options.casing === 'upper') {
-            letters = CHARS_UPPER;
-        } else {
-            letters = CHARS_LOWER + CHARS_UPPER;
-        }
+        return num;
+    };
 
-        if (options.pool) {
-            pool = options.pool;
-        } else if (options.alpha) {
-            pool = letters;
-        } else if (options.symbols) {
-            pool = symbols;
-        } else {
-            pool = letters + NUMBERS + symbols;
-        }
+    // NOTE the max and min are INCLUDED in the range. So:
+    //
+    // chance.natural({min: 1, max: 3});
+    //
+    // would return either 1, 2, or 3.
 
-        return pool.charAt(this.natural({max: (pool.length - 1)}));
+    Chance.prototype.natural = function (options) {
+
+        // 9007199254740992 (2^53) is the max integer number in JavaScript
+        // See: http://vq.io/132sa2j
+        options = initOptions(options, {min: 0, max: MAX_INT});
+
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
+    };
+
+    Chance.prototype.normal = function (options) {
+        options = initOptions(options, {mean : 0, dev : 1});
+
+        // The Marsaglia Polar method
+        var s, u, v, norm,
+            mean = options.mean,
+            dev = options.dev;
+
+        do {
+            // U and V are from the uniform distribution on (-1, 1)
+            u = this.random() * 2 - 1;
+            v = this.random() * 2 - 1;
+
+            s = u * u + v * v;
+        } while (s >= 1);
+
+        // Compute the standard normal variate
+        norm = u * Math.sqrt(-2 * Math.log(s) / s);
+
+        // Shape and scale
+        return dev * norm + mean;
     };
 
     Chance.prototype.string = function (options) {
@@ -934,10 +955,6 @@
         return this.string({pool: pool, length: options.length});
     };
 
-    Chance.prototype.mersenne_twister = function (seed) {
-        return new MersenneTwister(seed);
-    };
-
     Chance.prototype.luhn_check = function (num) {
         var str = num.toString();
         var checkDigit = +str.substring(str.length - 1);
@@ -958,6 +975,10 @@
             sum += digit;
         }
         return (sum * 9) % 10;
+    };
+
+    Chance.prototype.mersenne_twister = function (seed) {
+        return new MersenneTwister(seed);
     };
 
     // -- End Miscellaneous --
@@ -1112,24 +1133,5 @@
     if (typeof window === "object" && typeof window.document === "object") {
         window.Chance = Chance;
         window.chance = new Chance();
-    }
-
-    function initOptions(options, defaults) {
-        options || (options = {});
-        if (!defaults) {
-            return options;
-        }
-        for (var i in defaults) {
-            if (typeof options[i] === 'undefined') {
-                options[i] = defaults[i];
-            }
-        }
-        return options;
-    }
-
-    function testRange(test, errorMessage) {
-        if (test) {
-            throw new RangeError(errorMessage);
-        }
     }
 })();
