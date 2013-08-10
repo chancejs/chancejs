@@ -199,8 +199,12 @@
         return word.charAt(0).toUpperCase() + word.substr(1);
     };
 
-    Chance.prototype.pick = function (arr) {
-        return arr[this.natural({max: arr.length - 1})];
+    Chance.prototype.pick = function (arr, count) {
+        if (!count || count === 1) {
+            return arr[this.natural({max: arr.length - 1})];
+        } else {
+            return this.shuffle(arr).slice(0, count);
+        }
     };
 
     Chance.prototype.shuffle = function (arr) {
@@ -379,7 +383,7 @@
             return [value, value, value].join(delimiter || '');
         }
 
-        initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb'])});
+        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb']), grayscale: false});
         var isGrayscale = options.grayscale;
 
         if (options.format === 'hex') {
