@@ -30,6 +30,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(picked).to.have.length(3);
                 });
             });
+
+            it("doesn't destroy the original array when called with a count argument", function () {
+                arr = ['a', 'b', 'c', 'd', 'e', 'f'];
+                _(1000).times(function () {
+                    picked = chance.pick(arr, 3);
+                    expect(arr).to.have.length(6);
+                });
+            });
         });
 
         describe("shuffle()", function () {
