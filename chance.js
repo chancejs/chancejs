@@ -383,7 +383,7 @@
             return [value, value, value].join(delimiter || '');
         }
 
-        initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb'])});
+        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb']), grayscale: false});
         var isGrayscale = options.grayscale;
 
         if (options.format === 'hex') {
