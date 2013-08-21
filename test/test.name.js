@@ -9,7 +9,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     name = chance.name();
                     expect(name).to.be.a('string');
-                    expect(name).to.have.length.within(2, 20);
+                    expect(name).to.have.length.within(2, 30);
                     expect(name.split(' ')).to.have.length(2);
                 });
             });
