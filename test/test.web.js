@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Web", function () {
-        var tld, domain, email, ip, ipv6, twitter, chance = new Chance();
+        var tld, domain, email, hashtag, ip, ipv6, twitter, chance = new Chance();
 
         it("tld() returns a tld", function () {
             _(1000).times(function () {
@@ -46,7 +46,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
         it("fbid() returns what looks like a Facebook id", function () {
             _(1000).times(function () {
-                expect(chance.fbid()).to.be.a('string');
+                expect(chance.fbid()).to.be.a('number');
+            });
+        });
+
+        it("hashtag() returns what looks like a hashtag", function () {
+            _(1000).times(function () {
+                hashtag = chance.hashtag();
+                expect(hashtag).to.be.a('string');
+                expect(hashtag).to.match(/^\#\w+$/m);
             });
         });
 

@@ -469,7 +469,11 @@
     };
 
     Chance.prototype.fbid = function () {
-        return '10000' + this.natural({max: 100000000000}).toString();
+        return parseInt('10000' + this.natural({max: 100000000000}), 10);
+    };
+
+    Chance.prototype.hashtag = function () {
+        return '#' + this.word();
     };
 
     Chance.prototype.ip = function () {
