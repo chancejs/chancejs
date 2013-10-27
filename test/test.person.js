@@ -40,6 +40,12 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(chance.birthday({year: 1983}).getFullYear()).to.equal(1983);
                 });
             });
+
+            it("can have an age range specified", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday({type: 'child'}).getFullYear()).to.be.within((new Date().getFullYear() - 13), (new Date().getFullYear()));
+                });
+            });
         });
 
         describe("gender()", function () {

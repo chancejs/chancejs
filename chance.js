@@ -220,6 +220,14 @@
         return word.charAt(0).toUpperCase() + word.substr(1);
     };
 
+    Chance.prototype.mixin = function (obj) {
+        var chance = this;
+        for (var func_name in obj) {
+            Chance.prototype[func_name] = obj[func_name];
+        }
+        return this;
+    };
+
     Chance.prototype.pick = function (arr, count) {
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
