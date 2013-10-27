@@ -27,7 +27,7 @@ body {
   border-radius: 5px;
 }
 #sidebar {
-  color: #ecf0f1;
+  color: #FFF;
   background: #c0392b;
   position: fixed;
   top: 0; left: 0; bottom: 0;
@@ -40,7 +40,7 @@ body {
 }
 a.toc_title, a.toc_title:visited {
   display: block;
-  color: #ecf0f1;
+  color: #FFF;
   font-weight: 300;
   margin-top: 15px;
   text-decoration: underline;
@@ -72,7 +72,7 @@ ul.toc_section {
 }
 .toc_section li a {
   text-decoration: underline;
-  color: #ecf0f1;
+  color: #FFF;
 }
 .container {
   max-width: 690px;
