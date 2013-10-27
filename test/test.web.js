@@ -74,6 +74,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("klout() returns what looks like a legit Klout score", function () {
+            _(1000).times(function () {
+                expect(chance.klout()).to.be.a('number');
+                expect(chance.klout()).to.be.within(1, 100);
+            });
+        });
+
         it("twitter() returns what looks like a Twitter handle", function () {
             _(1000).times(function () {
                 twitter = chance.twitter();

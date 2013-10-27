@@ -494,6 +494,10 @@
         return ip_addr.substr(0, ip_addr.length - 1);
     };
 
+    Chance.prototype.klout = function () {
+        return this.natural({min: 1, max: 99});
+    };
+
     Chance.prototype.tlds = function () {
         return ['com', 'org', 'edu', 'gov', 'co.uk', 'net', 'io'];
     };
