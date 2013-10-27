@@ -1,7 +1,7 @@
 {
     "name": "chance",
-    "version": "0.4.2",
-    "main": "chance.min.js",
+    "version": "0.5.0",
+    "main": "chance.js",
     "ignore": ["node_modules"],
     "description": "Chance - Utility library to generate anything random",
     "homepage": "http://chancejs.com",
