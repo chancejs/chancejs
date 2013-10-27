@@ -1,8 +1,14 @@
 define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai, _) {
     var expect = chai.expect;
 
-    describe("Name", function () {
-        var name, first, last, prefix, chance = new Chance();
+    describe("Person", function () {
+        var age, name, first, last, prefix, chance = new Chance();
+
+        describe("age()", function () {
+            it("returns a random age");
+            it("age is within expected bounds");
+            it("can have the type specified");
+        });
 
         describe("name()", function () {
             it("returns a random name", function () {
