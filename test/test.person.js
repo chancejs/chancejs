@@ -11,6 +11,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(chance.age()).to.be.within(1, 120);
                 });
             });
+
             it("can have the type specified", function () {
                 _(1000).times(function () {
                     expect(chance.age({type: 'child'})).to.be.within(1, 13);
@@ -26,10 +27,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(chance.birthday().getFullYear()).to.be.within((new Date().getFullYear() - 120), (new Date().getFullYear()));
                 });
             });
+
             it("can have a string returned", function () {
                 _(1000).times(function () {
                     expect(chance.birthday({string: true})).to.be.a('string');
                     expect(chance.birthday({string: true})).to.match(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m);
+                });
+            });
+
+            it("can have a year specified", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday({year: 1983}).getFullYear()).to.equal(1983);
                 });
             });
         });
