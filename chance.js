@@ -5,14 +5,15 @@
 
 (function () {
 
-    // Constructor
-
+    // Constants
     var MAX_INT = 9007199254740992;
     var MIN_INT = -MAX_INT;
     var NUMBERS = '0123456789';
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
+
+    // Constructor
     var Chance = function (seed) {
         if (seed !== undefined) {
             // If we were passed a generator rather than a seed, use it.
@@ -32,6 +33,26 @@
         }
     };
 
+    // Random helper functions
+    function initOptions(options, defaults) {
+        options || (options = {});
+        if (!defaults) {
+            return options;
+        }
+        for (var i in defaults) {
+            if (typeof options[i] === 'undefined') {
+                options[i] = defaults[i];
+            }
+        }
+        return options;
+    }
+
+    function testRange(test, errorMessage) {
+        if (test) {
+            throw new RangeError(errorMessage);
+        }
+    }
+
     // -- Basics --
 
     Chance.prototype.bool = function (options) {
@@ -47,62 +68,37 @@
         return this.random() * 100 < options.likelihood;
     };
 
-    // NOTE the max and min are INCLUDED in the range. So:
-    //
-    // chance.natural({min: 1, max: 3});
-    //
-    // would return either 1, 2, or 3.
+    Chance.prototype.character = function (options) {
+        options = initOptions(options);
 
-    Chance.prototype.natural = function (options) {
+        var symbols = "!@#$%^&*()[]",
+            letters, pool;
 
-        // 9007199254740992 (2^53) is the max integer number in JavaScript
-        // See: http://vq.io/132sa2j
-        options = initOptions(options, {min: 0, max: MAX_INT});
+        testRange(
+            options.alpha && options.symbols,
+            "Chance: Cannot specify both alpha and symbols."
+        );
 
-        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
-        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
-    };
+        if (options.casing === 'lower') {
+            letters = CHARS_LOWER;
+        } else if (options.casing === 'upper') {
+            letters = CHARS_UPPER;
+        } else {
+            letters = CHARS_LOWER + CHARS_UPPER;
+        }
 
-    Chance.prototype.integer = function (options) {
-        var num, range;
+        if (options.pool) {
+            pool = options.pool;
+        } else if (options.alpha) {
+            pool = letters;
+        } else if (options.symbols) {
+            pool = symbols;
+        } else {
+            pool = letters + NUMBERS + symbols;
+        }
 
-        options = initOptions(options, {min : MIN_INT, max : MAX_INT});
-
-        // Greatest of absolute value of either max or min so we know we're
-        // including the entire search domain.
-        range = Math.max(Math.abs(options.min), Math.abs(options.max));
-
-        // Probably a better way to do this...
-        do {
-            num = this.natural({max: range});
-            num = this.bool() ? num : num * -1;
-        } while (num < options.min || num > options.max);
-
-        return num;
-    };
-
-    Chance.prototype.normal = function (options) {
-        options = initOptions(options, {mean : 0, dev : 1});
-
-        // The Marsaglia Polar method
-        var s, u, v, norm,
-            mean = options.mean,
-            dev = options.dev;
-
-        do {
-            // U and V are from the uniform distribution on (-1, 1)
-            u = this.random() * 2 - 1;
-            v = this.random() * 2 - 1;
-
-            s = u * u + v * v;
-        } while (s >= 1);
-
-        // Compute the standard normal variate
-        norm = u * Math.sqrt(-2 * Math.log(s) / s);
-
-        // Shape and scale
-        return dev * norm + mean;
+        return pool.charAt(this.natural({max: (pool.length - 1)}));
     };
 
     // Note, wanted to use "float" or "double" but those are both JS reserved words.
@@ -145,37 +141,62 @@
         return parseFloat(num_fixed);
     };
 
-    Chance.prototype.character = function (options) {
-        options = initOptions(options);
+    Chance.prototype.integer = function (options) {
+        var num, range;
 
-        var symbols = "!@#$%^&*()[]",
-            letters, pool;
+        options = initOptions(options, {min : MIN_INT, max : MAX_INT});
 
-        testRange(
-            options.alpha && options.symbols,
-            "Chance: Cannot specify both alpha and symbols."
-        );
+        // Greatest of absolute value of either max or min so we know we're
+        // including the entire search domain.
+        range = Math.max(Math.abs(options.min), Math.abs(options.max));
 
+        // Probably a better way to do this...
+        do {
+            num = this.natural({max: range});
+            num = this.bool() ? num : num * -1;
+        } while (num < options.min || num > options.max);
 
-        if (options.casing === 'lower') {
-            letters = CHARS_LOWER;
-        } else if (options.casing === 'upper') {
-            letters = CHARS_UPPER;
-        } else {
-            letters = CHARS_LOWER + CHARS_UPPER;
-        }
+        return num;
+    };
 
-        if (options.pool) {
-            pool = options.pool;
-        } else if (options.alpha) {
-            pool = letters;
-        } else if (options.symbols) {
-            pool = symbols;
-        } else {
-            pool = letters + NUMBERS + symbols;
-        }
+    // NOTE the max and min are INCLUDED in the range. So:
+    //
+    // chance.natural({min: 1, max: 3});
+    //
+    // would return either 1, 2, or 3.
 
-        return pool.charAt(this.natural({max: (pool.length - 1)}));
+    Chance.prototype.natural = function (options) {
+
+        // 9007199254740992 (2^53) is the max integer number in JavaScript
+        // See: http://vq.io/132sa2j
+        options = initOptions(options, {min: 0, max: MAX_INT});
+
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
+    };
+
+    Chance.prototype.normal = function (options) {
+        options = initOptions(options, {mean : 0, dev : 1});
+
+        // The Marsaglia Polar method
+        var s, u, v, norm,
+            mean = options.mean,
+            dev = options.dev;
+
+        do {
+            // U and V are from the uniform distribution on (-1, 1)
+            u = this.random() * 2 - 1;
+            v = this.random() * 2 - 1;
+
+            s = u * u + v * v;
+        } while (s >= 1);
+
+        // Compute the standard normal variate
+        norm = u * Math.sqrt(-2 * Math.log(s) / s);
+
+        // Shape and scale
+        return dev * norm + mean;
     };
 
     Chance.prototype.string = function (options) {
@@ -320,15 +341,55 @@
 
     // -- End Text --
 
-    // -- Name --
+    // -- Person --
 
-    // Perhaps make this more intelligent at some point
-    Chance.prototype.first = function () {
-        return this.capitalize(this.word());
+    Chance.prototype.age = function (options) {
+        options = initOptions(options);
+        var age;
+
+        switch (options.type) {
+        case 'child':
+            age = this.natural({min: 1, max: 12});
+            break;
+        case 'teen':
+            age = this.natural({min: 13, max: 19});
+            break;
+        case 'adult':
+            age = this.natural({min: 18, max: 120});
+            break;
+        case 'senior':
+            age = this.natural({min: 65, max: 120});
+            break;
+        default:
+            age = this.natural({min: 1, max: 120});
+            break;
+        }
+
+        return age;
     };
 
+    Chance.prototype.birthday = function (options) {
+        options = initOptions(options, {
+            year: (new Date().getFullYear() - this.age(options))
+        });
+
+        return this.date(options);
+    };
+
+    var firstNames = ['Sophia', 'Emma', 'Isabella', 'Jacob', 'Mason', 'Ethan', 'Noah', 'Olivia', 'William', 'Liam', 'Jayden', 'Michael', 'Ava', 'Alexander', 'Aiden', 'Daniel', 'Matthew', 'Elijah', 'Emily', 'James', 'Anthony', 'Benjamin', 'Abigail', 'Joshua', 'Andrew', 'David', 'Joseph', 'Logan', 'Jackson', 'Mia', 'Christopher', 'Gabriel', 'Madison', 'Samuel', 'Ryan', 'Lucas', 'John', 'Nathan', 'Isaac', 'Dylan', 'Caleb', 'Elizabeth', 'Chloe', 'Christian', 'Landon', 'Jonathan', 'Carter', 'Ella', 'Luke', 'Owen', 'Brayden', 'Avery', 'Gavin', 'Wyatt', 'Addison', 'Isaiah', 'Aubrey', 'Henry', 'Eli', 'Hunter', 'Lily', 'Jack', 'Natalie', 'Evan', 'Sofia', 'Jordan', 'Nicholas', 'Tyler', 'Aaron', 'Charlotte', 'Zoey', 'Jeremiah', 'Julian', 'Cameron', 'Grace', 'Hannah', 'Amelia', 'Harper', 'Levi', 'Lillian', 'Brandon', 'Angel', 'Austin', 'Connor', 'Adrian', 'Robert', 'Samantha', 'Charles', 'Evelyn', 'Victoria', 'Thomas', 'Brooklyn', 'Sebastian', 'Zoe', 'Colton', 'Jaxon', 'Layla', 'Kevin', 'Zachary', 'Ayden', 'Dominic', 'Blake', 'Jose', 'Hailey', 'Oliver', 'Justin', 'Bentley', 'Leah', 'Jason', 'Chase', 'Ian', 'Kaylee', 'Anna', 'Aaliyah', 'Gabriella', 'Josiah', 'Allison', 'Parker', 'Xavier', 'Nevaeh', 'Alexis', 'Adam', 'Audrey', 'Cooper', 'Savannah', 'Sarah', 'Alyssa', 'Claire', 'Taylor', 'Riley', 'Camila', 'Nathaniel', 'Arianna', 'Ashley', 'Grayson', 'Jace', 'Brianna', 'Carson', 'Sophie', 'Peyton', 'Nolan', 'Tristan', 'Luis', 'Brody', 'Bella', 'Khloe', 'Genesis', 'Alexa', 'Juan', 'Hudson', 'Serenity', 'Kylie', 'Aubree', 'Scarlett', 'Bryson', 'Carlos', 'Stella', 'Maya', 'Easton', 'Katherine', 'Julia', 'Damian', 'Alex', 'Kayden', 'Ryder', 'Lucy', 'Madelyn', 'Jesus', 'Cole', 'Autumn', 'Makayla', 'Kayla', 'Mackenzie', 'Micah', 'Vincent', 'Max', 'Lauren', 'Jaxson', 'Gianna', 'Eric', 'Ariana', 'Asher', 'Hayden', 'Faith', 'Alexandra', 'Melanie', 'Sydney', 'Bailey', 'Caroline', 'Naomi', 'Morgan', 'Kennedy', 'Ellie', 'Jasmine', 'Eva', 'Skylar', 'Diego', 'Kimberly', 'Violet', 'Molly', 'Miles', 'Steven', 'Aria', 'Ivan', 'Jocelyn', 'Trinity', 'Elias', 'Aidan', 'Maxwell', 'London', 'Bryce', 'Lydia', 'Madeline', 'Antonio', 'Giovanni', 'Reagan', 'Timothy', 'Bryan', 'Piper', 'Andrea', 'Santiago', 'Annabelle', 'Maria', 'Colin', 'Richard', 'Braxton', 'Kaleb', 'Brooke', 'Kyle', 'Kaden', 'Preston', 'Payton', 'Miguel', 'Jonah', 'Paisley', 'Paige', 'Lincoln', 'Ruby', 'Nora', 'Riley', 'Mariah', 'Leo', 'Victor', 'Brady', 'Jeremy', 'Mateo', 'Brian', 'Jaden', 'Ashton', 'Patrick', 'Rylee', 'Declan', 'Lilly', 'Brielle', 'Sean', 'Joel', 'Gael', 'Sawyer', 'Alejandro', 'Jade', 'Marcus', 'Destiny', 'Leonardo', 'Jesse', 'Caden', 'Jake', 'Kaiden', 'Nicole', 'Mila', 'Wesley', 'Kendall', 'Liliana', 'Camden', 'Kaitlyn', 'Natalia', 'Sadie', 'Edward', 'Brantley', 'Jordyn', 'Roman', 'Vanessa', 'Mary', 'Mya', 'Penelope', 'Isabelle', 'Alice', 'Axel', 'Silas', 'Jude', 'Grant', 'Reese', 'Gabrielle', 'Hadley', 'Katelyn', 'Angelina', 'Rachel', 'Isabel', 'Eleanor', 'Cayden', 'Emmanuel', 'George', 'Clara', 'Brooklynn', 'Jessica', 'Maddox', 'Malachi', 'Bradley', 'Alan', 'Weston', 'Elena', 'Gage', 'Aliyah', 'Vivian', 'Laila', 'Sara', 'Amy', 'Devin', 'Eliana', 'Greyson', 'Lyla', 'Juliana', 'Kenneth', 'Mark', 'Oscar', 'Tanner', 'Rylan', 'Valeria', 'Adriana', 'Nicolas', 'Makenzie', 'Harrison', 'Elise', 'Mckenzie', 'Derek', 'Quinn', 'Delilah', 'Peyton', 'Ezra', 'Cora', 'Kylee', 'Tucker', 'Emmett', 'Avery', 'Cody', 'Rebecca', 'Gracie', 'Izabella', 'Calvin', 'Andres', 'Jorge', 'Abel', 'Paul', 'Abraham', 'Kai', 'Josephine', 'Alaina', 'Michelle', 'Jennifer', 'Collin', 'Theodore', 'Ezekiel', 'Eden', 'Omar', 'Jayce', 'Valentina', 'Conner', 'Bennett', 'Aurora', 'Catherine', 'Stephanie', 'Trevor', 'Valerie', 'Eduardo', 'Peter', 'Maximus', 'Jayla', 'Jaiden', 'Willow', 'Jameson', 'Seth', 'Daisy', 'Alana', 'Melody', 'Hazel', 'Kingston', 'Summer', 'Melissa', 'Javier', 'Margaret', 'Travis', 'Kinsley', 'Kinley', 'Garrett', 'Everett', 'Ariel', 'Lila', 'Graham', 'Giselle', 'Ryleigh', 'Xander', 'Haley', 'Julianna', 'Ivy', 'Alivia', 'Cristian', 'Brynn', 'Damien', 'Ryker', 'Griffin', 'Keira', 'Daniela', 'Aniyah', 'Angela', 'Kate', 'Londyn', 'Corbin', 'Myles', 'Hayden', 'Harmony', 'Adalyn', 'Luca', 'Zane', 'Francisco', 'Ricardo', 'Alexis', 'Stephen', 'Zayden', 'Megan', 'Allie', 'Gabriela', 'Iker', 'Drake', 'Alayna', 'Lukas', 'Presley', 'Charlie', 'Spencer', 'Zion', 'Erick', 'Jenna', 'Josue', 'Alexandria', 'Ashlyn', 'Adrianna', 'Jada', 'Jeffrey', 'Trenton', 'Fiona', 'Chance', 'Norah', 'Paxton', 'Elliot', 'Emery', 'Fernando', 'Maci', 'Miranda', 'Keegan', 'Landen', 'Ximena', 'Amaya', 'Manuel', 'Amir', 'Shane', 'Cecilia', 'Raymond', 'Andre', 'Ana', 'Shelby', 'Katie', 'Hope', 'Callie', 'Jordan', 'Luna', 'Leilani', 'Eliza', 'Mckenna', 'Angel', 'Genevieve', 'Makenna', 'Isla', 'Lola', 'Danielle', 'Chelsea', 'Leila', 'Tessa', 'Adelyn', 'Camille', 'Mikayla', 'Adeline', 'Adalynn', 'Sienna', 'Esther', 'Jacqueline', 'Emerson', 'Arabella', 'Maggie', 'Athena', 'Lucia', 'Lexi', 'Ayla'];
+
+    Chance.prototype.first = function () {
+        return this.pick(firstNames);
+    };
+
+    Chance.prototype.gender = function () {
+        return this.pick(['Male', 'Female']);
+    };
+
+    var lastNames = ['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Robinson', 'Clark', 'Rodriguez', 'Lewis', 'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'Hernandez', 'King', 'Wright', 'Lopez', 'Hill', 'Scott', 'Green', 'Adams', 'Baker', 'Gonzalez', 'Nelson', 'Carter', 'Mitchell', 'Perez', 'Roberts', 'Turner', 'Phillips', 'Campbell', 'Parker', 'Evans', 'Edwards', 'Collins', 'Stewart', 'Sanchez', 'Morris', 'Rogers', 'Reed', 'Cook', 'Morgan', 'Bell', 'Murphy', 'Bailey', 'Rivera', 'Cooper', 'Richardson', 'Cox', 'Howard', 'Ward', 'Torres', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Kelly', 'Sanders', 'Price', 'Bennett', 'Wood', 'Barnes', 'Ross', 'Henderson', 'Coleman', 'Jenkins', 'Perry', 'Powell', 'Long', 'Patterson', 'Hughes', 'Flores', 'Washington', 'Butler', 'Simmons', 'Foster', 'Gonzales', 'Bryant', 'Alexander', 'Russell', 'Griffin', 'Diaz', 'Hayes', 'Myers', 'Ford', 'Hamilton', 'Graham', 'Sullivan', 'Wallace', 'Woods', 'Cole', 'West', 'Jordan', 'Owens', 'Reynolds', 'Fisher', 'Ellis', 'Harrison', 'Gibson', 'McDonald', 'Cruz', 'Marshall', 'Ortiz', 'Gomez', 'Murray', 'Freeman', 'Wells', 'Webb', 'Simpson', 'Stevens', 'Tucker', 'Porter', 'Hunter', 'Hicks', 'Crawford', 'Henry', 'Boyd', 'Mason', 'Morales', 'Kennedy', 'Warren', 'Dixon', 'Ramos', 'Reyes', 'Burns', 'Gordon', 'Shaw', 'Holmes', 'Rice', 'Robertson', 'Hunt', 'Black', 'Daniels', 'Palmer', 'Mills', 'Nichols', 'Grant', 'Knight', 'Ferguson', 'Rose', 'Stone', 'Hawkins', 'Dunn', 'Perkins', 'Hudson', 'Spencer', 'Gardner', 'Stephens', 'Payne', 'Pierce', 'Berry', 'Matthews', 'Arnold', 'Wagner', 'Willis', 'Ray', 'Watkins', 'Olson', 'Carroll', 'Duncan', 'Snyder', 'Hart', 'Cunningham', 'Bradley', 'Lane', 'Andrews', 'Ruiz', 'Harper', 'Fox', 'Riley', 'Armstrong', 'Carpenter', 'Weaver', 'Greene', 'Lawrence', 'Elliott', 'Chavez', 'Sims', 'Austin', 'Peters', 'Kelley', 'Franklin', 'Lawson', 'Fields', 'Gutierrez', 'Ryan', 'Schmidt', 'Carr', 'Vasquez', 'Castillo', 'Wheeler', 'Chapman', 'Oliver', 'Montgomery', 'Richards', 'Williamson', 'Johnston', 'Banks', 'Meyer', 'Bishop', 'McCoy', 'Howell', 'Alvarez', 'Morrison', 'Hansen', 'Fernandez', 'Garza', 'Harvey', 'Little', 'Burton', 'Stanley', 'Nguyen', 'George', 'Jacobs', 'Reid', 'Kim', 'Fuller', 'Lynch', 'Dean', 'Gilbert', 'Garrett', 'Romero', 'Welch', 'Larson', 'Frazier', 'Burke', 'Hanson', 'Day', 'Mendoza', 'Moreno', 'Bowman', 'Medina', 'Fowler', 'Brewer', 'Hoffman', 'Carlson', 'Silva', 'Pearson', 'Holland', 'Douglas', 'Fleming', 'Jensen', 'Vargas', 'Byrd', 'Davidson', 'Hopkins', 'May', 'Terry', 'Herrera', 'Wade', 'Soto', 'Walters', 'Curtis', 'Neal', 'Caldwell', 'Lowe', 'Jennings', 'Barnett', 'Graves', 'Jimenez', 'Horton', 'Shelton', 'Barrett', 'Obrien', 'Castro', 'Sutton', 'Gregory', 'McKinney', 'Lucas', 'Miles', 'Craig', 'Rodriquez', 'Chambers', 'Holt', 'Lambert', 'Fletcher', 'Watts', 'Bates', 'Hale', 'Rhodes', 'Pena', 'Beck', 'Newman', 'Haynes', 'McDaniel', 'Mendez', 'Bush', 'Vaughn', 'Parks', 'Dawson', 'Santiago', 'Norris', 'Hardy', 'Love', 'Steele', 'Curry', 'Powers', 'Schultz', 'Barker', 'Guzman', 'Page', 'Munoz', 'Ball', 'Keller', 'Chandler', 'Weber', 'Leonard', 'Walsh', 'Lyons', 'Ramsey', 'Wolfe', 'Schneider', 'Mullins', 'Benson', 'Sharp', 'Bowen', 'Daniel', 'Barber', 'Cummings', 'Hines', 'Baldwin', 'Griffith', 'Valdez', 'Hubbard', 'Salazar', 'Reeves', 'Warner', 'Stevenson', 'Burgess', 'Santos', 'Tate', 'Cross', 'Garner', 'Mann', 'Mack', 'Moss', 'Thornton', 'Dennis', 'McGee', 'Farmer', 'Delgado', 'Aguilar', 'Vega', 'Glover', 'Manning', 'Cohen', 'Harmon', 'Rodgers', 'Robbins', 'Newton', 'Todd', 'Blair', 'Higgins', 'Ingram', 'Reese', 'Cannon', 'Strickland', 'Townsend', 'Potter', 'Goodwin', 'Walton', 'Rowe', 'Hampton', 'Ortega', 'Patton', 'Swanson', 'Joseph', 'Francis', 'Goodman', 'Maldonado', 'Yates', 'Becker', 'Erickson', 'Hodges', 'Rios', 'Conner', 'Adkins', 'Webster', 'Norman', 'Malone', 'Hammond', 'Flowers', 'Cobb', 'Moody', 'Quinn', 'Blake', 'Maxwell', 'Pope', 'Floyd', 'Osborne', 'Paul', 'McCarthy', 'Guerrero', 'Lindsey', 'Estrada', 'Sandoval', 'Gibbs', 'Tyler', 'Gross', 'Fitzgerald', 'Stokes', 'Doyle', 'Sherman', 'Saunders', 'Wise', 'Colon', 'Gill', 'Alvarado', 'Greer', 'Padilla', 'Simon', 'Waters', 'Nunez', 'Ballard', 'Schwartz', 'McBride', 'Houston', 'Christensen', 'Klein', 'Pratt', 'Briggs', 'Parsons', 'McLaughlin', 'Zimmerman', 'French', 'Buchanan', 'Moran', 'Copeland', 'Roy', 'Pittman', 'Brady', 'McCormick', 'Holloway', 'Brock', 'Poole', 'Frank', 'Logan', 'Owen', 'Bass', 'Marsh', 'Drake', 'Wong', 'Jefferson', 'Park', 'Morton', 'Abbott', 'Sparks', 'Patrick', 'Norton', 'Huff', 'Clayton', 'Massey', 'Lloyd', 'Figueroa', 'Carson', 'Bowers', 'Roberson', 'Barton', 'Tran', 'Lamb', 'Harrington', 'Casey', 'Boone', 'Cortez', 'Clarke', 'Mathis', 'Singleton', 'Wilkins', 'Cain', 'Bryan', 'Underwood', 'Hogan', 'McKenzie', 'Collier', 'Luna', 'Phelps', 'McGuire', 'Allison', 'Bridges', 'Wilkerson', 'Nash', 'Summers', 'Atkins'];
+
     Chance.prototype.last = function () {
-        return this.capitalize(this.word());
+        return this.pick(lastNames);
     };
 
     Chance.prototype.name = function (options) {
@@ -339,7 +400,7 @@
             name;
 
         if (options.middle) {
-            name = first + ' ' + this.capitalize(this.word()) + ' ' + last;
+            name = first + ' ' + this.first() + ' ' + last;
         } else if (options.middle_initial) {
             name = first + ' ' + this.character({alpha: true, casing: 'upper'}) + '. ' + last;
         } else {
@@ -374,7 +435,7 @@
             this.pick(this.name_prefixes()).abbreviation;
     };
 
-    // -- End Name --
+    // -- End Person --
 
     // -- Web --
 
@@ -416,7 +477,11 @@
     };
 
     Chance.prototype.fbid = function () {
-        return '10000' + this.natural({max: 100000000000}).toString();
+        return parseInt('10000' + this.natural({max: 100000000000}), 10);
+    };
+
+    Chance.prototype.hashtag = function () {
+        return '#' + this.word();
     };
 
     Chance.prototype.ip = function () {
@@ -435,6 +500,10 @@
             ip_addr += this.hash({length: 4}) + ':';
         }
         return ip_addr.substr(0, ip_addr.length - 1);
+    };
+
+    Chance.prototype.klout = function () {
+        return this.natural({min: 1, max: 99});
     };
 
     Chance.prototype.tlds = function () {
@@ -711,6 +780,36 @@
         return this.bool() ? 'am' : 'pm';
     };
 
+    Chance.prototype.date = function (options) {
+        var year = parseInt(chance.year(), 10),
+            m = chance.month({raw: true}),
+            // Necessary because Date() 0-indexes month but not day or year
+            // for some reason.
+            month = m.numeric - 1,
+            day = chance.natural({min: 1, max: m.days}),
+            date;
+
+        options = initOptions(options, {
+            year: year,
+            month: month,
+            day: day,
+            american: true,
+            string: false
+        });
+
+        date = new Date(options.year, options.month, options.day);
+
+        if (options.american) {
+            // Adding 1 to the month is necessary because Date() 0-indexes
+            // months but not day for some odd reason.
+            date_string = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+        } else {
+            date_string = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        }
+
+        return options.string ? date_string : date;
+    };
+
     Chance.prototype.hour = function (options) {
         options = initOptions(options);
         var max = options.twentyfour ? 24 : 12;
@@ -729,18 +828,19 @@
 
     Chance.prototype.months = function () {
         return [
-            {name: 'January', short_name: 'Jan', numeric: '01'},
-            {name: 'February', short_name: 'Feb', numeric: '02'},
-            {name: 'March', short_name: 'Mar', numeric: '03'},
-            {name: 'April', short_name: 'Apr', numeric: '04'},
-            {name: 'May', short_name: 'May', numeric: '05'},
-            {name: 'June', short_name: 'Jun', numeric: '06'},
-            {name: 'July', short_name: 'Jul', numeric: '07'},
-            {name: 'August', short_name: 'Aug', numeric: '08'},
-            {name: 'September', short_name: 'Sep', numeric: '09'},
-            {name: 'October', short_name: 'Oct', numeric: '10'},
-            {name: 'November', short_name: 'Nov', numeric: '11'},
-            {name: 'December', short_name: 'Dec', numeric: '12'}
+            {name: 'January', short_name: 'Jan', numeric: '01', days: 31},
+            // Not messing with leap years...
+            {name: 'February', short_name: 'Feb', numeric: '02', days: 28},
+            {name: 'March', short_name: 'Mar', numeric: '03', days: 31},
+            {name: 'April', short_name: 'Apr', numeric: '04', days: 30},
+            {name: 'May', short_name: 'May', numeric: '05', days: 31},
+            {name: 'June', short_name: 'Jun', numeric: '06', days: 30},
+            {name: 'July', short_name: 'Jul', numeric: '07', days: 31},
+            {name: 'August', short_name: 'Aug', numeric: '08', days: 31},
+            {name: 'September', short_name: 'Sep', numeric: '09', days: 30},
+            {name: 'October', short_name: 'Oct', numeric: '10', days: 31},
+            {name: 'November', short_name: 'Nov', numeric: '11', days: 30},
+            {name: 'December', short_name: 'Dec', numeric: '12', days: 31}
         ];
     };
 
@@ -934,10 +1034,6 @@
         return this.string({pool: pool, length: options.length});
     };
 
-    Chance.prototype.mersenne_twister = function (seed) {
-        return new MersenneTwister(seed);
-    };
-
     Chance.prototype.luhn_check = function (num) {
         var str = num.toString();
         var checkDigit = +str.substring(str.length - 1);
@@ -958,6 +1054,10 @@
             sum += digit;
         }
         return (sum * 9) % 10;
+    };
+
+    Chance.prototype.mersenne_twister = function (seed) {
+        return new MersenneTwister(seed);
     };
 
     // -- End Miscellaneous --
@@ -1112,24 +1212,5 @@
     if (typeof window === "object" && typeof window.document === "object") {
         window.Chance = Chance;
         window.chance = new Chance();
-    }
-
-    function initOptions(options, defaults) {
-        options || (options = {});
-        if (!defaults) {
-            return options;
-        }
-        for (var i in defaults) {
-            if (typeof options[i] === 'undefined') {
-                options[i] = defaults[i];
-            }
-        }
-        return options;
-    }
-
-    function testRange(test, errorMessage) {
-        if (test) {
-            throw new RangeError(errorMessage);
-        }
     }
 })();
