@@ -15,11 +15,27 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         });
 
         describe("pick()", function () {
-            it("returns a single element", function () {
+            it("returns a single element when called without a count argument", function () {
                 arr = ['a', 'b', 'c', 'd'];
                 _(1000).times(function () {
                     picked = chance.pick(arr);
                     expect(picked).to.have.length(1);
+                });
+            });
+
+            it("returns multiple elements when called with a count argument", function () {
+                arr = ['a', 'b', 'c', 'd'];
+                _(1000).times(function () {
+                    picked = chance.pick(arr, 3);
+                    expect(picked).to.have.length(3);
+                });
+            });
+
+            it("doesn't destroy the original array when called with a count argument", function () {
+                arr = ['a', 'b', 'c', 'd', 'e', 'f'];
+                _(1000).times(function () {
+                    picked = chance.pick(arr, 3);
+                    expect(arr).to.have.length(6);
                 });
             });
         });

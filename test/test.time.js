@@ -2,7 +2,38 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Time", function () {
-        var hour, minute, time, timestamp, month, year, chance = new Chance();
+        var date, hour, minute, time, timestamp, month, year, chance = new Chance();
+
+        it("date() returns a date", function () {
+            _(1000).times(function () {
+                date = chance.date();
+                expect(date).to.be.a('Date');
+                expect(date.getTime()).to.be.ok;
+            });
+        });
+
+        it("date() can have some defaults provided and obeys them", function () {
+            _(1000).times(function () {
+                date = chance.date({year: 1983});
+                expect(date).to.be.a('Date');
+                expect(date.getFullYear()).to.equal(1983);
+
+                date = chance.date({month: 0});
+                expect(date).to.be.a('Date');
+                expect(date.getMonth()).to.equal(0);
+
+                date = chance.date({day: 21});
+                expect(date).to.be.a('Date');
+                expect(date.getDate()).to.equal(21);
+            });
+        });
+
+        it("date() can return a string date", function () {
+            _(1000).times(function () {
+                expect(chance.date({string: true})).to.be.a('string');
+                expect(chance.date({string: true})).to.match(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m);
+            });
+        });
 
         it("hour() returns a hour", function () {
             _(1000).times(function () {

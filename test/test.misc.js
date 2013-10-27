@@ -115,4 +115,51 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
     });
+
+    describe("Mixin", function () {
+        var chance = new Chance();
+        it("exists", function () {
+            expect(chance).to.have.property('mixin');
+        });
+
+        it("works with a simple function", function () {
+            chance.mixin({
+                'user': function () {
+                    return {
+                        first: chance.first(),
+                        last: chance.last(),
+                        email: chance.email()
+                    };
+                }
+            });
+            expect(chance).to.have.property('user');
+            _(1000).times(function () {
+                expect(chance.user()).to.be.ok;
+                expect(chance.user()).to.have.property('first');
+            });
+        });
+
+        it("multiple mixins work, can call previously defined mixins", function () {
+            chance.mixin({
+                'user': function () {
+                    return {
+                        first: chance.first(),
+                        last: chance.last(),
+                        email: chance.email()
+                    };
+                },
+                'social_user': function () {
+                    var user = chance.user();
+                    user.network = chance.pick(['facebook', 'twitter']);
+                    return user;
+                }
+            });
+            expect(chance).to.have.property('social_user');
+            _(1000).times(function () {
+                expect(chance.social_user()).to.be.ok;
+                expect(chance.social_user()).to.have.property('first');
+                expect(chance.social_user()).to.have.property('network');
+            });
+        });
+    });
 });

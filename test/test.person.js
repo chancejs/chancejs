@@ -1,15 +1,67 @@
 define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai, _) {
     var expect = chai.expect;
 
-    describe("Name", function () {
-        var name, first, last, prefix, chance = new Chance();
+    describe("Person", function () {
+        var age, name, first, last, prefix, chance = new Chance();
+
+        describe("age()", function () {
+            it("returns a random age within expected bounds", function () {
+                _(1000).times(function () {
+                    expect(chance.age()).to.be.a('number');
+                    expect(chance.age()).to.be.within(1, 120);
+                });
+            });
+
+            it("can have the type specified", function () {
+                _(1000).times(function () {
+                    expect(chance.age({type: 'child'})).to.be.within(1, 13);
+                    expect(chance.age({type: 'senior'})).to.be.within(65, 120);
+                });
+            });
+        });
+
+        describe("birthday()", function () {
+            it("returns a random birthday", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday()).to.be.a('Date');
+                    expect(chance.birthday().getFullYear()).to.be.within((new Date().getFullYear() - 120), (new Date().getFullYear()));
+                });
+            });
+
+            it("can have a string returned", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday({string: true})).to.be.a('string');
+                    expect(chance.birthday({string: true})).to.match(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m);
+                });
+            });
+
+            it("can have a year specified", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday({year: 1983}).getFullYear()).to.equal(1983);
+                });
+            });
+
+            it("can have an age range specified", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday({type: 'child'}).getFullYear()).to.be.within((new Date().getFullYear() - 13), (new Date().getFullYear()));
+                });
+            });
+        });
+
+        describe("gender()", function () {
+            it("returns a random gender", function () {
+                _(1000).times(function () {
+                    expect(chance.gender()).to.be.match(/(Male|Female)/);
+                });
+            });
+        });
 
         describe("name()", function () {
             it("returns a random name", function () {
                 _(1000).times(function () {
                     name = chance.name();
                     expect(name).to.be.a('string');
-                    expect(name).to.have.length.within(2, 20);
+                    expect(name).to.have.length.within(2, 30);
                     expect(name.split(' ')).to.have.length(2);
                 });
             });
