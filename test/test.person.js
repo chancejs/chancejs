@@ -19,6 +19,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("gender()", function () {
+            it("returns a random gender", function () {
+                _(1000).times(function () {
+                    expect(chance.gender()).to.be.match(/(Male|Female)/);
+                });
+            });
+        });
+
         describe("name()", function () {
             it("returns a random name", function () {
                 _(1000).times(function () {
