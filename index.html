@@ -34,8 +34,8 @@ github_url: https://github.com/victorquinn/chancejs
   {% assign posts = site.categories.text %}
   {% include methods_sidebar.html %}
 
-  <a class=toc_title href="#name">Name</a>
-  {% assign posts = site.categories.name %}
+  <a class=toc_title href="#person">Person</a>
+  {% assign posts = site.categories.person %}
   {% include methods_sidebar.html %}
 
   <a class=toc_title href="#web">Web</a>
@@ -79,14 +79,17 @@ github_url: https://github.com/victorquinn/chancejs
   </p>
   <p>
     <b>Chance</b> is loaded on this site so you can just open the console on your browser and play!
-    <img src="inspector.png">
+    <img class="image" src="inspector.png">
   </p>
   <p>
     <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://chancejs.com/" data-text="Chance - Utility library to generate random things for JavaScript" data-count="horizontal" data-via="victorquinn">Tweet</a>
   </p>
-
+  <p>
+    Written by <a href="http://victorquinn.com">Victor Quinn</a><br /><a href="https://coderwall.com/victorquinn"><img alt="Endorse victorquinn on Coderwall" src="https://api.coderwall.com/victorquinn/endorsecount.png" /></a>
+  </p>
+  <h3 id=npm>NPM</h3>
+  <p><a href="https://nodei.co/npm/chance/"><img src="https://nodei.co/npm/chance.png?downloads=true"></a></p>
   <h3 id=download>Download Chance</h3>
-
   <ul class=downloads>
     <li>
       <a href="chance.js" class="download" download="chance.js">chance.js v{{ page.version }} (for development)</a>
@@ -126,8 +129,8 @@ github_url: https://github.com/victorquinn/chancejs
     {% assign posts = site.categories.text %}
     {% include methods_full.html %}
 
-    <h2 id="name">Name</h2>
-    {% assign posts = site.categories.name %}
+    <h2 id="person">Person</h2>
+    {% assign posts = site.categories.person %}
     {% include methods_full.html %}
 
     <h2 id="web">Web</h2>
@@ -205,8 +208,8 @@ github_url: https://github.com/victorquinn/chancejs
   </p>
   <p>
     <small>
-      &copy; 2013 <a href="http://victorquinn.com">Victor Quinn</a><a href="https://coderwall.com/victorquinn"><img alt="Endorse victorquinn on Coderwall" src="https://api.coderwall.com/victorquinn/endorsecount.png" /></a><br>
-      Chance and this documentation are released under the terms of the <a href="{{ page.github_url }}/blob/master/MIT-LICENSE">MIT license</a>.
+      &copy; 2013 <a href="http://victorquinn.com">Victor Quinn</a><br>
+      Chance and this documentation are released under the terms of the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
     </small>
   </p>
 

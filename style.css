@@ -2,9 +2,10 @@
 body {
   font-size: 14px;
   line-height: 22px;
-  background: #ecf0f1;
+  background: #FFF;
   color: #000;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-weight: 300;
 }
 .interface {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
@@ -18,6 +19,12 @@ body {
 }
 #tour img {
   max-width: 500%;
+}
+.image {
+  border: 2px solid #eee;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 #sidebar {
   color: #ecf0f1;
@@ -34,7 +41,7 @@ body {
 a.toc_title, a.toc_title:visited {
   display: block;
   color: #ecf0f1;
-  font-weight: bold;
+  font-weight: 300;
   margin-top: 15px;
   text-decoration: underline;
 }
