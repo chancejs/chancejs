@@ -36,7 +36,7 @@ body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 15px 0 30px 30px;
-  border-right: 1px solid #e74c3c;
+  border-right: 1px solid #eee;
 }
 a.toc_title, a.toc_title:visited {
   display: block;
@@ -175,7 +175,7 @@ article {
   margin: 0 0 20px 0;
 }
 
-article.method h3 { margin-bottom: .2em; }
+article.method h3 { margin-bottom: 1.5em; }
 article.method h3 .emoji { display: none }
 .emoji-enabled article.method h3 .emoji {
   display: inline;
@@ -183,7 +183,7 @@ article.method h3 .emoji { display: none }
   font-size: 28px;
   cursor: default;
 }
-article.method p { margin: .5em 0 }
+article.method p { margin: 1.5em 0 }
 article.method .warning, article.method .version {
   margin: 0;
   font: bold 11px Arial;

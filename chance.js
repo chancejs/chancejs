@@ -1,4 +1,4 @@
-//  Chance.js 0.4.3
+//  Chance.js 0.5.0
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -218,6 +218,14 @@
 
     Chance.prototype.capitalize = function (word) {
         return word.charAt(0).toUpperCase() + word.substr(1);
+    };
+
+    Chance.prototype.mixin = function (obj) {
+        var chance = this;
+        for (var func_name in obj) {
+            Chance.prototype[func_name] = obj[func_name];
+        }
+        return this;
     };
 
     Chance.prototype.pick = function (arr, count) {
@@ -1062,7 +1070,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.4.3";
+    Chance.prototype.VERSION = "0.5.0";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
