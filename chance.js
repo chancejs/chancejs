@@ -772,6 +772,36 @@
         return this.bool() ? 'am' : 'pm';
     };
 
+    Chance.prototype.date = function (options) {
+        var year = parseInt(chance.year(), 10),
+            m = chance.month({raw: true}),
+            // Necessary because Date() 0-indexes month but not day or year
+            // for some reason.
+            month = m.numeric - 1,
+            day = chance.natural({min: 1, max: m.days}),
+            date;
+
+        options = initOptions(options, {
+            year: year,
+            month: month,
+            day: day,
+            american: true,
+            string: false
+        });
+
+        date = new Date(options.year, options.month, options.day);
+
+        if (options.american) {
+            // Adding 1 to the month is necessary because Date() 0-indexes
+            // months but not day for some odd reason.
+            date_string = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+        } else {
+            date_string = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        }
+
+        return options.string ? date_string : date;
+    };
+
     Chance.prototype.hour = function (options) {
         options = initOptions(options);
         var max = options.twentyfour ? 24 : 12;
@@ -790,18 +820,19 @@
 
     Chance.prototype.months = function () {
         return [
-            {name: 'January', short_name: 'Jan', numeric: '01'},
-            {name: 'February', short_name: 'Feb', numeric: '02'},
-            {name: 'March', short_name: 'Mar', numeric: '03'},
-            {name: 'April', short_name: 'Apr', numeric: '04'},
-            {name: 'May', short_name: 'May', numeric: '05'},
-            {name: 'June', short_name: 'Jun', numeric: '06'},
-            {name: 'July', short_name: 'Jul', numeric: '07'},
-            {name: 'August', short_name: 'Aug', numeric: '08'},
-            {name: 'September', short_name: 'Sep', numeric: '09'},
-            {name: 'October', short_name: 'Oct', numeric: '10'},
-            {name: 'November', short_name: 'Nov', numeric: '11'},
-            {name: 'December', short_name: 'Dec', numeric: '12'}
+            {name: 'January', short_name: 'Jan', numeric: '01', days: 31},
+            // Not messing with leap years...
+            {name: 'February', short_name: 'Feb', numeric: '02', days: 28},
+            {name: 'March', short_name: 'Mar', numeric: '03', days: 31},
+            {name: 'April', short_name: 'Apr', numeric: '04', days: 30},
+            {name: 'May', short_name: 'May', numeric: '05', days: 31},
+            {name: 'June', short_name: 'Jun', numeric: '06', days: 30},
+            {name: 'July', short_name: 'Jul', numeric: '07', days: 31},
+            {name: 'August', short_name: 'Aug', numeric: '08', days: 31},
+            {name: 'September', short_name: 'Sep', numeric: '09', days: 30},
+            {name: 'October', short_name: 'Oct', numeric: '10', days: 31},
+            {name: 'November', short_name: 'Nov', numeric: '11', days: 30},
+            {name: 'December', short_name: 'Dec', numeric: '12', days: 31}
         ];
     };
 
