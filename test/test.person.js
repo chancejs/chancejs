@@ -19,6 +19,21 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("birthday()", function () {
+            it("returns a random birthday", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday()).to.be.a('Date');
+                    expect(chance.birthday().getFullYear()).to.be.within((new Date().getFullYear() - 120), (new Date().getFullYear()));
+                });
+            });
+            it("can have a string returned", function () {
+                _(1000).times(function () {
+                    expect(chance.birthday({string: true})).to.be.a('string');
+                    expect(chance.birthday({string: true})).to.match(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m);
+                });
+            });
+        });
+
         describe("gender()", function () {
             it("returns a random gender", function () {
                 _(1000).times(function () {
