@@ -5,9 +5,18 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         var age, name, first, last, prefix, chance = new Chance();
 
         describe("age()", function () {
-            it("returns a random age");
-            it("age is within expected bounds");
-            it("can have the type specified");
+            it("returns a random age within expected bounds", function () {
+                _(1000).times(function () {
+                    expect(chance.age()).to.be.a('number');
+                    expect(chance.age()).to.be.within(1, 120);
+                });
+            });
+            it("can have the type specified", function () {
+                _(1000).times(function () {
+                    expect(chance.age({type: 'child'})).to.be.within(1, 13);
+                    expect(chance.age({type: 'senior'})).to.be.within(65, 120);
+                });
+            });
         });
 
         describe("name()", function () {
