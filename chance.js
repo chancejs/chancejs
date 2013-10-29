@@ -1,4 +1,4 @@
-//  Chance.js 0.5.0
+//  Chance.js 0.5.1
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -789,12 +789,12 @@
     };
 
     Chance.prototype.date = function (options) {
-        var year = parseInt(chance.year(), 10),
-            m = chance.month({raw: true}),
+        var year = parseInt(this.year(), 10),
+            m = this.month({raw: true}),
             // Necessary because Date() 0-indexes month but not day or year
             // for some reason.
             month = m.numeric - 1,
-            day = chance.natural({min: 1, max: m.days}),
+            day = this.natural({min: 1, max: m.days}),
             date;
 
         options = initOptions(options, {
@@ -1070,7 +1070,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.0";
+    Chance.prototype.VERSION = "0.5.1";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
