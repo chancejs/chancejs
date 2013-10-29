@@ -789,12 +789,12 @@
     };
 
     Chance.prototype.date = function (options) {
-        var year = parseInt(chance.year(), 10),
-            m = chance.month({raw: true}),
+        var year = parseInt(this.year(), 10),
+            m = this.month({raw: true}),
             // Necessary because Date() 0-indexes month but not day or year
             // for some reason.
             month = m.numeric - 1,
-            day = chance.natural({min: 1, max: m.days}),
+            day = this.natural({min: 1, max: m.days}),
             date;
 
         options = initOptions(options, {
