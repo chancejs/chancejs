@@ -1,4 +1,4 @@
-//  Chance.js 0.5.1
+//  Chance.js 0.5.2
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -1027,12 +1027,21 @@
     };
 
     // Guid
-    Chance.prototype.guid = function () {
-        return this.hash({casing: 'upper', length: 8}) + '-' +
-            this.hash({casing: 'upper', length: 4}) + '-' +
-            this.hash({casing: 'upper', length: 4}) + '-' +
-            this.hash({casing: 'upper', length: 4}) + '-' +
-            this.hash({casing: 'upper', length: 12});
+    Chance.prototype.guid = function (options) {
+        options = options || {version: 5};
+        
+        var guid_pool = "ABCDEF1234567890",
+            variant_pool = "AB89",
+            guid = this.string({pool: guid_pool, length: 8}) + '-' +
+                   this.string({pool: guid_pool, length: 4}) + '-' +
+                   // The Version
+                   options.version + 
+                   this.string({pool: guid_pool, length: 3}) + '-' +
+                   // The Variant
+                   this.string({pool: variant_pool, length: 1}) +
+                   this.string({pool: guid_pool, length: 3}) + '-' +
+                   this.string({pool: guid_pool, length: 12});
+        return guid;
     };
 
     // Hash
@@ -1070,7 +1079,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.1";
+    Chance.prototype.VERSION = "0.5.2";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {

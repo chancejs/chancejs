@@ -79,27 +79,28 @@ Please feel free to reach out to me if you have any questions or suggestions.
 THANK YOU!
 
 ```
- project  : chancejs
- repo age : 4 months
- active   : 40 days
- commits  : 215
- files    : 18
+project  : chancejs
+ repo age : 5 months
+ active   : 43 days
+ commits  : 231
+ files    : 19
  authors  :
-   167  Victor Quinn            77.7%
-    11  davmillar               5.1%
-    11  Tim Petricola           5.1%
-     5  Michael Cordingley      2.3%
-     5  Matt Klaber             2.3%
-     3  qjcg                    1.4%
-     2  dhilipsiva              0.9%
-     2  Andreas Koeberle        0.9%
-     2  path411                 0.9%
-     2  Kevin Garnett           0.9%
-     1  Ryan Tenney             0.5%
-     1  Doug Lawrence           0.5%
-     1  Richard Anaya           0.5%
-     1  Adam Krebs              0.5%
-     1  leesei                  0.5%
+   180	Victor Quinn            77.9%
+    11	davmillar               4.8%
+    11	Tim Petricola           4.8%
+     5	Michael Cordingley      2.2%
+     5	Matt Klaber             2.2%
+     4	Kevin Garnett           1.7%
+     3	qjcg                    1.3%
+     2	dhilipsiva              0.9%
+     2	Andreas Koeberle        0.9%
+     2	path411                 0.9%
+     1	Ryan Tenney             0.4%
+     1	Doug Lawrence           0.4%
+     1	Johannes Stein          0.4%
+     1	Richard Anaya           0.4%
+     1	Adam Krebs              0.4%
+     1	leesei                  0.4%
 ```
 
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
