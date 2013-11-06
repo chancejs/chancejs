@@ -38,11 +38,38 @@ It can also be used with [Bower](http://bower.io)
 then in the HTML of your app:
 
     <!-- Load Chance -->
-    <script type="text/javascript" src="components/chance/chance.min.js"></script>
+    <script type="text/javascript" src="bower_components/chance/chance.min.js"></script>
     <script>
         // Use Chance immediately!
         alert(chance.string());
     </script>
+
+### Component
+
+It can also be used with [Component](http://component.io)
+
+    component install victorquinn/chancejs
+    
+then in the HTML of your app:
+
+    <!-- Load Chance -->
+    <script type="text/javascript" src="components/victorquinn-chancejs/chance.js"></script>
+    <script>
+        // Use Chance immediately!
+        alert(chance.string());
+    </script>
+
+
+
+### Node.js
+
+And it can be used in Node.js.
+
+    var Chance = require('chance'),
+        chance = new Chance();
+        
+    // Get a random zip code
+    chance.zip();
 
 ### RequireJS
 
@@ -55,17 +82,6 @@ Chance also includes an AMD define so it can be used with RequireJS.
         // Then just use it:
         var my_random_integer = chance.integer();
     });
-
-
-### Node.js
-
-And it can be used in Node.js.
-
-    var Chance = require('chance'),
-        chance = new Chance();
-        
-    // Get a random zip code
-    chance.zip();
 
 
 ## Author
