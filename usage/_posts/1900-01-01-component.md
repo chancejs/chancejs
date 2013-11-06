@@ -1,18 +1,18 @@
 ---
-title: bower
+title: component
 ---
 
-It can also be used with [Bower](http://bower.io)
+It can also be used with [Component](http://component.io)
 
 {% highlight bash %}
-bower install chance
+component install victorquinn/chancejs
 {% endhighlight %}
 
 then in the HTML of your app:
 
 {% highlight html %}
 <!-- Load Chance -->
-<script type="text/javascript" src="bower_components/chance/chance.js"></script>
+<script type="text/javascript" src="components/victorquinn-chancejs/chance.js"></script>
 <script>
   // Use Chance
   alert(chance.string());
