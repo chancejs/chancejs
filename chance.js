@@ -819,6 +819,10 @@
         return options.string ? date_string : date;
     };
 
+    Chance.prototype.hammertime = function (options) {
+        return this.date(options).getTime();
+    };
+
     Chance.prototype.hour = function (options) {
         options = initOptions(options);
         var max = options.twentyfour ? 24 : 12;
