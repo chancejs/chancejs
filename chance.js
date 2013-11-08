@@ -789,23 +789,24 @@
     };
 
     Chance.prototype.date = function (options) {
-        var year = parseInt(this.year(), 10),
-            m = this.month({raw: true}),
-            // Necessary because Date() 0-indexes month but not day or year
-            // for some reason.
-            month = m.numeric - 1,
-            day = this.natural({min: 1, max: m.days}),
+        var m = this.month({raw: true}),
             date_string;
 
         options = initOptions(options, {
-            year: year,
-            month: month,
-            day: day,
+            year: parseInt(this.year(), 10),
+            // Necessary to subtract 1 because Date() 0-indexes month but not day or year
+            // for some reason.
+            month: m.numeric - 1,
+            day: this.natural({min: 1, max: m.days}),
+            hour: this.hour(),
+            minute: this.minute(),
+            second: this.minute(),
+            millisecond: this.natural({min: 0, max: 999}),
             american: true,
             string: false
         });
 
-        var date = new Date(options.year, options.month, options.day);
+        var date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
 
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
