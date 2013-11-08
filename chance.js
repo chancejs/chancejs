@@ -800,8 +800,8 @@
             day: this.natural({min: 1, max: m.days}),
             hour: this.hour(),
             minute: this.minute(),
-            second: this.minute(),
-            millisecond: this.natural({min: 0, max: 999}),
+            second: this.second(),
+            millisecond: this.millisecond(),
             american: true,
             string: false
         });
@@ -829,7 +829,11 @@
         return this.natural({min: 1, max: max});
     };
 
-    Chance.prototype.minute = function () {
+    Chance.prototype.millisecond = function () {
+        return this.natural({max: 999});
+    };
+
+    Chance.prototype.minute = Chance.prototype.second = function () {
         return this.natural({max: 59});
     };
 
