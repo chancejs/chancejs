@@ -795,7 +795,7 @@
             // for some reason.
             month = m.numeric - 1,
             day = this.natural({min: 1, max: m.days}),
-            date;
+            date_string;
 
         options = initOptions(options, {
             year: year,
@@ -805,7 +805,7 @@
             string: false
         });
 
-        date = new Date(options.year, options.month, options.day);
+        var date = new Date(options.year, options.month, options.day);
 
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
