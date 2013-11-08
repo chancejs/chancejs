@@ -1,4 +1,4 @@
-//  Chance.js 0.5.2
+//  Chance.js 0.5.3
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -789,23 +789,24 @@
     };
 
     Chance.prototype.date = function (options) {
-        var year = parseInt(this.year(), 10),
-            m = this.month({raw: true}),
-            // Necessary because Date() 0-indexes month but not day or year
-            // for some reason.
-            month = m.numeric - 1,
-            day = this.natural({min: 1, max: m.days}),
-            date;
+        var m = this.month({raw: true}),
+            date_string;
 
         options = initOptions(options, {
-            year: year,
-            month: month,
-            day: day,
+            year: parseInt(this.year(), 10),
+            // Necessary to subtract 1 because Date() 0-indexes month but not day or year
+            // for some reason.
+            month: m.numeric - 1,
+            day: this.natural({min: 1, max: m.days}),
+            hour: this.hour(),
+            minute: this.minute(),
+            second: this.second(),
+            millisecond: this.millisecond(),
             american: true,
             string: false
         });
 
-        date = new Date(options.year, options.month, options.day);
+        var date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
 
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
@@ -818,13 +819,21 @@
         return options.string ? date_string : date;
     };
 
+    Chance.prototype.hammertime = function (options) {
+        return this.date(options).getTime();
+    };
+
     Chance.prototype.hour = function (options) {
         options = initOptions(options);
         var max = options.twentyfour ? 24 : 12;
         return this.natural({min: 1, max: max});
     };
 
-    Chance.prototype.minute = function () {
+    Chance.prototype.millisecond = function () {
+        return this.natural({max: 999});
+    };
+
+    Chance.prototype.minute = Chance.prototype.second = function () {
         return this.natural({max: 59});
     };
 
@@ -1079,7 +1088,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.2";
+    Chance.prototype.VERSION = "0.5.3";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
