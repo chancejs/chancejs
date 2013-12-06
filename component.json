@@ -4,5 +4,6 @@
   "description": "Minimalist generator of random strings, numbers, etc.",
   "version": "0.5.2",
   "keywords": ["chance", "random", "generator", "test"],
-  "scripts": "chance.js"
+  "main": "chance.js",
+  "scripts": [ "chance.js" ]
 }
