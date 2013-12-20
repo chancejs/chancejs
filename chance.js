@@ -964,7 +964,11 @@
             dollar = dollar + '0';
         }
 
-        return '$' + dollar;
+        if (dollar < 0) {
+            return '-$' + dollar.replace('-', '');
+        } else {
+            return '$' + dollar;
+        }
     };
 
     Chance.prototype.exp = function (options) {
