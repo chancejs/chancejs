@@ -1,4 +1,4 @@
-//  Chance.js 0.5.3
+//  Chance.js 0.5.4
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -761,6 +761,10 @@
         ];
     };
 
+    Chance.prototype.tv = function (options) {
+        return this.radio(options);
+    };
+
     // Note: only returning US zip codes, internationalization will be a whole
     // other beast to tackle at some point.
     Chance.prototype.zip = function (options) {
@@ -964,7 +968,11 @@
             dollar = dollar + '0';
         }
 
-        return '$' + dollar;
+        if (dollar < 0) {
+            return '-$' + dollar.replace('-', '');
+        } else {
+            return '$' + dollar;
+        }
     };
 
     Chance.prototype.exp = function (options) {
@@ -1044,7 +1052,7 @@
             guid = this.string({pool: guid_pool, length: 8}) + '-' +
                    this.string({pool: guid_pool, length: 4}) + '-' +
                    // The Version
-                   options.version + 
+                   options.version +
                    this.string({pool: guid_pool, length: 3}) + '-' +
                    // The Variant
                    this.string({pool: variant_pool, length: 1}) +
@@ -1088,7 +1096,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.3";
+    Chance.prototype.VERSION = "0.5.4";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
