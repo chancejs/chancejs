@@ -761,6 +761,10 @@
         ];
     };
 
+    Chance.prototype.tv = function (options) {
+        return this.radio(options);
+    };
+
     // Note: only returning US zip codes, internationalization will be a whole
     // other beast to tackle at some point.
     Chance.prototype.zip = function (options) {
@@ -1048,7 +1052,7 @@
             guid = this.string({pool: guid_pool, length: 8}) + '-' +
                    this.string({pool: guid_pool, length: 4}) + '-' +
                    // The Version
-                   options.version + 
+                   options.version +
                    this.string({pool: guid_pool, length: 3}) + '-' +
                    // The Variant
                    this.string({pool: variant_pool, length: 1}) +
