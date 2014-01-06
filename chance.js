@@ -558,7 +558,7 @@
 
     Chance.prototype.longitude = function (options) {
         options = initOptions(options, {fixed : 5});
-        return this.floating({min: 0, max: 180, fixed: options.fixed});
+        return this.floating({min: -180, max: 180, fixed: options.fixed});
     };
 
     Chance.prototype.phone = function (options) {
