@@ -286,13 +286,29 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 }, 5);
             });
 
-            it("returns repeatable results if seed provided on the Chance object", function () {
+            it("returns repeatable results if number seed provided on the Chance object", function () {
                 seed = new Date().getTime();
                 chance1 = new Chance(seed);
                 chance2 = new Chance(seed);
 
                 _(1000).times(function () {
                     expect(chance1.random()).to.equal(chance2.random());
+                });
+            });
+            
+            it("returns repeatable results if date seed provided on the Chance object", function () {
+                seed1 = new Date("2014-01-01");
+                seed2 = new Date("2014-01-02");
+                chance1 = new Chance(seed1);
+                chance2 = new Chance(seed1);
+                chance3 = new Chance(seed2);
+
+                _(1000).times(function () {
+                    expect(chance1.random()).to.equal(chance2.random());
+                });
+                
+                _(1000).times(function () {
+                    expect(chance1.random()).to.not.equal(chance3.random());
                 });
             });
         });
