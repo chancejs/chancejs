@@ -20,7 +20,13 @@
             if (typeof seed === 'function') {
                 this.random = seed;
             } else {
-                this.seed = seed;
+                // If we were passed a date, use .getTime of that date
+                if (Object.prototype.toString.call(seed) === "[object Date]") {
+                    this.seed = seed.getTime();
+                }
+                else {
+                    this.seed = seed;
+                }
             }
         }
 
@@ -553,7 +559,7 @@
 
     Chance.prototype.geoJson = function (options) {
         options = initOptions(options);
-        return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options) ;
+        return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
     };
     
     Chance.prototype.altitude = function (options) {
