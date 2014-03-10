@@ -397,9 +397,9 @@
         options = initOptions(options);
 
         var gender = options.gender;
-        if (options.gender === 'Male') {
+        if (options.gender === 'male') {
             gender = 'Male';
-        } else if (options.gender === 'Female') {
+        } else if (options.gender === 'female') {
             gender = 'Female';
         } else {
             gender = this.gender();
