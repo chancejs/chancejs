@@ -22,10 +22,12 @@ desired.
 
 Chance instantiates itself onto the window. This means that in the simplest case you can just include the script tag then use an instance of Chance immediately.
 
-    <script src="chance.js"></script>
-    <script>
-        console.log(chance.string());
-    </script>
+```html
+<script src="chance.js"></script>
+<script>
+    console.log(chance.string());
+</script>
+```
 
 [More info](http://chancejs.com#browser)
 
@@ -33,40 +35,46 @@ Chance instantiates itself onto the window. This means that in the simplest case
 
 It can also be used with [Bower](http://bower.io)
 
-    bower install chance
+```
+bower install chance
+```
 
 then in the HTML of your app:
 
-    <!-- Load Chance -->
-    <script type="text/javascript" src="components/chance/chance.min.js"></script>
-    <script>
-        // Use Chance immediately!
-        alert(chance.string());
-    </script>
+```html
+<!-- Load Chance -->
+<script type="text/javascript" src="components/chance/chance.min.js"></script>
+<script>
+    // Use Chance immediately!
+    alert(chance.string());
+</script>
+```
 
 ### RequireJS
 
 Chance also includes an AMD define so it can be used with RequireJS.
 
-    require(['Chance'], function(Chance) {
-        // Instantiate
-        var chance = new Chance();
-       
-        // Then just use it:
-        var my_random_integer = chance.integer();
-    });
-
+```js
+require(['Chance'], function(Chance) {
+    // Instantiate
+    var chance = new Chance();
+   
+    // Then just use it:
+    var my_random_integer = chance.integer();
+});
+```
 
 ### Node.js
 
 And it can be used in Node.js.
 
-    var Chance = require('chance'),
-        chance = new Chance();
-        
-    // Get a random zip code
-    chance.zip();
-
+```js
+var Chance = require('chance'),
+    chance = new Chance();
+    
+// Get a random zip code
+chance.zip();
+```
 
 ## Author
 ### Victor Quinn
