@@ -295,9 +295,9 @@
         options = initOptions(options);
 
         var length = options.length || this.natural({min: 2, max: 3}),
-            consanants = 'bcdfghjklmnprstvwz', // consonants except hard to speak ones
+            consonants = 'bcdfghjklmnprstvwz', // consonants except hard to speak ones
             vowels = 'aeiou', // vowels
-            all = consanants + vowels, // all
+            all = consonants + vowels, // all
             text = '',
             chr;
 
@@ -307,11 +307,11 @@
             if (i === 0) {
                 // First character can be anything
                 chr = this.character({pool: all});
-            } else if (consanants.indexOf(chr) === -1) {
-                // Last charcter was a vowel, now we want a consanant
-                chr = this.character({pool: consanants});
+            } else if (consonants.indexOf(chr) === -1) {
+                // Last character was a vowel, now we want a consonant
+                chr = this.character({pool: consonants});
             } else {
-                // Last charcter was a consanant, now we want a vowel
+                // Last character was a consonant, now we want a vowel
                 chr = this.character({pool: vowels});
             }
 
@@ -974,7 +974,7 @@
                 }
             }
             if (type === null) {
-                throw new Error("Credit card type '" + options.name + "'' is not suppoted");
+                throw new Error("Credit card type '" + options.name + "'' is not supported");
             }
         } else {
             type = this.pick(types);
