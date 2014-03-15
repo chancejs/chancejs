@@ -13,5 +13,11 @@
     "author": {
         "name": "Victor Quinn",
         "web": "http://victorquinn.com"
+    },
+    "devDependencies": {
+        "mocha": "1.18.0",
+        "chai": "~1.9.0",
+        "requirejs": "~2.1.11",
+        "lodash": "~2.4.1"
     }
 }
