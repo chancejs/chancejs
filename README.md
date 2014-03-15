@@ -13,7 +13,7 @@ library can generate random numbers, characters, strings, names, addresses,
 dice, and pretty much anything else.
 
 It includes the basic building blocks for all these items and is built on top
-of a Mersenne Twister so it can generate these things with repeatibility, if
+of a Mersenne Twister so it can generate these things with repeatability, if
 desired.
 
 ## Usage
