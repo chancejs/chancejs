@@ -1,8 +1,6 @@
 language: node_js
 before_script:
   - npm install -g bower
-  - cd test
   - bower install
-  - cd ..
 node_js:
   - "0.10"
