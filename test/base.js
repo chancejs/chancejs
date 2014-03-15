@@ -1,9 +1,9 @@
 require.config({
     paths: {
         'Chance': '../chance',
-        'chai': '../node_modules/chai/chai',
-        'mocha': '../node_modules/mocha/mocha',
-        'underscore': '../node_modules/underscore/underscore'
+        'chai': 'lib/chai/chai',
+        'mocha': 'lib/mocha/mocha',
+        'underscore': 'lib/lodash/dist/lodash'
     },
     shim: {
         'underscore': {
