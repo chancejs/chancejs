@@ -1,3 +1,5 @@
 language: node_js
+before_script:
+  - "cd test; bower install; cd ..;"
 node_js:
   - "0.10"
