@@ -170,6 +170,20 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(chance.latitude()).to.be.within(-90, 90);
                 });
             });
+
+            it("latitude() will accept a min and obey it", function () {
+                _(1000).times(function () {
+                    var min = chance.floating({min: -90, max: 90});
+                    expect(chance.latitude({min: min})).to.be.within(min, 90);
+                });
+            });
+
+            it("latitude() will accept a max and obey it", function () {
+                _(1000).times(function () {
+                    var max = chance.floating({min: -90, max: 90});
+                    expect(chance.latitude({max: max})).to.be.within(-90, max);
+                });
+            });
         });
 
         describe("Longitude", function () {
@@ -182,6 +196,21 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(chance.longitude()).to.be.within(-180, 180);
                 });
             });
+
+            it("longitude() will accept a min and obey it", function () {
+                _(1000).times(function () {
+                    var min = chance.floating({min: -180, max: 180});
+                    expect(chance.longitude({min: min})).to.be.within(min, 180);
+                });
+            });
+
+            it("longitude() will accept a max and obey it", function () {
+                _(1000).times(function () {
+                    var max = chance.floating({min: -180, max: 180});
+                    expect(chance.longitude({max: max})).to.be.within(-180, max);
+                });
+            });
+
         });
 
         describe("Coordinates", function () {

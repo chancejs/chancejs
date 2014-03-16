@@ -557,7 +557,7 @@
 
     Chance.prototype.geoJson = function (options) {
         options = initOptions(options);
-        return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options) ;
+        return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
     };
     
     Chance.prototype.altitude = function (options) {
@@ -566,18 +566,18 @@
     };
     
     Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed : 5});
+        options = initOptions(options, {fixed: 5});
         return this.floating({min: -35994, max: 0, fixed: options.fixed});
     };
     
     Chance.prototype.latitude = function (options) {
-        options = initOptions(options, {fixed : 5});
-        return this.floating({min: -90, max: 90, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: -90, max: 90});
+        return this.floating({min: options.min, max: options.max, fixed: options.fixed});
     };
 
     Chance.prototype.longitude = function (options) {
-        options = initOptions(options, {fixed : 5});
-        return this.floating({min: -180, max: 180, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: -180, max: 180});
+        return this.floating({min: options.min, max: options.max, fixed: options.fixed});
     };
 
     Chance.prototype.phone = function (options) {
