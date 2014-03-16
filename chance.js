@@ -228,6 +228,15 @@
         return this;
     };
 
+    // H/T to SO for this one: http://vq.io/OtUrZ5
+    Chance.prototype.pad = function (number, width, pad) {
+        // Default pad to 0 if none provided
+        pad = pad || '0';
+        // Convert number to a string
+        number = number + '';
+        return number.length >= width ? number : new Array(width - number.length + 1).join(pad) + number;
+    };
+
     Chance.prototype.pick = function (arr, count) {
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
@@ -490,6 +499,12 @@
 
     Chance.prototype.fbid = function () {
         return parseInt('10000' + this.natural({max: 100000000000}), 10);
+    };
+
+    Chance.prototype.google_analytics = function () {
+        var account = this.pad(this.natural({max: 999999}), 6);
+        var property = this.pad(this.natural({max: 99}), 2);
+        return 'UA-' + account + '-' + property;
     };
 
     Chance.prototype.hashtag = function () {

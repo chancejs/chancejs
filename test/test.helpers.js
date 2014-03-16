@@ -53,5 +53,33 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("pad()", function () {
+            it("always returns same number when width same as the length of the number", function () {
+                _(1000).times(function () {
+                    var num = chance.natural({min: 10000, max: 99999});
+                    expect(chance.pad(num, 5)).to.be.a('string');
+                    expect(chance.pad(num, 5)).to.have.length(5);
+                });
+            });
+
+            it("will pad a smaller number to the right width", function () {
+                _(1000).times(function () {
+                    var num = chance.natural({max: 99999});
+                    expect(chance.pad(num, 10)).to.be.a('string');
+                    expect(chance.pad(num, 10)).to.have.length(10);
+                    expect(chance.pad(num, 10).indexOf('00000')).to.not.equal(-1);
+                });
+            });
+
+            it("can specify pad element", function () {
+                _(1000).times(function () {
+                    var num = chance.natural({max: 99999});
+                    expect(chance.pad(num, 10, 'V')).to.be.a('string');
+                    expect(chance.pad(num, 10, 'V')).to.have.length(10);
+                    expect(chance.pad(num, 10, 'V').indexOf('VVVVV')).to.not.equal(-1);
+                });
+            });
+        });
+
     });
 });
