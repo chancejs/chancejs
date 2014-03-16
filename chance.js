@@ -15,6 +15,10 @@
 
     // Constructor
     var Chance = function (seed) {
+        if (!(this instanceof Chance)) {
+            return new Chance(seed);
+        }
+
         if (seed !== undefined) {
             // If we were passed a generator rather than a seed, use it.
             if (typeof seed === 'function') {
