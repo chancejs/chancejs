@@ -1,4 +1,4 @@
-//  Chance.js 0.5.4
+//  Chance.js 0.5.5
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -15,6 +15,10 @@
 
     // Constructor
     var Chance = function (seed) {
+        if (!(this instanceof Chance)) {
+            return new Chance(seed);
+        }
+
         if (seed !== undefined) {
             // If we were passed a generator rather than a seed, use it.
             if (typeof seed === 'function') {
@@ -228,6 +232,15 @@
         return this;
     };
 
+    // H/T to SO for this one: http://vq.io/OtUrZ5
+    Chance.prototype.pad = function (number, width, pad) {
+        // Default pad to 0 if none provided
+        pad = pad || '0';
+        // Convert number to a string
+        number = number + '';
+        return number.length >= width ? number : new Array(width - number.length + 1).join(pad) + number;
+    };
+
     Chance.prototype.pick = function (arr, count) {
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
@@ -295,9 +308,9 @@
         options = initOptions(options);
 
         var length = options.length || this.natural({min: 2, max: 3}),
-            consanants = 'bcdfghjklmnprstvwz', // consonants except hard to speak ones
+            consonants = 'bcdfghjklmnprstvwz', // consonants except hard to speak ones
             vowels = 'aeiou', // vowels
-            all = consanants + vowels, // all
+            all = consonants + vowels, // all
             text = '',
             chr;
 
@@ -307,11 +320,11 @@
             if (i === 0) {
                 // First character can be anything
                 chr = this.character({pool: all});
-            } else if (consanants.indexOf(chr) === -1) {
-                // Last charcter was a vowel, now we want a consanant
-                chr = this.character({pool: consanants});
+            } else if (consonants.indexOf(chr) === -1) {
+                // Last character was a vowel, now we want a consonant
+                chr = this.character({pool: consonants});
             } else {
-                // Last charcter was a consanant, now we want a vowel
+                // Last character was a consonant, now we want a vowel
                 chr = this.character({pool: vowels});
             }
 
@@ -384,10 +397,14 @@
         return this.date(options);
     };
 
-    var firstNames = ['Sophia', 'Emma', 'Isabella', 'Jacob', 'Mason', 'Ethan', 'Noah', 'Olivia', 'William', 'Liam', 'Jayden', 'Michael', 'Ava', 'Alexander', 'Aiden', 'Daniel', 'Matthew', 'Elijah', 'Emily', 'James', 'Anthony', 'Benjamin', 'Abigail', 'Joshua', 'Andrew', 'David', 'Joseph', 'Logan', 'Jackson', 'Mia', 'Christopher', 'Gabriel', 'Madison', 'Samuel', 'Ryan', 'Lucas', 'John', 'Nathan', 'Isaac', 'Dylan', 'Caleb', 'Elizabeth', 'Chloe', 'Christian', 'Landon', 'Jonathan', 'Carter', 'Ella', 'Luke', 'Owen', 'Brayden', 'Avery', 'Gavin', 'Wyatt', 'Addison', 'Isaiah', 'Aubrey', 'Henry', 'Eli', 'Hunter', 'Lily', 'Jack', 'Natalie', 'Evan', 'Sofia', 'Jordan', 'Nicholas', 'Tyler', 'Aaron', 'Charlotte', 'Zoey', 'Jeremiah', 'Julian', 'Cameron', 'Grace', 'Hannah', 'Amelia', 'Harper', 'Levi', 'Lillian', 'Brandon', 'Angel', 'Austin', 'Connor', 'Adrian', 'Robert', 'Samantha', 'Charles', 'Evelyn', 'Victoria', 'Thomas', 'Brooklyn', 'Sebastian', 'Zoe', 'Colton', 'Jaxon', 'Layla', 'Kevin', 'Zachary', 'Ayden', 'Dominic', 'Blake', 'Jose', 'Hailey', 'Oliver', 'Justin', 'Bentley', 'Leah', 'Jason', 'Chase', 'Ian', 'Kaylee', 'Anna', 'Aaliyah', 'Gabriella', 'Josiah', 'Allison', 'Parker', 'Xavier', 'Nevaeh', 'Alexis', 'Adam', 'Audrey', 'Cooper', 'Savannah', 'Sarah', 'Alyssa', 'Claire', 'Taylor', 'Riley', 'Camila', 'Nathaniel', 'Arianna', 'Ashley', 'Grayson', 'Jace', 'Brianna', 'Carson', 'Sophie', 'Peyton', 'Nolan', 'Tristan', 'Luis', 'Brody', 'Bella', 'Khloe', 'Genesis', 'Alexa', 'Juan', 'Hudson', 'Serenity', 'Kylie', 'Aubree', 'Scarlett', 'Bryson', 'Carlos', 'Stella', 'Maya', 'Easton', 'Katherine', 'Julia', 'Damian', 'Alex', 'Kayden', 'Ryder', 'Lucy', 'Madelyn', 'Jesus', 'Cole', 'Autumn', 'Makayla', 'Kayla', 'Mackenzie', 'Micah', 'Vincent', 'Max', 'Lauren', 'Jaxson', 'Gianna', 'Eric', 'Ariana', 'Asher', 'Hayden', 'Faith', 'Alexandra', 'Melanie', 'Sydney', 'Bailey', 'Caroline', 'Naomi', 'Morgan', 'Kennedy', 'Ellie', 'Jasmine', 'Eva', 'Skylar', 'Diego', 'Kimberly', 'Violet', 'Molly', 'Miles', 'Steven', 'Aria', 'Ivan', 'Jocelyn', 'Trinity', 'Elias', 'Aidan', 'Maxwell', 'London', 'Bryce', 'Lydia', 'Madeline', 'Antonio', 'Giovanni', 'Reagan', 'Timothy', 'Bryan', 'Piper', 'Andrea', 'Santiago', 'Annabelle', 'Maria', 'Colin', 'Richard', 'Braxton', 'Kaleb', 'Brooke', 'Kyle', 'Kaden', 'Preston', 'Payton', 'Miguel', 'Jonah', 'Paisley', 'Paige', 'Lincoln', 'Ruby', 'Nora', 'Riley', 'Mariah', 'Leo', 'Victor', 'Brady', 'Jeremy', 'Mateo', 'Brian', 'Jaden', 'Ashton', 'Patrick', 'Rylee', 'Declan', 'Lilly', 'Brielle', 'Sean', 'Joel', 'Gael', 'Sawyer', 'Alejandro', 'Jade', 'Marcus', 'Destiny', 'Leonardo', 'Jesse', 'Caden', 'Jake', 'Kaiden', 'Nicole', 'Mila', 'Wesley', 'Kendall', 'Liliana', 'Camden', 'Kaitlyn', 'Natalia', 'Sadie', 'Edward', 'Brantley', 'Jordyn', 'Roman', 'Vanessa', 'Mary', 'Mya', 'Penelope', 'Isabelle', 'Alice', 'Axel', 'Silas', 'Jude', 'Grant', 'Reese', 'Gabrielle', 'Hadley', 'Katelyn', 'Angelina', 'Rachel', 'Isabel', 'Eleanor', 'Cayden', 'Emmanuel', 'George', 'Clara', 'Brooklynn', 'Jessica', 'Maddox', 'Malachi', 'Bradley', 'Alan', 'Weston', 'Elena', 'Gage', 'Aliyah', 'Vivian', 'Laila', 'Sara', 'Amy', 'Devin', 'Eliana', 'Greyson', 'Lyla', 'Juliana', 'Kenneth', 'Mark', 'Oscar', 'Tanner', 'Rylan', 'Valeria', 'Adriana', 'Nicolas', 'Makenzie', 'Harrison', 'Elise', 'Mckenzie', 'Derek', 'Quinn', 'Delilah', 'Peyton', 'Ezra', 'Cora', 'Kylee', 'Tucker', 'Emmett', 'Avery', 'Cody', 'Rebecca', 'Gracie', 'Izabella', 'Calvin', 'Andres', 'Jorge', 'Abel', 'Paul', 'Abraham', 'Kai', 'Josephine', 'Alaina', 'Michelle', 'Jennifer', 'Collin', 'Theodore', 'Ezekiel', 'Eden', 'Omar', 'Jayce', 'Valentina', 'Conner', 'Bennett', 'Aurora', 'Catherine', 'Stephanie', 'Trevor', 'Valerie', 'Eduardo', 'Peter', 'Maximus', 'Jayla', 'Jaiden', 'Willow', 'Jameson', 'Seth', 'Daisy', 'Alana', 'Melody', 'Hazel', 'Kingston', 'Summer', 'Melissa', 'Javier', 'Margaret', 'Travis', 'Kinsley', 'Kinley', 'Garrett', 'Everett', 'Ariel', 'Lila', 'Graham', 'Giselle', 'Ryleigh', 'Xander', 'Haley', 'Julianna', 'Ivy', 'Alivia', 'Cristian', 'Brynn', 'Damien', 'Ryker', 'Griffin', 'Keira', 'Daniela', 'Aniyah', 'Angela', 'Kate', 'Londyn', 'Corbin', 'Myles', 'Hayden', 'Harmony', 'Adalyn', 'Luca', 'Zane', 'Francisco', 'Ricardo', 'Alexis', 'Stephen', 'Zayden', 'Megan', 'Allie', 'Gabriela', 'Iker', 'Drake', 'Alayna', 'Lukas', 'Presley', 'Charlie', 'Spencer', 'Zion', 'Erick', 'Jenna', 'Josue', 'Alexandria', 'Ashlyn', 'Adrianna', 'Jada', 'Jeffrey', 'Trenton', 'Fiona', 'Chance', 'Norah', 'Paxton', 'Elliot', 'Emery', 'Fernando', 'Maci', 'Miranda', 'Keegan', 'Landen', 'Ximena', 'Amaya', 'Manuel', 'Amir', 'Shane', 'Cecilia', 'Raymond', 'Andre', 'Ana', 'Shelby', 'Katie', 'Hope', 'Callie', 'Jordan', 'Luna', 'Leilani', 'Eliza', 'Mckenna', 'Angel', 'Genevieve', 'Makenna', 'Isla', 'Lola', 'Danielle', 'Chelsea', 'Leila', 'Tessa', 'Adelyn', 'Camille', 'Mikayla', 'Adeline', 'Adalynn', 'Sienna', 'Esther', 'Jacqueline', 'Emerson', 'Arabella', 'Maggie', 'Athena', 'Lucia', 'Lexi', 'Ayla'];
+    var firstNames = {
+        "male": ["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Charles", "Thomas", "Christopher", "Daniel", "Matthew", "George", "Donald", "Anthony", "Paul", "Mark", "Edward", "Steven", "Kenneth", "Andrew", "Brian", "Joshua", "Kevin", "Ronald", "Timothy", "Jason", "Jeffrey", "Frank", "Gary", "Ryan", "Nicholas", "Eric", "Stephen", "Jacob", "Larry", "Jonathan", "Scott", "Raymond", "Justin", "Brandon", "Gregory", "Samuel", "Benjamin", "Patrick", "Jack", "Henry", "Walter", "Dennis", "Jerry", "Alexander", "Peter", "Tyler", "Douglas", "Harold", "Aaron", "Jose", "Adam", "Arthur", "Zachary", "Carl", "Nathan", "Albert", "Kyle", "Lawrence", "Joe", "Willie", "Gerald", "Roger", "Keith", "Jeremy", "Terry", "Harry", "Ralph", "Sean", "Jesse", "Roy", "Louis", "Billy", "Austin", "Bruce", "Eugene", "Christian", "Bryan", "Wayne", "Russell", "Howard", "Fred", "Ethan", "Jordan", "Philip", "Alan", "Juan", "Randy", "Vincent", "Bobby", "Dylan", "Johnny", "Phillip", "Victor", "Clarence", "Ernest", "Martin", "Craig", "Stanley", "Shawn", "Travis", "Bradley", "Leonard", "Earl", "Gabriel", "Jimmy", "Francis", "Todd", "Noah", "Danny", "Dale", "Cody", "Carlos", "Allen", "Frederick", "Logan", "Curtis", "Alex", "Joel", "Luis", "Norman", "Marvin", "Glenn", "Tony", "Nathaniel", "Rodney", "Melvin", "Alfred", "Steve", "Cameron", "Chad", "Edwin", "Caleb", "Evan", "Antonio", "Lee", "Herbert", "Jeffery", "Isaac", "Derek", "Ricky", "Marcus", "Theodore", "Elijah", "Luke", "Jesus", "Eddie", "Troy", "Mike", "Dustin", "Ray", "Adrian", "Bernard", "Leroy", "Angel", "Randall", "Wesley", "Ian", "Jared", "Mason", "Hunter", "Calvin", "Oscar", "Clifford", "Jay", "Shane", "Ronnie", "Barry", "Lucas", "Corey", "Manuel", "Leo", "Tommy", "Warren", "Jackson", "Isaiah", "Connor", "Don", "Dean", "Jon", "Julian", "Miguel", "Bill", "Lloyd", "Charlie", "Mitchell", "Leon", "Jerome", "Darrell", "Jeremiah", "Alvin", "Brett", "Seth", "Floyd", "Jim", "Blake", "Micheal", "Gordon", "Trevor", "Lewis", "Erik", "Edgar", "Vernon", "Devin", "Gavin", "Jayden", "Chris", "Clyde", "Tom", "Derrick", "Mario", "Brent", "Marc", "Herman", "Chase", "Dominic", "Ricardo", "Franklin", "Maurice", "Max", "Aiden", "Owen", "Lester", "Gilbert", "Elmer", "Gene", "Francisco", "Glen", "Cory", "Garrett", "Clayton", "Sam", "Jorge", "Chester", "Alejandro", "Jeff", "Harvey", "Milton", "Cole", "Ivan", "Andre", "Duane", "Landon"],
+        "female": ["Mary", "Emma", "Elizabeth", "Minnie", "Margaret", "Ida", "Alice", "Bertha", "Sarah", "Annie", "Clara", "Ella", "Florence", "Cora", "Martha", "Laura", "Nellie", "Grace", "Carrie", "Maude", "Mabel", "Bessie", "Jennie", "Gertrude", "Julia", "Hattie", "Edith", "Mattie", "Rose", "Catherine", "Lillian", "Ada", "Lillie", "Helen", "Jessie", "Louise", "Ethel", "Lula", "Myrtle", "Eva", "Frances", "Lena", "Lucy", "Edna", "Maggie", "Pearl", "Daisy", "Fannie", "Josephine", "Dora", "Rosa", "Katherine", "Agnes", "Marie", "Nora", "May", "Mamie", "Blanche", "Stella", "Ellen", "Nancy", "Effie", "Sallie", "Nettie", "Della", "Lizzie", "Flora", "Susie", "Maud", "Mae", "Etta", "Harriet", "Sadie", "Caroline", "Katie", "Lydia", "Elsie", "Kate", "Susan", "Mollie", "Alma", "Addie", "Georgia", "Eliza", "Lulu", "Nannie", "Lottie", "Amanda", "Belle", "Charlotte", "Rebecca", "Ruth", "Viola", "Olive", "Amelia", "Hannah", "Jane", "Virginia", "Emily", "Matilda", "Irene", "Kathryn", "Esther", "Willie", "Henrietta", "Ollie", "Amy", "Rachel", "Sara", "Estella", "Theresa", "Augusta", "Ora", "Pauline", "Josie", "Lola", "Sophia", "Leona", "Anne", "Mildred", "Ann", "Beulah", "Callie", "Lou", "Delia", "Eleanor", "Barbara", "Iva", "Louisa", "Maria", "Mayme", "Evelyn", "Estelle", "Nina", "Betty", "Marion", "Bettie", "Dorothy", "Luella", "Inez", "Lela", "Rosie", "Allie", "Millie", "Janie", "Cornelia", "Victoria", "Ruby", "Winifred", "Alta", "Celia", "Christine", "Beatrice", "Birdie", "Harriett", "Mable", "Myra", "Sophie", "Tillie", "Isabel", "Sylvia", "Carolyn", "Isabelle", "Leila", "Sally", "Ina", "Essie", "Bertie", "Nell", "Alberta", "Katharine", "Lora", "Rena", "Mina", "Rhoda", "Mathilda", "Abbie", "Eula", "Dollie", "Hettie", "Eunice", "Fanny", "Ola", "Lenora", "Adelaide", "Christina", "Lelia", "Nelle", "Sue", "Johanna", "Lilly", "Lucinda", "Minerva", "Lettie", "Roxie", "Cynthia", "Helena", "Hilda", "Hulda", "Bernice", "Genevieve", "Jean", "Cordelia", "Marian", "Francis", "Jeanette", "Adeline", "Gussie", "Leah", "Lois", "Lura", "Mittie", "Hallie", "Isabella", "Olga", "Phoebe", "Teresa", "Hester", "Lida", "Lina", "Winnie", "Claudia", "Marguerite", "Vera", "Cecelia", "Bess", "Emilie", "John", "Rosetta", "Verna", "Myrtie", "Cecilia", "Elva", "Olivia", "Ophelia", "Georgie", "Elnora", "Violet", "Adele", "Lily", "Linnie", "Loretta", "Madge", "Polly", "Virgie", "Eugenia", "Lucile", "Lucille", "Mabelle", "Rosalie"]
+    };
 
-    Chance.prototype.first = function () {
-        return this.pick(firstNames);
+    Chance.prototype.first = function (options) {
+        options = initOptions(options, {gender: this.gender()});
+        return this.pick(firstNames[options.gender.toLowerCase()]);
     };
 
     Chance.prototype.gender = function () {
@@ -403,12 +420,12 @@
     Chance.prototype.name = function (options) {
         options = initOptions(options);
 
-        var first = this.first(),
+        var first = this.first(options),
             last = this.last(),
             name;
 
         if (options.middle) {
-            name = first + ' ' + this.first() + ' ' + last;
+            name = first + ' ' + this.first(options) + ' ' + last;
         } else if (options.middle_initial) {
             name = first + ' ' + this.character({alpha: true, casing: 'upper'}) + '. ' + last;
         } else {
@@ -488,6 +505,12 @@
         return parseInt('10000' + this.natural({max: 100000000000}), 10);
     };
 
+    Chance.prototype.google_analytics = function () {
+        var account = this.pad(this.natural({max: 999999}), 6);
+        var property = this.pad(this.natural({max: 99}), 2);
+        return 'UA-' + account + '-' + property;
+    };
+
     Chance.prototype.hashtag = function () {
         return '#' + this.word();
     };
@@ -551,14 +574,29 @@
         return this.latitude(options) + ', ' + this.longitude(options);
     };
 
-    Chance.prototype.latitude = function (options) {
+    Chance.prototype.geoJson = function (options) {
+        options = initOptions(options);
+        return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
+    };
+    
+    Chance.prototype.altitude = function (options) {
         options = initOptions(options, {fixed : 5});
-        return this.floating({min: -90, max: 90, fixed: options.fixed});
+        return this.floating({min: 0, max: 32736000, fixed: options.fixed});
+    };
+    
+    Chance.prototype.depth = function (options) {
+        options = initOptions(options, {fixed: 5});
+        return this.floating({min: -35994, max: 0, fixed: options.fixed});
+    };
+    
+    Chance.prototype.latitude = function (options) {
+        options = initOptions(options, {fixed: 5, min: -90, max: 90});
+        return this.floating({min: options.min, max: options.max, fixed: options.fixed});
     };
 
     Chance.prototype.longitude = function (options) {
-        options = initOptions(options, {fixed : 5});
-        return this.floating({min: 0, max: 180, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: -180, max: 180});
+        return this.floating({min: options.min, max: options.max, fixed: options.fixed});
     };
 
     Chance.prototype.phone = function (options) {
@@ -946,7 +984,7 @@
                 }
             }
             if (type === null) {
-                throw new Error("Credit card type '" + options.name + "'' is not suppoted");
+                throw new Error("Credit card type '" + options.name + "'' is not supported");
             }
         } else {
             type = this.pick(types);
@@ -1096,7 +1134,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.4";
+    Chance.prototype.VERSION = "0.5.5";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
