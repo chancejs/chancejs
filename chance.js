@@ -1272,9 +1272,9 @@
         exports.Chance = Chance;
     }
 
-    // Register as a named AMD module
+    // Register as an anonymous AMD module
     if (typeof define === 'function' && define.amd) {
-        define('Chance', [], function () {
+        define([], function () {
             return Chance;
         });
     }
