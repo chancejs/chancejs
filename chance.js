@@ -155,7 +155,7 @@
 
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
-        options = initOptions(options, {min: 0, max: MAX_INT});
+        options = initOptions(options, {min: MIN_INT, max: MAX_INT});
 
         testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
@@ -163,6 +163,7 @@
     };
 
     Chance.prototype.natural = function (options) {
+        options = initOptions(options, {min: 0, max: MAX_INT});
         return this.integer(options);
     };
 
