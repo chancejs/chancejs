@@ -145,31 +145,13 @@
         return parseFloat(num_fixed);
     };
 
-    Chance.prototype.integer = function (options) {
-        var num, range;
-
-        options = initOptions(options, {min : MIN_INT, max : MAX_INT});
-
-        // Greatest of absolute value of either max or min so we know we're
-        // including the entire search domain.
-        range = Math.max(Math.abs(options.min), Math.abs(options.max));
-
-        // Probably a better way to do this...
-        do {
-            num = this.natural({max: range});
-            num = this.bool() ? num : num * -1;
-        } while (num < options.min || num > options.max);
-
-        return num;
-    };
-
     // NOTE the max and min are INCLUDED in the range. So:
     //
     // chance.natural({min: 1, max: 3});
     //
     // would return either 1, 2, or 3.
 
-    Chance.prototype.natural = function (options) {
+    Chance.prototype.integer = function (options) {
 
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
@@ -178,6 +160,10 @@
         testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
         return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
+    };
+
+    Chance.prototype.natural = function (options) {
+        return this.integer(options);
     };
 
     Chance.prototype.normal = function (options) {
@@ -578,17 +564,17 @@
         options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
     };
-    
+
     Chance.prototype.altitude = function (options) {
         options = initOptions(options, {fixed : 5});
         return this.floating({min: 0, max: 32736000, fixed: options.fixed});
     };
-    
+
     Chance.prototype.depth = function (options) {
         options = initOptions(options, {fixed: 5});
         return this.floating({min: -35994, max: 0, fixed: options.fixed});
     };
-    
+
     Chance.prototype.latitude = function (options) {
         options = initOptions(options, {fixed: 5, min: -90, max: 90});
         return this.floating({min: options.min, max: options.max, fixed: options.fixed});
@@ -1084,7 +1070,7 @@
     // Guid
     Chance.prototype.guid = function (options) {
         options = options || {version: 5};
-        
+
         var guid_pool = "ABCDEF1234567890",
             variant_pool = "AB89",
             guid = this.string({pool: guid_pool, length: 8}) + '-' +
