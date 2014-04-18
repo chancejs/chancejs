@@ -24,6 +24,6 @@ chance.longitude({fixed: 7});
 By default includes entire range of allowed longitudes, can specify a min and/or max to bound it
 
 {% highlight js %}
-chance.longitude({min: -77}, {max: -78});
+chance.longitude({min: -77, max: -78});
 => -77.22644
 {% endhighlight %}
