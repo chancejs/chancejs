@@ -1226,9 +1226,6 @@
         return _curs[ this.integer({min: 0, max: (_curs.length-1)})];
     };
     
-    
-    
-
     // -- End Finance
 
     // -- Miscellaneous --
