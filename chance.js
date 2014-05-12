@@ -1213,6 +1213,27 @@
         return _curs[ this.integer({min: 0, max: (_curs.length-1)})];
     };
     
+    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
+    Chance.prototype.cur_pairs = function (returnAsString) {
+        var _cur1 = this.cur(); //first currency 
+        var _cur2 = null;
+        
+        while(_cur2 == null)
+        {
+            _cur2 = this.cur();
+            
+            if (_cur2 == _cur1) 
+                _cur2 = null; //try to next cur
+        }
+        
+        if (returnAsString)
+            return  _cur1 + '/' + _cur2;
+        else
+            return [_cur1, _cur2];
+    };
+    
+    
+    
     // -- End Finance
 
     // -- Miscellaneous --
