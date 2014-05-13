@@ -1317,7 +1317,7 @@
 
     Chance.prototype.team = function () {
         return this.pick(teamNames);
-    }
+    };
 
     Chance.prototype.mersenne_twister = function (seed) {
         return new MersenneTwister(seed);
