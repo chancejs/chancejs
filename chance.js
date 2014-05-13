@@ -1312,6 +1312,13 @@
         return (sum * 9) % 10;
     };
 
+    // Team
+    var teamNames = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-Ray", "Yankee", "Zulu"];
+
+    Chance.prototype.team = function () {
+        return this.pick(teamNames);
+    }
+
     Chance.prototype.mersenne_twister = function (seed) {
         return new MersenneTwister(seed);
     };
