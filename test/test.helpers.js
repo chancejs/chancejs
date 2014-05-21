@@ -51,6 +51,43 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(arr2).to.not.be.empty;
                 });
             });
+
+            it("returns a well shuffled array", function () {
+                // See http://vq.io/1lEhbim checking it isn't doing that!
+                arr = ['a', 'b', 'c', 'd', 'e'];
+                var positions = {
+                    a: [0, 0, 0, 0, 0],
+                    b: [0, 0, 0, 0, 0],
+                    c: [0, 0, 0, 0, 0],
+                    d: [0, 0, 0, 0, 0],
+                    e: [0, 0, 0, 0, 0]
+                };
+
+                _(10000).times(function () {
+                    arr = chance.shuffle(arr);
+
+                    // Accumulate the position of the a each time
+                    arr.forEach(function(item, index) {
+                        positions[item][index]++;
+                    });
+                });
+
+                // Divide by the estimated number of a's which should appear in each
+                // position
+                _.forEach(positions, function(position, index) {
+                    positions[index] = _.map(position, function(item) {
+                        return item/10000;
+                    });
+                });
+
+                _.forEach(positions, function(position, index) {
+                    _.forEach(position, function(item) {
+                        // This should be around 20% give or take a bit since there are
+                        // 5 elements and they should be evenly distributed
+                        expect(item).to.be.within(0.18, 0.22);
+                    });
+                });
+            });
         });
 
         describe("pad()", function () {
