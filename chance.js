@@ -13,6 +13,9 @@
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
 
+    // Cached array helpers
+    var slice = Array.prototype.slice;
+
     // Constructor
     var Chance = function (seed) {
         if (!(this instanceof Chance)) {
@@ -217,6 +220,20 @@
             Chance.prototype[func_name] = obj[func_name];
         }
         return this;
+    };
+
+    Chance.prototype.unique = function(fn, num, opts) {
+        var arr = [], count = 0;
+
+        while (arr.length < num) {
+            var result = fn.apply(this, slice.call(arguments, 2));
+            if (arr.indexOf(result) === -1) arr.push(result);
+
+            if (++count > num * 50) {
+                throw new RangeError("Chance: num is likely too large for sample set");
+            }
+        }
+        return arr;
     };
 
     // H/T to SO for this one: http://vq.io/OtUrZ5
@@ -1036,7 +1053,7 @@
     Chance.prototype.exp_year = function () {
         return this.year({max: new Date().getFullYear() + 10});
     };
-    
+
     //return all world currency by ISO 4217
     Chance.prototype.cur_types = function () {
         return [
@@ -1205,35 +1222,35 @@
             {'code' : 'ZWD', 'name' : 'Zimbabwe Dollar'}
         ];
     };
-    
+
      //return random world currency by ISO 4217
     Chance.prototype.cur = function () {
         var _curs = this.cur_types();
-        
+
         return _curs[ this.integer({min: 0, max: (_curs.length-1)})];
     };
-    
+
     //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
     Chance.prototype.cur_pairs = function (returnAsString) {
-        var _cur1 = this.cur(); //first currency 
+        var _cur1 = this.cur(); //first currency
         var _cur2 = null;
-        
+
         while(_cur2 == null)
         {
             _cur2 = this.cur();
-            
-            if (_cur2 == _cur1) 
+
+            if (_cur2 == _cur1)
                 _cur2 = null; //try to next cur
         }
-        
+
         if (returnAsString)
             return  _cur1 + '/' + _cur2;
         else
             return [_cur1, _cur2];
     };
-    
-    
-    
+
+
+
     // -- End Finance
 
     // -- Miscellaneous --
