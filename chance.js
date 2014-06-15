@@ -447,6 +447,17 @@
             this.pick(this.name_prefixes()).abbreviation;
     };
 
+    Chance.prototype.ssn = function () {
+        var ssn_pool = "1234567890",
+            ssn;
+
+        ssn = this.string({pool: ssn_pool, length: 3}) + '-' +
+              this.string({pool: ssn_pool, length: 2}) + '-' +
+              this.string({pool: ssn_pool, length: 4});
+
+        return ssn;
+    };
+
     // -- End Person --
 
     // -- Web --
@@ -1036,7 +1047,7 @@
     Chance.prototype.exp_year = function () {
         return this.year({max: new Date().getFullYear() + 10});
     };
-    
+
     //return all world currency by ISO 4217
     Chance.prototype.cur_types = function () {
         return [
@@ -1205,35 +1216,37 @@
             {'code' : 'ZWD', 'name' : 'Zimbabwe Dollar'}
         ];
     };
-    
+
      //return random world currency by ISO 4217
     Chance.prototype.cur = function () {
         var _curs = this.cur_types();
-        
+
         return _curs[ this.integer({min: 0, max: (_curs.length-1)})];
     };
-    
+
     //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
     Chance.prototype.cur_pairs = function (returnAsString) {
-        var _cur1 = this.cur(); //first currency 
+        var _cur1 = this.cur(); //first currency
         var _cur2 = null;
-        
+
         while(_cur2 == null)
         {
             _cur2 = this.cur();
-            
-            if (_cur2 == _cur1) 
+
+            if (_cur2 === _cur1) {
                 _cur2 = null; //try to next cur
+            }
         }
-        
-        if (returnAsString)
+
+        if (returnAsString) {
             return  _cur1 + '/' + _cur2;
-        else
+        } else {
             return [_cur1, _cur2];
+        }
     };
-    
-    
-    
+
+
+
     // -- End Finance
 
     // -- Miscellaneous --
