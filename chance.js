@@ -447,6 +447,17 @@
             this.pick(this.name_prefixes()).abbreviation;
     };
 
+    Chance.prototype.ssn = function () {
+        var ssn_pool = "1234567890",
+            ssn;
+
+        ssn = this.string({pool: ssn_pool, length: 3}) + '-' +
+              this.string({pool: ssn_pool, length: 2}) + '-' +
+              this.string({pool: ssn_pool, length: 4});
+
+        return ssn;
+    };
+
     // -- End Person --
 
     // -- Web --
@@ -1243,14 +1254,16 @@
         {
             _cur2 = this.cur();
 
-            if (_cur2 == _cur1)
+            if (_cur2 === _cur1) {
                 _cur2 = null; //try to next cur
+            }
         }
 
-        if (returnAsString)
+        if (returnAsString) {
             return  _cur1 + '/' + _cur2;
-        else
+        } else {
             return [_cur1, _cur2];
+        }
     };
 
 

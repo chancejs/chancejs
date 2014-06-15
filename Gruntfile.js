@@ -15,10 +15,10 @@ module.exports = function (grunt) {
                 noarg: true,
                 sub: true,
                 trailing: true,
-//                undef: true,
                 boss: true,
                 eqnull: true,
-                browser: true
+                browser: true,
+                white: false
             },
             globals: {
                 exports: true,
