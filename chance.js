@@ -13,6 +13,9 @@
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
 
+    // Cached array helpers
+    var slice = Array.prototype.slice;
+
     // Constructor
     var Chance = function (seed) {
         if (!(this instanceof Chance)) {
@@ -217,6 +220,20 @@
             Chance.prototype[func_name] = obj[func_name];
         }
         return this;
+    };
+
+    Chance.prototype.unique = function(fn, num, opts) {
+        var arr = [], count = 0;
+
+        while (arr.length < num) {
+            var result = fn.apply(this, slice.call(arguments, 2));
+            if (arr.indexOf(result) === -1) arr.push(result);
+
+            if (++count > num * 50) {
+                throw new RangeError("Chance: num is likely too large for sample set");
+            }
+        }
+        return arr;
     };
 
     // H/T to SO for this one: http://vq.io/OtUrZ5

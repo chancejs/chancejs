@@ -90,6 +90,25 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("unique", function () {
+            it("gives a unique array of the selected function", function () {
+                _(1000).times(function () {
+                    var arr = chance.unique(chance.email, 25, {domain: "example.com"});
+                    expect(arr).to.be.an('array');
+                    expect(arr[0]).to.match(/example\.com$/);
+                    expect(_.uniq(arr).length).to.equal(25);
+                });
+            });
+
+            it("throws a RangeError when num is likely out of range", function () {
+                _(1000).times(function () {
+                    expect(function () {
+                        chance.unique(chance.character, 10, {pool: 'abcde'});
+                    }).to.throw(RangeError, /too large/);
+                });
+            });
+        });
+
         describe("pad()", function () {
             it("always returns same number when width same as the length of the number", function () {
                 _(1000).times(function () {
