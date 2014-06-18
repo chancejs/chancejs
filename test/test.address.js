@@ -75,6 +75,22 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(state.length).to.be.above(2);
                 });
             });
+
+            it("states() returns all 50 US States and DC", function () {
+                expect(chance.states()).to.have.length(51);
+            });
+
+            it("states({territories: true}) returns 50 US States, DC, and 7 US Territories", function () {
+                expect(chance.states({territories: true})).to.have.length(58);
+            });
+
+            it("states({armed_forces: true}) returns 50 US States, DC, and 3 Armed Forces Military States", function () {
+                expect(chance.states({armed_forces: true})).to.have.length(54);
+            });
+
+            it("states({territories: true, armed_forces: true}) returns 50 US States, DC, 7 US Territories, and 3 Armed Forces Military States", function () {
+                expect(chance.states({territories: true, armed_forces: true})).to.have.length(61);
+            });
         });
 
         describe("Province", function () {
