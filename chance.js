@@ -1,4 +1,4 @@
-//  Chance.js 0.5.7
+//  Chance.js 0.5.8
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -222,13 +222,25 @@
         return this;
     };
 
-    Chance.prototype.unique = function(fn, num, opts) {
+    // Given a function that generates something random and a number of items to generate,
+    // return an array of items where none repeat.
+    Chance.prototype.unique = function(fn, num, options) {
+        options = initOptions(options, {
+            // Default comparator to check that val is not already in arr.
+            // Should return `false` if item not in array, `true` otherwise
+            comparator: function(arr, val) {
+                return arr.indexOf(result) !== -1;
+            }
+        });
+
         var arr = [], count = 0;
 
         while (arr.length < num) {
             var result = fn.apply(this, slice.call(arguments, 2));
-            if (arr.indexOf(result) === -1) {
+            if (!options.comparator(arr, result)) {
                 arr.push(result);
+                // reset count when unique found
+                count = 0;
             }
 
             if (++count > num * 50) {
@@ -1103,7 +1115,7 @@
     };
 
     //return all world currency by ISO 4217
-    Chance.prototype.cur_types = function () {
+    Chance.prototype.currency_types = function () {
         return [
             {'code' : 'AED', 'name' : 'United Arab Emirates Dirham'},
             {'code' : 'AFN', 'name' : 'Afghanistan Afghani'},
@@ -1271,35 +1283,36 @@
         ];
     };
 
-     //return random world currency by ISO 4217
-    Chance.prototype.cur = function () {
-        var _curs = this.cur_types();
-
-        return _curs[ this.integer({min: 0, max: (_curs.length-1)})];
+    //return random world currency by ISO 4217
+    Chance.prototype.currency = function () {
+        return this.pick(this.currency_types());
     };
 
     //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
-    Chance.prototype.cur_pairs = function (returnAsString) {
-        var _cur1 = this.cur(); //first currency
-        var _cur2 = null;
+    Chance.prototype.currency_pair = function (returnAsString) {
+        var currencies = this.unique(this.currency, 2, {
+            comparator: function(arr, val) {
+                // If this is the first element, we know it doesn't exist
+                if (arr.length === 0) {
+                    return false;
+                }
 
-        while(_cur2 == null)
-        {
-            _cur2 = this.cur();
-
-            if (_cur2 === _cur1) {
-                _cur2 = null; //try to next cur
+                return arr.reduce(function(acc, item) {
+                    // If a match has been found, short circuit check and just return
+                    if (acc) {
+                        return acc;
+                    }
+                    return item.code === val.code;
+                }, false);
             }
-        }
+        });
 
         if (returnAsString) {
-            return  _cur1 + '/' + _cur2;
+            return  currencies[0] + '/' + currencies[1];
         } else {
-            return [_cur1, _cur2];
+            return currencies;
         }
     };
-
-
 
     // -- End Finance
 
@@ -1385,7 +1398,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.7";
+    Chance.prototype.VERSION = "0.5.8";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
