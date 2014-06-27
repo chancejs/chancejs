@@ -375,21 +375,24 @@
         var age;
 
         switch (options.type) {
-        case 'child':
-            age = this.natural({min: 1, max: 12});
-            break;
-        case 'teen':
-            age = this.natural({min: 13, max: 19});
-            break;
-        case 'adult':
-            age = this.natural({min: 18, max: 120});
-            break;
-        case 'senior':
-            age = this.natural({min: 65, max: 120});
-            break;
-        default:
-            age = this.natural({min: 1, max: 120});
-            break;
+            case 'child':
+                age = this.natural({min: 1, max: 12});
+                break;
+            case 'teen':
+                age = this.natural({min: 13, max: 19});
+                break;
+            case 'adult':
+                age = this.natural({min: 18, max: 65});
+                break;
+            case 'senior':
+                age = this.natural({min: 65, max: 100});
+                break;
+            case 'all':
+                age = this.natural({min: 1, max: 100});
+                break;
+            default:
+                age = this.natural({min: 18, max: 65});
+                break;
         }
 
         return age;
