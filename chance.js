@@ -443,13 +443,24 @@
         return name;
     };
 
-    Chance.prototype.name_prefixes = function () {
-        return [
-            {name: 'Doctor', abbreviation: 'Dr.'},
-            {name: 'Miss', abbreviation: 'Miss'},
-            {name: 'Misses', abbreviation: 'Mrs.'},
-            {name: 'Mister', abbreviation: 'Mr.'}
+    // Return the list of available name prefixes based on supplied gender.
+    Chance.prototype.name_prefixes = function (gender) {
+        gender = gender || "all";
+
+        var prefixes = [
+            { name: 'Doctor', abbreviation: 'Dr.' }
         ];
+
+        if (gender === "male" || gender === "all") {
+            prefixes.push({ name: 'Mister', abbreviation: 'Mr.' });
+        }
+
+        if (gender === "female" || gender === "all") {
+            prefixes.push({ name: 'Miss', abbreviation: 'Miss' });
+            prefixes.push({ name: 'Misses', abbreviation: 'Mrs.' });
+        }
+
+        return prefixes;
     };
 
     // Alias for name_prefix
@@ -458,10 +469,10 @@
     };
 
     Chance.prototype.name_prefix = function (options) {
-        options = initOptions(options);
+        options = initOptions(options, { gender: "all" });
         return options.full ?
-            this.pick(this.name_prefixes()).name :
-            this.pick(this.name_prefixes()).abbreviation;
+            this.pick(this.name_prefixes(options.gender)).name :
+            this.pick(this.name_prefixes(options.gender)).abbreviation;
     };
 
     Chance.prototype.ssn = function () {

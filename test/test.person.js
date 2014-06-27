@@ -126,6 +126,16 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+            it("returns a correctly gendered prefix", function () {
+                _(1000).times(function () {
+                    prefix = chance.name_prefix({ gender: "female" });
+                    expect(prefix).to.not.equal("Mr.");
+                    prefix = chance.name_prefix({ gender: "male" });
+                    expect(prefix).to.not.equal("Mrs.");
+                    expect(prefix).to.not.equal("Miss");
+                });
+            });
+
             it("can get full prefix", function () {
                 _(1000).times(function () {
                     prefix = chance.name_prefix({full: true});
