@@ -1,4 +1,4 @@
-//  Chance.js 0.5.5
+//  Chance.js 0.5.6
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -12,6 +12,9 @@
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
+
+    // Cached array helpers
+    var slice = Array.prototype.slice;
 
     // Constructor
     var Chance = function (seed) {
@@ -219,6 +222,22 @@
         return this;
     };
 
+    Chance.prototype.unique = function(fn, num, opts) {
+        var arr = [], count = 0;
+
+        while (arr.length < num) {
+            var result = fn.apply(this, slice.call(arguments, 2));
+            if (arr.indexOf(result) === -1) {
+                arr.push(result);
+            }
+
+            if (++count > num * 50) {
+                throw new RangeError("Chance: num is likely too large for sample set");
+            }
+        }
+        return arr;
+    };
+
     // H/T to SO for this one: http://vq.io/OtUrZ5
     Chance.prototype.pad = function (number, width, pad) {
         // Default pad to 0 if none provided
@@ -356,21 +375,24 @@
         var age;
 
         switch (options.type) {
-        case 'child':
-            age = this.natural({min: 1, max: 12});
-            break;
-        case 'teen':
-            age = this.natural({min: 13, max: 19});
-            break;
-        case 'adult':
-            age = this.natural({min: 18, max: 120});
-            break;
-        case 'senior':
-            age = this.natural({min: 65, max: 120});
-            break;
-        default:
-            age = this.natural({min: 1, max: 120});
-            break;
+            case 'child':
+                age = this.natural({min: 1, max: 12});
+                break;
+            case 'teen':
+                age = this.natural({min: 13, max: 19});
+                break;
+            case 'adult':
+                age = this.natural({min: 18, max: 65});
+                break;
+            case 'senior':
+                age = this.natural({min: 65, max: 100});
+                break;
+            case 'all':
+                age = this.natural({min: 1, max: 100});
+                break;
+            default:
+                age = this.natural({min: 18, max: 65});
+                break;
         }
 
         return age;
@@ -426,13 +448,24 @@
         return name;
     };
 
-    Chance.prototype.name_prefixes = function () {
-        return [
-            {name: 'Doctor', abbreviation: 'Dr.'},
-            {name: 'Miss', abbreviation: 'Miss'},
-            {name: 'Misses', abbreviation: 'Mrs.'},
-            {name: 'Mister', abbreviation: 'Mr.'}
+    // Return the list of available name prefixes based on supplied gender.
+    Chance.prototype.name_prefixes = function (gender) {
+        gender = gender || "all";
+
+        var prefixes = [
+            { name: 'Doctor', abbreviation: 'Dr.' }
         ];
+
+        if (gender === "male" || gender === "all") {
+            prefixes.push({ name: 'Mister', abbreviation: 'Mr.' });
+        }
+
+        if (gender === "female" || gender === "all") {
+            prefixes.push({ name: 'Miss', abbreviation: 'Miss' });
+            prefixes.push({ name: 'Misses', abbreviation: 'Mrs.' });
+        }
+
+        return prefixes;
     };
 
     // Alias for name_prefix
@@ -441,10 +474,21 @@
     };
 
     Chance.prototype.name_prefix = function (options) {
-        options = initOptions(options);
+        options = initOptions(options, { gender: "all" });
         return options.full ?
-            this.pick(this.name_prefixes()).name :
-            this.pick(this.name_prefixes()).abbreviation;
+            this.pick(this.name_prefixes(options.gender)).name :
+            this.pick(this.name_prefixes(options.gender)).abbreviation;
+    };
+
+    Chance.prototype.ssn = function () {
+        var ssn_pool = "1234567890",
+            ssn;
+
+        ssn = this.string({pool: ssn_pool, length: 3}) + '-' +
+              this.string({pool: ssn_pool, length: 2}) + '-' +
+              this.string({pool: ssn_pool, length: 4});
+
+        return ssn;
     };
 
     // -- End Person --
@@ -659,29 +703,27 @@
 
     Chance.prototype.state = function (options) {
         return (options && options.full) ?
-            this.pick(this.states()).name :
-            this.pick(this.states()).abbreviation;
+            this.pick(this.states(options)).name :
+            this.pick(this.states(options)).abbreviation;
     };
 
-    Chance.prototype.states = function () {
-        return [
+    Chance.prototype.states = function (options) {
+        options = initOptions(options);
+
+        var states, us_states_and_dc, territories, armed_forces;
+
+        us_states_and_dc = [
             {name: 'Alabama', abbreviation: 'AL'},
             {name: 'Alaska', abbreviation: 'AK'},
-            {name: 'American Samoa', abbreviation: 'AS'},
             {name: 'Arizona', abbreviation: 'AZ'},
             {name: 'Arkansas', abbreviation: 'AR'},
-            {name: 'Armed Forces Europe', abbreviation: 'AE'},
-            {name: 'Armed Forces Pacific', abbreviation: 'AP'},
-            {name: 'Armed Forces the Americas', abbreviation: 'AA'},
             {name: 'California', abbreviation: 'CA'},
             {name: 'Colorado', abbreviation: 'CO'},
             {name: 'Connecticut', abbreviation: 'CT'},
             {name: 'Delaware', abbreviation: 'DE'},
             {name: 'District of Columbia', abbreviation: 'DC'},
-            {name: 'Federated States of Micronesia', abbreviation: 'FM'},
             {name: 'Florida', abbreviation: 'FL'},
             {name: 'Georgia', abbreviation: 'GA'},
-            {name: 'Guam', abbreviation: 'GU'},
             {name: 'Hawaii', abbreviation: 'HI'},
             {name: 'Idaho', abbreviation: 'ID'},
             {name: 'Illinois', abbreviation: 'IL'},
@@ -691,7 +733,6 @@
             {name: 'Kentucky', abbreviation: 'KY'},
             {name: 'Louisiana', abbreviation: 'LA'},
             {name: 'Maine', abbreviation: 'ME'},
-            {name: 'Marshall Islands', abbreviation: 'MH'},
             {name: 'Maryland', abbreviation: 'MD'},
             {name: 'Massachusetts', abbreviation: 'MA'},
             {name: 'Michigan', abbreviation: 'MI'},
@@ -707,12 +748,10 @@
             {name: 'New York', abbreviation: 'NY'},
             {name: 'North Carolina', abbreviation: 'NC'},
             {name: 'North Dakota', abbreviation: 'ND'},
-            {name: 'Northern Mariana Islands', abbreviation: 'MP'},
             {name: 'Ohio', abbreviation: 'OH'},
             {name: 'Oklahoma', abbreviation: 'OK'},
             {name: 'Oregon', abbreviation: 'OR'},
             {name: 'Pennsylvania', abbreviation: 'PA'},
-            {name: 'Puerto Rico', abbreviation: 'PR'},
             {name: 'Rhode Island', abbreviation: 'RI'},
             {name: 'South Carolina', abbreviation: 'SC'},
             {name: 'South Dakota', abbreviation: 'SD'},
@@ -720,13 +759,39 @@
             {name: 'Texas', abbreviation: 'TX'},
             {name: 'Utah', abbreviation: 'UT'},
             {name: 'Vermont', abbreviation: 'VT'},
-            {name: 'Virgin Islands, U.S.', abbreviation: 'VI'},
             {name: 'Virginia', abbreviation: 'VA'},
             {name: 'Washington', abbreviation: 'WA'},
             {name: 'West Virginia', abbreviation: 'WV'},
             {name: 'Wisconsin', abbreviation: 'WI'},
             {name: 'Wyoming', abbreviation: 'WY'}
         ];
+
+        territories = [
+            {name: 'American Samoa', abbreviation: 'AS'},
+            {name: 'Federated States of Micronesia', abbreviation: 'FM'},
+            {name: 'Guam', abbreviation: 'GU'},
+            {name: 'Marshall Islands', abbreviation: 'MH'},
+            {name: 'Northern Mariana Islands', abbreviation: 'MP'},
+            {name: 'Puerto Rico', abbreviation: 'PR'},
+            {name: 'Virgin Islands, U.S.', abbreviation: 'VI'}
+        ];
+
+        armed_forces = [
+            {name: 'Armed Forces Europe', abbreviation: 'AE'},
+            {name: 'Armed Forces Pacific', abbreviation: 'AP'},
+            {name: 'Armed Forces the Americas', abbreviation: 'AA'}
+        ];
+
+        states = us_states_and_dc;
+
+        if (options.territories) {
+            states = states.concat(territories);
+        }
+        if (options.armed_forces) {
+            states = states.concat(armed_forces);
+        }
+
+        return states;
     };
 
     Chance.prototype.street = function (options) {
@@ -1037,6 +1102,205 @@
         return this.year({max: new Date().getFullYear() + 10});
     };
 
+    //return all world currency by ISO 4217
+    Chance.prototype.cur_types = function () {
+        return [
+            {'code' : 'AED', 'name' : 'United Arab Emirates Dirham'},
+            {'code' : 'AFN', 'name' : 'Afghanistan Afghani'},
+            {'code' : 'ALL', 'name' : 'Albania Lek'},
+            {'code' : 'AMD', 'name' : 'Armenia Dram'},
+            {'code' : 'ANG', 'name' : 'Netherlands Antilles Guilder'},
+            {'code' : 'AOA', 'name' : 'Angola Kwanza'},
+            {'code' : 'ARS', 'name' : 'Argentina Peso'},
+            {'code' : 'AUD', 'name' : 'Australia Dollar'},
+            {'code' : 'AWG', 'name' : 'Aruba Guilder'},
+            {'code' : 'AZN', 'name' : 'Azerbaijan New Manat'},
+            {'code' : 'BAM', 'name' : 'Bosnia and Herzegovina Convertible Marka'},
+            {'code' : 'BBD', 'name' : 'Barbados Dollar'},
+            {'code' : 'BDT', 'name' : 'Bangladesh Taka'},
+            {'code' : 'BGN', 'name' : 'Bulgaria Lev'},
+            {'code' : 'BHD', 'name' : 'Bahrain Dinar'},
+            {'code' : 'BIF', 'name' : 'Burundi Franc'},
+            {'code' : 'BMD', 'name' : 'Bermuda Dollar'},
+            {'code' : 'BND', 'name' : 'Brunei Darussalam Dollar'},
+            {'code' : 'BOB', 'name' : 'Bolivia Boliviano'},
+            {'code' : 'BRL', 'name' : 'Brazil Real'},
+            {'code' : 'BSD', 'name' : 'Bahamas Dollar'},
+            {'code' : 'BTN', 'name' : 'Bhutan Ngultrum'},
+            {'code' : 'BWP', 'name' : 'Botswana Pula'},
+            {'code' : 'BYR', 'name' : 'Belarus Ruble'},
+            {'code' : 'BZD', 'name' : 'Belize Dollar'},
+            {'code' : 'CAD', 'name' : 'Canada Dollar'},
+            {'code' : 'CDF', 'name' : 'Congo/Kinshasa Franc'},
+            {'code' : 'CHF', 'name' : 'Switzerland Franc'},
+            {'code' : 'CLP', 'name' : 'Chile Peso'},
+            {'code' : 'CNY', 'name' : 'China Yuan Renminbi'},
+            {'code' : 'COP', 'name' : 'Colombia Peso'},
+            {'code' : 'CRC', 'name' : 'Costa Rica Colon'},
+            {'code' : 'CUC', 'name' : 'Cuba Convertible Peso'},
+            {'code' : 'CUP', 'name' : 'Cuba Peso'},
+            {'code' : 'CVE', 'name' : 'Cape Verde Escudo'},
+            {'code' : 'CZK', 'name' : 'Czech Republic Koruna'},
+            {'code' : 'DJF', 'name' : 'Djibouti Franc'},
+            {'code' : 'DKK', 'name' : 'Denmark Krone'},
+            {'code' : 'DOP', 'name' : 'Dominican Republic Peso'},
+            {'code' : 'DZD', 'name' : 'Algeria Dinar'},
+            {'code' : 'EGP', 'name' : 'Egypt Pound'},
+            {'code' : 'ERN', 'name' : 'Eritrea Nakfa'},
+            {'code' : 'ETB', 'name' : 'Ethiopia Birr'},
+            {'code' : 'EUR', 'name' : 'Euro Member Countries'},
+            {'code' : 'FJD', 'name' : 'Fiji Dollar'},
+            {'code' : 'FKP', 'name' : 'Falkland Islands (Malvinas) Pound'},
+            {'code' : 'GBP', 'name' : 'United Kingdom Pound'},
+            {'code' : 'GEL', 'name' : 'Georgia Lari'},
+            {'code' : 'GGP', 'name' : 'Guernsey Pound'},
+            {'code' : 'GHS', 'name' : 'Ghana Cedi'},
+            {'code' : 'GIP', 'name' : 'Gibraltar Pound'},
+            {'code' : 'GMD', 'name' : 'Gambia Dalasi'},
+            {'code' : 'GNF', 'name' : 'Guinea Franc'},
+            {'code' : 'GTQ', 'name' : 'Guatemala Quetzal'},
+            {'code' : 'GYD', 'name' : 'Guyana Dollar'},
+            {'code' : 'HKD', 'name' : 'Hong Kong Dollar'},
+            {'code' : 'HNL', 'name' : 'Honduras Lempira'},
+            {'code' : 'HRK', 'name' : 'Croatia Kuna'},
+            {'code' : 'HTG', 'name' : 'Haiti Gourde'},
+            {'code' : 'HUF', 'name' : 'Hungary Forint'},
+            {'code' : 'IDR', 'name' : 'Indonesia Rupiah'},
+            {'code' : 'ILS', 'name' : 'Israel Shekel'},
+            {'code' : 'IMP', 'name' : 'Isle of Man Pound'},
+            {'code' : 'INR', 'name' : 'India Rupee'},
+            {'code' : 'IQD', 'name' : 'Iraq Dinar'},
+            {'code' : 'IRR', 'name' : 'Iran Rial'},
+            {'code' : 'ISK', 'name' : 'Iceland Krona'},
+            {'code' : 'JEP', 'name' : 'Jersey Pound'},
+            {'code' : 'JMD', 'name' : 'Jamaica Dollar'},
+            {'code' : 'JOD', 'name' : 'Jordan Dinar'},
+            {'code' : 'JPY', 'name' : 'Japan Yen'},
+            {'code' : 'KES', 'name' : 'Kenya Shilling'},
+            {'code' : 'KGS', 'name' : 'Kyrgyzstan Som'},
+            {'code' : 'KHR', 'name' : 'Cambodia Riel'},
+            {'code' : 'KMF', 'name' : 'Comoros Franc'},
+            {'code' : 'KPW', 'name' : 'Korea (North) Won'},
+            {'code' : 'KRW', 'name' : 'Korea (South) Won'},
+            {'code' : 'KWD', 'name' : 'Kuwait Dinar'},
+            {'code' : 'KYD', 'name' : 'Cayman Islands Dollar'},
+            {'code' : 'KZT', 'name' : 'Kazakhstan Tenge'},
+            {'code' : 'LAK', 'name' : 'Laos Kip'},
+            {'code' : 'LBP', 'name' : 'Lebanon Pound'},
+            {'code' : 'LKR', 'name' : 'Sri Lanka Rupee'},
+            {'code' : 'LRD', 'name' : 'Liberia Dollar'},
+            {'code' : 'LSL', 'name' : 'Lesotho Loti'},
+            {'code' : 'LTL', 'name' : 'Lithuania Litas'},
+            {'code' : 'LYD', 'name' : 'Libya Dinar'},
+            {'code' : 'MAD', 'name' : 'Morocco Dirham'},
+            {'code' : 'MDL', 'name' : 'Moldova Leu'},
+            {'code' : 'MGA', 'name' : 'Madagascar Ariary'},
+            {'code' : 'MKD', 'name' : 'Macedonia Denar'},
+            {'code' : 'MMK', 'name' : 'Myanmar (Burma) Kyat'},
+            {'code' : 'MNT', 'name' : 'Mongolia Tughrik'},
+            {'code' : 'MOP', 'name' : 'Macau Pataca'},
+            {'code' : 'MRO', 'name' : 'Mauritania Ouguiya'},
+            {'code' : 'MUR', 'name' : 'Mauritius Rupee'},
+            {'code' : 'MVR', 'name' : 'Maldives (Maldive Islands) Rufiyaa'},
+            {'code' : 'MWK', 'name' : 'Malawi Kwacha'},
+            {'code' : 'MXN', 'name' : 'Mexico Peso'},
+            {'code' : 'MYR', 'name' : 'Malaysia Ringgit'},
+            {'code' : 'MZN', 'name' : 'Mozambique Metical'},
+            {'code' : 'NAD', 'name' : 'Namibia Dollar'},
+            {'code' : 'NGN', 'name' : 'Nigeria Naira'},
+            {'code' : 'NIO', 'name' : 'Nicaragua Cordoba'},
+            {'code' : 'NOK', 'name' : 'Norway Krone'},
+            {'code' : 'NPR', 'name' : 'Nepal Rupee'},
+            {'code' : 'NZD', 'name' : 'New Zealand Dollar'},
+            {'code' : 'OMR', 'name' : 'Oman Rial'},
+            {'code' : 'PAB', 'name' : 'Panama Balboa'},
+            {'code' : 'PEN', 'name' : 'Peru Nuevo Sol'},
+            {'code' : 'PGK', 'name' : 'Papua New Guinea Kina'},
+            {'code' : 'PHP', 'name' : 'Philippines Peso'},
+            {'code' : 'PKR', 'name' : 'Pakistan Rupee'},
+            {'code' : 'PLN', 'name' : 'Poland Zloty'},
+            {'code' : 'PYG', 'name' : 'Paraguay Guarani'},
+            {'code' : 'QAR', 'name' : 'Qatar Riyal'},
+            {'code' : 'RON', 'name' : 'Romania New Leu'},
+            {'code' : 'RSD', 'name' : 'Serbia Dinar'},
+            {'code' : 'RUB', 'name' : 'Russia Ruble'},
+            {'code' : 'RWF', 'name' : 'Rwanda Franc'},
+            {'code' : 'SAR', 'name' : 'Saudi Arabia Riyal'},
+            {'code' : 'SBD', 'name' : 'Solomon Islands Dollar'},
+            {'code' : 'SCR', 'name' : 'Seychelles Rupee'},
+            {'code' : 'SDG', 'name' : 'Sudan Pound'},
+            {'code' : 'SEK', 'name' : 'Sweden Krona'},
+            {'code' : 'SGD', 'name' : 'Singapore Dollar'},
+            {'code' : 'SHP', 'name' : 'Saint Helena Pound'},
+            {'code' : 'SLL', 'name' : 'Sierra Leone Leone'},
+            {'code' : 'SOS', 'name' : 'Somalia Shilling'},
+            {'code' : 'SPL', 'name' : 'Seborga Luigino'},
+            {'code' : 'SRD', 'name' : 'Suriname Dollar'},
+            {'code' : 'STD', 'name' : 'São Tomé and Príncipe Dobra'},
+            {'code' : 'SVC', 'name' : 'El Salvador Colon'},
+            {'code' : 'SYP', 'name' : 'Syria Pound'},
+            {'code' : 'SZL', 'name' : 'Swaziland Lilangeni'},
+            {'code' : 'THB', 'name' : 'Thailand Baht'},
+            {'code' : 'TJS', 'name' : 'Tajikistan Somoni'},
+            {'code' : 'TMT', 'name' : 'Turkmenistan Manat'},
+            {'code' : 'TND', 'name' : 'Tunisia Dinar'},
+            {'code' : 'TOP', 'name' : 'Tonga Pa\'anga'},
+            {'code' : 'TRY', 'name' : 'Turkey Lira'},
+            {'code' : 'TTD', 'name' : 'Trinidad and Tobago Dollar'},
+            {'code' : 'TVD', 'name' : 'Tuvalu Dollar'},
+            {'code' : 'TWD', 'name' : 'Taiwan New Dollar'},
+            {'code' : 'TZS', 'name' : 'Tanzania Shilling'},
+            {'code' : 'UAH', 'name' : 'Ukraine Hryvnia'},
+            {'code' : 'UGX', 'name' : 'Uganda Shilling'},
+            {'code' : 'USD', 'name' : 'United States Dollar'},
+            {'code' : 'UYU', 'name' : 'Uruguay Peso'},
+            {'code' : 'UZS', 'name' : 'Uzbekistan Som'},
+            {'code' : 'VEF', 'name' : 'Venezuela Bolivar'},
+            {'code' : 'VND', 'name' : 'Viet Nam Dong'},
+            {'code' : 'VUV', 'name' : 'Vanuatu Vatu'},
+            {'code' : 'WST', 'name' : 'Samoa Tala'},
+            {'code' : 'XAF', 'name' : 'Communauté Financière Africaine (BEAC) CFA Franc BEAC'},
+            {'code' : 'XCD', 'name' : 'East Caribbean Dollar'},
+            {'code' : 'XDR', 'name' : 'International Monetary Fund (IMF) Special Drawing Rights'},
+            {'code' : 'XOF', 'name' : 'Communauté Financière Africaine (BCEAO) Franc'},
+            {'code' : 'XPF', 'name' : 'Comptoirs Français du Pacifique (CFP) Franc'},
+            {'code' : 'YER', 'name' : 'Yemen Rial'},
+            {'code' : 'ZAR', 'name' : 'South Africa Rand'},
+            {'code' : 'ZMW', 'name' : 'Zambia Kwacha'},
+            {'code' : 'ZWD', 'name' : 'Zimbabwe Dollar'}
+        ];
+    };
+
+     //return random world currency by ISO 4217
+    Chance.prototype.cur = function () {
+        var _curs = this.cur_types();
+
+        return _curs[ this.integer({min: 0, max: (_curs.length-1)})];
+    };
+
+    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
+    Chance.prototype.cur_pairs = function (returnAsString) {
+        var _cur1 = this.cur(); //first currency
+        var _cur2 = null;
+
+        while(_cur2 == null)
+        {
+            _cur2 = this.cur();
+
+            if (_cur2 === _cur1) {
+                _cur2 = null; //try to next cur
+            }
+        }
+
+        if (returnAsString) {
+            return  _cur1 + '/' + _cur2;
+        } else {
+            return [_cur1, _cur2];
+        }
+    };
+
+
+
     // -- End Finance
 
     // -- Miscellaneous --
@@ -1121,7 +1385,7 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.5";
+    Chance.prototype.VERSION = "0.5.6";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {

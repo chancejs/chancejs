@@ -126,11 +126,32 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+            it("returns a correctly gendered prefix", function () {
+                _(1000).times(function () {
+                    prefix = chance.name_prefix({ gender: "female" });
+                    expect(prefix).to.not.equal("Mr.");
+                    prefix = chance.name_prefix({ gender: "male" });
+                    expect(prefix).to.not.equal("Mrs.");
+                    expect(prefix).to.not.equal("Miss");
+                });
+            });
+
             it("can get full prefix", function () {
                 _(1000).times(function () {
                     prefix = chance.name_prefix({full: true});
                     expect(prefix).to.be.a('string');
                     expect(prefix).to.have.length.above(3);
+                });
+            });
+        });
+
+        describe("ssn()", function () {
+            it("returns a random socal security number", function () {
+                _(1000).times(function () {
+                    ssn = chance.ssn();
+                    expect(ssn).to.be.a('string');
+                    expect(ssn).to.match(/^\d{3}-\d{2}-\d{4}$/m);
+                    expect(ssn).to.have.length(11);
                 });
             });
         });

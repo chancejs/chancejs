@@ -105,35 +105,44 @@ Please feel free to reach out to me if you have any questions or suggestions.
 THANK YOU!
 
 ```
-project  : chancejs
- repo age : 9 months
- active   : 48 days
- commits  : 251
- files    : 25
+ project  : chancejs
+ repo age : 1 year
+ active   : 77 days
+ commits  : 302
+ files    : 21
  authors  :
-   197	Victor Quinn            78.5%
-    11	Tim Petricola           4.4%
-    11	davmillar               4.4%
-     5	Matt Klaber             2.0%
-     5	Michael Cordingley      2.0%
-     4	Kevin Garnett           1.6%
-     3	qjcg                    1.2%
-     2	Andreas Koeberle        0.8%
-     2	dhilipsiva              0.8%
-     2	path411                 0.8%
-     1	Ng, Patrick             0.4%
-     1	Bitdeli Chef            0.4%
-     1	Dominic Barnes          0.4%
-     1	Doug Lawrence           0.4%
-     1	Johannes Stein          0.4%
-     1	Adam Krebs              0.4%
-     1	Richard Anaya           0.4%
-     1	Ryan Tenney             0.4%
-     1	leesei                  0.4%
+   226	Victor Quinn            74.8%
+    13	Tim Petricola           4.3%
+    11	davmillar               3.6%
+     5	Michael Cordingley      1.7%
+     5	Alex DiLiberto          1.7%
+     5	Matt Klaber             1.7%
+     4	Kevin Garnett           1.3%
+     3	Alexandr Lozovyuk       1.0%
+     3	qjcg                    1.0%
+     2	xshyamx                 0.7%
+     2	Andreas Koeberle        0.7%
+     2	Iskren Chernev          0.7%
+     2	Nicholas Johnson        0.7%
+     2	Pascal Borreli          0.7%
+     2	dhilipsiva              0.7%
+     2	path411                 0.7%
+     2	shyam                   0.7%
+     2	Adam Krebs              0.7%
+     1	Ng, Patrick             0.3%
+     1	Doug Lawrence           0.3%
+     1	Dominic Barnes          0.3%
+     1	leesei                  0.3%
+     1	lkptrzk                 0.3%
+     1	Richard Anaya           0.3%
+     1	Ryan Tenney             0.3%
+     1	Samuel Greene           0.3%
+     1	Johannes Stein          0.3%
 ```
 
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
 
-
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/victorquinn/chancejs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+Proudly written in Washington, D.C.
 

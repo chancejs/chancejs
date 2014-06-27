@@ -4,7 +4,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         jshint: {
             options: {
-                es5: true,
                 curly: true,
                 eqeqeq: true,
                 expr: true,
@@ -15,10 +14,10 @@ module.exports = function (grunt) {
                 noarg: true,
                 sub: true,
                 trailing: true,
-//                undef: true,
                 boss: true,
                 eqnull: true,
-                browser: true
+                browser: true,
+                white: false
             },
             globals: {
                 exports: true,
@@ -26,14 +25,8 @@ module.exports = function (grunt) {
             },
             all: js_files
         },
-        shell: {
-            'mocha-phantomjs': {
-                command: './node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html',
-                options: {
-                    stdout: true,
-                    stderr: true
-                }
-            }
+        mocha_phantomjs: {
+            all: ["test/runner.html"]
         },
         uglify: {
             my_target: {
@@ -45,7 +38,7 @@ module.exports = function (grunt) {
         watch: {
             options: { livereload: true },
             files: js_files,
-            tasks: ['jshint', 'shell:mocha-phantomjs', 'uglify']
+            tasks: ['jshint', 'mocha_phantomjs', 'uglify']
         }
     });
 
@@ -53,8 +46,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-mocha-phantomjs');
 
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('test', ['shell:mocha-phantomjs']);
+    grunt.registerTask('test', ['mocha_phantomjs']);
 };
