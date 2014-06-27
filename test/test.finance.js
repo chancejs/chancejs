@@ -90,6 +90,29 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("currency", function () {
+            var currency, chance = new Chance();
+
+            it("returns a currency", function () {
+                _(1000).times(function () {
+                    currency = chance.currency();
+                    expect(currency).to.be.an("object");
+                    expect(currency.code).to.exist;
+                    expect(currency.code.length).to.equal(3);
+                    expect(currency.name).to.be.ok;
+                });
+            });
+
+            it("returns a currency pair", function () {
+                _(1000).times(function () {
+                    var currency_pair = chance.currency_pair();
+                    expect(currency_pair).to.be.an("array");
+                    expect(currency_pair.length).to.equal(2);
+                    expect(currency_pair[0].code).to.not.equal(currency_pair[1].code);
+                });
+            });
+        });
+
         describe("Expiration", function () {
             it("exp() looks correct", function () {
                 _(1000).times(function () {

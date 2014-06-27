@@ -107,6 +107,28 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     }).to.throw(RangeError, /too large/);
                 });
             });
+
+            it("will take a custom comparator for comparing complex objects", function () {
+                _(1000).times(function () {
+                    var arr = chance.unique(chance.currency, 25, {
+                        comparator: function(arr, val) {
+                            // If this is the first element, we know it doesn't exist
+                            if (arr.length === 0) {
+                                return false;
+                            }
+
+                            return arr.reduce(function(acc, item) {
+                                // If a match has been found, short circuit check and just return
+                                if (acc) {
+                                    return acc;
+                                }
+                                return item.name === val.name;
+                            }, false);
+                        }
+                    });
+                    expect(_.uniq(arr).length).to.equal(25);
+                });
+            });
         });
 
         describe("pad()", function () {
