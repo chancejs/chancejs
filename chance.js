@@ -442,7 +442,7 @@
         }
 
         if (options.prefix) {
-            name = this.prefix() + ' ' + name;
+            name = this.prefix(options) + ' ' + name;
         }
 
         return name;
