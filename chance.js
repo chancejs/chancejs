@@ -227,7 +227,9 @@
 
         while (arr.length < num) {
             var result = fn.apply(this, slice.call(arguments, 2));
-            if (arr.indexOf(result) === -1) arr.push(result);
+            if (arr.indexOf(result) === -1) {
+                arr.push(result);
+            }
 
             if (++count > num * 50) {
                 throw new RangeError("Chance: num is likely too large for sample set");
