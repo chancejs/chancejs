@@ -380,6 +380,102 @@
 
     // -- End Text --
 
+    // -- String Interpolation
+    
+    Chance.prototype.interpolate = function(text) {
+
+        var results = [], // collection of strings to be joined at the end
+            _textLength = text.length,
+            _index = 0,
+            _startIndex,
+            _endIndex;
+            
+        // symbol that indicates the beginning of the chance function 
+        var startSymbol = '`';
+        // symbol that indicates the end of the chance function and back to text
+        var endSymbol = '`'; 
+
+        while (_index < _textLength) {
+            if ((_startIndex = text.indexOf(startSymbol, _index)) != -1 && (_endIndex = text.indexOf(endSymbol, _startIndex + startSymbol.length)) != -1) {
+                // place any plain text in the results up to the startSymbol
+                results.push(text.substring(_index, _startIndex));
+                // regex the code part:  function(args).props
+                var code = text.substring(_startIndex + startSymbol.length, _endIndex);
+                
+                var r = this._parseFunction(code);
+                
+                // validate existence of function
+                var func = this[r.func];
+                if (typeof func !== "function") {
+                    throw "Chance.interpolate: Invalid function " + r.func + " at character "+(_startIndex+1);
+                }
+
+                var result = func.apply(this, r.args);
+                for (var j = 0; j < r.props.length; j++) {
+                    result = result[r.props[j]];
+                }
+                results.push(result);
+
+                _index = _endIndex + endSymbol.length;
+            }
+            else {
+                if (_index !== _textLength) {
+                    results.push(text.substring(_index));
+                }
+                break;
+            }
+
+        }
+
+        return results.join('');
+    };
+    
+    
+    /*
+    Utility to convert a string into 3 elements:
+        Input: " customer( 'arg1' , {\"json\":\"here\"} ).prop1.subprop  "  into
+        Returns: 
+        { 
+            func: "customer", 
+            args: ['arg1' , {json:"here"} ],
+            props: ["prop1","prop2"]
+    
+    */
+    Chance.prototype._parseFunction = function(string) {
+        var chunks = string.match(/^([a-z_]+)\(?(.+?(?=\)))?\)?(.*)?/);
+        
+        var func = chunks[1];
+        
+        var args = [];
+        // if arguments exist
+        if (chunks[2] && chunks[2].charAt(0) != '.') {
+            args = chunks[2].split(',');
+            for (var i = 0; i < args.length; i++) {
+                // trim leading and trailing quotes
+                var tmp = args[i].trim().replace(/^[\'\"]|[\'\"]$/g, "");
+                // potentially parse the argument as JSON
+                if (tmp.charAt(0) == '{' || tmp.charAt(0) == '[') {
+                    tmp = JSON.parse(tmp);
+                }
+                args[i] = tmp;
+            }
+        }
+        
+        var properties = [];
+        if (chunks[3] || chunks[2] && chunks[2].charAt(0) == '.') {
+            properties = chunks[3] || chunks[2];
+            properties = properties.substring(1).split('.');
+        }
+    
+        return {
+            'func': func,
+            'args': args,
+            'props': properties
+        };
+    };
+    
+    // -- End String Interpolation
+
     // -- Person --
 
     Chance.prototype.age = function (options) {
