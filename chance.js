@@ -433,11 +433,11 @@
     
     /*
     Utility to convert a string into 3 elements:
-        Input: " customer( 'arg1' , {\"json\":\"here\"} ).prop1.subprop  "  into
+        Input: " customer( \"arg1\" , {\"json\":\"here\"} ).prop1.subprop  "  into
         Returns: 
         { 
             func: "customer", 
-            args: ['arg1' , {json:"here"} ],
+            args: ["arg1" , {json:"here"} ],
             props: ["prop1","prop2"]
     
     */
@@ -447,20 +447,11 @@
         var func = chunks[1];
         
         var args = [];
-        // if arguments exist
+        // if arguments exist, they need to be JSON compilant
+        // func("str",42,{"key":"str","key2":42},[2,3,4,5])
         if (chunks[2] && chunks[2].charAt(0) != '.') {
-            args = chunks[2].split(',');
-            for (var i = 0; i < args.length; i++) {
-                // trim leading and trailing quotes
-                var tmp = args[i].trim().replace(/^[\'\"]|[\'\"]$/g, "");
-                // potentially parse the argument as JSON
-                if (tmp.charAt(0) == '{' || tmp.charAt(0) == '[') {
-                    tmp = JSON.parse(tmp);
-                }
-                args[i] = tmp;
-            }
+            args = JSON.parse('['+chunks[2]+']');
         }
-        
         var properties = [];
         if (chunks[3] || chunks[2] && chunks[2].charAt(0) == '.') {
             properties = chunks[3] || chunks[2];
