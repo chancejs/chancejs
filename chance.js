@@ -442,7 +442,7 @@
     
     */
     Chance.prototype._parseFunction = function(string) {
-        var chunks = string.match(/^([a-z_]+)\(?(.+?(?=\)))?\)?(.*)?/);
+        var chunks = string.match(/^([a-zA-Z_]+)\(?(.+?(?=\)))?\)?(.*)?/);
         
         var func = chunks[1];
         
