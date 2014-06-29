@@ -442,7 +442,7 @@
     
     */
     Chance.prototype._parseFunction = function(string) {
-        var chunks = string.match(/^([a-zA-Z_]+)\(?(.+?(?=\)))?\)?(.*)?/);
+        var chunks = string.match(/^([a-zA-Z\$\_]+)\(?(.+?(?=\)))?\)?(.*)?/);
         
         var func = chunks[1];
         
@@ -1335,7 +1335,7 @@
             {'code' : 'SOS', 'name' : 'Somalia Shilling'},
             {'code' : 'SPL', 'name' : 'Seborga Luigino'},
             {'code' : 'SRD', 'name' : 'Suriname Dollar'},
-            {'code' : 'STD', 'name' : 'São Tomé and Príncipe Dobra'},
+            {'code' : 'STD', 'name' : 'SÃ£o TomÃ© and PrÃ­ncipe Dobra'},
             {'code' : 'SVC', 'name' : 'El Salvador Colon'},
             {'code' : 'SYP', 'name' : 'Syria Pound'},
             {'code' : 'SZL', 'name' : 'Swaziland Lilangeni'},
@@ -1358,11 +1358,11 @@
             {'code' : 'VND', 'name' : 'Viet Nam Dong'},
             {'code' : 'VUV', 'name' : 'Vanuatu Vatu'},
             {'code' : 'WST', 'name' : 'Samoa Tala'},
-            {'code' : 'XAF', 'name' : 'Communauté Financière Africaine (BEAC) CFA Franc BEAC'},
+            {'code' : 'XAF', 'name' : 'CommunautÃ© FinanciÃ¨re Africaine (BEAC) CFA Franc BEAC'},
             {'code' : 'XCD', 'name' : 'East Caribbean Dollar'},
             {'code' : 'XDR', 'name' : 'International Monetary Fund (IMF) Special Drawing Rights'},
-            {'code' : 'XOF', 'name' : 'Communauté Financière Africaine (BCEAO) Franc'},
-            {'code' : 'XPF', 'name' : 'Comptoirs Français du Pacifique (CFP) Franc'},
+            {'code' : 'XOF', 'name' : 'CommunautÃ© FinanciÃ¨re Africaine (BCEAO) Franc'},
+            {'code' : 'XPF', 'name' : 'Comptoirs FranÃ§ais du Pacifique (CFP) Franc'},
             {'code' : 'YER', 'name' : 'Yemen Rial'},
             {'code' : 'ZAR', 'name' : 'South Africa Rand'},
             {'code' : 'ZMW', 'name' : 'Zambia Kwacha'},
