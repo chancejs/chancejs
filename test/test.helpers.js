@@ -38,8 +38,91 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(arr).to.have.length(6);
                 });
             });
-        });
+        
+            it("throws an error if there are insufficient items for the request if hyphenated expansion is false", function () {
+                arr = ['a', 'b', 'c', 'd', 'e', 'f'];
+                expect(function () { chance.pick(arr, 12,false) }).to.throw(RangeError);
+            });
+            
 
+            it("throws an error if self-expanding elements aren't unique enough", function () {
+                arr = ['a', 'a', 'a', 'a', 'a', 'a'];
+                expect(function () { chance.pick(arr, 12,false) }).to.throw(RangeError);
+            });
+            
+            it("returns hyphenated self-expanding elements when called with a count argument greater than the length of the array", function () {
+                arr = ['a', 'b', 'c', 'd', 'e', 'f'];
+            	picked = chance.pick(arr, 3, '-');
+            	expect(picked).to.have.length(3);
+            	expect(picked[0].split('-')).to.have.length(1);
+            	// each item should be unique
+            	expect(picked.filter(
+            			function(value, index, self) { 
+            				return self.indexOf(value) === index;
+            			}
+            		)
+            	).to.have.length(3);
+
+            	
+            	picked = chance.pick(arr, 7, '-');
+                	expect(picked).to.have.length(7);
+                	expect(picked[0].split('-')).to.have.length(2);
+                	// each item should be unique
+                	expect(picked.filter(
+                			function(value, index, self) { 
+                				return self.indexOf(value) === index;
+                			}
+                		)
+                	).to.have.length(7);
+
+                // try it for 36 
+                	picked = chance.pick(arr, 36, '-');
+                	expect(picked).to.have.length(36);
+                	expect(picked[0].split('-')).to.have.length(3);
+                	// each item should be unique
+                	expect(picked.filter(
+                			function(value, index, self) { 
+                				return self.indexOf(value) === index;
+                			}
+                		)
+                	).to.have.length(36);
+
+                	
+                	// larger array
+                	picked = chance.pick(arr, 150, '-');
+                	expect(picked).to.have.length(150);
+                	expect(picked[0].split('-')).to.have.length(4);
+                	// each item should be unique
+                	expect(picked.filter(
+                			function(value, index, self) { 
+                				return self.indexOf(value) === index;
+                			}
+                		)
+                	).to.have.length(150);
+                	
+                	
+                	arr = [];
+                	var tmp = chance.currency_types();
+                	for(var i=0;i<tmp.length;i++) {
+                		arr.push(tmp[i].code);
+                	}
+                    
+                    picked = chance.pick(arr, 150, '-');
+                	expect(picked).to.have.length(150);
+                	expect(picked[0].split('-')).to.have.length(2);
+                	// each item should be unique
+                	expect(picked.filter(
+                			function(value, index, self) { 
+                				return self.indexOf(value) === index;
+                			}
+                		)
+                	).to.have.length(150);
+                	
+	
+            });
+
+        });
+        
         describe("shuffle()", function () {
             it("returns an array of the same size", function () {
                 arr = ['a', 'b', 'c', 'd', 'e'];
