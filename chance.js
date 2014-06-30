@@ -298,7 +298,6 @@
 					tmp.push(bank.shift());
 				}
 				// add the combined element to the results
-				console.log(tmp.join(selfExpandingSeparator));
 				result.push(tmp.join(selfExpandingSeparator));
 				// filter the list for unique elements
 				result = result.filter(function (value, index, self) { 
