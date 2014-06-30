@@ -259,11 +259,61 @@
         return number.length >= width ? number : new Array(width - number.length + 1).join(pad) + number;
     };
 
-    Chance.prototype.pick = function (arr, count) {
+
+    /*
+     *   pick(arr) returns one item from the array
+     *   pick(arr,count) returns a subset of the array 
+     *   pick(arr,count,separator) returns an array of size count, 
+     *   	if there are not enough elements available, elements are combined and joined by the separator
+     *   	e.g. ['a-b','f-d','e-g','a-c',...] 
+     */ 
+    	
+    Chance.prototype.pick = function (arr, count, selfExpandingSeparator) {
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
-        } else {
+        } else if (!selfExpandingSeparator){
+            testRange(
+                    count>arr.length,
+                    "Chance: Cannot return "+count+" items from an array of size "+arr.length+"."
+                );
             return this.shuffle(arr).slice(0, count);
+            
+        } else if (selfExpandingSeparator){
+        	var arrLength = arr.length;
+        	var groupsNeeded = 1;
+        	// increase the number of groups needed based on length of available array with a 200% buffer
+        	while(Math.pow(arrLength,groupsNeeded) < (count * 2.00 ) ) {
+        		groupsNeeded++;
+        	}
+        	
+        	var result = [],counter=0,bank = this.shuffle(arr);
+        	while (result.length < count) {
+				// create groups of elements (joined with the separator)
+				var tmp = [];
+				for ( var i = 0; i < groupsNeeded; i++) {
+					// if the bank gets empty, shuffle up and feed some more elements
+					if (bank.length == 0) {
+						bank = bank.concat(this.shuffle(arr));
+					}
+					tmp.push(bank.shift());
+				}
+				// add the combined element to the results
+				console.log(tmp.join(selfExpandingSeparator));
+				result.push(tmp.join(selfExpandingSeparator));
+				// filter the list for unique elements
+				result = result.filter(function (value, index, self) { 
+					return self.indexOf(value) === index;
+				});
+				
+
+
+	            if (++counter > count * 50) {
+	                throw new RangeError("Chance: num is likely too large for sample set");
+	            }
+				
+			}
+        	
+            return result;
         }
     };
 
