@@ -384,30 +384,30 @@
 
     Chance.prototype.age = function (options) {
         options = initOptions(options);
-        var age;
+        var ageRange;
 
         switch (options.type) {
             case 'child':
-                age = this.natural({min: 1, max: 12});
+                ageRange = {min: 1, max: 12};
                 break;
             case 'teen':
-                age = this.natural({min: 13, max: 19});
+                ageRange = {min: 13, max: 19};
                 break;
             case 'adult':
-                age = this.natural({min: 18, max: 65});
+                ageRange = {min: 18, max: 65};
                 break;
             case 'senior':
-                age = this.natural({min: 65, max: 100});
+                ageRange = {min: 65, max: 100};
                 break;
             case 'all':
-                age = this.natural({min: 1, max: 100});
+                ageRange = {min: 1, max: 100};
                 break;
             default:
-                age = this.natural({min: 18, max: 65});
+                ageRange = {min: 18, max: 65};
                 break;
         }
 
-        return age;
+        return this.natural(ageRange);
     };
 
     Chance.prototype.birthday = function (options) {
@@ -568,12 +568,12 @@
     };
 
     Chance.prototype.ipv6 = function () {
-        var ip_addr = "";
+        var ip_addr = [];
 
         for (var i = 0; i < 8; i++) {
-            ip_addr += this.hash({length: 4}) + ':';
+            ip_addr.push(this.hash({length: 4}));
         }
-        return ip_addr.substr(0, ip_addr.length - 1);
+        return ip_addr.join(":");
     };
 
     Chance.prototype.klout = function () {
@@ -1319,14 +1319,20 @@
     // -- Miscellaneous --
 
     // Dice - For all the board game geeks out there, myself included ;)
-    Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
-    Chance.prototype.d6 = function () { return this.natural({min: 1, max: 6}); };
-    Chance.prototype.d8 = function () { return this.natural({min: 1, max: 8}); };
-    Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
-    Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
-    Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
-    Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
-    Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
+    function diceFn (range) {
+    	return function () {
+    		return this.natural(range);
+    	};
+    }
+    Chance.prototype.d4 = diceFn({min: 1, max: 4});
+    Chance.prototype.d6 = diceFn({min: 1, max: 6});
+    Chance.prototype.d8 = diceFn({min: 1, max: 8});
+    Chance.prototype.d10 = diceFn({min: 1, max: 10});
+    Chance.prototype.d12 = diceFn({min: 1, max: 12});
+    Chance.prototype.d20 = diceFn({min: 1, max: 20});
+    Chance.prototype.d30 = diceFn({min: 1, max: 30});
+    Chance.prototype.d100 = diceFn({min: 1, max: 100});
+
     Chance.prototype.rpg = function (thrown, options) {
         options = initOptions(options);
         if (thrown === null) {
