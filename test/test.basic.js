@@ -2,8 +2,24 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Basics", function () {
-        var bool, integer, natural, floating, character, string, temp, chance = new Chance();
+        var bool, integer, natural, floating, character, string, temp, chance = new Chance(),
+            data, cData;
 
+        describe("Data", function () {
+            it("get data", function () {
+                data = chance.get("lastNames");
+                expect(data).to.be.an('array');
+            });
+            
+            it("set custom data", function () {
+                cData = {lastNames: ["customName", "testLast"]};
+                chance.set(cData);
+                data = chance.get("lastNames");
+                expect(data).to.be.an('array');
+                expect(data).to.have.length(2);
+            });
+        });
+        
         describe("Bool", function () {
             it("returns a random boolean", function () {
                 bool = chance.bool();

@@ -17,7 +17,7 @@
     var slice = Array.prototype.slice;
 
     // Constructor
-    var Chance = function (seed) {
+    function Chance (seed) {
         if (!(this instanceof Chance)) {
             return new Chance(seed);
         }
@@ -38,7 +38,7 @@
                 return this.mt.random(this.seed);
             };
         }
-    };
+    }
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -418,24 +418,19 @@
         return this.date(options);
     };
 
-    var firstNames = {
-        "male": ["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Charles", "Thomas", "Christopher", "Daniel", "Matthew", "George", "Donald", "Anthony", "Paul", "Mark", "Edward", "Steven", "Kenneth", "Andrew", "Brian", "Joshua", "Kevin", "Ronald", "Timothy", "Jason", "Jeffrey", "Frank", "Gary", "Ryan", "Nicholas", "Eric", "Stephen", "Jacob", "Larry", "Jonathan", "Scott", "Raymond", "Justin", "Brandon", "Gregory", "Samuel", "Benjamin", "Patrick", "Jack", "Henry", "Walter", "Dennis", "Jerry", "Alexander", "Peter", "Tyler", "Douglas", "Harold", "Aaron", "Jose", "Adam", "Arthur", "Zachary", "Carl", "Nathan", "Albert", "Kyle", "Lawrence", "Joe", "Willie", "Gerald", "Roger", "Keith", "Jeremy", "Terry", "Harry", "Ralph", "Sean", "Jesse", "Roy", "Louis", "Billy", "Austin", "Bruce", "Eugene", "Christian", "Bryan", "Wayne", "Russell", "Howard", "Fred", "Ethan", "Jordan", "Philip", "Alan", "Juan", "Randy", "Vincent", "Bobby", "Dylan", "Johnny", "Phillip", "Victor", "Clarence", "Ernest", "Martin", "Craig", "Stanley", "Shawn", "Travis", "Bradley", "Leonard", "Earl", "Gabriel", "Jimmy", "Francis", "Todd", "Noah", "Danny", "Dale", "Cody", "Carlos", "Allen", "Frederick", "Logan", "Curtis", "Alex", "Joel", "Luis", "Norman", "Marvin", "Glenn", "Tony", "Nathaniel", "Rodney", "Melvin", "Alfred", "Steve", "Cameron", "Chad", "Edwin", "Caleb", "Evan", "Antonio", "Lee", "Herbert", "Jeffery", "Isaac", "Derek", "Ricky", "Marcus", "Theodore", "Elijah", "Luke", "Jesus", "Eddie", "Troy", "Mike", "Dustin", "Ray", "Adrian", "Bernard", "Leroy", "Angel", "Randall", "Wesley", "Ian", "Jared", "Mason", "Hunter", "Calvin", "Oscar", "Clifford", "Jay", "Shane", "Ronnie", "Barry", "Lucas", "Corey", "Manuel", "Leo", "Tommy", "Warren", "Jackson", "Isaiah", "Connor", "Don", "Dean", "Jon", "Julian", "Miguel", "Bill", "Lloyd", "Charlie", "Mitchell", "Leon", "Jerome", "Darrell", "Jeremiah", "Alvin", "Brett", "Seth", "Floyd", "Jim", "Blake", "Micheal", "Gordon", "Trevor", "Lewis", "Erik", "Edgar", "Vernon", "Devin", "Gavin", "Jayden", "Chris", "Clyde", "Tom", "Derrick", "Mario", "Brent", "Marc", "Herman", "Chase", "Dominic", "Ricardo", "Franklin", "Maurice", "Max", "Aiden", "Owen", "Lester", "Gilbert", "Elmer", "Gene", "Francisco", "Glen", "Cory", "Garrett", "Clayton", "Sam", "Jorge", "Chester", "Alejandro", "Jeff", "Harvey", "Milton", "Cole", "Ivan", "Andre", "Duane", "Landon"],
-        "female": ["Mary", "Emma", "Elizabeth", "Minnie", "Margaret", "Ida", "Alice", "Bertha", "Sarah", "Annie", "Clara", "Ella", "Florence", "Cora", "Martha", "Laura", "Nellie", "Grace", "Carrie", "Maude", "Mabel", "Bessie", "Jennie", "Gertrude", "Julia", "Hattie", "Edith", "Mattie", "Rose", "Catherine", "Lillian", "Ada", "Lillie", "Helen", "Jessie", "Louise", "Ethel", "Lula", "Myrtle", "Eva", "Frances", "Lena", "Lucy", "Edna", "Maggie", "Pearl", "Daisy", "Fannie", "Josephine", "Dora", "Rosa", "Katherine", "Agnes", "Marie", "Nora", "May", "Mamie", "Blanche", "Stella", "Ellen", "Nancy", "Effie", "Sallie", "Nettie", "Della", "Lizzie", "Flora", "Susie", "Maud", "Mae", "Etta", "Harriet", "Sadie", "Caroline", "Katie", "Lydia", "Elsie", "Kate", "Susan", "Mollie", "Alma", "Addie", "Georgia", "Eliza", "Lulu", "Nannie", "Lottie", "Amanda", "Belle", "Charlotte", "Rebecca", "Ruth", "Viola", "Olive", "Amelia", "Hannah", "Jane", "Virginia", "Emily", "Matilda", "Irene", "Kathryn", "Esther", "Willie", "Henrietta", "Ollie", "Amy", "Rachel", "Sara", "Estella", "Theresa", "Augusta", "Ora", "Pauline", "Josie", "Lola", "Sophia", "Leona", "Anne", "Mildred", "Ann", "Beulah", "Callie", "Lou", "Delia", "Eleanor", "Barbara", "Iva", "Louisa", "Maria", "Mayme", "Evelyn", "Estelle", "Nina", "Betty", "Marion", "Bettie", "Dorothy", "Luella", "Inez", "Lela", "Rosie", "Allie", "Millie", "Janie", "Cornelia", "Victoria", "Ruby", "Winifred", "Alta", "Celia", "Christine", "Beatrice", "Birdie", "Harriett", "Mable", "Myra", "Sophie", "Tillie", "Isabel", "Sylvia", "Carolyn", "Isabelle", "Leila", "Sally", "Ina", "Essie", "Bertie", "Nell", "Alberta", "Katharine", "Lora", "Rena", "Mina", "Rhoda", "Mathilda", "Abbie", "Eula", "Dollie", "Hettie", "Eunice", "Fanny", "Ola", "Lenora", "Adelaide", "Christina", "Lelia", "Nelle", "Sue", "Johanna", "Lilly", "Lucinda", "Minerva", "Lettie", "Roxie", "Cynthia", "Helena", "Hilda", "Hulda", "Bernice", "Genevieve", "Jean", "Cordelia", "Marian", "Francis", "Jeanette", "Adeline", "Gussie", "Leah", "Lois", "Lura", "Mittie", "Hallie", "Isabella", "Olga", "Phoebe", "Teresa", "Hester", "Lida", "Lina", "Winnie", "Claudia", "Marguerite", "Vera", "Cecelia", "Bess", "Emilie", "John", "Rosetta", "Verna", "Myrtie", "Cecilia", "Elva", "Olivia", "Ophelia", "Georgie", "Elnora", "Violet", "Adele", "Lily", "Linnie", "Loretta", "Madge", "Polly", "Virgie", "Eugenia", "Lucile", "Lucille", "Mabelle", "Rosalie"]
-    };
 
     Chance.prototype.first = function (options) {
         options = initOptions(options, {gender: this.gender()});
-        return this.pick(firstNames[options.gender.toLowerCase()]);
+        return this.pick(this.get("firstNames")[options.gender.toLowerCase()]);
     };
 
     Chance.prototype.gender = function () {
         return this.pick(['Male', 'Female']);
     };
 
-    var lastNames = ['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Robinson', 'Clark', 'Rodriguez', 'Lewis', 'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'Hernandez', 'King', 'Wright', 'Lopez', 'Hill', 'Scott', 'Green', 'Adams', 'Baker', 'Gonzalez', 'Nelson', 'Carter', 'Mitchell', 'Perez', 'Roberts', 'Turner', 'Phillips', 'Campbell', 'Parker', 'Evans', 'Edwards', 'Collins', 'Stewart', 'Sanchez', 'Morris', 'Rogers', 'Reed', 'Cook', 'Morgan', 'Bell', 'Murphy', 'Bailey', 'Rivera', 'Cooper', 'Richardson', 'Cox', 'Howard', 'Ward', 'Torres', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Kelly', 'Sanders', 'Price', 'Bennett', 'Wood', 'Barnes', 'Ross', 'Henderson', 'Coleman', 'Jenkins', 'Perry', 'Powell', 'Long', 'Patterson', 'Hughes', 'Flores', 'Washington', 'Butler', 'Simmons', 'Foster', 'Gonzales', 'Bryant', 'Alexander', 'Russell', 'Griffin', 'Diaz', 'Hayes', 'Myers', 'Ford', 'Hamilton', 'Graham', 'Sullivan', 'Wallace', 'Woods', 'Cole', 'West', 'Jordan', 'Owens', 'Reynolds', 'Fisher', 'Ellis', 'Harrison', 'Gibson', 'McDonald', 'Cruz', 'Marshall', 'Ortiz', 'Gomez', 'Murray', 'Freeman', 'Wells', 'Webb', 'Simpson', 'Stevens', 'Tucker', 'Porter', 'Hunter', 'Hicks', 'Crawford', 'Henry', 'Boyd', 'Mason', 'Morales', 'Kennedy', 'Warren', 'Dixon', 'Ramos', 'Reyes', 'Burns', 'Gordon', 'Shaw', 'Holmes', 'Rice', 'Robertson', 'Hunt', 'Black', 'Daniels', 'Palmer', 'Mills', 'Nichols', 'Grant', 'Knight', 'Ferguson', 'Rose', 'Stone', 'Hawkins', 'Dunn', 'Perkins', 'Hudson', 'Spencer', 'Gardner', 'Stephens', 'Payne', 'Pierce', 'Berry', 'Matthews', 'Arnold', 'Wagner', 'Willis', 'Ray', 'Watkins', 'Olson', 'Carroll', 'Duncan', 'Snyder', 'Hart', 'Cunningham', 'Bradley', 'Lane', 'Andrews', 'Ruiz', 'Harper', 'Fox', 'Riley', 'Armstrong', 'Carpenter', 'Weaver', 'Greene', 'Lawrence', 'Elliott', 'Chavez', 'Sims', 'Austin', 'Peters', 'Kelley', 'Franklin', 'Lawson', 'Fields', 'Gutierrez', 'Ryan', 'Schmidt', 'Carr', 'Vasquez', 'Castillo', 'Wheeler', 'Chapman', 'Oliver', 'Montgomery', 'Richards', 'Williamson', 'Johnston', 'Banks', 'Meyer', 'Bishop', 'McCoy', 'Howell', 'Alvarez', 'Morrison', 'Hansen', 'Fernandez', 'Garza', 'Harvey', 'Little', 'Burton', 'Stanley', 'Nguyen', 'George', 'Jacobs', 'Reid', 'Kim', 'Fuller', 'Lynch', 'Dean', 'Gilbert', 'Garrett', 'Romero', 'Welch', 'Larson', 'Frazier', 'Burke', 'Hanson', 'Day', 'Mendoza', 'Moreno', 'Bowman', 'Medina', 'Fowler', 'Brewer', 'Hoffman', 'Carlson', 'Silva', 'Pearson', 'Holland', 'Douglas', 'Fleming', 'Jensen', 'Vargas', 'Byrd', 'Davidson', 'Hopkins', 'May', 'Terry', 'Herrera', 'Wade', 'Soto', 'Walters', 'Curtis', 'Neal', 'Caldwell', 'Lowe', 'Jennings', 'Barnett', 'Graves', 'Jimenez', 'Horton', 'Shelton', 'Barrett', 'Obrien', 'Castro', 'Sutton', 'Gregory', 'McKinney', 'Lucas', 'Miles', 'Craig', 'Rodriquez', 'Chambers', 'Holt', 'Lambert', 'Fletcher', 'Watts', 'Bates', 'Hale', 'Rhodes', 'Pena', 'Beck', 'Newman', 'Haynes', 'McDaniel', 'Mendez', 'Bush', 'Vaughn', 'Parks', 'Dawson', 'Santiago', 'Norris', 'Hardy', 'Love', 'Steele', 'Curry', 'Powers', 'Schultz', 'Barker', 'Guzman', 'Page', 'Munoz', 'Ball', 'Keller', 'Chandler', 'Weber', 'Leonard', 'Walsh', 'Lyons', 'Ramsey', 'Wolfe', 'Schneider', 'Mullins', 'Benson', 'Sharp', 'Bowen', 'Daniel', 'Barber', 'Cummings', 'Hines', 'Baldwin', 'Griffith', 'Valdez', 'Hubbard', 'Salazar', 'Reeves', 'Warner', 'Stevenson', 'Burgess', 'Santos', 'Tate', 'Cross', 'Garner', 'Mann', 'Mack', 'Moss', 'Thornton', 'Dennis', 'McGee', 'Farmer', 'Delgado', 'Aguilar', 'Vega', 'Glover', 'Manning', 'Cohen', 'Harmon', 'Rodgers', 'Robbins', 'Newton', 'Todd', 'Blair', 'Higgins', 'Ingram', 'Reese', 'Cannon', 'Strickland', 'Townsend', 'Potter', 'Goodwin', 'Walton', 'Rowe', 'Hampton', 'Ortega', 'Patton', 'Swanson', 'Joseph', 'Francis', 'Goodman', 'Maldonado', 'Yates', 'Becker', 'Erickson', 'Hodges', 'Rios', 'Conner', 'Adkins', 'Webster', 'Norman', 'Malone', 'Hammond', 'Flowers', 'Cobb', 'Moody', 'Quinn', 'Blake', 'Maxwell', 'Pope', 'Floyd', 'Osborne', 'Paul', 'McCarthy', 'Guerrero', 'Lindsey', 'Estrada', 'Sandoval', 'Gibbs', 'Tyler', 'Gross', 'Fitzgerald', 'Stokes', 'Doyle', 'Sherman', 'Saunders', 'Wise', 'Colon', 'Gill', 'Alvarado', 'Greer', 'Padilla', 'Simon', 'Waters', 'Nunez', 'Ballard', 'Schwartz', 'McBride', 'Houston', 'Christensen', 'Klein', 'Pratt', 'Briggs', 'Parsons', 'McLaughlin', 'Zimmerman', 'French', 'Buchanan', 'Moran', 'Copeland', 'Roy', 'Pittman', 'Brady', 'McCormick', 'Holloway', 'Brock', 'Poole', 'Frank', 'Logan', 'Owen', 'Bass', 'Marsh', 'Drake', 'Wong', 'Jefferson', 'Park', 'Morton', 'Abbott', 'Sparks', 'Patrick', 'Norton', 'Huff', 'Clayton', 'Massey', 'Lloyd', 'Figueroa', 'Carson', 'Bowers', 'Roberson', 'Barton', 'Tran', 'Lamb', 'Harrington', 'Casey', 'Boone', 'Cortez', 'Clarke', 'Mathis', 'Singleton', 'Wilkins', 'Cain', 'Bryan', 'Underwood', 'Hogan', 'McKenzie', 'Collier', 'Luna', 'Phelps', 'McGuire', 'Allison', 'Bridges', 'Wilkerson', 'Nash', 'Summers', 'Atkins'];
 
     Chance.prototype.last = function () {
-        return this.pick(lastNames);
+        return this.pick(this.get("lastNames"));
     };
 
     Chance.prototype.name = function (options) {
@@ -493,12 +488,11 @@
     };
 
     Chance.prototype.ssn = function () {
-        var ssn_pool = "1234567890",
-            ssn;
+        var ssn;
 
-        ssn = this.string({pool: ssn_pool, length: 3}) + '-' +
-              this.string({pool: ssn_pool, length: 2}) + '-' +
-              this.string({pool: ssn_pool, length: 4});
+        ssn = this.string({pool: NUMBERS, length: 3}) + '-' +
+              this.string({pool: NUMBERS, length: 2}) + '-' +
+              this.string({pool: NUMBERS, length: 4});
 
         return ssn;
     };
@@ -648,8 +642,11 @@
             options.parens = false;
         }
         var areacode = this.areacode(options).toString();
-        var exchange = this.natural({min: 2, max: 9}).toString() + this.natural({min: 0, max: 9}).toString() + this.natural({min: 0, max: 9}).toString();
+        var exchange = this.natural({min: 2, max: 9}).toString() 
+            + this.natural({min: 0, max: 9}).toString() 
+            + this.natural({min: 0, max: 9}).toString();
         var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
+        
         return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
     };
 
@@ -665,25 +662,7 @@
     };
 
     Chance.prototype.provinces = function () {
-        return [
-            {name: 'Alberta', abbreviation: 'AB'},
-            {name: 'British Columbia', abbreviation: 'BC'},
-            {name: 'Manitoba', abbreviation: 'MB'},
-            {name: 'New Brunswick', abbreviation: 'NB'},
-            {name: 'Newfoundland and Labrador', abbreviation: 'NL'},
-            {name: 'Nova Scotia', abbreviation: 'NS'},
-            {name: 'Ontario', abbreviation: 'ON'},
-            {name: 'Prince Edward Island', abbreviation: 'PE'},
-            {name: 'Quebec', abbreviation: 'QC'},
-            {name: 'Saskatchewan', abbreviation: 'SK'},
-
-            // The case could be made that the following are not actually provinces
-            // since they are technically considered "territories" however they all
-            // look the same on an envelope!
-            {name: 'Northwest Territories', abbreviation: 'NT'},
-            {name: 'Nunavut', abbreviation: 'NU'},
-            {name: 'Yukon', abbreviation: 'YT'}
-        ];
+        return this.get("provinces");
     };
 
     Chance.prototype.province = function (options) {
@@ -722,77 +701,10 @@
     Chance.prototype.states = function (options) {
         options = initOptions(options);
 
-        var states, us_states_and_dc, territories, armed_forces;
-
-        us_states_and_dc = [
-            {name: 'Alabama', abbreviation: 'AL'},
-            {name: 'Alaska', abbreviation: 'AK'},
-            {name: 'Arizona', abbreviation: 'AZ'},
-            {name: 'Arkansas', abbreviation: 'AR'},
-            {name: 'California', abbreviation: 'CA'},
-            {name: 'Colorado', abbreviation: 'CO'},
-            {name: 'Connecticut', abbreviation: 'CT'},
-            {name: 'Delaware', abbreviation: 'DE'},
-            {name: 'District of Columbia', abbreviation: 'DC'},
-            {name: 'Florida', abbreviation: 'FL'},
-            {name: 'Georgia', abbreviation: 'GA'},
-            {name: 'Hawaii', abbreviation: 'HI'},
-            {name: 'Idaho', abbreviation: 'ID'},
-            {name: 'Illinois', abbreviation: 'IL'},
-            {name: 'Indiana', abbreviation: 'IN'},
-            {name: 'Iowa', abbreviation: 'IA'},
-            {name: 'Kansas', abbreviation: 'KS'},
-            {name: 'Kentucky', abbreviation: 'KY'},
-            {name: 'Louisiana', abbreviation: 'LA'},
-            {name: 'Maine', abbreviation: 'ME'},
-            {name: 'Maryland', abbreviation: 'MD'},
-            {name: 'Massachusetts', abbreviation: 'MA'},
-            {name: 'Michigan', abbreviation: 'MI'},
-            {name: 'Minnesota', abbreviation: 'MN'},
-            {name: 'Mississippi', abbreviation: 'MS'},
-            {name: 'Missouri', abbreviation: 'MO'},
-            {name: 'Montana', abbreviation: 'MT'},
-            {name: 'Nebraska', abbreviation: 'NE'},
-            {name: 'Nevada', abbreviation: 'NV'},
-            {name: 'New Hampshire', abbreviation: 'NH'},
-            {name: 'New Jersey', abbreviation: 'NJ'},
-            {name: 'New Mexico', abbreviation: 'NM'},
-            {name: 'New York', abbreviation: 'NY'},
-            {name: 'North Carolina', abbreviation: 'NC'},
-            {name: 'North Dakota', abbreviation: 'ND'},
-            {name: 'Ohio', abbreviation: 'OH'},
-            {name: 'Oklahoma', abbreviation: 'OK'},
-            {name: 'Oregon', abbreviation: 'OR'},
-            {name: 'Pennsylvania', abbreviation: 'PA'},
-            {name: 'Rhode Island', abbreviation: 'RI'},
-            {name: 'South Carolina', abbreviation: 'SC'},
-            {name: 'South Dakota', abbreviation: 'SD'},
-            {name: 'Tennessee', abbreviation: 'TN'},
-            {name: 'Texas', abbreviation: 'TX'},
-            {name: 'Utah', abbreviation: 'UT'},
-            {name: 'Vermont', abbreviation: 'VT'},
-            {name: 'Virginia', abbreviation: 'VA'},
-            {name: 'Washington', abbreviation: 'WA'},
-            {name: 'West Virginia', abbreviation: 'WV'},
-            {name: 'Wisconsin', abbreviation: 'WI'},
-            {name: 'Wyoming', abbreviation: 'WY'}
-        ];
-
-        territories = [
-            {name: 'American Samoa', abbreviation: 'AS'},
-            {name: 'Federated States of Micronesia', abbreviation: 'FM'},
-            {name: 'Guam', abbreviation: 'GU'},
-            {name: 'Marshall Islands', abbreviation: 'MH'},
-            {name: 'Northern Mariana Islands', abbreviation: 'MP'},
-            {name: 'Puerto Rico', abbreviation: 'PR'},
-            {name: 'Virgin Islands, U.S.', abbreviation: 'VI'}
-        ];
-
-        armed_forces = [
-            {name: 'Armed Forces Europe', abbreviation: 'AE'},
-            {name: 'Armed Forces Pacific', abbreviation: 'AP'},
-            {name: 'Armed Forces the Americas', abbreviation: 'AA'}
-        ];
+        var states,
+            us_states_and_dc = this.get("us_states_and_dc"),
+            territories = this.get("territories"),
+            armed_forces = this.get("armed_forces");
 
         states = us_states_and_dc;
 
@@ -824,43 +736,7 @@
 
     Chance.prototype.street_suffixes = function () {
         // These are the most common suffixes.
-        return [
-            {name: 'Avenue', abbreviation: 'Ave'},
-            {name: 'Boulevard', abbreviation: 'Blvd'},
-            {name: 'Center', abbreviation: 'Ctr'},
-            {name: 'Circle', abbreviation: 'Cir'},
-            {name: 'Court', abbreviation: 'Ct'},
-            {name: 'Drive', abbreviation: 'Dr'},
-            {name: 'Extension', abbreviation: 'Ext'},
-            {name: 'Glen', abbreviation: 'Gln'},
-            {name: 'Grove', abbreviation: 'Grv'},
-            {name: 'Heights', abbreviation: 'Hts'},
-            {name: 'Highway', abbreviation: 'Hwy'},
-            {name: 'Junction', abbreviation: 'Jct'},
-            {name: 'Key', abbreviation: 'Key'},
-            {name: 'Lane', abbreviation: 'Ln'},
-            {name: 'Loop', abbreviation: 'Loop'},
-            {name: 'Manor', abbreviation: 'Mnr'},
-            {name: 'Mill', abbreviation: 'Mill'},
-            {name: 'Park', abbreviation: 'Park'},
-            {name: 'Parkway', abbreviation: 'Pkwy'},
-            {name: 'Pass', abbreviation: 'Pass'},
-            {name: 'Path', abbreviation: 'Path'},
-            {name: 'Pike', abbreviation: 'Pike'},
-            {name: 'Place', abbreviation: 'Pl'},
-            {name: 'Plaza', abbreviation: 'Plz'},
-            {name: 'Point', abbreviation: 'Pt'},
-            {name: 'Ridge', abbreviation: 'Rdg'},
-            {name: 'River', abbreviation: 'Riv'},
-            {name: 'Road', abbreviation: 'Rd'},
-            {name: 'Square', abbreviation: 'Sq'},
-            {name: 'Street', abbreviation: 'St'},
-            {name: 'Terrace', abbreviation: 'Ter'},
-            {name: 'Trail', abbreviation: 'Trl'},
-            {name: 'Turnpike', abbreviation: 'Tpke'},
-            {name: 'View', abbreviation: 'Vw'},
-            {name: 'Way', abbreviation: 'Way'}
-        ];
+        return this.get("street_suffixes");
     };
 
     Chance.prototype.tv = function (options) {
@@ -950,21 +826,7 @@
     };
 
     Chance.prototype.months = function () {
-        return [
-            {name: 'January', short_name: 'Jan', numeric: '01', days: 31},
-            // Not messing with leap years...
-            {name: 'February', short_name: 'Feb', numeric: '02', days: 28},
-            {name: 'March', short_name: 'Mar', numeric: '03', days: 31},
-            {name: 'April', short_name: 'Apr', numeric: '04', days: 30},
-            {name: 'May', short_name: 'May', numeric: '05', days: 31},
-            {name: 'June', short_name: 'Jun', numeric: '06', days: 30},
-            {name: 'July', short_name: 'Jul', numeric: '07', days: 31},
-            {name: 'August', short_name: 'Aug', numeric: '08', days: 31},
-            {name: 'September', short_name: 'Sep', numeric: '09', days: 30},
-            {name: 'October', short_name: 'Oct', numeric: '10', days: 31},
-            {name: 'November', short_name: 'Nov', numeric: '11', days: 30},
-            {name: 'December', short_name: 'Dec', numeric: '12', days: 31}
-        ];
+        return this.get("months");
     };
 
     Chance.prototype.second = function () {
@@ -1013,25 +875,7 @@
 
     Chance.prototype.cc_types = function () {
         // http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
-        return [
-            {name: "American Express", short_name: 'amex', prefix: '34', length: 15},
-            {name: "Bankcard", short_name: 'bankcard', prefix: '5610', length: 16},
-            {name: "China UnionPay", short_name: 'chinaunion', prefix: '62', length: 16},
-            {name: "Diners Club Carte Blanche", short_name: 'dccarte', prefix: '300', length: 14},
-            {name: "Diners Club enRoute", short_name: 'dcenroute', prefix: '2014', length: 15},
-            {name: "Diners Club International", short_name: 'dcintl', prefix: '36', length: 14},
-            {name: "Diners Club United States & Canada", short_name: 'dcusc', prefix: '54', length: 16},
-            {name: "Discover Card", short_name: 'discover', prefix: '6011', length: 16},
-            {name: "InstaPayment", short_name: 'instapay', prefix: '637', length: 16},
-            {name: "JCB", short_name: 'jcb', prefix: '3528', length: 16},
-            {name: "Laser", short_name: 'laser', prefix: '6304', length: 16},
-            {name: "Maestro", short_name: 'maestro', prefix: '5018', length: 16},
-            {name: "Mastercard", short_name: 'mc', prefix: '51', length: 16},
-            {name: "Solo", short_name: 'solo', prefix: '6334', length: 16},
-            {name: "Switch", short_name: 'switch', prefix: '4903', length: 16},
-            {name: "Visa", short_name: 'visa', prefix: '4', length: 16},
-            {name: "Visa Electron", short_name: 'electron', prefix: '4026', length: 16}
-        ];
+        return this.get("cc_types");
     };
 
     Chance.prototype.cc_type = function (options) {
@@ -1116,7 +960,298 @@
 
     //return all world currency by ISO 4217
     Chance.prototype.currency_types = function () {
-        return [
+        return this.get("currency_types");
+    };
+
+
+    //return random world currency by ISO 4217
+    Chance.prototype.currency = function () {
+        return this.pick(this.currency_types());
+    };
+
+    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
+    Chance.prototype.currency_pair = function (returnAsString) {
+        var currencies = this.unique(this.currency, 2, {
+            comparator: function(arr, val) {
+                // If this is the first element, we know it doesn't exist
+                if (arr.length === 0) {
+                    return false;
+                }
+
+                return arr.reduce(function(acc, item) {
+                    // If a match has been found, short circuit check and just return
+                    if (acc) {
+                        return acc;
+                    }
+                    return item.code === val.code;
+                }, false);
+            }
+        });
+
+        if (returnAsString) {
+            return  currencies[0] + '/' + currencies[1];
+        } else {
+            return currencies;
+        }
+    };
+
+    // -- End Finance
+
+    // -- Miscellaneous --
+
+    // Dice - For all the board game geeks out there, myself included ;)
+    Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
+    Chance.prototype.d6 = function () { return this.natural({min: 1, max: 6}); };
+    Chance.prototype.d8 = function () { return this.natural({min: 1, max: 8}); };
+    Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
+    Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
+    Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
+    Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
+    Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
+    Chance.prototype.rpg = function (thrown, options) {
+        options = initOptions(options);
+        if (thrown === null) {
+            throw new Error("A type of die roll must be included");
+        } else {
+            var bits = thrown.toLowerCase().split("d"),
+                rolls = [];
+
+            if (bits.length !== 2 || !parseInt(bits[0], 10) || !parseInt(bits[1], 10)) {
+                throw new Error("Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
+            }
+            for (var i = bits[0]; i > 0; i--) {
+                rolls[i - 1] = this.natural({min: 1, max: bits[1]});
+            }
+            return (typeof options.sum !== 'undefined' && options.sum) ? rolls.reduce(function (p, c) { return p + c; }) : rolls;
+        }
+    };
+
+    // Guid
+    Chance.prototype.guid = function (options) {
+        options = options || {version: 5};
+
+        var guid_pool = "ABCDEF1234567890",
+            variant_pool = "AB89",
+            guid = this.string({pool: guid_pool, length: 8}) + '-' +
+                   this.string({pool: guid_pool, length: 4}) + '-' +
+                   // The Version
+                   options.version +
+                   this.string({pool: guid_pool, length: 3}) + '-' +
+                   // The Variant
+                   this.string({pool: variant_pool, length: 1}) +
+                   this.string({pool: guid_pool, length: 3}) + '-' +
+                   this.string({pool: guid_pool, length: 12});
+        return guid;
+    };
+
+    // Hash
+    Chance.prototype.hash = function (options) {
+        options = initOptions(options, {length : 40, casing: 'lower'});
+        var pool = options.casing === 'upper' ? HEX_POOL.toUpperCase() : HEX_POOL;
+        return this.string({pool: pool, length: options.length});
+    };
+
+    Chance.prototype.luhn_check = function (num) {
+        var str = num.toString();
+        var checkDigit = +str.substring(str.length - 1);
+        return checkDigit === this.luhn_calculate(+str.substring(0, str.length - 1));
+    };
+
+    Chance.prototype.luhn_calculate = function (num) {
+        var digits = num.toString().split("").reverse();
+        var sum = 0;
+        var digit;
+        
+        for (var i = 0, l = digits.length; l > i; ++i) {
+            digit = +digits[i];
+            if (i % 2 === 0) {
+                digit *= 2;
+                if (digit > 9) {
+                    digit -= 9;
+                }
+            }
+            sum += digit;
+        }
+        return (sum * 9) % 10;
+    };
+
+
+    var data = {
+
+        firstNames: {
+            "male": ["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Charles", "Thomas", "Christopher", "Daniel", "Matthew", "George", "Donald", "Anthony", "Paul", "Mark", "Edward", "Steven", "Kenneth", "Andrew", "Brian", "Joshua", "Kevin", "Ronald", "Timothy", "Jason", "Jeffrey", "Frank", "Gary", "Ryan", "Nicholas", "Eric", "Stephen", "Jacob", "Larry", "Jonathan", "Scott", "Raymond", "Justin", "Brandon", "Gregory", "Samuel", "Benjamin", "Patrick", "Jack", "Henry", "Walter", "Dennis", "Jerry", "Alexander", "Peter", "Tyler", "Douglas", "Harold", "Aaron", "Jose", "Adam", "Arthur", "Zachary", "Carl", "Nathan", "Albert", "Kyle", "Lawrence", "Joe", "Willie", "Gerald", "Roger", "Keith", "Jeremy", "Terry", "Harry", "Ralph", "Sean", "Jesse", "Roy", "Louis", "Billy", "Austin", "Bruce", "Eugene", "Christian", "Bryan", "Wayne", "Russell", "Howard", "Fred", "Ethan", "Jordan", "Philip", "Alan", "Juan", "Randy", "Vincent", "Bobby", "Dylan", "Johnny", "Phillip", "Victor", "Clarence", "Ernest", "Martin", "Craig", "Stanley", "Shawn", "Travis", "Bradley", "Leonard", "Earl", "Gabriel", "Jimmy", "Francis", "Todd", "Noah", "Danny", "Dale", "Cody", "Carlos", "Allen", "Frederick", "Logan", "Curtis", "Alex", "Joel", "Luis", "Norman", "Marvin", "Glenn", "Tony", "Nathaniel", "Rodney", "Melvin", "Alfred", "Steve", "Cameron", "Chad", "Edwin", "Caleb", "Evan", "Antonio", "Lee", "Herbert", "Jeffery", "Isaac", "Derek", "Ricky", "Marcus", "Theodore", "Elijah", "Luke", "Jesus", "Eddie", "Troy", "Mike", "Dustin", "Ray", "Adrian", "Bernard", "Leroy", "Angel", "Randall", "Wesley", "Ian", "Jared", "Mason", "Hunter", "Calvin", "Oscar", "Clifford", "Jay", "Shane", "Ronnie", "Barry", "Lucas", "Corey", "Manuel", "Leo", "Tommy", "Warren", "Jackson", "Isaiah", "Connor", "Don", "Dean", "Jon", "Julian", "Miguel", "Bill", "Lloyd", "Charlie", "Mitchell", "Leon", "Jerome", "Darrell", "Jeremiah", "Alvin", "Brett", "Seth", "Floyd", "Jim", "Blake", "Micheal", "Gordon", "Trevor", "Lewis", "Erik", "Edgar", "Vernon", "Devin", "Gavin", "Jayden", "Chris", "Clyde", "Tom", "Derrick", "Mario", "Brent", "Marc", "Herman", "Chase", "Dominic", "Ricardo", "Franklin", "Maurice", "Max", "Aiden", "Owen", "Lester", "Gilbert", "Elmer", "Gene", "Francisco", "Glen", "Cory", "Garrett", "Clayton", "Sam", "Jorge", "Chester", "Alejandro", "Jeff", "Harvey", "Milton", "Cole", "Ivan", "Andre", "Duane", "Landon"],
+            "female": ["Mary", "Emma", "Elizabeth", "Minnie", "Margaret", "Ida", "Alice", "Bertha", "Sarah", "Annie", "Clara", "Ella", "Florence", "Cora", "Martha", "Laura", "Nellie", "Grace", "Carrie", "Maude", "Mabel", "Bessie", "Jennie", "Gertrude", "Julia", "Hattie", "Edith", "Mattie", "Rose", "Catherine", "Lillian", "Ada", "Lillie", "Helen", "Jessie", "Louise", "Ethel", "Lula", "Myrtle", "Eva", "Frances", "Lena", "Lucy", "Edna", "Maggie", "Pearl", "Daisy", "Fannie", "Josephine", "Dora", "Rosa", "Katherine", "Agnes", "Marie", "Nora", "May", "Mamie", "Blanche", "Stella", "Ellen", "Nancy", "Effie", "Sallie", "Nettie", "Della", "Lizzie", "Flora", "Susie", "Maud", "Mae", "Etta", "Harriet", "Sadie", "Caroline", "Katie", "Lydia", "Elsie", "Kate", "Susan", "Mollie", "Alma", "Addie", "Georgia", "Eliza", "Lulu", "Nannie", "Lottie", "Amanda", "Belle", "Charlotte", "Rebecca", "Ruth", "Viola", "Olive", "Amelia", "Hannah", "Jane", "Virginia", "Emily", "Matilda", "Irene", "Kathryn", "Esther", "Willie", "Henrietta", "Ollie", "Amy", "Rachel", "Sara", "Estella", "Theresa", "Augusta", "Ora", "Pauline", "Josie", "Lola", "Sophia", "Leona", "Anne", "Mildred", "Ann", "Beulah", "Callie", "Lou", "Delia", "Eleanor", "Barbara", "Iva", "Louisa", "Maria", "Mayme", "Evelyn", "Estelle", "Nina", "Betty", "Marion", "Bettie", "Dorothy", "Luella", "Inez", "Lela", "Rosie", "Allie", "Millie", "Janie", "Cornelia", "Victoria", "Ruby", "Winifred", "Alta", "Celia", "Christine", "Beatrice", "Birdie", "Harriett", "Mable", "Myra", "Sophie", "Tillie", "Isabel", "Sylvia", "Carolyn", "Isabelle", "Leila", "Sally", "Ina", "Essie", "Bertie", "Nell", "Alberta", "Katharine", "Lora", "Rena", "Mina", "Rhoda", "Mathilda", "Abbie", "Eula", "Dollie", "Hettie", "Eunice", "Fanny", "Ola", "Lenora", "Adelaide", "Christina", "Lelia", "Nelle", "Sue", "Johanna", "Lilly", "Lucinda", "Minerva", "Lettie", "Roxie", "Cynthia", "Helena", "Hilda", "Hulda", "Bernice", "Genevieve", "Jean", "Cordelia", "Marian", "Francis", "Jeanette", "Adeline", "Gussie", "Leah", "Lois", "Lura", "Mittie", "Hallie", "Isabella", "Olga", "Phoebe", "Teresa", "Hester", "Lida", "Lina", "Winnie", "Claudia", "Marguerite", "Vera", "Cecelia", "Bess", "Emilie", "John", "Rosetta", "Verna", "Myrtie", "Cecilia", "Elva", "Olivia", "Ophelia", "Georgie", "Elnora", "Violet", "Adele", "Lily", "Linnie", "Loretta", "Madge", "Polly", "Virgie", "Eugenia", "Lucile", "Lucille", "Mabelle", "Rosalie"]
+        },
+
+        lastNames: ['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Robinson', 'Clark', 'Rodriguez', 'Lewis', 'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'Hernandez', 'King', 'Wright', 'Lopez', 'Hill', 'Scott', 'Green', 'Adams', 'Baker', 'Gonzalez', 'Nelson', 'Carter', 'Mitchell', 'Perez', 'Roberts', 'Turner', 'Phillips', 'Campbell', 'Parker', 'Evans', 'Edwards', 'Collins', 'Stewart', 'Sanchez', 'Morris', 'Rogers', 'Reed', 'Cook', 'Morgan', 'Bell', 'Murphy', 'Bailey', 'Rivera', 'Cooper', 'Richardson', 'Cox', 'Howard', 'Ward', 'Torres', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Kelly', 'Sanders', 'Price', 'Bennett', 'Wood', 'Barnes', 'Ross', 'Henderson', 'Coleman', 'Jenkins', 'Perry', 'Powell', 'Long', 'Patterson', 'Hughes', 'Flores', 'Washington', 'Butler', 'Simmons', 'Foster', 'Gonzales', 'Bryant', 'Alexander', 'Russell', 'Griffin', 'Diaz', 'Hayes', 'Myers', 'Ford', 'Hamilton', 'Graham', 'Sullivan', 'Wallace', 'Woods', 'Cole', 'West', 'Jordan', 'Owens', 'Reynolds', 'Fisher', 'Ellis', 'Harrison', 'Gibson', 'McDonald', 'Cruz', 'Marshall', 'Ortiz', 'Gomez', 'Murray', 'Freeman', 'Wells', 'Webb', 'Simpson', 'Stevens', 'Tucker', 'Porter', 'Hunter', 'Hicks', 'Crawford', 'Henry', 'Boyd', 'Mason', 'Morales', 'Kennedy', 'Warren', 'Dixon', 'Ramos', 'Reyes', 'Burns', 'Gordon', 'Shaw', 'Holmes', 'Rice', 'Robertson', 'Hunt', 'Black', 'Daniels', 'Palmer', 'Mills', 'Nichols', 'Grant', 'Knight', 'Ferguson', 'Rose', 'Stone', 'Hawkins', 'Dunn', 'Perkins', 'Hudson', 'Spencer', 'Gardner', 'Stephens', 'Payne', 'Pierce', 'Berry', 'Matthews', 'Arnold', 'Wagner', 'Willis', 'Ray', 'Watkins', 'Olson', 'Carroll', 'Duncan', 'Snyder', 'Hart', 'Cunningham', 'Bradley', 'Lane', 'Andrews', 'Ruiz', 'Harper', 'Fox', 'Riley', 'Armstrong', 'Carpenter', 'Weaver', 'Greene', 'Lawrence', 'Elliott', 'Chavez', 'Sims', 'Austin', 'Peters', 'Kelley', 'Franklin', 'Lawson', 'Fields', 'Gutierrez', 'Ryan', 'Schmidt', 'Carr', 'Vasquez', 'Castillo', 'Wheeler', 'Chapman', 'Oliver', 'Montgomery', 'Richards', 'Williamson', 'Johnston', 'Banks', 'Meyer', 'Bishop', 'McCoy', 'Howell', 'Alvarez', 'Morrison', 'Hansen', 'Fernandez', 'Garza', 'Harvey', 'Little', 'Burton', 'Stanley', 'Nguyen', 'George', 'Jacobs', 'Reid', 'Kim', 'Fuller', 'Lynch', 'Dean', 'Gilbert', 'Garrett', 'Romero', 'Welch', 'Larson', 'Frazier', 'Burke', 'Hanson', 'Day', 'Mendoza', 'Moreno', 'Bowman', 'Medina', 'Fowler', 'Brewer', 'Hoffman', 'Carlson', 'Silva', 'Pearson', 'Holland', 'Douglas', 'Fleming', 'Jensen', 'Vargas', 'Byrd', 'Davidson', 'Hopkins', 'May', 'Terry', 'Herrera', 'Wade', 'Soto', 'Walters', 'Curtis', 'Neal', 'Caldwell', 'Lowe', 'Jennings', 'Barnett', 'Graves', 'Jimenez', 'Horton', 'Shelton', 'Barrett', 'Obrien', 'Castro', 'Sutton', 'Gregory', 'McKinney', 'Lucas', 'Miles', 'Craig', 'Rodriquez', 'Chambers', 'Holt', 'Lambert', 'Fletcher', 'Watts', 'Bates', 'Hale', 'Rhodes', 'Pena', 'Beck', 'Newman', 'Haynes', 'McDaniel', 'Mendez', 'Bush', 'Vaughn', 'Parks', 'Dawson', 'Santiago', 'Norris', 'Hardy', 'Love', 'Steele', 'Curry', 'Powers', 'Schultz', 'Barker', 'Guzman', 'Page', 'Munoz', 'Ball', 'Keller', 'Chandler', 'Weber', 'Leonard', 'Walsh', 'Lyons', 'Ramsey', 'Wolfe', 'Schneider', 'Mullins', 'Benson', 'Sharp', 'Bowen', 'Daniel', 'Barber', 'Cummings', 'Hines', 'Baldwin', 'Griffith', 'Valdez', 'Hubbard', 'Salazar', 'Reeves', 'Warner', 'Stevenson', 'Burgess', 'Santos', 'Tate', 'Cross', 'Garner', 'Mann', 'Mack', 'Moss', 'Thornton', 'Dennis', 'McGee', 'Farmer', 'Delgado', 'Aguilar', 'Vega', 'Glover', 'Manning', 'Cohen', 'Harmon', 'Rodgers', 'Robbins', 'Newton', 'Todd', 'Blair', 'Higgins', 'Ingram', 'Reese', 'Cannon', 'Strickland', 'Townsend', 'Potter', 'Goodwin', 'Walton', 'Rowe', 'Hampton', 'Ortega', 'Patton', 'Swanson', 'Joseph', 'Francis', 'Goodman', 'Maldonado', 'Yates', 'Becker', 'Erickson', 'Hodges', 'Rios', 'Conner', 'Adkins', 'Webster', 'Norman', 'Malone', 'Hammond', 'Flowers', 'Cobb', 'Moody', 'Quinn', 'Blake', 'Maxwell', 'Pope', 'Floyd', 'Osborne', 'Paul', 'McCarthy', 'Guerrero', 'Lindsey', 'Estrada', 'Sandoval', 'Gibbs', 'Tyler', 'Gross', 'Fitzgerald', 'Stokes', 'Doyle', 'Sherman', 'Saunders', 'Wise', 'Colon', 'Gill', 'Alvarado', 'Greer', 'Padilla', 'Simon', 'Waters', 'Nunez', 'Ballard', 'Schwartz', 'McBride', 'Houston', 'Christensen', 'Klein', 'Pratt', 'Briggs', 'Parsons', 'McLaughlin', 'Zimmerman', 'French', 'Buchanan', 'Moran', 'Copeland', 'Roy', 'Pittman', 'Brady', 'McCormick', 'Holloway', 'Brock', 'Poole', 'Frank', 'Logan', 'Owen', 'Bass', 'Marsh', 'Drake', 'Wong', 'Jefferson', 'Park', 'Morton', 'Abbott', 'Sparks', 'Patrick', 'Norton', 'Huff', 'Clayton', 'Massey', 'Lloyd', 'Figueroa', 'Carson', 'Bowers', 'Roberson', 'Barton', 'Tran', 'Lamb', 'Harrington', 'Casey', 'Boone', 'Cortez', 'Clarke', 'Mathis', 'Singleton', 'Wilkins', 'Cain', 'Bryan', 'Underwood', 'Hogan', 'McKenzie', 'Collier', 'Luna', 'Phelps', 'McGuire', 'Allison', 'Bridges', 'Wilkerson', 'Nash', 'Summers', 'Atkins'],
+
+        provinces: [
+            {name: 'Alberta', abbreviation: 'AB'},
+            {name: 'British Columbia', abbreviation: 'BC'},
+            {name: 'Manitoba', abbreviation: 'MB'},
+            {name: 'New Brunswick', abbreviation: 'NB'},
+            {name: 'Newfoundland and Labrador', abbreviation: 'NL'},
+            {name: 'Nova Scotia', abbreviation: 'NS'},
+            {name: 'Ontario', abbreviation: 'ON'},
+            {name: 'Prince Edward Island', abbreviation: 'PE'},
+            {name: 'Quebec', abbreviation: 'QC'},
+            {name: 'Saskatchewan', abbreviation: 'SK'},
+
+            // The case could be made that the following are not actually provinces
+            // since they are technically considered "territories" however they all
+            // look the same on an envelope!
+            {name: 'Northwest Territories', abbreviation: 'NT'},
+            {name: 'Nunavut', abbreviation: 'NU'},
+            {name: 'Yukon', abbreviation: 'YT'}
+        ],
+
+        us_states_and_dc: [
+            {name: 'Alabama', abbreviation: 'AL'},
+            {name: 'Alaska', abbreviation: 'AK'},
+            {name: 'Arizona', abbreviation: 'AZ'},
+            {name: 'Arkansas', abbreviation: 'AR'},
+            {name: 'California', abbreviation: 'CA'},
+            {name: 'Colorado', abbreviation: 'CO'},
+            {name: 'Connecticut', abbreviation: 'CT'},
+            {name: 'Delaware', abbreviation: 'DE'},
+            {name: 'District of Columbia', abbreviation: 'DC'},
+            {name: 'Florida', abbreviation: 'FL'},
+            {name: 'Georgia', abbreviation: 'GA'},
+            {name: 'Hawaii', abbreviation: 'HI'},
+            {name: 'Idaho', abbreviation: 'ID'},
+            {name: 'Illinois', abbreviation: 'IL'},
+            {name: 'Indiana', abbreviation: 'IN'},
+            {name: 'Iowa', abbreviation: 'IA'},
+            {name: 'Kansas', abbreviation: 'KS'},
+            {name: 'Kentucky', abbreviation: 'KY'},
+            {name: 'Louisiana', abbreviation: 'LA'},
+            {name: 'Maine', abbreviation: 'ME'},
+            {name: 'Maryland', abbreviation: 'MD'},
+            {name: 'Massachusetts', abbreviation: 'MA'},
+            {name: 'Michigan', abbreviation: 'MI'},
+            {name: 'Minnesota', abbreviation: 'MN'},
+            {name: 'Mississippi', abbreviation: 'MS'},
+            {name: 'Missouri', abbreviation: 'MO'},
+            {name: 'Montana', abbreviation: 'MT'},
+            {name: 'Nebraska', abbreviation: 'NE'},
+            {name: 'Nevada', abbreviation: 'NV'},
+            {name: 'New Hampshire', abbreviation: 'NH'},
+            {name: 'New Jersey', abbreviation: 'NJ'},
+            {name: 'New Mexico', abbreviation: 'NM'},
+            {name: 'New York', abbreviation: 'NY'},
+            {name: 'North Carolina', abbreviation: 'NC'},
+            {name: 'North Dakota', abbreviation: 'ND'},
+            {name: 'Ohio', abbreviation: 'OH'},
+            {name: 'Oklahoma', abbreviation: 'OK'},
+            {name: 'Oregon', abbreviation: 'OR'},
+            {name: 'Pennsylvania', abbreviation: 'PA'},
+            {name: 'Rhode Island', abbreviation: 'RI'},
+            {name: 'South Carolina', abbreviation: 'SC'},
+            {name: 'South Dakota', abbreviation: 'SD'},
+            {name: 'Tennessee', abbreviation: 'TN'},
+            {name: 'Texas', abbreviation: 'TX'},
+            {name: 'Utah', abbreviation: 'UT'},
+            {name: 'Vermont', abbreviation: 'VT'},
+            {name: 'Virginia', abbreviation: 'VA'},
+            {name: 'Washington', abbreviation: 'WA'},
+            {name: 'West Virginia', abbreviation: 'WV'},
+            {name: 'Wisconsin', abbreviation: 'WI'},
+            {name: 'Wyoming', abbreviation: 'WY'}
+        ],
+
+        territories: [
+            {name: 'American Samoa', abbreviation: 'AS'},
+            {name: 'Federated States of Micronesia', abbreviation: 'FM'},
+            {name: 'Guam', abbreviation: 'GU'},
+            {name: 'Marshall Islands', abbreviation: 'MH'},
+            {name: 'Northern Mariana Islands', abbreviation: 'MP'},
+            {name: 'Puerto Rico', abbreviation: 'PR'},
+            {name: 'Virgin Islands, U.S.', abbreviation: 'VI'}
+        ],
+
+        armed_forces: [
+            {name: 'Armed Forces Europe', abbreviation: 'AE'},
+            {name: 'Armed Forces Pacific', abbreviation: 'AP'},
+            {name: 'Armed Forces the Americas', abbreviation: 'AA'}
+        ],
+
+        street_suffixes: [
+            {name: 'Avenue', abbreviation: 'Ave'},
+            {name: 'Boulevard', abbreviation: 'Blvd'},
+            {name: 'Center', abbreviation: 'Ctr'},
+            {name: 'Circle', abbreviation: 'Cir'},
+            {name: 'Court', abbreviation: 'Ct'},
+            {name: 'Drive', abbreviation: 'Dr'},
+            {name: 'Extension', abbreviation: 'Ext'},
+            {name: 'Glen', abbreviation: 'Gln'},
+            {name: 'Grove', abbreviation: 'Grv'},
+            {name: 'Heights', abbreviation: 'Hts'},
+            {name: 'Highway', abbreviation: 'Hwy'},
+            {name: 'Junction', abbreviation: 'Jct'},
+            {name: 'Key', abbreviation: 'Key'},
+            {name: 'Lane', abbreviation: 'Ln'},
+            {name: 'Loop', abbreviation: 'Loop'},
+            {name: 'Manor', abbreviation: 'Mnr'},
+            {name: 'Mill', abbreviation: 'Mill'},
+            {name: 'Park', abbreviation: 'Park'},
+            {name: 'Parkway', abbreviation: 'Pkwy'},
+            {name: 'Pass', abbreviation: 'Pass'},
+            {name: 'Path', abbreviation: 'Path'},
+            {name: 'Pike', abbreviation: 'Pike'},
+            {name: 'Place', abbreviation: 'Pl'},
+            {name: 'Plaza', abbreviation: 'Plz'},
+            {name: 'Point', abbreviation: 'Pt'},
+            {name: 'Ridge', abbreviation: 'Rdg'},
+            {name: 'River', abbreviation: 'Riv'},
+            {name: 'Road', abbreviation: 'Rd'},
+            {name: 'Square', abbreviation: 'Sq'},
+            {name: 'Street', abbreviation: 'St'},
+            {name: 'Terrace', abbreviation: 'Ter'},
+            {name: 'Trail', abbreviation: 'Trl'},
+            {name: 'Turnpike', abbreviation: 'Tpke'},
+            {name: 'View', abbreviation: 'Vw'},
+            {name: 'Way', abbreviation: 'Way'}
+        ],
+
+        months: [
+            {name: 'January', short_name: 'Jan', numeric: '01', days: 31},
+            // Not messing with leap years...
+            {name: 'February', short_name: 'Feb', numeric: '02', days: 28},
+            {name: 'March', short_name: 'Mar', numeric: '03', days: 31},
+            {name: 'April', short_name: 'Apr', numeric: '04', days: 30},
+            {name: 'May', short_name: 'May', numeric: '05', days: 31},
+            {name: 'June', short_name: 'Jun', numeric: '06', days: 30},
+            {name: 'July', short_name: 'Jul', numeric: '07', days: 31},
+            {name: 'August', short_name: 'Aug', numeric: '08', days: 31},
+            {name: 'September', short_name: 'Sep', numeric: '09', days: 30},
+            {name: 'October', short_name: 'Oct', numeric: '10', days: 31},
+            {name: 'November', short_name: 'Nov', numeric: '11', days: 30},
+            {name: 'December', short_name: 'Dec', numeric: '12', days: 31}
+        ],
+
+        // http://en.wikipedia.org/wiki/Bank_card_number#Issuer_identification_number_.28IIN.29
+        cc_types: [
+            {name: "American Express", short_name: 'amex', prefix: '34', length: 15},
+            {name: "Bankcard", short_name: 'bankcard', prefix: '5610', length: 16},
+            {name: "China UnionPay", short_name: 'chinaunion', prefix: '62', length: 16},
+            {name: "Diners Club Carte Blanche", short_name: 'dccarte', prefix: '300', length: 14},
+            {name: "Diners Club enRoute", short_name: 'dcenroute', prefix: '2014', length: 15},
+            {name: "Diners Club International", short_name: 'dcintl', prefix: '36', length: 14},
+            {name: "Diners Club United States & Canada", short_name: 'dcusc', prefix: '54', length: 16},
+            {name: "Discover Card", short_name: 'discover', prefix: '6011', length: 16},
+            {name: "InstaPayment", short_name: 'instapay', prefix: '637', length: 16},
+            {name: "JCB", short_name: 'jcb', prefix: '3528', length: 16},
+            {name: "Laser", short_name: 'laser', prefix: '6304', length: 16},
+            {name: "Maestro", short_name: 'maestro', prefix: '5018', length: 16},
+            {name: "Mastercard", short_name: 'mc', prefix: '51', length: 16},
+            {name: "Solo", short_name: 'solo', prefix: '6334', length: 16},
+            {name: "Switch", short_name: 'switch', prefix: '4903', length: 16},
+            {name: "Visa", short_name: 'visa', prefix: '4', length: 16},
+            {name: "Visa Electron", short_name: 'electron', prefix: '4026', length: 16}
+        ],
+
+        //return all world currency by ISO 4217
+        currency_types: [
             {'code' : 'AED', 'name' : 'United Arab Emirates Dirham'},
             {'code' : 'AFN', 'name' : 'Afghanistan Afghani'},
             {'code' : 'ALL', 'name' : 'Albania Lek'},
@@ -1280,117 +1415,37 @@
             {'code' : 'ZAR', 'name' : 'South Africa Rand'},
             {'code' : 'ZMW', 'name' : 'Zambia Kwacha'},
             {'code' : 'ZWD', 'name' : 'Zimbabwe Dollar'}
-        ];
+        ]
     };
 
-    //return random world currency by ISO 4217
-    Chance.prototype.currency = function () {
-        return this.pick(this.currency_types());
-    };
+    function copyObject(source, target) {
+        var key;
 
-    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
-    Chance.prototype.currency_pair = function (returnAsString) {
-        var currencies = this.unique(this.currency, 2, {
-            comparator: function(arr, val) {
-                // If this is the first element, we know it doesn't exist
-                if (arr.length === 0) {
-                    return false;
-                }
+        target = target || (Array.isArray(source) ? [] : {});
 
-                return arr.reduce(function(acc, item) {
-                    // If a match has been found, short circuit check and just return
-                    if (acc) {
-                        return acc;
-                    }
-                    return item.code === val.code;
-                }, false);
+        for (key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key] || target[key];
             }
-        });
+        }
 
-        if (returnAsString) {
-            return  currencies[0] + '/' + currencies[1];
+        return target;
+    }
+
+    /** Get the data based on key**/
+    Chance.prototype.get = function (name) {
+        return copyObject(data[name]);
+    };
+
+    /** Set the data as key and data or the data map**/
+    Chance.prototype.set = function (name, values) {
+        if (typeof name === "string") {
+            data[name] = values;
         } else {
-            return currencies;
+            data = copyObject(name, data);
         }
     };
 
-    // -- End Finance
-
-    // -- Miscellaneous --
-
-    // Dice - For all the board game geeks out there, myself included ;)
-    Chance.prototype.d4 = function () { return this.natural({min: 1, max: 4}); };
-    Chance.prototype.d6 = function () { return this.natural({min: 1, max: 6}); };
-    Chance.prototype.d8 = function () { return this.natural({min: 1, max: 8}); };
-    Chance.prototype.d10 = function () { return this.natural({min: 1, max: 10}); };
-    Chance.prototype.d12 = function () { return this.natural({min: 1, max: 12}); };
-    Chance.prototype.d20 = function () { return this.natural({min: 1, max: 20}); };
-    Chance.prototype.d30 = function () { return this.natural({min: 1, max: 30}); };
-    Chance.prototype.d100 = function () { return this.natural({min: 1, max: 100}); };
-    Chance.prototype.rpg = function (thrown, options) {
-        options = initOptions(options);
-        if (thrown === null) {
-            throw new Error("A type of die roll must be included");
-        } else {
-            var bits = thrown.toLowerCase().split("d"),
-                rolls = [];
-
-            if (bits.length !== 2 || !parseInt(bits[0], 10) || !parseInt(bits[1], 10)) {
-                throw new Error("Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
-            }
-            for (var i = bits[0]; i > 0; i--) {
-                rolls[i - 1] = this.natural({min: 1, max: bits[1]});
-            }
-            return (typeof options.sum !== 'undefined' && options.sum) ? rolls.reduce(function (p, c) { return p + c; }) : rolls;
-        }
-    };
-
-    // Guid
-    Chance.prototype.guid = function (options) {
-        options = options || {version: 5};
-
-        var guid_pool = "ABCDEF1234567890",
-            variant_pool = "AB89",
-            guid = this.string({pool: guid_pool, length: 8}) + '-' +
-                   this.string({pool: guid_pool, length: 4}) + '-' +
-                   // The Version
-                   options.version +
-                   this.string({pool: guid_pool, length: 3}) + '-' +
-                   // The Variant
-                   this.string({pool: variant_pool, length: 1}) +
-                   this.string({pool: guid_pool, length: 3}) + '-' +
-                   this.string({pool: guid_pool, length: 12});
-        return guid;
-    };
-
-    // Hash
-    Chance.prototype.hash = function (options) {
-        options = initOptions(options, {length : 40, casing: 'lower'});
-        var pool = options.casing === 'upper' ? HEX_POOL.toUpperCase() : HEX_POOL;
-        return this.string({pool: pool, length: options.length});
-    };
-
-    Chance.prototype.luhn_check = function (num) {
-        var str = num.toString();
-        var checkDigit = +str.substring(str.length - 1);
-        return checkDigit === this.luhn_calculate(+str.substring(0, str.length - 1));
-    };
-
-    Chance.prototype.luhn_calculate = function (num) {
-        var digits = num.toString().split("").reverse();
-        var sum = 0;
-        for (var i = 0, l = digits.length; l > i; ++i) {
-            var digit = +digits[i];
-            if (i % 2 === 0) {
-                digit *= 2;
-                if (digit > 9) {
-                    digit -= 9;
-                }
-            }
-            sum += digit;
-        }
-        return (sum * 9) % 10;
-    };
 
     Chance.prototype.mersenne_twister = function (seed) {
         return new MersenneTwister(seed);
