@@ -487,13 +487,23 @@
             this.pick(this.name_prefixes(options.gender)).abbreviation;
     };
 
-    Chance.prototype.ssn = function () {
-        var ssn;
+    Chance.prototype.ssn = function (options) {
+        options = initOptions(options, {ssnFour: false, dashes: true});
+        var ssn_pool = "1234567890",
+            ssn,
+            dash = '';
 
-        ssn = this.string({pool: NUMBERS, length: 3}) + '-' +
-              this.string({pool: NUMBERS, length: 2}) + '-' +
-              this.string({pool: NUMBERS, length: 4});
+        if(options.dashes){
+            dash = '-';
+        }
 
+        if(!options.ssnFour) {
+            ssn = this.string({pool: ssn_pool, length: 3}) + dash +
+            this.string({pool: ssn_pool, length: 2}) + dash +
+            this.string({pool: ssn_pool, length: 4});
+        } else {
+            ssn = this.string({pool: ssn_pool, length: 4});
+        }
         return ssn;
     };
 
