@@ -1,6 +1,6 @@
 {
     "name": "chance",
-    "version": "0.5.8",
+    "version": "0.5.9",
     "main": "chance.js",
     "ignore": ["node_modules"],
     "description": "Chance - Utility library to generate anything random",
