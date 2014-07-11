@@ -652,9 +652,9 @@
             options.parens = false;
         }
         var areacode = this.areacode(options).toString();
-        var exchange = this.natural({min: 2, max: 9}).toString() 
-            + this.natural({min: 0, max: 9}).toString() 
-            + this.natural({min: 0, max: 9}).toString();
+        var exchange = this.natural({min: 2, max: 9}).toString() +
+                this.natural({min: 0, max: 9}).toString() +
+                this.natural({min: 0, max: 9}).toString();
         var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
         
         return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
