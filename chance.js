@@ -43,14 +43,15 @@
     // Random helper functions
     function initOptions(options, defaults) {
         options || (options = {});
-        if (!defaults) {
-            return options;
+
+        if (defaults) {
+	        for (var i in defaults) {
+	            if (typeof options[i] === 'undefined') {
+	                options[i] = defaults[i];
+	            }
+	        }
         }
-        for (var i in defaults) {
-            if (typeof options[i] === 'undefined') {
-                options[i] = defaults[i];
-            }
-        }
+
         return options;
     }
 
@@ -115,7 +116,7 @@
     // the trailing zeroes are dropped. Left to the consumer if trailing zeroes are
     // needed
     Chance.prototype.floating = function (options) {
-        var num, range;
+        var num;
 
         options = initOptions(options, {fixed : 4});
         var fixed = Math.pow(10, options.fixed);
@@ -197,13 +198,10 @@
         options = initOptions(options);
 
         var length = options.length || this.natural({min: 5, max: 20}),
-            text = '',
-            pool = options.pool;
+        	pool = options.pool,
+            text = this.n(this.character, length, {pool: pool});
 
-        for (var i = 0; i < length; i++) {
-            text += this.character({pool: pool});
-        }
-        return text;
+        return text.join("");
     };
 
     // -- End Basics --
@@ -215,7 +213,6 @@
     };
 
     Chance.prototype.mixin = function (obj) {
-        var chance = this;
         for (var func_name in obj) {
             Chance.prototype[func_name] = obj[func_name];
         }
@@ -229,24 +226,40 @@
             // Default comparator to check that val is not already in arr.
             // Should return `false` if item not in array, `true` otherwise
             comparator: function(arr, val) {
-                return arr.indexOf(result) !== -1;
+                return arr.indexOf(val) !== -1;
             }
         });
 
-        var arr = [], count = 0;
+        var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, opts = slice.call(arguments, 2);
 
         while (arr.length < num) {
-            var result = fn.apply(this, slice.call(arguments, 2));
+            result = fn.apply(this, opts);
             if (!options.comparator(arr, result)) {
                 arr.push(result);
                 // reset count when unique found
                 count = 0;
             }
 
-            if (++count > num * 50) {
+            if (++count > MAX_DUPLICATES) {
                 throw new RangeError("Chance: num is likely too large for sample set");
             }
         }
+        return arr;
+    };
+
+    /**
+     *  Gives an array of n random terms
+     *  @param fn the function that generates something random
+     *  @param n number of terms to generate
+     *  @param options options for the function fn
+     */
+    Chance.prototype.n = function(fn, n, options) {
+        var i = n || 1, arr = [];
+
+        for (null; i--; null) {
+            arr.push(fn.call(this, options));
+        }
+
         return arr;
     };
 
@@ -293,11 +306,7 @@
         options = initOptions(options);
 
         var sentences = options.sentences || this.natural({min: 3, max: 7}),
-            sentence_array = [];
-
-        for (var i = 0; i < sentences; i++) {
-            sentence_array.push(this.sentence());
-        }
+            sentence_array = this.n(this.sentence, sentences);
 
         return sentence_array.join(' ');
     };
@@ -308,11 +317,7 @@
         options = initOptions(options);
 
         var words = options.words || this.natural({min: 12, max: 18}),
-            text, word_array = [];
-
-        for (var i = 0; i < words; i++) {
-            word_array.push(this.word());
-        }
+            text, word_array = this.n(this.word, words);
 
         text = word_array.join(' ');
 
@@ -491,11 +496,7 @@
         options = initOptions(options, {ssnFour: false, dashes: true});
         var ssn_pool = "1234567890",
             ssn,
-            dash = '';
-
-        if(options.dashes){
-            dash = '-';
-        }
+            dash = options.dashes ? '-' : '';
 
         if(!options.ssnFour) {
             ssn = this.string({pool: ssn_pool, length: 3}) + dash +
@@ -572,11 +573,8 @@
     };
 
     Chance.prototype.ipv6 = function () {
-        var ip_addr = [];
+        var ip_addr = this.n(this.hash, 8, {length: 4});
 
-        for (var i = 0; i < 8; i++) {
-            ip_addr.push(this.hash({length: 4}));
-        }
         return ip_addr.join(":");
     };
 
@@ -656,7 +654,7 @@
                 this.natural({min: 0, max: 9}).toString() +
                 this.natural({min: 0, max: 9}).toString();
         var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
-        
+
         return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
     };
 
@@ -756,20 +754,14 @@
     // Note: only returning US zip codes, internationalization will be a whole
     // other beast to tackle at some point.
     Chance.prototype.zip = function (options) {
-        var zip = "";
-
-        for (var i = 0; i < 5; i++) {
-            zip += this.natural({max: 9}).toString();
-        }
+        var zip = this.n(this.natural, 5, {max: 9});
 
         if (options && options.plusfour === true) {
-            zip += '-';
-            for (i = 0; i < 4; i++) {
-                zip += this.natural({max: 9}).toString();
-            }
+            zip.push('-');
+            zip = zip.concat(this.n(this.natural, 4, {max: 9}));
         }
 
-        return zip;
+        return zip.join("");
     };
 
     // -- End Address --
@@ -864,18 +856,17 @@
     Chance.prototype.cc = function (options) {
         options = initOptions(options);
 
-        var type, number, to_generate, type_name;
+        var type, number, to_generate;
 
         type = (options.type) ?
                     this.cc_type({ name: options.type, raw: true }) :
                     this.cc_type({ raw: true });
+
         number = type.prefix.split("");
         to_generate = type.length - type.prefix.length - 1;
 
         // Generates n - 1 digits
-        for (var i = 0; i < to_generate; i++) {
-            number.push(this.integer({min: 0, max: 9}));
-        }
+        number = number.concat(this.n(this.integer, to_generate, {min: 0, max: 9}));
 
         // Generates the last digit according to Luhn algorithm
         number.push(this.luhn_calculate(number.join("")));
@@ -950,13 +941,14 @@
 
     Chance.prototype.exp_month = function (options) {
         options = initOptions(options);
-        var month, month_int;
+        var month, month_int,
+        	curMonth = new Date().getMonth();
 
         if (options.future) {
             do {
                 month = this.month({raw: true}).numeric;
                 month_int = parseInt(month, 10);
-            } while (month_int < new Date().getMonth());
+            } while (month_int < curMonth);
         } else {
             month = this.month({raw: true}).numeric;
         }
@@ -984,16 +976,13 @@
         var currencies = this.unique(this.currency, 2, {
             comparator: function(arr, val) {
                 // If this is the first element, we know it doesn't exist
-                if (arr.length === 0) {
+                /*if (arr.length === 0) {
                     return false;
-                }
+                }*/
 
                 return arr.reduce(function(acc, item) {
                     // If a match has been found, short circuit check and just return
-                    if (acc) {
-                        return acc;
-                    }
-                    return item.code === val.code;
+                    return acc || (item.code === val.code);
                 }, false);
             }
         });
@@ -1077,7 +1066,7 @@
         var digits = num.toString().split("").reverse();
         var sum = 0;
         var digit;
-        
+
         for (var i = 0, l = digits.length; l > i; ++i) {
             digit = +digits[i];
             if (i % 2 === 0) {
