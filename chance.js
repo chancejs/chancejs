@@ -40,16 +40,18 @@
         }
     }
 
+    Chance.prototype.VERSION = "0.5.9";
+
     // Random helper functions
     function initOptions(options, defaults) {
         options || (options = {});
 
         if (defaults) {
-	        for (var i in defaults) {
-	            if (typeof options[i] === 'undefined') {
-	                options[i] = defaults[i];
-	            }
-	        }
+            for (var i in defaults) {
+                if (typeof options[i] === 'undefined') {
+                    options[i] = defaults[i];
+                }
+            }
         }
 
         return options;
@@ -198,7 +200,7 @@
         options = initOptions(options);
 
         var length = options.length || this.natural({min: 5, max: 20}),
-        	pool = options.pool,
+            pool = options.pool,
             text = this.n(this.character, length, {pool: pool});
 
         return text.join("");
@@ -230,10 +232,10 @@
             }
         });
 
-        var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, opts = slice.call(arguments, 2);
+        var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, params = slice.call(arguments, 2);
 
         while (arr.length < num) {
-            result = fn.apply(this, opts);
+            result = fn.apply(this, params);
             if (!options.comparator(arr, result)) {
                 arr.push(result);
                 // reset count when unique found
@@ -251,13 +253,14 @@
      *  Gives an array of n random terms
      *  @param fn the function that generates something random
      *  @param n number of terms to generate
-     *  @param options options for the function fn
+     *  @param options options for the function fn. 
+     *  There can be more parameters after these. All additional parameters are provided to the given function
      */
     Chance.prototype.n = function(fn, n, options) {
-        var i = n || 1, arr = [];
+        var i = n || 1, arr = [], params = slice.call(arguments, 2);
 
         for (null; i--; null) {
-            arr.push(fn.call(this, options));
+            arr.push(fn.apply(this, params));
         }
 
         return arr;
@@ -556,6 +559,7 @@
     Chance.prototype.google_analytics = function () {
         var account = this.pad(this.natural({max: 999999}), 6);
         var property = this.pad(this.natural({max: 99}), 2);
+
         return 'UA-' + account + '-' + property;
     };
 
@@ -606,7 +610,10 @@
     Chance.prototype.areacode = function (options) {
         options = initOptions(options, {parens : true});
         // Don't want area codes to start with 1, or have a 9 as the second digit
-        var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 0, max: 8}).toString() + this.natural({min: 0, max: 9}).toString();
+        var areacode = this.natural({min: 2, max: 9}).toString() +
+                this.natural({min: 0, max: 8}).toString() +
+                this.natural({min: 0, max: 9}).toString();
+
         return options.parens ? '(' + areacode + ')' : areacode;
     };
 
@@ -653,6 +660,7 @@
         var exchange = this.natural({min: 2, max: 9}).toString() +
                 this.natural({min: 0, max: 9}).toString() +
                 this.natural({min: 0, max: 9}).toString();
+
         var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
 
         return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
@@ -697,7 +705,9 @@
             break;
         }
 
-        return fl + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
+        return fl + this.character({alpha: true, casing: "upper"}) +
+                this.character({alpha: true, casing: "upper"}) +
+                this.character({alpha: true, casing: "upper"});
     };
 
     Chance.prototype.state = function (options) {
@@ -942,7 +952,7 @@
     Chance.prototype.exp_month = function (options) {
         options = initOptions(options);
         var month, month_int,
-        	curMonth = new Date().getMonth();
+            curMonth = new Date().getMonth();
 
         if (options.future) {
             do {
@@ -975,10 +985,6 @@
     Chance.prototype.currency_pair = function (returnAsString) {
         var currencies = this.unique(this.currency, 2, {
             comparator: function(arr, val) {
-                // If this is the first element, we know it doesn't exist
-                /*if (arr.length === 0) {
-                    return false;
-                }*/
 
                 return arr.reduce(function(acc, item) {
                     // If a match has been found, short circuit check and just return
@@ -1000,9 +1006,9 @@
 
     // Dice - For all the board game geeks out there, myself included ;)
     function diceFn (range) {
-    	return function () {
-    		return this.natural(range);
-    	};
+        return function () {
+            return this.natural(range);
+        };
     }
     Chance.prototype.d4 = diceFn({min: 1, max: 4});
     Chance.prototype.d6 = diceFn({min: 1, max: 6});
@@ -1458,7 +1464,6 @@
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.9";
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
