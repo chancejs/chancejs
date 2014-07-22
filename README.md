@@ -43,11 +43,42 @@ then in the HTML of your app:
 
 ```html
 <!-- Load Chance -->
-<script type="text/javascript" src="components/chance/chance.min.js"></script>
+<script type="text/javascript" src="app/bower_components/chance/chance.min.js"></script>
 <script>
     // Use Chance immediately!
     alert(chance.string());
 </script>
+```
+
+### Component
+
+It can also be used with [Component](http://component.io)
+
+```
+component install victorquinn/chancejs
+```
+
+then in the HTML of your app:
+
+```html
+<!-- Load Chance -->
+<script type="text/javascript" src="components/victorquinn-chancejs/chance.js"></script>
+<script>
+    // Use Chance immediately!
+    alert(chance.string());
+</script>
+```
+
+### Node.js
+
+And it can be used in Node.js.
+
+```js
+var Chance = require('chance'),
+    chance = new Chance();
+
+// Get a random zip code
+chance.zip();
 ```
 
 ### RequireJS
@@ -58,23 +89,10 @@ Chance also includes an AMD define so it can be used with RequireJS.
 require(['Chance'], function(Chance) {
     // Instantiate
     var chance = new Chance();
-   
+       
     // Then just use it:
     var my_random_integer = chance.integer();
 });
-```
-
-### Node.js
-
-And it can be used in Node.js.
-
-```js
-var Chance = require('chance'),
-    chance = new Chance();
-    
-// Get a random zip code
-chance.zip();
-```
 
 ## Author
 ### Victor Quinn
@@ -124,4 +142,7 @@ THANK YOU!
 
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
 
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/victorquinn/chancejs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 Proudly written in Washington, D.C.
+
