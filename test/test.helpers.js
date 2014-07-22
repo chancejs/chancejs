@@ -131,6 +131,20 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("n random terms", function () {
+            it("gives an array of n terms for the given function", function () {
+                var arr = chance.n(chance.email, 25, {domain: "example.com"});
+                expect(arr).to.be.an('array');
+                expect(arr[0]).to.match(/example\.com$/);
+                expect(arr.length).to.equal(25);
+            });
+            it("gives an array of 1 term when n is not given", function () {
+                var arr = chance.n(chance.email);
+                expect(arr).to.be.an('array');
+                expect(arr.length).to.equal(1);
+            });
+        });
+        
         describe("pad()", function () {
             it("always returns same number when width same as the length of the number", function () {
                 _(1000).times(function () {
