@@ -1062,22 +1062,18 @@
         // the network variant uses a dot every fourth byte
         
         options = initOptions(options);
-        if(!options.separator) options.separator =  options.networkVersion ? "." : ":";
+        if(!options.separator) {
+            options.separator =  options.networkVersion ? "." : ":";
+        }
         
         var mac_pool="ABCDEF1234567890",
             mac = "";
-        if(!options.networkVersion){
-            mac = this.string({pool: mac_pool, length:2}) + options.separator +
-              this.string({pool: mac_pool, length:2}) + options.separator +
-              this.string({pool: mac_pool, length:2}) + options.separator +
-              this.string({pool: mac_pool, length:2}) + options.separator +
-              this.string({pool: mac_pool, length:2}) + options.separator +
-              this.string({pool: mac_pool, length:2});
-        }else{
-            mac = this.string({pool: mac_pool, length:4}) + options.separator +
-                this.string({pool: mac_pool, length:4}) + options.separator + 
-                this.string({pool: mac_pool, length:4});
+        if(!options.networkVersion) {
+            mac = this.n(this.string, 6, { pool: mac_pool, length:2 }).join(options.separator);
+        } else {
+            mac = this.n(this.string, 3, {pool: mac_pool, length:4}).join(options.separator);
         }
+
         return mac;
     };
     
