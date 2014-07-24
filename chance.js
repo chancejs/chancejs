@@ -1055,6 +1055,32 @@
         return guid;
     };
 
+    //Mac Address
+    Chance.prototype.mac_address = function(options){
+        // typically mac addresses are separated by ":"
+        // however they can also be separated by "-"
+        // the network variant uses a dot every fourth byte
+        
+        options = initOptions(options);
+        if(!options.separator) options.separator =  options.networkVersion ? "." : ":";
+        
+        var mac_pool="ABCDEF1234567890",
+            mac = "";
+        if(!options.networkVersion){
+            mac = this.string({pool: mac_pool, length:2}) + options.separator +
+              this.string({pool: mac_pool, length:2}) + options.separator +
+              this.string({pool: mac_pool, length:2}) + options.separator +
+              this.string({pool: mac_pool, length:2}) + options.separator +
+              this.string({pool: mac_pool, length:2}) + options.separator +
+              this.string({pool: mac_pool, length:2});
+        }else{
+            mac = this.string({pool: mac_pool, length:4}) + options.separator +
+                this.string({pool: mac_pool, length:4}) + options.separator + 
+                this.string({pool: mac_pool, length:4});
+        }
+        return mac;
+    };
+    
     // Hash
     Chance.prototype.hash = function (options) {
         options = initOptions(options, {length : 40, casing: 'lower'});

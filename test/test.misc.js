@@ -85,6 +85,39 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         });
     });
 
+      describe("Mac Address", function () {
+        var mac, chance = new Chance();
+
+        it("returns a proper mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address();
+                expect(mac).to.match(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/);
+            });
+        });
+
+        it("returns a proper colon separated mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address({separator: ":"});
+                expect(mac).to.match(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/);
+            });
+        });
+
+        it("returns a proper hyphen separated mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address({separator:"-"});
+                expect(mac).to.match(/([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}/);
+            });
+        });
+
+        it("returns a proper network version mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address({networkVersion:true});
+                expect(mac).to.match(/([0-9a-fA-F]){4}.([0-9a-fA-F]){4}.([0-9a-fA-F]){4}/);
+            });
+        });
+
+    });
+
     describe("Guid", function () {
         var guid, chance = new Chance();
 
