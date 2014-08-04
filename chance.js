@@ -32,12 +32,35 @@
             }
         } else {
             if (isNode()) {
+                this._randoms = [];
                 this.random = function () {
-                    return require('crypto').randomBytes(4).readUInt32BE(0)/MAX_32;
+                    if (this._randoms.length) {
+                        return this._randoms.pop();
+                    }
+                    this._randoms = new Array(100);
+                    var buff = require('crypto').randomBytes(4 * 100);
+                    var len = 100;
+                    var i = -1;
+                    while (++i < len) {
+                        this._randoms[i] = buff.readUInt32BE(i * 4)/MAX_32;
+                    }
+                    return this._randoms.pop();
                 };
             } else if (isModernBrowser()) {
+                this._randoms = [];
                 this.random = function () {
-                    return crypto.getRandomValues(new Uint32Array(1))[0]/MAX_32;
+                    if (this._randoms.length) {
+                        return this._randoms.pop();
+                    }
+                    this._randoms = new Array(100);
+                    var buff = new Uint32Array(100);
+                    crypto.getRandomValues(buff);
+                    var len = 100;
+                    var i = -1;
+                    while (++i < len) {
+                        this._randoms[i] = buff[i];
+                    }
+                    return this._randoms.pop();
                 };
             }
         }
