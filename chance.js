@@ -13,6 +13,7 @@
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
+    var RANDOM_POOL = 500;
 
     // Cached array helpers
     var slice = Array.prototype.slice;
@@ -37,9 +38,15 @@
                     if (this._randoms.length) {
                         return this._randoms.pop();
                     }
-                    this._randoms = new Array(100);
-                    var buff = require('crypto').randomBytes(4 * 100);
-                    var len = 100;
+                    this._randoms = new Array(RANDOM_POOL);
+                    var crypto = require('crypto');
+                    var buff;
+                    try {
+                        buff = crypto.randomBytes(4 * RANDOM_POOL);
+                    } catch (e) {
+                        buff = crypto.pseudoRandomBytes(4 * RANDOM_POOL);
+                    }
+                    var len = RANDOM_POOL;
                     var i = -1;
                     while (++i < len) {
                         this._randoms[i] = buff.readUInt32BE(i * 4)/MAX_32;
@@ -52,10 +59,10 @@
                     if (this._randoms.length) {
                         return this._randoms.pop();
                     }
-                    this._randoms = new Array(100);
-                    var buff = new Uint32Array(100);
+                    this._randoms = new Array(RANDOM_POOL);
+                    var buff = new Uint32Array(RANDOM_POOL);
                     crypto.getRandomValues(buff);
-                    var len = 100;
+                    var len = RANDOM_POOL;
                     var i = -1;
                     while (++i < len) {
                         this._randoms[i] = buff[i];
