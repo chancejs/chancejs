@@ -27,10 +27,14 @@
     "grunt-shell": "0.7.0",
     "mocha-phantomjs": "3.5.0",
     "uglify-js": "1.2.6",
-    "grunt-bump": "0.0.11"
+    "grunt-bump": "0.0.11",
+    "underscore": "^1.6.0",
+    "chai": "^1.9.1",
+    "mocha": "^1.21.3"
   },
   "scripts": {
-    "test": "mocha-phantomjs test/runner.html"
+    "test": "mocha-phantomjs test/runner.html && npm run test-node",
+    "test-node": "mocha test/test.*.js -r test/node.js -R spec"
   },
   "keywords": [
     "chance",
