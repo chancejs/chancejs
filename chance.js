@@ -7,6 +7,7 @@
 
     // Constants
     var MAX_INT = 9007199254740992;
+    var MAX_32 = 0x100000000;
     var MIN_INT = -MAX_INT;
     var NUMBERS = '0123456789';
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
@@ -33,10 +34,21 @@
 
         // If no generator function was provided, use our MT
         if (typeof this.random === 'undefined') {
-            this.mt = this.mersenne_twister(seed);
-            this.random = function () {
-                return this.mt.random(this.seed);
-            };
+            if (isNode()) {
+                this.random = function () {
+                    return require('crypto').randomBytes(4).readUInt32BE(0)/MAX_32;
+                };
+            } else if (isModernBrowser()) {
+                this.random = function () {
+                    return crypto.getRandomValues(new Uint32Array(1))[0]/MAX_32;
+                };
+            } else {
+                this.mt = this.mersenne_twister(seed);
+                this.random = function () {
+                    return this.mt.random(this.seed);
+                };
+            }
+            
         }
     }
 
@@ -1107,8 +1119,17 @@
         }
         return (sum * 9) % 10;
     };
-
-
+    function isModernBrowser() {
+        try {
+          var _ = crypto.getRandomValues(new Uint32Array(1))[0];
+          return true;
+        } catch (e) {
+            return false;
+        }
+    }
+    function isNode() {
+        return typeof process !== 'undefined' && process.toString() === '[object process]';
+    }
     var data = {
 
         firstNames: {

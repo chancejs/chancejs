@@ -30,7 +30,7 @@
     "grunt-bump": "0.0.11"
   },
   "scripts": {
-    "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
+    "test": "mocha-phantomjs test/runner.html"
   },
   "keywords": [
     "chance",
@@ -41,5 +41,8 @@
     "name",
     "address",
     "dice"
-  ]
+  ],
+  "browser": {
+    "crypto": false
+  }
 }
