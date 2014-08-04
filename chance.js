@@ -30,10 +30,7 @@
             } else {
                 this.seed = seed;
             }
-        }
-
-        // If no generator function was provided, use our MT
-        if (typeof this.random === 'undefined') {
+        } else {
             if (isNode()) {
                 this.random = function () {
                     return require('crypto').randomBytes(4).readUInt32BE(0)/MAX_32;
@@ -42,13 +39,15 @@
                 this.random = function () {
                     return crypto.getRandomValues(new Uint32Array(1))[0]/MAX_32;
                 };
-            } else {
-                this.mt = this.mersenne_twister(seed);
-                this.random = function () {
-                    return this.mt.random(this.seed);
-                };
             }
-            
+        }
+
+        // If no generator function was provided, use our MT
+        if (typeof this.random === 'undefined') {
+            this.mt = this.mersenne_twister(seed);
+            this.random = function () {
+                return this.mt.random(this.seed);
+            };
         }
     }
 
