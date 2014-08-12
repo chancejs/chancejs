@@ -122,6 +122,14 @@ THANK YOU!
      1	Johannes Stein          0.3%
 ```
 
+### Contribute! 
+
+Be a part of this project! You can run the test using the following.
+1. Install dependencies from package.json by running `npm install`
+2. Install dependencies for testing by running `bower install`
+3. Run the test via `npm test`
+4. Make some fun new modules!
+
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
 
 Proudly written in Washington, D.C.
