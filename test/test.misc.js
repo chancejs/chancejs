@@ -118,6 +118,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
     });
 
+    describe("Apple Token", function(){
+        var apple_token, chance = new Chance();
+
+        it("returns a proper apple token", function () {
+            _(1000).times(function () {
+                apple_token = chance.apple_token();
+                expect(apple_token).to.match(/([0-9a-fA-F]){32}/);
+            });
+        });
+    });
+
     describe("Guid", function () {
         var guid, chance = new Chance();
 
