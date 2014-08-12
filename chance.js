@@ -1037,6 +1037,16 @@
         }
     };
 
+    // Apple Device Token
+    Chance.prototype.apple_token = function (options) {
+      //incase iOS tokens change, we'll be ready
+      options = options || {version: '6'};
+
+      var token_pool = "ABCDEF1234567890";
+      var apple_token = this.string({pool: token_pool, length: 64});
+      return apple_token;
+    };
+
     // Guid
     Chance.prototype.guid = function (options) {
         options = options || {version: 5};
