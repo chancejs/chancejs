@@ -124,7 +124,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("returns a proper apple token", function () {
             _(1000).times(function () {
                 apple_token = chance.apple_token();
-                expect(apple_token).to.match(/([0-9a-fA-F]){32}/);
+                expect(apple_token).to.match(/([0-9a-fA-F]){64}/);
             });
         });
     });
