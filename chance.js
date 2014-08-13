@@ -275,11 +275,60 @@
         return number.length >= width ? number : new Array(width - number.length + 1).join(pad) + number;
     };
 
-    Chance.prototype.pick = function (arr, count) {
+
+    /*
+     *   pick(arr) returns one item from the array
+     *   pick(arr,count) returns a subset of the array 
+     *   pick(arr,count,separator) returns an array of size count, 
+     *   	if there are not enough elements available, elements are combined and joined by the separator
+     *   	e.g. ['a-b','f-d','e-g','a-c',...] 
+     */ 
+    	
+    Chance.prototype.pick = function (arr, count, selfExpandingSeparator) {
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
-        } else {
+        } else if (!selfExpandingSeparator){
+            testRange(
+                    count>arr.length,
+                    "Chance: Cannot return "+count+" items from an array of size "+arr.length+"."
+                );
             return this.shuffle(arr).slice(0, count);
+            
+        } else if (selfExpandingSeparator){
+        	var arrLength = arr.length;
+        	var groupsNeeded = 1;
+        	// increase the number of groups needed based on length of available array with a 200% buffer
+        	while(Math.pow(arrLength,groupsNeeded) < (count * 2.00 ) ) {
+        		groupsNeeded++;
+        	}
+        	
+        	var result = [],counter=0,bank = this.shuffle(arr);
+        	while (result.length < count) {
+				// create groups of elements (joined with the separator)
+				var tmp = [];
+				for ( var i = 0; i < groupsNeeded; i++) {
+					// if the bank gets empty, shuffle up and feed some more elements
+					if (bank.length == 0) {
+						bank = bank.concat(this.shuffle(arr));
+					}
+					tmp.push(bank.shift());
+				}
+				// add the combined element to the results
+				result.push(tmp.join(selfExpandingSeparator));
+				// filter the list for unique elements
+				result = result.filter(function (value, index, self) { 
+					return self.indexOf(value) === index;
+				});
+				
+
+
+	            if (++counter > count * 50) {
+	                throw new RangeError("Chance: num is likely too large for sample set");
+	            }
+				
+			}
+        	
+            return result;
         }
     };
 
@@ -387,6 +436,93 @@
     };
 
     // -- End Text --
+
+    // -- String Interpolation
+    
+    Chance.prototype.interpolate = function(text) {
+
+        var results = [], // collection of strings to be joined at the end
+            _textLength = text.length,
+            _index = 0,
+            _startIndex,
+            _endIndex;
+            
+        // symbol that indicates the beginning of the chance function 
+        var startSymbol = '`';
+        // symbol that indicates the end of the chance function and back to text
+        var endSymbol = '`'; 
+
+        while (_index < _textLength) {
+            if ((_startIndex = text.indexOf(startSymbol, _index)) != -1 && (_endIndex = text.indexOf(endSymbol, _startIndex + startSymbol.length)) != -1) {
+                // place any plain text in the results up to the startSymbol
+                results.push(text.substring(_index, _startIndex));
+                // regex the code part:  function(args).props
+                var code = text.substring(_startIndex + startSymbol.length, _endIndex);
+                
+                var r = this._parseFunction(code);
+                
+                // validate existence of function
+                var func = this[r.func];
+                if (typeof func !== "function") {
+                    throw "Chance.interpolate: Invalid function " + r.func + " at character "+(_startIndex+1);
+                }
+
+                var result = func.apply(this, r.args);
+                for (var j = 0; j < r.props.length; j++) {
+                    result = result[r.props[j]];
+                }
+                results.push(result);
+
+                _index = _endIndex + endSymbol.length;
+            }
+            else {
+                if (_index !== _textLength) {
+                    results.push(text.substring(_index));
+                }
+                break;
+            }
+
+        }
+
+        return results.join('');
+    };
+    
+    
+    /*
+    Utility to convert a string into 3 elements:
+        Input: " customer( \"arg1\" , {\"json\":\"here\"} ).prop1.subprop  "  into
+        Returns: 
+        { 
+            func: "customer", 
+            args: ["arg1" , {json:"here"} ],
+            props: ["prop1","prop2"]
+    
+    */
+    Chance.prototype._parseFunction = function(string) {
+        var chunks = string.match(/^([a-zA-Z\$\_]+)\(?(.+?(?=\)))?\)?(.*)?/);
+        
+        var func = chunks[1];
+        
+        var args = [];
+        // if arguments exist, they need to be JSON compilant
+        // func("str",42,{"key":"str","key2":42},[2,3,4,5])
+        if (chunks[2] && chunks[2].charAt(0) != '.') {
+            args = JSON.parse('['+chunks[2]+']');
+        }
+        var properties = [];
+        if (chunks[3] || chunks[2] && chunks[2].charAt(0) == '.') {
+            properties = chunks[3] || chunks[2];
+            properties = properties.substring(1).split('.');
+        }
+    
+        return {
+            'func': func,
+            'args': args,
+            'props': properties
+        };
+    };
+    
+    // -- End String Interpolation
 
     // -- Person --
 
