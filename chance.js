@@ -303,6 +303,36 @@
         return new_array;
     };
 
+    // Returns a single item from an array with relative weighting of odds
+    Chance.prototype.weighted = function(arr, weights) {
+        if (arr.length !== weights.length) {
+            throw new RangeError("Chance: length of array and weights must match");
+        }
+
+        // @todo figure out best way to handle fractions (probaby scaling so they are whole)
+
+        var sum = weights.reduce(function(total, weight) {
+            return total + weight;
+        }, 0);
+
+        // get an index
+        var selected = this.natural({ min: 1, max: sum });
+
+        var total = weights[0];
+        var chosen;
+        // Using some() here so we can bail as soon as we get our match
+        weights.some(function(weight, index) {
+            if (selected < total + weight && selected >= total) {
+                chosen = arr[index];
+                return true;
+            }
+            total += weight;
+            return false;
+        });
+
+        return chosen;
+    };
+
     // -- End Helpers --
 
     // -- Text --
