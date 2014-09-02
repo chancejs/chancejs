@@ -38,6 +38,8 @@
                 return this.mt.random(this.seed);
             };
         }
+
+        return this;
     }
 
     Chance.prototype.VERSION = "0.5.9";
@@ -607,6 +609,11 @@
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
     };
 
+    Chance.prototype.altitude = function (options) {
+        options = initOptions(options, {fixed : 5});
+        return this.floating({min: 0, max: 32736000, fixed: options.fixed});
+    };
+
     Chance.prototype.areacode = function (options) {
         options = initOptions(options, {parens : true});
         // Don't want area codes to start with 1, or have a 9 as the second digit
@@ -626,6 +633,11 @@
         return this.latitude(options) + ', ' + this.longitude(options);
     };
 
+    Chance.prototype.depth = function (options) {
+        options = initOptions(options, {fixed: 5});
+        return this.floating({min: -35994, max: 0, fixed: options.fixed});
+    };
+
     Chance.prototype.geohash = function (options) {
         options = initOptions(options, { length: 7 });
         return this.string({ length: options.length, pool: '0123456789bcdefghjkmnpqrstuvwxyz' });
@@ -634,16 +646,6 @@
     Chance.prototype.geojson = function (options) {
         options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
-    };
-
-    Chance.prototype.altitude = function (options) {
-        options = initOptions(options, {fixed : 5});
-        return this.floating({min: 0, max: 32736000, fixed: options.fixed});
-    };
-
-    Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed: 5});
-        return this.floating({min: -35994, max: 0, fixed: options.fixed});
     };
 
     Chance.prototype.latitude = function (options) {
