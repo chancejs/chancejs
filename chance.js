@@ -1069,28 +1069,6 @@
                    this.string({ pool: guid_pool, length: 12 });
         return guid;
     };
-
-    // Mac Address
-    Chance.prototype.mac_address = function(options){
-        // typically mac addresses are separated by ":"
-        // however they can also be separated by "-"
-        // the network variant uses a dot every fourth byte
-        
-        options = initOptions(options);
-        if(!options.separator) {
-            options.separator =  options.networkVersion ? "." : ":";
-        }
-        
-        var mac_pool="ABCDEF1234567890",
-            mac = "";
-        if(!options.networkVersion) {
-            mac = this.n(this.string, 6, { pool: mac_pool, length:2 }).join(options.separator);
-        } else {
-            mac = this.n(this.string, 3, {pool: mac_pool, length:4}).join(options.separator);
-        }
-
-        return mac;
-    };
     
     // Hash
     Chance.prototype.hash = function (options) {
@@ -1485,8 +1463,26 @@
         return copyObject(data[name]);
     };
 
-    Chance.prototype.mersenne_twister = function (seed) {
-        return new MersenneTwister(seed);
+    // Mac Address
+    Chance.prototype.mac_address = function(options){
+        // typically mac addresses are separated by ":"
+        // however they can also be separated by "-"
+        // the network variant uses a dot every fourth byte
+
+        options = initOptions(options);
+        if(!options.separator) {
+            options.separator =  options.networkVersion ? "." : ":";
+        }
+
+        var mac_pool="ABCDEF1234567890",
+            mac = "";
+        if(!options.networkVersion) {
+            mac = this.n(this.string, 6, { pool: mac_pool, length:2 }).join(options.separator);
+        } else {
+            mac = this.n(this.string, 3, { pool: mac_pool, length:4 }).join(options.separator);
+        }
+
+        return mac;
     };
 
     Chance.prototype.radio = function (options) {
@@ -1527,6 +1523,9 @@
 
     // -- End Miscellaneous --
 
+    Chance.prototype.mersenne_twister = function (seed) {
+        return new MersenneTwister(seed);
+    };
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
