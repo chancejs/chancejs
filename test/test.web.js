@@ -44,6 +44,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("email() has a length specified, it should generate a string before the domain with an equal length", function () {
+            _(1000).times(function () {
+                email = chance.email({length: 5});
+                expect(email.split('@')[0].length).to.equal(5);
+            });
+        });
+
         it("fbid() returns what looks like a Facebook id", function () {
             _(1000).times(function () {
                 expect(chance.fbid()).to.be.a('number');
