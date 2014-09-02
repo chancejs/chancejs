@@ -226,7 +226,20 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(chance.longitude({max: max})).to.be.within(-180, max);
                 });
             });
+        });
 
+        describe("Geohash", function () {
+            it("geohash() looks right", function() {
+                expect(chance.geohash()).to.be.a('string');
+                expect(chance.geohash()).to.have.length(7);
+            });
+
+            it("geohash() will accept a length and obey it", function() {
+                _(1000).times(function () {
+                    var length = chance.d10();
+                    expect(chance.geohash({ length: length })).to.have.length(length);
+                });
+            });
         });
 
         describe("Coordinates", function () {

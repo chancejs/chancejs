@@ -626,7 +626,12 @@
         return this.latitude(options) + ', ' + this.longitude(options);
     };
 
-    Chance.prototype.geoJson = function (options) {
+    Chance.prototype.geohash = function (options) {
+        options = initOptions(options, { length: 7 });
+        return this.string({ length: options.length, pool: '0123456789bcdefghjkmnpqrstuvwxyz' });
+    };
+
+    Chance.prototype.geojson = function (options) {
         options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
     };
