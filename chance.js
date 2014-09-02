@@ -549,7 +549,7 @@
 
     Chance.prototype.email = function (options) {
         options = initOptions(options);
-        return this.word() + '@' + (options.domain || this.domain());
+        return this.word({length: options.length}) + '@' + (options.domain || this.domain());
     };
 
     Chance.prototype.fbid = function () {
