@@ -694,29 +694,6 @@
             this.pick(this.provinces()).abbreviation;
     };
 
-    Chance.prototype.radio = function (options) {
-        // Initial Letter (Typically Designated by Side of Mississippi River)
-        options = initOptions(options, {side : "?"});
-        var fl = "";
-        switch (options.side.toLowerCase()) {
-        case "east":
-        case "e":
-            fl = "W";
-            break;
-        case "west":
-        case "w":
-            fl = "K";
-            break;
-        default:
-            fl = this.character({pool: "KW"});
-            break;
-        }
-
-        return fl + this.character({alpha: true, casing: "upper"}) +
-                this.character({alpha: true, casing: "upper"}) +
-                this.character({alpha: true, casing: "upper"});
-    };
-
     Chance.prototype.state = function (options) {
         return (options && options.full) ?
             this.pick(this.states(options)).name :
@@ -762,10 +739,6 @@
     Chance.prototype.street_suffixes = function () {
         // These are the most common suffixes.
         return this.get("street_suffixes");
-    };
-
-    Chance.prototype.tv = function (options) {
-        return this.radio(options);
     };
 
     // Note: only returning US zip codes, internationalization will be a whole
@@ -1487,7 +1460,34 @@
         return copyObject(data[name]);
     };
 
-    /** Set the data as key and data or the data map**/
+    Chance.prototype.mersenne_twister = function (seed) {
+        return new MersenneTwister(seed);
+    };
+
+    Chance.prototype.radio = function (options) {
+        // Initial Letter (Typically Designated by Side of Mississippi River)
+        options = initOptions(options, {side : "?"});
+        var fl = "";
+        switch (options.side.toLowerCase()) {
+        case "east":
+        case "e":
+            fl = "W";
+            break;
+        case "west":
+        case "w":
+            fl = "K";
+            break;
+        default:
+            fl = this.character({pool: "KW"});
+            break;
+        }
+
+        return fl + this.character({alpha: true, casing: "upper"}) +
+                this.character({alpha: true, casing: "upper"}) +
+                this.character({alpha: true, casing: "upper"});
+    };
+
+    // Set the data as key and data or the data map
     Chance.prototype.set = function (name, values) {
         if (typeof name === "string") {
             data[name] = values;
@@ -1496,9 +1496,8 @@
         }
     };
 
-
-    Chance.prototype.mersenne_twister = function (seed) {
-        return new MersenneTwister(seed);
+    Chance.prototype.tv = function (options) {
+        return this.radio(options);
     };
 
     // -- End Miscellaneous --
