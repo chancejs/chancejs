@@ -105,40 +105,52 @@ Please feel free to reach out to me if you have any questions or suggestions.
 THANK YOU!
 
 ```
- project  : chancejs
- repo age : 1 year
- active   : 77 days
- commits  : 306
+project  : chancejs
+ repo age : 1 year, 2 months
+ active   : 87 days
+ commits  : 336
  files    : 21
  authors  :
-   230	Victor Quinn            75.2%
-    13	Tim Petricola           4.2%
-    11	davmillar               3.6%
-     5	Michael Cordingley      1.6%
-     5	Alex DiLiberto          1.6%
-     5	Matt Klaber             1.6%
-     4	Kevin Garnett           1.3%
-     3	Alexandr Lozovyuk       1.0%
-     3	qjcg                    1.0%
-     2	xshyamx                 0.7%
-     2	Andreas Koeberle        0.7%
-     2	Iskren Chernev          0.7%
-     2	Nicholas Johnson        0.7%
-     2	Pascal Borreli          0.7%
-     2	dhilipsiva              0.7%
-     2	path411                 0.7%
-     2	shyam                   0.7%
-     2	Adam Krebs              0.7%
-     1	Ng, Patrick             0.3%
+   249	Victor Quinn            74.1%
+    13	Tim Petricola           3.9%
+    11	davmillar               3.3%
+     5	Michael Cordingley      1.5%
+     5	Alex DiLiberto          1.5%
+     5	Matt Klaber             1.5%
+     4	Abhijeet Pawar          1.2%
+     4	Kevin Garnett           1.2%
+     4	Avishaan                1.2%
+     3	qjcg                    0.9%
+     3	Alexandr Lozovyuk       0.9%
+     3	Nicholas Johnson        0.9%
+     2	xshyamx                 0.6%
+     2	Adam Krebs              0.6%
+     2	Andreas Koeberle        0.6%
+     2	Iskren Chernev          0.6%
+     2	Pascal Borreli          0.6%
+     2	dhilipsiva              0.6%
+     2	path411                 0.6%
+     2	shyam                   0.6%
+     1	Richard Anaya           0.3%
+     1	Johannes Stein          0.3%
+     1	ddunning                0.3%
      1	Doug Lawrence           0.3%
-     1	Dominic Barnes          0.3%
+     1	flrent                  0.3%
      1	leesei                  0.3%
      1	lkptrzk                 0.3%
-     1	Richard Anaya           0.3%
+     1	Dominic Barnes          0.3%
      1	Ryan Tenney             0.3%
      1	Samuel Greene           0.3%
-     1	Johannes Stein          0.3%
+     1	Ng, Patrick             0.3%
 ```
+
+### Contribute! 
+
+Be a part of this project! You can run the test using the following.
+1. Install dependencies from package.json by running `npm install`
+2. Install dependencies for testing by running `bower install`
+3. Run the test via `npm test`
+4. Make some fun new modules!
 
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
 

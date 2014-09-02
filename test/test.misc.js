@@ -85,6 +85,50 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         });
     });
 
+      describe("Mac Address", function () {
+        var mac, chance = new Chance();
+
+        it("returns a proper mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address();
+                expect(mac).to.match(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/);
+            });
+        });
+
+        it("returns a proper colon separated mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address({separator: ":"});
+                expect(mac).to.match(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/);
+            });
+        });
+
+        it("returns a proper hyphen separated mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address({separator:"-"});
+                expect(mac).to.match(/([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}/);
+            });
+        });
+
+        it("returns a proper network version mac address", function () {
+            _(1000).times(function () {
+                mac = chance.mac_address({networkVersion:true});
+                expect(mac).to.match(/([0-9a-fA-F]){4}.([0-9a-fA-F]){4}.([0-9a-fA-F]){4}/);
+            });
+        });
+
+    });
+
+    describe("Apple Token", function(){
+        var apple_token, chance = new Chance();
+
+        it("returns a proper apple token", function () {
+            _(1000).times(function () {
+                apple_token = chance.apple_token();
+                expect(apple_token).to.match(/([0-9a-fA-F]){64}/);
+            });
+        });
+    });
+
     describe("Guid", function () {
         var guid, chance = new Chance();
 
@@ -98,35 +142,35 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("returns a proper version 1 guid", function () {
             _(1000).times(function () {
                 guid = chance.guid({version: 1});
-                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-1([0-9a-fA-F]){3}-([AB89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
+                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-1([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
             });
         });
 
         it("returns a proper version 2 guid", function () {
             _(1000).times(function () {
                 guid = chance.guid({version: 2});
-                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-2([0-9a-fA-F]){3}-([AB89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
+                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-2([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
             });
         });
 
         it("returns a proper version 3 guid", function () {
             _(1000).times(function () {
                 guid = chance.guid({version: 3});
-                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-3([0-9a-fA-F]){3}-([AB89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
+                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-3([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
             });
         });
 
         it("returns a proper version 4 guid", function () {
             _(1000).times(function () {
                 guid = chance.guid({version: 4});
-                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-4([0-9a-fA-F]){3}-([AB89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
+                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-4([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
             });
         });
 
         it("returns a proper version 5 guid", function () {
             _(1000).times(function () {
                 guid = chance.guid({version: 5});
-                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-5([0-9a-fA-F]){3}-([AB89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
+                expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-5([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
             });
         });
     });

@@ -40,6 +40,69 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("weighted()", function () {
+            it("returns an element", function () {
+                _(1000).times(function () {
+                    picked = chance.weighted(['a', 'b', 'c', 'd'], [1, 1, 1, 1]);
+                    expect(picked).to.be.a('string');
+                });
+            });
+
+            it("throws an error if called with an array of weights with length different from options", function() {
+                expect(function () {
+                    chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3]);
+                }).to.throw(RangeError, /length of array and weights must match/);
+
+                expect(function () {
+                    chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3, 4]);
+                }).to.not.throw(RangeError, /length of array and weights must match/);
+
+                expect(function () {
+                    chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3, 4, 5]);
+                }).to.throw(RangeError, /length of array and weights must match/);
+            });
+
+            it("returns with results properly weighted", function() {
+                // Use Math.random as the random function rather than our Mersenne twister just to
+                //   speed things up here because this test takes awhile to gather enough data to
+                //   have a large enough sample size to adequately test. This increases performance
+                //   by a few orders of magnitude
+                var chance = new Chance(Math.random);
+                _(10).times(function() {
+                    var picked = { a: 0, b: 0, c: 0, d: 0 };
+                    // This makes it a tad slow, but we need a large enough sample size to adequately test
+                    _(100000).times(function () {
+                        picked[chance.weighted(['a', 'b', 'c', 'd'], [1, 100, 100, 1])]++;
+                    });
+
+                    // This range is somewhat arbitrary, but good enough to test our constraints
+                    expect(picked.b / picked.a).to.be.within(80, 120);
+                    expect(picked.c / picked.d).to.be.within(80, 120);
+                    expect((picked.c / picked.b) * 100).to.be.within(50, 150);
+                });
+            });
+
+            it("works with fractional weights", function() {
+                // Use Math.random as the random function rather than our Mersenne twister just to
+                //   speed things up here because this test takes awhile to gather enough data to
+                //   have a large enough sample size to adequately test. This increases performance
+                //   by a few orders of magnitude
+                var chance = new Chance(Math.random);
+                _(10).times(function() {
+                    var picked = { a: 0, b: 0, c: 0, d: 0 };
+                    // This makes it a tad slow, but we need a large enough sample size to adequately test
+                    _(100000).times(function () {
+                        picked[chance.weighted(['a', 'b', 'c', 'd'], [0.001, 0.1, 0.1, 0.001])]++;
+                    });
+
+                    // This range is somewhat arbitrary, but good enough to test our constraints
+                    expect(picked.b / picked.a).to.be.within(80, 120);
+                    expect(picked.c / picked.d).to.be.within(80, 120);
+                    expect((picked.c / picked.b) * 100).to.be.within(50, 150);
+                });
+            });
+        });
+
         describe("shuffle()", function () {
             it("returns an array of the same size", function () {
                 arr = ['a', 'b', 'c', 'd', 'e'];
@@ -131,6 +194,20 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        describe("n random terms", function () {
+            it("gives an array of n terms for the given function", function () {
+                var arr = chance.n(chance.email, 25, {domain: "example.com"});
+                expect(arr).to.be.an('array');
+                expect(arr[0]).to.match(/example\.com$/);
+                expect(arr.length).to.equal(25);
+            });
+            it("gives an array of 1 term when n is not given", function () {
+                var arr = chance.n(chance.email);
+                expect(arr).to.be.an('array');
+                expect(arr.length).to.equal(1);
+            });
+        });
+        
         describe("pad()", function () {
             it("always returns same number when width same as the length of the number", function () {
                 _(1000).times(function () {
