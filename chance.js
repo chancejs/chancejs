@@ -309,7 +309,19 @@
             throw new RangeError("Chance: length of array and weights must match");
         }
 
-        // @todo figure out best way to handle fractions (probaby scaling so they are whole)
+        // If any of the weights are less than 1, we want to scale them up to whole
+        //   numbers for the rest of this logic to work
+        if (weights.some(function(weight) { return weight < 1; })) {
+            var min = weights.reduce(function(min, weight) {
+                return (weight < min) ? weight : min;
+            }, weights[0]);
+
+            var scaling_factor = 1 / min;
+
+            weights = weights.map(function(weight) {
+                return weight * scaling_factor;
+            });
+        }
 
         var sum = weights.reduce(function(total, weight) {
             return total + weight;

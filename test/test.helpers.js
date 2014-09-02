@@ -81,6 +81,26 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect((picked.c / picked.b) * 100).to.be.within(50, 150);
                 });
             });
+
+            it("works with fractional weights", function() {
+                // Use Math.random as the random function rather than our Mersenne twister just to
+                //   speed things up here because this test takes awhile to gather enough data to
+                //   have a large enough sample size to adequately test. This increases performance
+                //   by a few orders of magnitude
+                var chance = new Chance(Math.random);
+                _(10).times(function() {
+                    var picked = { a: 0, b: 0, c: 0, d: 0 };
+                    // This makes it a tad slow, but we need a large enough sample size to adequately test
+                    _(100000).times(function () {
+                        picked[chance.weighted(['a', 'b', 'c', 'd'], [0.001, 0.1, 0.1, 0.001])]++;
+                    });
+
+                    // This range is somewhat arbitrary, but good enough to test our constraints
+                    expect(picked.b / picked.a).to.be.within(80, 120);
+                    expect(picked.c / picked.d).to.be.within(80, 120);
+                    expect((picked.c / picked.b) * 100).to.be.within(50, 150);
+                });
+            });
         });
 
         describe("shuffle()", function () {
