@@ -175,29 +175,6 @@
         return this.integer(options);
     };
 
-    Chance.prototype.normal = function (options) {
-        options = initOptions(options, {mean : 0, dev : 1});
-
-        // The Marsaglia Polar method
-        var s, u, v, norm,
-            mean = options.mean,
-            dev = options.dev;
-
-        do {
-            // U and V are from the uniform distribution on (-1, 1)
-            u = this.random() * 2 - 1;
-            v = this.random() * 2 - 1;
-
-            s = u * u + v * v;
-        } while (s >= 1);
-
-        // Compute the standard normal variate
-        norm = u * Math.sqrt(-2 * Math.log(s) / s);
-
-        // Shape and scale
-        return dev * norm + mean;
-    };
-
     Chance.prototype.string = function (options) {
         options = initOptions(options);
 
@@ -1519,6 +1496,29 @@
         }
 
         return mac;
+    };
+
+    Chance.prototype.normal = function (options) {
+        options = initOptions(options, {mean : 0, dev : 1});
+
+        // The Marsaglia Polar method
+        var s, u, v, norm,
+            mean = options.mean,
+            dev = options.dev;
+
+        do {
+            // U and V are from the uniform distribution on (-1, 1)
+            u = this.random() * 2 - 1;
+            v = this.random() * 2 - 1;
+
+            s = u * u + v * v;
+        } while (s >= 1);
+
+        // Compute the standard normal variate
+        norm = u * Math.sqrt(-2 * Math.log(s) / s);
+
+        // Shape and scale
+        return dev * norm + mean;
     };
 
     Chance.prototype.radio = function (options) {
