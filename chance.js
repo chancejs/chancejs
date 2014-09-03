@@ -307,11 +307,11 @@
         // get an index
         var selected = this.natural({ min: 1, max: sum });
 
-        var total = weights[0];
+        var total = 0;
         var chosen;
         // Using some() here so we can bail as soon as we get our match
         weights.some(function(weight, index) {
-            if (selected < total + weight && selected >= total) {
+            if (selected <= total + weight) {
                 chosen = arr[index];
                 return true;
             }
