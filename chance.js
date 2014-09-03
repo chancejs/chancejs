@@ -1,4 +1,4 @@
-//  Chance.js 0.5.9
+//  Chance.js 0.6.0
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -38,19 +38,24 @@
                 return this.mt.random(this.seed);
             };
         }
+
+        return this;
     }
+
+    Chance.prototype.VERSION = "0.6.0";
 
     // Random helper functions
     function initOptions(options, defaults) {
         options || (options = {});
-        if (!defaults) {
-            return options;
-        }
-        for (var i in defaults) {
-            if (typeof options[i] === 'undefined') {
-                options[i] = defaults[i];
+
+        if (defaults) {
+            for (var i in defaults) {
+                if (typeof options[i] === 'undefined') {
+                    options[i] = defaults[i];
+                }
             }
         }
+
         return options;
     }
 
@@ -115,7 +120,7 @@
     // the trailing zeroes are dropped. Left to the consumer if trailing zeroes are
     // needed
     Chance.prototype.floating = function (options) {
-        var num, range;
+        var num;
 
         options = initOptions(options, {fixed : 4});
         var fixed = Math.pow(10, options.fixed);
@@ -197,13 +202,10 @@
         options = initOptions(options);
 
         var length = options.length || this.natural({min: 5, max: 20}),
-            text = '',
-            pool = options.pool;
+            pool = options.pool,
+            text = this.n(this.character, length, {pool: pool});
 
-        for (var i = 0; i < length; i++) {
-            text += this.character({pool: pool});
-        }
-        return text;
+        return text.join("");
     };
 
     // -- End Basics --
@@ -215,7 +217,6 @@
     };
 
     Chance.prototype.mixin = function (obj) {
-        var chance = this;
         for (var func_name in obj) {
             Chance.prototype[func_name] = obj[func_name];
         }
@@ -229,24 +230,41 @@
             // Default comparator to check that val is not already in arr.
             // Should return `false` if item not in array, `true` otherwise
             comparator: function(arr, val) {
-                return arr.indexOf(result) !== -1;
+                return arr.indexOf(val) !== -1;
             }
         });
 
-        var arr = [], count = 0;
+        var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, params = slice.call(arguments, 2);
 
         while (arr.length < num) {
-            var result = fn.apply(this, slice.call(arguments, 2));
+            result = fn.apply(this, params);
             if (!options.comparator(arr, result)) {
                 arr.push(result);
                 // reset count when unique found
                 count = 0;
             }
 
-            if (++count > num * 50) {
+            if (++count > MAX_DUPLICATES) {
                 throw new RangeError("Chance: num is likely too large for sample set");
             }
         }
+        return arr;
+    };
+
+    /**
+     *  Gives an array of n random terms
+     *  @param fn the function that generates something random
+     *  @param n number of terms to generate
+     *  @param options options for the function fn. 
+     *  There can be more parameters after these. All additional parameters are provided to the given function
+     */
+    Chance.prototype.n = function(fn, n, options) {
+        var i = n || 1, arr = [], params = slice.call(arguments, 2);
+
+        for (null; i--; null) {
+            arr.push(fn.apply(this, params));
+        }
+
         return arr;
     };
 
@@ -285,6 +303,48 @@
         return new_array;
     };
 
+    // Returns a single item from an array with relative weighting of odds
+    Chance.prototype.weighted = function(arr, weights) {
+        if (arr.length !== weights.length) {
+            throw new RangeError("Chance: length of array and weights must match");
+        }
+
+        // If any of the weights are less than 1, we want to scale them up to whole
+        //   numbers for the rest of this logic to work
+        if (weights.some(function(weight) { return weight < 1; })) {
+            var min = weights.reduce(function(min, weight) {
+                return (weight < min) ? weight : min;
+            }, weights[0]);
+
+            var scaling_factor = 1 / min;
+
+            weights = weights.map(function(weight) {
+                return weight * scaling_factor;
+            });
+        }
+
+        var sum = weights.reduce(function(total, weight) {
+            return total + weight;
+        }, 0);
+
+        // get an index
+        var selected = this.natural({ min: 1, max: sum });
+
+        var total = weights[0];
+        var chosen;
+        // Using some() here so we can bail as soon as we get our match
+        weights.some(function(weight, index) {
+            if (selected < total + weight && selected >= total) {
+                chosen = arr[index];
+                return true;
+            }
+            total += weight;
+            return false;
+        });
+
+        return chosen;
+    };
+
     // -- End Helpers --
 
     // -- Text --
@@ -293,11 +353,7 @@
         options = initOptions(options);
 
         var sentences = options.sentences || this.natural({min: 3, max: 7}),
-            sentence_array = [];
-
-        for (var i = 0; i < sentences; i++) {
-            sentence_array.push(this.sentence());
-        }
+            sentence_array = this.n(this.sentence, sentences);
 
         return sentence_array.join(' ');
     };
@@ -308,11 +364,7 @@
         options = initOptions(options);
 
         var words = options.words || this.natural({min: 12, max: 18}),
-            text, word_array = [];
-
-        for (var i = 0; i < words; i++) {
-            word_array.push(this.word());
-        }
+            text, word_array = this.n(this.word, words);
 
         text = word_array.join(' ');
 
@@ -491,11 +543,7 @@
         options = initOptions(options, {ssnFour: false, dashes: true});
         var ssn_pool = "1234567890",
             ssn,
-            dash = '';
-
-        if(options.dashes){
-            dash = '-';
-        }
+            dash = options.dashes ? '-' : '';
 
         if(!options.ssnFour) {
             ssn = this.string({pool: ssn_pool, length: 3}) + dash +
@@ -545,7 +593,7 @@
 
     Chance.prototype.email = function (options) {
         options = initOptions(options);
-        return this.word() + '@' + (options.domain || this.domain());
+        return this.word({length: options.length}) + '@' + (options.domain || this.domain());
     };
 
     Chance.prototype.fbid = function () {
@@ -555,6 +603,7 @@
     Chance.prototype.google_analytics = function () {
         var account = this.pad(this.natural({max: 999999}), 6);
         var property = this.pad(this.natural({max: 99}), 2);
+
         return 'UA-' + account + '-' + property;
     };
 
@@ -572,11 +621,8 @@
     };
 
     Chance.prototype.ipv6 = function () {
-        var ip_addr = [];
+        var ip_addr = this.n(this.hash, 8, {length: 4});
 
-        for (var i = 0; i < 8; i++) {
-            ip_addr.push(this.hash({length: 4}));
-        }
         return ip_addr.join(":");
     };
 
@@ -605,10 +651,18 @@
         return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
     };
 
+    Chance.prototype.altitude = function (options) {
+        options = initOptions(options, {fixed : 5});
+        return this.floating({min: 0, max: 32736000, fixed: options.fixed});
+    };
+
     Chance.prototype.areacode = function (options) {
         options = initOptions(options, {parens : true});
         // Don't want area codes to start with 1, or have a 9 as the second digit
-        var areacode = this.natural({min: 2, max: 9}).toString() + this.natural({min: 0, max: 8}).toString() + this.natural({min: 0, max: 9}).toString();
+        var areacode = this.natural({min: 2, max: 9}).toString() +
+                this.natural({min: 0, max: 8}).toString() +
+                this.natural({min: 0, max: 9}).toString();
+
         return options.parens ? '(' + areacode + ')' : areacode;
     };
 
@@ -621,19 +675,19 @@
         return this.latitude(options) + ', ' + this.longitude(options);
     };
 
-    Chance.prototype.geoJson = function (options) {
-        options = initOptions(options);
-        return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
-    };
-
-    Chance.prototype.altitude = function (options) {
-        options = initOptions(options, {fixed : 5});
-        return this.floating({min: 0, max: 32736000, fixed: options.fixed});
-    };
-
     Chance.prototype.depth = function (options) {
         options = initOptions(options, {fixed: 5});
         return this.floating({min: -35994, max: 0, fixed: options.fixed});
+    };
+
+    Chance.prototype.geohash = function (options) {
+        options = initOptions(options, { length: 7 });
+        return this.string({ length: options.length, pool: '0123456789bcdefghjkmnpqrstuvwxyz' });
+    };
+
+    Chance.prototype.geojson = function (options) {
+        options = initOptions(options);
+        return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
     };
 
     Chance.prototype.latitude = function (options) {
@@ -655,8 +709,9 @@
         var exchange = this.natural({min: 2, max: 9}).toString() +
                 this.natural({min: 0, max: 9}).toString() +
                 this.natural({min: 0, max: 9}).toString();
+
         var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
-        
+
         return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
     };
 
@@ -679,27 +734,6 @@
         return (options && options.full) ?
             this.pick(this.provinces()).name :
             this.pick(this.provinces()).abbreviation;
-    };
-
-    Chance.prototype.radio = function (options) {
-        // Initial Letter (Typically Designated by Side of Mississippi River)
-        options = initOptions(options, {side : "?"});
-        var fl = "";
-        switch (options.side.toLowerCase()) {
-        case "east":
-        case "e":
-            fl = "W";
-            break;
-        case "west":
-        case "w":
-            fl = "K";
-            break;
-        default:
-            fl = this.character({pool: "KW"});
-            break;
-        }
-
-        return fl + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
     };
 
     Chance.prototype.state = function (options) {
@@ -749,27 +783,17 @@
         return this.get("street_suffixes");
     };
 
-    Chance.prototype.tv = function (options) {
-        return this.radio(options);
-    };
-
     // Note: only returning US zip codes, internationalization will be a whole
     // other beast to tackle at some point.
     Chance.prototype.zip = function (options) {
-        var zip = "";
-
-        for (var i = 0; i < 5; i++) {
-            zip += this.natural({max: 9}).toString();
-        }
+        var zip = this.n(this.natural, 5, {max: 9});
 
         if (options && options.plusfour === true) {
-            zip += '-';
-            for (i = 0; i < 4; i++) {
-                zip += this.natural({max: 9}).toString();
-            }
+            zip.push('-');
+            zip = zip.concat(this.n(this.natural, 4, {max: 9}));
         }
 
-        return zip;
+        return zip.join("");
     };
 
     // -- End Address --
@@ -864,18 +888,17 @@
     Chance.prototype.cc = function (options) {
         options = initOptions(options);
 
-        var type, number, to_generate, type_name;
+        var type, number, to_generate;
 
         type = (options.type) ?
                     this.cc_type({ name: options.type, raw: true }) :
                     this.cc_type({ raw: true });
+
         number = type.prefix.split("");
         to_generate = type.length - type.prefix.length - 1;
 
         // Generates n - 1 digits
-        for (var i = 0; i < to_generate; i++) {
-            number.push(this.integer({min: 0, max: 9}));
-        }
+        number = number.concat(this.n(this.integer, to_generate, {min: 0, max: 9}));
 
         // Generates the last digit according to Luhn algorithm
         number.push(this.luhn_calculate(number.join("")));
@@ -950,13 +973,14 @@
 
     Chance.prototype.exp_month = function (options) {
         options = initOptions(options);
-        var month, month_int;
+        var month, month_int,
+            curMonth = new Date().getMonth();
 
         if (options.future) {
             do {
                 month = this.month({raw: true}).numeric;
                 month_int = parseInt(month, 10);
-            } while (month_int < new Date().getMonth());
+            } while (month_int < curMonth);
         } else {
             month = this.month({raw: true}).numeric;
         }
@@ -983,17 +1007,10 @@
     Chance.prototype.currency_pair = function (returnAsString) {
         var currencies = this.unique(this.currency, 2, {
             comparator: function(arr, val) {
-                // If this is the first element, we know it doesn't exist
-                if (arr.length === 0) {
-                    return false;
-                }
 
                 return arr.reduce(function(acc, item) {
                     // If a match has been found, short circuit check and just return
-                    if (acc) {
-                        return acc;
-                    }
-                    return item.code === val.code;
+                    return acc || (item.code === val.code);
                 }, false);
             }
         });
@@ -1011,9 +1028,9 @@
 
     // Dice - For all the board game geeks out there, myself included ;)
     function diceFn (range) {
-    	return function () {
-    		return this.natural(range);
-    	};
+        return function () {
+            return this.natural(range);
+        };
     }
     Chance.prototype.d4 = diceFn({min: 1, max: 4});
     Chance.prototype.d6 = diceFn({min: 1, max: 6});
@@ -1042,24 +1059,29 @@
         }
     };
 
-    // Guid
-    Chance.prototype.guid = function (options) {
-        options = options || {version: 5};
-
-        var guid_pool = "ABCDEF1234567890",
-            variant_pool = "AB89",
-            guid = this.string({pool: guid_pool, length: 8}) + '-' +
-                   this.string({pool: guid_pool, length: 4}) + '-' +
-                   // The Version
-                   options.version +
-                   this.string({pool: guid_pool, length: 3}) + '-' +
-                   // The Variant
-                   this.string({pool: variant_pool, length: 1}) +
-                   this.string({pool: guid_pool, length: 3}) + '-' +
-                   this.string({pool: guid_pool, length: 12});
-        return guid;
+    // Apple Device Token
+    Chance.prototype.apple_token = function (options) {
+        return this.string({ pool: "abcdef1234567890", length: 64 });
     };
 
+    // Guid
+    Chance.prototype.guid = function (options) {
+        options = initOptions(options, { version: 5 });
+
+        var guid_pool = "abcdef1234567890",
+            variant_pool = "ab89",
+            guid = this.string({ pool: guid_pool, length: 8 }) + '-' +
+                   this.string({ pool: guid_pool, length: 4 }) + '-' +
+                   // The Version
+                   options.version +
+                   this.string({ pool: guid_pool, length: 3 }) + '-' +
+                   // The Variant
+                   this.string({ pool: variant_pool, length: 1 }) +
+                   this.string({ pool: guid_pool, length: 3 }) + '-' +
+                   this.string({ pool: guid_pool, length: 12 });
+        return guid;
+    };
+    
     // Hash
     Chance.prototype.hash = function (options) {
         options = initOptions(options, {length : 40, casing: 'lower'});
@@ -1077,7 +1099,7 @@
         var digits = num.toString().split("").reverse();
         var sum = 0;
         var digit;
-        
+
         for (var i = 0, l = digits.length; l > i; ++i) {
             digit = +digits[i];
             if (i % 2 === 0) {
@@ -1453,7 +1475,52 @@
         return copyObject(data[name]);
     };
 
-    /** Set the data as key and data or the data map**/
+    // Mac Address
+    Chance.prototype.mac_address = function(options){
+        // typically mac addresses are separated by ":"
+        // however they can also be separated by "-"
+        // the network variant uses a dot every fourth byte
+
+        options = initOptions(options);
+        if(!options.separator) {
+            options.separator =  options.networkVersion ? "." : ":";
+        }
+
+        var mac_pool="ABCDEF1234567890",
+            mac = "";
+        if(!options.networkVersion) {
+            mac = this.n(this.string, 6, { pool: mac_pool, length:2 }).join(options.separator);
+        } else {
+            mac = this.n(this.string, 3, { pool: mac_pool, length:4 }).join(options.separator);
+        }
+
+        return mac;
+    };
+
+    Chance.prototype.radio = function (options) {
+        // Initial Letter (Typically Designated by Side of Mississippi River)
+        options = initOptions(options, {side : "?"});
+        var fl = "";
+        switch (options.side.toLowerCase()) {
+        case "east":
+        case "e":
+            fl = "W";
+            break;
+        case "west":
+        case "w":
+            fl = "K";
+            break;
+        default:
+            fl = this.character({pool: "KW"});
+            break;
+        }
+
+        return fl + this.character({alpha: true, casing: "upper"}) +
+                this.character({alpha: true, casing: "upper"}) +
+                this.character({alpha: true, casing: "upper"});
+    };
+
+    // Set the data as key and data or the data map
     Chance.prototype.set = function (name, values) {
         if (typeof name === "string") {
             data[name] = values;
@@ -1462,14 +1529,15 @@
         }
     };
 
-
-    Chance.prototype.mersenne_twister = function (seed) {
-        return new MersenneTwister(seed);
+    Chance.prototype.tv = function (options) {
+        return this.radio(options);
     };
 
     // -- End Miscellaneous --
 
-    Chance.prototype.VERSION = "0.5.9";
+    Chance.prototype.mersenne_twister = function (seed) {
+        return new MersenneTwister(seed);
+    };
 
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
