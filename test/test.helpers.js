@@ -61,7 +61,6 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
 
                 // This range is somewhat arbitrary, but good enough to test our constraints
-                console.log("PICKED: %s", JSON.stringify(picked));
                 expect(picked.b / picked.a).to.be.within(80, 120);
 
                 picked = { a: 0, b: 0 };

@@ -648,8 +648,8 @@
     };
 
     Chance.prototype.altitude = function (options) {
-        options = initOptions(options, {fixed : 5});
-        return this.floating({min: 0, max: 32736000, fixed: options.fixed});
+        options = initOptions(options, {fixed : 5, max: 8848});
+        return this.floating({min: 0, max: options.max, fixed: options.fixed});
     };
 
     Chance.prototype.areacode = function (options) {
@@ -672,8 +672,8 @@
     };
 
     Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed: 5});
-        return this.floating({min: -35994, max: 0, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: -2550});
+        return this.floating({min: options.min, max: 0, fixed: options.fixed});
     };
 
     Chance.prototype.geohash = function (options) {
@@ -930,6 +930,35 @@
         return options.raw ? type : type.name;
     };
 
+    //return all world currency by ISO 4217
+    Chance.prototype.currency_types = function () {
+        return this.get("currency_types");
+    };
+
+    //return random world currency by ISO 4217
+    Chance.prototype.currency = function () {
+        return this.pick(this.currency_types());
+    };
+
+    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
+    Chance.prototype.currency_pair = function (returnAsString) {
+        var currencies = this.unique(this.currency, 2, {
+            comparator: function(arr, val) {
+
+                return arr.reduce(function(acc, item) {
+                    // If a match has been found, short circuit check and just return
+                    return acc || (item.code === val.code);
+                }, false);
+            }
+        });
+
+        if (returnAsString) {
+            return  currencies[0] + '/' + currencies[1];
+        } else {
+            return currencies;
+        }
+    };
+
     Chance.prototype.dollar = function (options) {
         // By default, a somewhat more sane max for dollar than all available numbers
         options = initOptions(options, {max : 10000, min : 0});
@@ -986,36 +1015,6 @@
 
     Chance.prototype.exp_year = function () {
         return this.year({max: new Date().getFullYear() + 10});
-    };
-
-    //return all world currency by ISO 4217
-    Chance.prototype.currency_types = function () {
-        return this.get("currency_types");
-    };
-
-
-    //return random world currency by ISO 4217
-    Chance.prototype.currency = function () {
-        return this.pick(this.currency_types());
-    };
-
-    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
-    Chance.prototype.currency_pair = function (returnAsString) {
-        var currencies = this.unique(this.currency, 2, {
-            comparator: function(arr, val) {
-
-                return arr.reduce(function(acc, item) {
-                    // If a match has been found, short circuit check and just return
-                    return acc || (item.code === val.code);
-                }, false);
-            }
-        });
-
-        if (returnAsString) {
-            return  currencies[0] + '/' + currencies[1];
-        } else {
-            return currencies;
-        }
     };
 
     // -- End Finance
