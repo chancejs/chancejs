@@ -550,6 +550,11 @@
 
     // -- Web --
 
+    // Apple Push Token
+    Chance.prototype.apple_token = function (options) {
+        return this.string({ pool: "abcdef1234567890", length: 64 });
+    };
+
     Chance.prototype.color = function (options) {
         function gray(value, delimiter) {
             return [value, value, value].join(delimiter || '');
@@ -635,7 +640,7 @@
 
     // -- End Web --
 
-    // -- Address --
+    // -- Location --
 
     Chance.prototype.address = function (options) {
         options = initOptions(options);
@@ -787,7 +792,7 @@
         return zip.join("");
     };
 
-    // -- End Address --
+    // -- End Location --
 
     // -- Time
 
@@ -1048,11 +1053,6 @@
             }
             return (typeof options.sum !== 'undefined' && options.sum) ? rolls.reduce(function (p, c) { return p + c; }) : rolls;
         }
-    };
-
-    // Apple Device Token
-    Chance.prototype.apple_token = function (options) {
-        return this.string({ pool: "abcdef1234567890", length: 64 });
     };
 
     // Guid
