@@ -1,4 +1,4 @@
-//  Chance.js 0.6.0
+//  Chance.js 0.6.1
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -42,7 +42,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "0.6.0";
+    Chance.prototype.VERSION = "0.6.1";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -173,29 +173,6 @@
     Chance.prototype.natural = function (options) {
         options = initOptions(options, {min: 0, max: MAX_INT});
         return this.integer(options);
-    };
-
-    Chance.prototype.normal = function (options) {
-        options = initOptions(options, {mean : 0, dev : 1});
-
-        // The Marsaglia Polar method
-        var s, u, v, norm,
-            mean = options.mean,
-            dev = options.dev;
-
-        do {
-            // U and V are from the uniform distribution on (-1, 1)
-            u = this.random() * 2 - 1;
-            v = this.random() * 2 - 1;
-
-            s = u * u + v * v;
-        } while (s >= 1);
-
-        // Compute the standard normal variate
-        norm = u * Math.sqrt(-2 * Math.log(s) / s);
-
-        // Shape and scale
-        return dev * norm + mean;
     };
 
     Chance.prototype.string = function (options) {
@@ -330,11 +307,11 @@
         // get an index
         var selected = this.natural({ min: 1, max: sum });
 
-        var total = weights[0];
+        var total = 0;
         var chosen;
         // Using some() here so we can bail as soon as we get our match
         weights.some(function(weight, index) {
-            if (selected < total + weight && selected >= total) {
+            if (selected <= total + weight) {
                 chosen = arr[index];
                 return true;
             }
@@ -470,6 +447,21 @@
         return this.date(options);
     };
 
+    // CPF; ID to identify taxpayers in Brazil
+    Chance.prototype.cpf = function () {
+        var n = this.n(this.natural, 9, { max: 9 });
+        var d1 = n[8]*2+n[7]*3+n[6]*4+n[5]*5+n[4]*6+n[3]*7+n[2]*8+n[1]*9+n[0]*10;
+        d1 = 11 - (d1 % 11);
+        if (d1>=10) {
+            d1 = 0;
+        }
+        var d2 = d1*2+n[8]*3+n[7]*4+n[6]*5+n[5]*6+n[4]*7+n[3]*8+n[2]*9+n[1]*10+n[0]*11;
+        d2 = 11 - (d2 % 11);
+        if (d2>=10) {
+            d2 = 0;
+        }
+        return ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
+    };
 
     Chance.prototype.first = function (options) {
         options = initOptions(options, {gender: this.gender()});
@@ -479,7 +471,6 @@
     Chance.prototype.gender = function () {
         return this.pick(['Male', 'Female']);
     };
-
 
     Chance.prototype.last = function () {
         return this.pick(this.get("lastNames"));
@@ -558,6 +549,11 @@
     // -- End Person --
 
     // -- Web --
+
+    // Apple Push Token
+    Chance.prototype.apple_token = function (options) {
+        return this.string({ pool: "abcdef1234567890", length: 64 });
+    };
 
     Chance.prototype.color = function (options) {
         function gray(value, delimiter) {
@@ -644,7 +640,7 @@
 
     // -- End Web --
 
-    // -- Address --
+    // -- Location --
 
     Chance.prototype.address = function (options) {
         options = initOptions(options);
@@ -652,8 +648,8 @@
     };
 
     Chance.prototype.altitude = function (options) {
-        options = initOptions(options, {fixed : 5});
-        return this.floating({min: 0, max: 32736000, fixed: options.fixed});
+        options = initOptions(options, {fixed : 5, max: 8848});
+        return this.floating({min: 0, max: options.max, fixed: options.fixed});
     };
 
     Chance.prototype.areacode = function (options) {
@@ -676,8 +672,8 @@
     };
 
     Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed: 5});
-        return this.floating({min: -35994, max: 0, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: -2550});
+        return this.floating({min: options.min, max: 0, fixed: options.fixed});
     };
 
     Chance.prototype.geohash = function (options) {
@@ -796,7 +792,7 @@
         return zip.join("");
     };
 
-    // -- End Address --
+    // -- End Location --
 
     // -- Time
 
@@ -934,6 +930,35 @@
         return options.raw ? type : type.name;
     };
 
+    //return all world currency by ISO 4217
+    Chance.prototype.currency_types = function () {
+        return this.get("currency_types");
+    };
+
+    //return random world currency by ISO 4217
+    Chance.prototype.currency = function () {
+        return this.pick(this.currency_types());
+    };
+
+    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
+    Chance.prototype.currency_pair = function (returnAsString) {
+        var currencies = this.unique(this.currency, 2, {
+            comparator: function(arr, val) {
+
+                return arr.reduce(function(acc, item) {
+                    // If a match has been found, short circuit check and just return
+                    return acc || (item.code === val.code);
+                }, false);
+            }
+        });
+
+        if (returnAsString) {
+            return  currencies[0] + '/' + currencies[1];
+        } else {
+            return currencies;
+        }
+    };
+
     Chance.prototype.dollar = function (options) {
         // By default, a somewhat more sane max for dollar than all available numbers
         options = initOptions(options, {max : 10000, min : 0});
@@ -992,36 +1017,6 @@
         return this.year({max: new Date().getFullYear() + 10});
     };
 
-    //return all world currency by ISO 4217
-    Chance.prototype.currency_types = function () {
-        return this.get("currency_types");
-    };
-
-
-    //return random world currency by ISO 4217
-    Chance.prototype.currency = function () {
-        return this.pick(this.currency_types());
-    };
-
-    //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
-    Chance.prototype.currency_pair = function (returnAsString) {
-        var currencies = this.unique(this.currency, 2, {
-            comparator: function(arr, val) {
-
-                return arr.reduce(function(acc, item) {
-                    // If a match has been found, short circuit check and just return
-                    return acc || (item.code === val.code);
-                }, false);
-            }
-        });
-
-        if (returnAsString) {
-            return  currencies[0] + '/' + currencies[1];
-        } else {
-            return currencies;
-        }
-    };
-
     // -- End Finance
 
     // -- Miscellaneous --
@@ -1057,11 +1052,6 @@
             }
             return (typeof options.sum !== 'undefined' && options.sum) ? rolls.reduce(function (p, c) { return p + c; }) : rolls;
         }
-    };
-
-    // Apple Device Token
-    Chance.prototype.apple_token = function (options) {
-        return this.string({ pool: "abcdef1234567890", length: 64 });
     };
 
     // Guid
@@ -1495,6 +1485,29 @@
         }
 
         return mac;
+    };
+
+    Chance.prototype.normal = function (options) {
+        options = initOptions(options, {mean : 0, dev : 1});
+
+        // The Marsaglia Polar method
+        var s, u, v, norm,
+            mean = options.mean,
+            dev = options.dev;
+
+        do {
+            // U and V are from the uniform distribution on (-1, 1)
+            u = this.random() * 2 - 1;
+            v = this.random() * 2 - 1;
+
+            s = u * u + v * v;
+        } while (s >= 1);
+
+        // Compute the standard normal variate
+        norm = u * Math.sqrt(-2 * Math.log(s) / s);
+
+        // Shape and scale
+        return dev * norm + mean;
     };
 
     Chance.prototype.radio = function (options) {
