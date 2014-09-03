@@ -155,5 +155,16 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
+
+        describe("cpf()", function () {
+            it("returns a random valid taxpayer number for Brazil citizens (CPF)", function () {
+                _(1000).times(function () {
+                    cpf = chance.cpf();
+                    expect(cpf).to.be.a('string');
+                    expect(cpf).to.match(/^\d{3}.\d{3}.\d{3}-\d{2}$/m);
+                    expect(cpf).to.have.length(14);
+                });
+            });
+        });
     });
 });

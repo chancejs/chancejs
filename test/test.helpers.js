@@ -48,6 +48,31 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+            it("works with just 2 items", function() {
+                // Use Math.random as the random function rather than our Mersenne twister just to
+                //   speed things up here because this test takes awhile to gather enough data to
+                //   have a large enough sample size to adequately test. This increases speed
+                //   by a few orders of magnitude at the cost of repeatability (which we aren't using here)
+                var chance = new Chance(Math.random);
+                var picked = { a: 0, b: 0 };
+                // This makes it a tad slow, but we need a large enough sample size to adequately test
+                _(100000).times(function () {
+                    picked[chance.weighted(['a', 'b'], [1, 100])]++;
+                });
+
+                // This range is somewhat arbitrary, but good enough to test our constraints
+                expect(picked.b / picked.a).to.be.within(80, 120);
+
+                picked = { a: 0, b: 0 };
+                // This makes it a tad slow, but we need a large enough sample size to adequately test
+                _(100000).times(function () {
+                    picked[chance.weighted(['a', 'b'], [100, 1])]++;
+                });
+
+                // This range is somewhat arbitrary, but good enough to test our constraints
+                expect(picked.a / picked.b).to.be.within(80, 120);
+            });
+
             it("throws an error if called with an array of weights with length different from options", function() {
                 expect(function () {
                     chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3]);
