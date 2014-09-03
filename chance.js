@@ -447,6 +447,21 @@
         return this.date(options);
     };
 
+    // CPF; ID to identify taxpayers in Brazil
+    Chance.prototype.cpf = function () {
+        var n = this.n(this.natural, 9, { max: 9 });
+        var d1 = n[8]*2+n[7]*3+n[6]*4+n[5]*5+n[4]*6+n[3]*7+n[2]*8+n[1]*9+n[0]*10;
+        d1 = 11 - (d1 % 11);
+        if (d1>=10) {
+            d1 = 0;
+        }
+        var d2 = d1*2+n[8]*3+n[7]*4+n[6]*5+n[5]*6+n[4]*7+n[3]*8+n[2]*9+n[1]*10+n[0]*11;
+        d2 = 11 - (d2 % 11);
+        if (d2>=10) {
+            d2 = 0;
+        }
+        return ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
+    };
 
     Chance.prototype.first = function (options) {
         options = initOptions(options, {gender: this.gender()});
@@ -456,7 +471,6 @@
     Chance.prototype.gender = function () {
         return this.pick(['Male', 'Female']);
     };
-
 
     Chance.prototype.last = function () {
         return this.pick(this.get("lastNames"));
@@ -530,22 +544,6 @@
             ssn = this.string({pool: ssn_pool, length: 4});
         }
         return ssn;
-    };
-
-    // CPF; ID to identify taxpayers in Brazil
-    Chance.prototype.cpf = function () {
-        var n = this.n(this.natural, 9, { max: 9 });
-        var d1 = n[8]*2+n[7]*3+n[6]*4+n[5]*5+n[4]*6+n[3]*7+n[2]*8+n[1]*9+n[0]*10;
-        d1 = 11 - (d1 % 11);
-        if (d1>=10) {
-            d1 = 0;
-        }
-        var d2 = d1*2+n[8]*3+n[7]*4+n[6]*5+n[5]*6+n[4]*7+n[3]*8+n[2]*9+n[1]*10+n[0]*11;
-        d2 = 11 - (d2 % 11);
-        if (d2>=10) {
-            d2 = 0;
-        }
-        return ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
     };
 
     // -- End Person --
