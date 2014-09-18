@@ -1150,10 +1150,12 @@
     };
     function isModernBrowser() {
         try {
-          var _ = crypto.getRandomValues(new Uint32Array(1))[0];
-          return true;
+            // simply checking for crypto.getRandomValues to exist 
+            // isn't sufficent as some browsers have a version that throws
+            var _ = crypto.getRandomValues(new Uint32Array(1))[0];
+            return true;
         } catch (e) {
-            return false;
+              return false;
         }
     }
     function isNode() {
