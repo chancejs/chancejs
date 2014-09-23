@@ -1458,16 +1458,29 @@
       return result;
     });
 
-    function copyObject(source, target) {
-        var key, i, keys;
+    function _copyObject(source, target) {
+      var keys = o_keys(source);
 
-        target = target || (Array.isArray(source) ? [] : {});
+      for (var i = 0, l = keys.length; i < l; i++) {
+        key = keys[i];
+        target[key] = source[key] || target[key];
+      }
+    }
 
-        keys = o_keys(source);
+    function _copyArray(source, target) {
+      for (var i = 0, l = source.length; i < l; i++) {
+        target[i] = source[i];
+      }
+    }
 
-        for (var i = 0, l = keys.length; i< l; i++) {
-          key = keys[i];
-          target[key] = source[key] || target[key];
+    function copyObject(source, _target) {
+        var isArray = Array.isArray(source);
+        var target = _target || (isArray ? new Array(source.length) : {});
+
+        if (isArray) {
+          _copyArray(source, target);
+        } else {
+          _copyObject(source, target);
         }
 
         return target;
