@@ -1446,15 +1446,28 @@
         ]
     };
 
+    var o_hasOwnProperty = Object.prototype.hasOwnProperty;
+    var o_keys = (Object.keys || function(obj) {
+      var result = [];
+      for (var key in obj) {
+        if (o_hasOwnProperty.call(obj, key)) {
+          result.push(key);
+        }
+      }
+
+      return result;
+    });
+
     function copyObject(source, target) {
-        var key;
+        var key, i, keys;
 
         target = target || (Array.isArray(source) ? [] : {});
 
-        for (key in source) {
-            if (source.hasOwnProperty(key)) {
-                target[key] = source[key] || target[key];
-            }
+        keys = o_keys(source);
+
+        for (var i = 0, l = keys.length; i< l; i++) {
+          key = keys[i];
+          target[key] = source[key] || target[key];
         }
 
         return target;
