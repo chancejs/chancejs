@@ -1721,6 +1721,11 @@
         });
     }
 
+    // if there is a importsScrips object define chance for worker
+    if (typeof importScripts !== 'undefined') {
+        chance = new Chance();
+    }
+
     // If there is a window object, that at least has a document property,
     // instantiate and define chance on the window
     if (typeof window === "object" && typeof window.document === "object") {
