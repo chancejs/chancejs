@@ -1,4 +1,4 @@
-define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai, _) {
+define(['Chance', 'mocha', 'chai', 'underscore', 'phoneTest'], function (Chance, mocha, chai, _, phoneTest) {
     var assert = chai.assert,
         expect = chai.expect;
 
@@ -166,6 +166,38 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     expect(chance.phone({formatted : false, parens: true})).to.be.a('string');
                     expect(chance.phone({formatted : false, parens: true})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
+                });
+            });
+
+            it("phone({ukPhone: true}) returns a string", function () {
+                expect(chance.phone({ukPhone: true})).to.be.a('string');
+            });
+
+            it("phone({ukMobile: true}) returns a string", function () {
+                expect(chance.phone({ukMobile: true})).to.be.a('string');
+            });
+
+            it('phone({ukPhone: true}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(chance.phone({ukPhone: true}))).to.be.true;
+                });
+            });
+
+            it('phone({ukPhone: true, formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(phoneTest.format(chance.phone({ukPhone: true, formatted: false})))).to.be.true;
+                });
+            });
+
+            it('phone({ukMobile: true}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(chance.phone({ukMobile: true}))).to.be.true;
+                });
+            });
+
+            it('phone({ukMobile: true, formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(phoneTest.format(chance.phone({ukMobile: true, formatted: false})))).to.be.true;
                 });
             });
         });
