@@ -169,35 +169,35 @@ define(['Chance', 'mocha', 'chai', 'underscore', 'phoneTest'], function (Chance,
                 });
             });
 
-            it("phone({ukPhone: true}) returns a string", function () {
-                expect(chance.phone({ukPhone: true})).to.be.a('string');
+            it("phone({country: 'uk'}) returns a string", function () {
+                expect(chance.phone({country: 'uk'})).to.be.a('string');
             });
 
-            it("phone({ukMobile: true}) returns a string", function () {
-                expect(chance.phone({ukMobile: true})).to.be.a('string');
+            it("phone({country: 'uk', mobile: true}) returns a string", function () {
+                expect(chance.phone({country: 'uk', mobile: true})).to.be.a('string');
             });
 
-            it('phone({ukPhone: true}) looks right', function () {
+            it('phone({country: "uk"}) looks right', function () {
                 _(1000).times(function () {
-                    expect(phoneTest.isValid(chance.phone({ukPhone: true}))).to.be.true;
+                    expect(phoneTest.isValid(chance.phone({country: 'uk'}))).to.be.true;
                 });
             });
 
-            it('phone({ukPhone: true, formatted: false}) looks right', function () {
+            it('phone({country: "uk", formatted: false}) looks right', function () {
                 _(1000).times(function () {
-                    expect(phoneTest.isValid(phoneTest.format(chance.phone({ukPhone: true, formatted: false})))).to.be.true;
+                    expect(phoneTest.isValid(phoneTest.format(chance.phone({country: 'uk', formatted: false})))).to.be.true;
                 });
             });
 
-            it('phone({ukMobile: true}) looks right', function () {
+            it('phone({country: "uk", mobile: true}) looks right', function () {
                 _(1000).times(function () {
-                    expect(phoneTest.isValid(chance.phone({ukMobile: true}))).to.be.true;
+                    expect(phoneTest.isValid(chance.phone({country: 'uk', mobile: true}))).to.be.true;
                 });
             });
 
-            it('phone({ukMobile: true, formatted: false}) looks right', function () {
+            it('phone({country: "uk", mobile: true, formatted: false}) looks right', function () {
                 _(1000).times(function () {
-                    expect(phoneTest.isValid(phoneTest.format(chance.phone({ukMobile: true, formatted: false})))).to.be.true;
+                    expect(phoneTest.isValid(phoneTest.format(chance.phone({country: 'uk', mobile: true, formatted: false})))).to.be.true;
                 });
             });
         });
