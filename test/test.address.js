@@ -200,6 +200,38 @@ define(['Chance', 'mocha', 'chai', 'underscore', 'phoneTest'], function (Chance,
                     expect(phoneTest.isValid(phoneTest.format(chance.phone({country: 'uk', mobile: true, formatted: false})))).to.be.true;
                 });
             });
+
+            it("phone({country: 'fr'}) returns a string", function () {
+                expect(chance.phone({country: 'fr'})).to.be.a('string');
+            });
+
+            it("phone({country: 'fr', mobile: true}) returns a string", function () {
+                expect(chance.phone({country: 'fr', mobile: true})).to.be.a('string');
+            });
+
+            it('phone({country: "fr"}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr'})).match(/0[123459] .. .. .. ../);
+                });
+            });
+
+            it('phone({country: "fr", formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr', formatted: false})).match(/0........./);
+                });
+            });
+
+            it('phone({country: "fr", mobile: true}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr', mobile: true})).match(/0[67] .. .. .. ../);
+                });
+            });
+
+            it('phone({country: "fr", mobile: true, formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr', mobile: true, formatted: false})).match(/0[67]......../);
+                });
+            });
         });
 
         describe("City", function () {
