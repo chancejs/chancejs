@@ -709,43 +709,62 @@
             };
         options = initOptions(options, {
             formatted: true,
-            ukPhone: false,
-            ukMobile: false
+            country: 'us',
+            mobile: false
         });
         if (!options.formatted) {
             options.parens = false;
         }
-        if (options.ukPhone) {
-            numPick = chance.pick([
-                //valid area codes of major cities/counties followed by random numbers in required format.
-                { area: '01' + this.character({ pool: '234569' }) + '1 ', sections: [3,4] },
-                { area: '020 ' + this.character({ pool: '378' }), sections: [3,4] },
-                { area: '023 ' + this.character({ pool: '89' }), sections: [3,4] },
-                { area: '024 7', sections: [3,4] },
-                { area: '028 ' + this.pick(['25','28','37','71','82','90','92','95']), sections: [2,4] },
-                { area: '012' + this.pick(['04','08','54','76','97','98']) + ' ', sections: [5] },
-                { area: '013' + this.pick(['63','64','84','86']) + ' ', sections: [5] },
-                { area: '014' + this.pick(['04','20','60','61','80','88']) + ' ', sections: [5] },
-                { area: '015' + this.pick(['24','27','62','66']) + ' ', sections: [5] },
-                { area: '016' + this.pick(['06','29','35','47','59','95']) + ' ', sections: [5] },
-                { area: '017' + this.pick(['26','44','50','68']) + ' ', sections: [5] },
-                { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [5] },
-                { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [5] }
-            ]);
-            return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
-        } else if (options.ukMobile) {
-            numPick = chance.pick([
-                { area: '07' + this.pick(['4','5','7','8','9']), sections: [2,6] },
-                { area: '07624 ', sections: [6] }
-            ]);
-            return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
-        } else {
-            var areacode = this.areacode(options).toString();
-            var exchange = this.natural({ min: 2, max: 9 }).toString() +
-                this.natural({ min: 0, max: 9 }).toString() +
-                this.natural({ min: 0, max: 9 }).toString();
-            var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
-            return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
+        switch (options.country) {
+            case 'fr':
+                if (!options.mobile) {
+                    numPick = chance.pick([
+                        // Valid zone and département codes.
+                        '01' + this.pick(['30', '34', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '53', '55', '56', '58', '60', '64', '69', '70', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83']) + self.string({ pool: '0123456789', length: 6}),
+                        '02' + this.pick(['14', '18', '22', '23', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '40', '41', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '56', '57', '61', '62', '69', '72', '76', '77', '78', '85', '90', '96', '97', '98', '99']) + self.string({ pool: '0123456789', length: 6}),
+                        '03' + this.pick(['10', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '39', '44', '45', '51', '52', '54', '55', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90']) + self.string({ pool: '0123456789', length: 6}),
+                        '04' + this.pick(['11', '13', '15', '20', '22', '26', '27', '30', '32', '34', '37', '42', '43', '44', '50', '56', '57', '63', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '88', '89', '90', '91', '92', '93', '94', '95', '97', '98']) + self.string({ pool: '0123456789', length: 6}),
+                        '05' + this.pick(['08', '16', '17', '19', '24', '31', '32', '33', '34', '35', '40', '45', '46', '47', '49', '53', '55', '56', '57', '58', '59', '61', '62', '63', '64', '65', '67', '79', '81', '82', '86', '87', '90', '94']) + self.string({ pool: '0123456789', length: 6}),
+                        '09' + self.string({ pool: '0123456789', length: 8}),
+                    ]);
+                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                } else {
+                    numPick = this.pick(['06', '07']) + self.string({ pool: '0123456789', length: 8});
+                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                }
+            case 'uk':
+                if (!options.mobile) {
+                    numPick = chance.pick([
+                        //valid area codes of major cities/counties followed by random numbers in required format.
+                        { area: '01' + this.character({ pool: '234569' }) + '1 ', sections: [3,4] },
+                        { area: '020 ' + this.character({ pool: '378' }), sections: [3,4] },
+                        { area: '023 ' + this.character({ pool: '89' }), sections: [3,4] },
+                        { area: '024 7', sections: [3,4] },
+                        { area: '028 ' + this.pick(['25','28','37','71','82','90','92','95']), sections: [2,4] },
+                        { area: '012' + this.pick(['04','08','54','76','97','98']) + ' ', sections: [5] },
+                        { area: '013' + this.pick(['63','64','84','86']) + ' ', sections: [5] },
+                        { area: '014' + this.pick(['04','20','60','61','80','88']) + ' ', sections: [5] },
+                        { area: '015' + this.pick(['24','27','62','66']) + ' ', sections: [5] },
+                        { area: '016' + this.pick(['06','29','35','47','59','95']) + ' ', sections: [5] },
+                        { area: '017' + this.pick(['26','44','50','68']) + ' ', sections: [5] },
+                        { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [5] },
+                        { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [5] }
+                    ]);
+                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
+                } else {
+                    numPick = chance.pick([
+                        { area: '07' + this.pick(['4','5','7','8','9']), sections: [2,6] },
+                        { area: '07624 ', sections: [6] }
+                    ]);
+                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
+                }
+            case 'us':
+                var areacode = this.areacode(options).toString();
+                var exchange = this.natural({ min: 2, max: 9 }).toString() +
+                    this.natural({ min: 0, max: 9 }).toString() +
+                    this.natural({ min: 0, max: 9 }).toString();
+                var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
+                return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
         }
     };
 
