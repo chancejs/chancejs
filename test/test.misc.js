@@ -241,4 +241,18 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
     });
+
+    describe("CNPJ", function () {
+        var chance = new Chance();
+
+        it("returns a valid Brazil company ID (CNPJ)", function () {
+            _(1000).times(function () {
+                cnpj = chance.cnpj();
+                expect(cnpj).to.be.a('string');
+                expect(cnpj).to.match(/^\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}$/m);
+                expect(cnpj).to.have.length(18);
+            });
+        });
+
+    });
 });
