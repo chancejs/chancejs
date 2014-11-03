@@ -311,6 +311,35 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(chance1.random()).to.equal(chance2.random());
                 });
             });
+
+            it("returns repeatable results is a string is provided as a seed", function () {
+                seed = "foo";
+                chance1 = new Chance(seed);
+                chance2 = new Chance(seed);
+
+                _(1000).times(function () {
+                    expect(chance1.random()).to.equal(chance2.random());
+                });
+            });
+
+            it("returns different results if two different strings are provided", function () {
+                chance1 = new Chance("foo");
+                chance2 = new Chance("baz");
+
+                _(1000).times(function () {
+                    expect(chance1.random()).to.not.equal(chance2.random());
+                });
+            });
+
+            it("returns different results if multiple arguments are provided", function () {
+                seed = new Date().getTime();
+                chance1 = new Chance(seed, "foo");
+                chance2 = new Chance(seed, "bar");
+
+                _(1000).times(function () {
+                    expect(chance1.random()).to.not.equal(chance2.random());
+                });
+            });
         });
 
         describe("arbitrary function", function () {
