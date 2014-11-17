@@ -312,7 +312,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
-            it("returns repeatable results is a string is provided as a seed", function () {
+            it("returns repeatable results if a string is provided as a seed", function () {
                 seed = "foo";
                 chance1 = new Chance(seed);
                 chance2 = new Chance(seed);
