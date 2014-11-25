@@ -124,7 +124,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("returns a proper android id", function () {
             _(1000).times(function () {
                 android_id = chance.android_id();
-                expect(android_id).to.match(/([0-9a-zA-Z]){64}/);
+                expect(android_id).to.match(/APA91([0-9a-zA-Z-_]){178}/);
             });
         });
     });

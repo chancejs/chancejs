@@ -551,7 +551,7 @@
     // -- Web --
     // Android GCM Registration ID
     Chance.prototype.android_id = function (options) {
-        return this.string({ pool: "0123456789abcefghijklmnopqrstuvwxyz", length: 64 });
+        return "APA91" + this.string({ pool: "0123456789abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", length: 178 });
     };
 
     // Apple Push Token
