@@ -549,6 +549,10 @@
     // -- End Person --
 
     // -- Web --
+    // Android GCM Registration ID
+    Chance.prototype.android_id = function (options) {
+        return this.string({ pool: "0123456789abcefghijklmnopqrstuvwxyz", length: 64 });
+    };
 
     // Apple Push Token
     Chance.prototype.apple_token = function (options) {

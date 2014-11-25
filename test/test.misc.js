@@ -118,6 +118,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
     });
 
+    describe("Android Registration ID", function(){
+        var android_id, chance = new Chance();
+
+        it("returns a proper android id", function () {
+            _(1000).times(function () {
+                android_id = chance.android_id();
+                expect(android_id).to.match(/([0-9a-zA-Z]){64}/);
+            });
+        });
+    });
+
     describe("Apple Token", function(){
         var apple_token, chance = new Chance();
 
