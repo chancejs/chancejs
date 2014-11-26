@@ -1,4 +1,4 @@
-define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai, _) {
+define(['Chance', 'mocha', 'chai', 'underscore', 'phoneTest'], function (Chance, mocha, chai, _, phoneTest) {
     var assert = chai.assert,
         expect = chai.expect;
 
@@ -166,6 +166,70 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 _(1000).times(function () {
                     expect(chance.phone({formatted : false, parens: true})).to.be.a('string');
                     expect(chance.phone({formatted : false, parens: true})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
+                });
+            });
+
+            it("phone({country: 'uk'}) returns a string", function () {
+                expect(chance.phone({country: 'uk'})).to.be.a('string');
+            });
+
+            it("phone({country: 'uk', mobile: true}) returns a string", function () {
+                expect(chance.phone({country: 'uk', mobile: true})).to.be.a('string');
+            });
+
+            it('phone({country: "uk"}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(chance.phone({country: 'uk'}))).to.be.true;
+                });
+            });
+
+            it('phone({country: "uk", formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(phoneTest.format(chance.phone({country: 'uk', formatted: false})))).to.be.true;
+                });
+            });
+
+            it('phone({country: "uk", mobile: true}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(chance.phone({country: 'uk', mobile: true}))).to.be.true;
+                });
+            });
+
+            it('phone({country: "uk", mobile: true, formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(phoneTest.isValid(phoneTest.format(chance.phone({country: 'uk', mobile: true, formatted: false})))).to.be.true;
+                });
+            });
+
+            it("phone({country: 'fr'}) returns a string", function () {
+                expect(chance.phone({country: 'fr'})).to.be.a('string');
+            });
+
+            it("phone({country: 'fr', mobile: true}) returns a string", function () {
+                expect(chance.phone({country: 'fr', mobile: true})).to.be.a('string');
+            });
+
+            it('phone({country: "fr"}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr'})).match(/0[123459] .. .. .. ../);
+                });
+            });
+
+            it('phone({country: "fr", formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr', formatted: false})).match(/0........./);
+                });
+            });
+
+            it('phone({country: "fr", mobile: true}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr', mobile: true})).match(/0[67] .. .. .. ../);
+                });
+            });
+
+            it('phone({country: "fr", mobile: true, formatted: false}) looks right', function () {
+                _(1000).times(function () {
+                    expect(chance.phone({country: 'fr', mobile: true, formatted: false})).match(/0[67]......../);
                 });
             });
         });

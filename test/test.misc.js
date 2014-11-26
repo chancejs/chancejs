@@ -118,6 +118,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
     });
 
+    describe("Android Registration ID", function(){
+        var android_id, chance = new Chance();
+
+        it("returns a proper android id", function () {
+            _(1000).times(function () {
+                android_id = chance.android_id();
+                expect(android_id).to.match(/APA91([0-9a-zA-Z-_]){178}/);
+            });
+        });
+    });
+
     describe("Apple Token", function(){
         var apple_token, chance = new Chance();
 
@@ -240,5 +251,19 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(chance.social_user()).to.have.property('network');
             });
         });
+    });
+
+    describe("CNPJ", function () {
+        var chance = new Chance();
+
+        it("returns a valid Brazil company ID (CNPJ)", function () {
+            _(1000).times(function () {
+                cnpj = chance.cnpj();
+                expect(cnpj).to.be.a('string');
+                expect(cnpj).to.match(/^\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}$/m);
+                expect(cnpj).to.have.length(18);
+            });
+        });
+
     });
 });
