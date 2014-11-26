@@ -1,4 +1,4 @@
-//  Chance.js 0.6.2
+//  Chance.js 0.6.3
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -42,7 +42,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "0.6.2";
+    Chance.prototype.VERSION = "0.6.3";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -722,7 +722,7 @@
         switch (options.country) {
             case 'fr':
                 if (!options.mobile) {
-                    numPick = chance.pick([
+                    numPick = this.pick([
                         // Valid zone and département codes.
                         '01' + this.pick(['30', '34', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '53', '55', '56', '58', '60', '64', '69', '70', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83']) + self.string({ pool: '0123456789', length: 6}),
                         '02' + this.pick(['14', '18', '22', '23', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '40', '41', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '56', '57', '61', '62', '69', '72', '76', '77', '78', '85', '90', '96', '97', '98', '99']) + self.string({ pool: '0123456789', length: 6}),
@@ -738,7 +738,7 @@
                 }
             case 'uk':
                 if (!options.mobile) {
-                    numPick = chance.pick([
+                    numPick = this.pick([
                         //valid area codes of major cities/counties followed by random numbers in required format.
                         { area: '01' + this.character({ pool: '234569' }) + '1 ', sections: [3,4] },
                         { area: '020 ' + this.character({ pool: '378' }), sections: [3,4] },
@@ -756,7 +756,7 @@
                     ]);
                     return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
                 } else {
-                    numPick = chance.pick([
+                    numPick = this.pick([
                         { area: '07' + this.pick(['4','5','7','8','9']), sections: [2,6] },
                         { area: '07624 ', sections: [6] }
                     ]);
