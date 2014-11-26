@@ -1,4 +1,4 @@
-//  Chance.js 0.6.1
+//  Chance.js 0.6.3
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -42,7 +42,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "0.6.1";
+    Chance.prototype.VERSION = "0.6.3";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -549,6 +549,10 @@
     // -- End Person --
 
     // -- Web --
+    // Android GCM Registration ID
+    Chance.prototype.android_id = function (options) {
+        return "APA91" + this.string({ pool: "0123456789abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", length: 178 });
+    };
 
     // Apple Push Token
     Chance.prototype.apple_token = function (options) {
@@ -697,18 +701,75 @@
     };
 
     Chance.prototype.phone = function (options) {
-        options = initOptions(options, {formatted : true});
+        var self = this,
+            numPick,
+            ukNum = function (parts) {
+                var section = [];
+                //fills the section part of the phone number with random numbers.
+                parts.sections.forEach(function(n) {
+                    section.push(self.string({ pool: '0123456789', length: n}));
+                });
+                return parts.area + section.join(' ');
+            };
+        options = initOptions(options, {
+            formatted: true,
+            country: 'us',
+            mobile: false
+        });
         if (!options.formatted) {
             options.parens = false;
         }
-        var areacode = this.areacode(options).toString();
-        var exchange = this.natural({min: 2, max: 9}).toString() +
-                this.natural({min: 0, max: 9}).toString() +
-                this.natural({min: 0, max: 9}).toString();
-
-        var subscriber = this.natural({min: 1000, max: 9999}).toString(); // this could be random [0-9]{4}
-
-        return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
+        switch (options.country) {
+            case 'fr':
+                if (!options.mobile) {
+                    numPick = this.pick([
+                        // Valid zone and département codes.
+                        '01' + this.pick(['30', '34', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '53', '55', '56', '58', '60', '64', '69', '70', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83']) + self.string({ pool: '0123456789', length: 6}),
+                        '02' + this.pick(['14', '18', '22', '23', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '40', '41', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '56', '57', '61', '62', '69', '72', '76', '77', '78', '85', '90', '96', '97', '98', '99']) + self.string({ pool: '0123456789', length: 6}),
+                        '03' + this.pick(['10', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '39', '44', '45', '51', '52', '54', '55', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90']) + self.string({ pool: '0123456789', length: 6}),
+                        '04' + this.pick(['11', '13', '15', '20', '22', '26', '27', '30', '32', '34', '37', '42', '43', '44', '50', '56', '57', '63', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '88', '89', '90', '91', '92', '93', '94', '95', '97', '98']) + self.string({ pool: '0123456789', length: 6}),
+                        '05' + this.pick(['08', '16', '17', '19', '24', '31', '32', '33', '34', '35', '40', '45', '46', '47', '49', '53', '55', '56', '57', '58', '59', '61', '62', '63', '64', '65', '67', '79', '81', '82', '86', '87', '90', '94']) + self.string({ pool: '0123456789', length: 6}),
+                        '09' + self.string({ pool: '0123456789', length: 8}),
+                    ]);
+                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                } else {
+                    numPick = this.pick(['06', '07']) + self.string({ pool: '0123456789', length: 8});
+                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                }
+            case 'uk':
+                if (!options.mobile) {
+                    numPick = this.pick([
+                        //valid area codes of major cities/counties followed by random numbers in required format.
+                        { area: '01' + this.character({ pool: '234569' }) + '1 ', sections: [3,4] },
+                        { area: '020 ' + this.character({ pool: '378' }), sections: [3,4] },
+                        { area: '023 ' + this.character({ pool: '89' }), sections: [3,4] },
+                        { area: '024 7', sections: [3,4] },
+                        { area: '028 ' + this.pick(['25','28','37','71','82','90','92','95']), sections: [2,4] },
+                        { area: '012' + this.pick(['04','08','54','76','97','98']) + ' ', sections: [5] },
+                        { area: '013' + this.pick(['63','64','84','86']) + ' ', sections: [5] },
+                        { area: '014' + this.pick(['04','20','60','61','80','88']) + ' ', sections: [5] },
+                        { area: '015' + this.pick(['24','27','62','66']) + ' ', sections: [5] },
+                        { area: '016' + this.pick(['06','29','35','47','59','95']) + ' ', sections: [5] },
+                        { area: '017' + this.pick(['26','44','50','68']) + ' ', sections: [5] },
+                        { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [5] },
+                        { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [5] }
+                    ]);
+                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
+                } else {
+                    numPick = this.pick([
+                        { area: '07' + this.pick(['4','5','7','8','9']), sections: [2,6] },
+                        { area: '07624 ', sections: [6] }
+                    ]);
+                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
+                }
+            case 'us':
+                var areacode = this.areacode(options).toString();
+                var exchange = this.natural({ min: 2, max: 9 }).toString() +
+                    this.natural({ min: 0, max: 9 }).toString() +
+                    this.natural({ min: 0, max: 9 }).toString();
+                var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
+                return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
+        }
     };
 
     Chance.prototype.postal = function () {
@@ -1446,15 +1507,41 @@
         ]
     };
 
-    function copyObject(source, target) {
-        var key;
+    var o_hasOwnProperty = Object.prototype.hasOwnProperty;
+    var o_keys = (Object.keys || function(obj) {
+      var result = [];
+      for (var key in obj) {
+        if (o_hasOwnProperty.call(obj, key)) {
+          result.push(key);
+        }
+      }
 
-        target = target || (Array.isArray(source) ? [] : {});
+      return result;
+    });
 
-        for (key in source) {
-            if (source.hasOwnProperty(key)) {
-                target[key] = source[key] || target[key];
-            }
+    function _copyObject(source, target) {
+      var keys = o_keys(source);
+
+      for (var i = 0, l = keys.length; i < l; i++) {
+        key = keys[i];
+        target[key] = source[key] || target[key];
+      }
+    }
+
+    function _copyArray(source, target) {
+      for (var i = 0, l = source.length; i < l; i++) {
+        target[i] = source[i];
+      }
+    }
+
+    function copyObject(source, _target) {
+        var isArray = Array.isArray(source);
+        var target = _target || (isArray ? new Array(source.length) : {});
+
+        if (isArray) {
+          _copyArray(source, target);
+        } else {
+          _copyObject(source, target);
         }
 
         return target;
@@ -1544,6 +1631,22 @@
 
     Chance.prototype.tv = function (options) {
         return this.radio(options);
+    };
+
+    // ID number for Brazil companies
+    Chance.prototype.cnpj = function () {
+        var n = this.n(this.natural, 8, { max: 9 });
+        var d1 = 2+n[7]*6+n[6]*7+n[5]*8+n[4]*9+n[3]*2+n[2]*3+n[1]*4+n[0]*5;
+        d1 = 11 - (d1 % 11);
+        if (d1>=10){
+            d1 = 0;
+        }
+        var d2 = d1*2+3+n[7]*7+n[6]*8+n[5]*9+n[4]*2+n[3]*3+n[2]*4+n[1]*5+n[0]*6;
+        d2 = 11 - (d2 % 11);
+        if (d2>=10){
+            d2 = 0;
+        }
+        return ''+n[0]+n[1]+'.'+n[2]+n[3]+n[4]+'.'+n[5]+n[6]+n[7]+'/0001-'+d1+d2;
     };
 
     // -- End Miscellaneous --
@@ -1693,6 +1796,11 @@
         define([], function () {
             return Chance;
         });
+    }
+
+    // if there is a importsScrips object define chance for worker
+    if (typeof importScripts !== 'undefined') {
+        chance = new Chance();
     }
 
     // If there is a window object, that at least has a document property,
