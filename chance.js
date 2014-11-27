@@ -548,7 +548,7 @@
 
     // -- End Person --
 
-    // -- Web --
+    // -- Mobile --
     // Android GCM Registration ID
     Chance.prototype.android_id = function (options) {
         return "APA91" + this.string({ pool: "0123456789abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", length: 178 });
@@ -558,7 +558,9 @@
     Chance.prototype.apple_token = function (options) {
         return this.string({ pool: "abcdef1234567890", length: 64 });
     };
+    // -- End Mobile --
 
+    // -- Web --
     Chance.prototype.color = function (options) {
         function gray(value, delimiter) {
             return [value, value, value].join(delimiter || '');
