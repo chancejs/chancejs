@@ -38,6 +38,10 @@ github_url: https://github.com/victorquinn/chancejs
   {% assign posts = site.categories.person %}
   {% include methods_sidebar.html %}
 
+  <a class=toc_title href="#mobile">Mobile</a>
+  {% assign posts = site.categories.mobile %}
+  {% include methods_sidebar.html %}
+
   <a class=toc_title href="#web">Web</a>
   {% assign posts = site.categories.web %}
   {% include methods_sidebar.html %}
@@ -133,6 +137,10 @@ github_url: https://github.com/victorquinn/chancejs
 
     <h2 id="person">Person</h2>
     {% assign posts = site.categories.person %}
+    {% include methods_full.html %}
+
+    <h2 id="web">Mobile</h2>
+    {% assign posts = site.categories.mobile %}
     {% include methods_full.html %}
 
     <h2 id="web">Web</h2>
