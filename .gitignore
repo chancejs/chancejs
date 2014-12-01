@@ -1,1 +1,6 @@
 public
+
+# Ignore leftovers from develop/master branches
+node_modules
+.idea
+test/lib
