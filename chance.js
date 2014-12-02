@@ -22,22 +22,37 @@
             return new Chance(seed);
         }
 
-        if (seed !== undefined) {
-            // If we were passed a generator rather than a seed, use it.
-            if (typeof seed === 'function') {
-                this.random = seed;
+        // if user has provided a function, use that as the generator
+        if (typeof seed === 'function') {
+            this.random = seed;
+            return this;
+        }
+
+        var seedling;
+        
+        if (arguments.length) {
+            // set a starting value of zero so we can add to it
+            this.seed = 0;
+        }
+        // otherwise, leave this.seed blank so that MT will recieve a blank
+
+        for (var i = 0; i < arguments.length; i++) {
+            seedling = 0;
+            if (typeof arguments[i] === 'string') {
+                for (var j = 0; j < arguments[i].length; j++) {
+                    seedling += (arguments[i].length - j) * arguments[i].charCodeAt(j);
+                }
             } else {
-                this.seed = seed;
+                seedling = this.seed;
             }
+            this.seed += (arguments.length - i) * seedling;
         }
 
         // If no generator function was provided, use our MT
-        if (typeof this.random === 'undefined') {
-            this.mt = this.mersenne_twister(seed);
-            this.random = function () {
-                return this.mt.random(this.seed);
-            };
-        }
+        this.mt = this.mersenne_twister(this.seed);
+        this.random = function () {
+            return this.mt.random(this.seed);
+        };
 
         return this;
     }
