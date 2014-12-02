@@ -3,3 +3,5 @@ node_modules
 .idea
 chance.min.js
 test/lib
+# Ignore gh-pages specific content
+public
