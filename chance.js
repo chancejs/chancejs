@@ -563,6 +563,7 @@
     Chance.prototype.wp8_anid2 = function (options) {
         return btoa( this.hash( { length : 32 } ) )
     };
+
     // -- End Mobile --
 
     // -- Web --
