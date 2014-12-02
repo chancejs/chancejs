@@ -43,6 +43,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("hour() returns a hour in 24 hour format", function () {
+            _(1000).times(function () {
+                hour = chance.hour({twentyfour: true});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(1, 24);
+            });
+        });
+
         it("minute() returns a minute", function () {
             _(1000).times(function () {
                 minute = chance.minute();
