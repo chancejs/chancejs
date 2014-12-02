@@ -558,6 +558,11 @@
     Chance.prototype.apple_token = function (options) {
         return this.string({ pool: "abcdef1234567890", length: 64 });
     };
+
+    //Windows Phone 7 ANID
+    Chance.prototype.wp7_anid = function (options) {
+        return 'A=' + this.guid().replace(/-/g, '').toUpperCase() + '&E=' + this.hash({ length:3 }) + '&W=' + this.integer({ min:0, max:9 });
+    };
     // -- End Mobile --
 
     // -- Web --

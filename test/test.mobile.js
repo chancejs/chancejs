@@ -22,4 +22,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
     });
+
+    describe("Windows Phone 7 ANID", function(){
+        var wp7_anid, chance = new Chance();
+
+        it("returns a proper windows phone 7 anid", function () {
+            _(1000).times(function () {
+                wp7_anid = chance.wp7_anid();
+                expect(wp7_anid).to.match(/^A=[0-9A-F]{32}&E=[0-9a-f]{3}&W=\d$/);
+            });
+        });
+    });
 });
