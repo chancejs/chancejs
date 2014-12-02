@@ -45,4 +45,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
     });
+
+    describe("BlackBerry Device PIN", function(){
+        var bb_pin, chance = new Chance();
+
+        it("returns a proper blackberry pin", function () {
+            _(1000).times(function () {
+                bb_pin = chance.bb_pin();
+                expect(bb_pin).to.match(/([0-9a-f]){8}/);
+            });
+        });
+    });
 });

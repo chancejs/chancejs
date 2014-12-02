@@ -564,9 +564,14 @@
         return btoa( this.hash( { length : 32 } ) );
     };
 
-    //Windows Phone 7 ANID
+    // Windows Phone 7 ANID
     Chance.prototype.wp7_anid = function (options) {
         return 'A=' + this.guid().replace(/-/g, '').toUpperCase() + '&E=' + this.hash({ length:3 }) + '&W=' + this.integer({ min:0, max:9 });
+    };
+
+    // BlackBerry Device PIN
+    Chance.prototype.bb_pin = function (options) {
+        return this.hash({ length: 8 });
     };
 
     // -- End Mobile --
