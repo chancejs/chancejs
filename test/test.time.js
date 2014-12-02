@@ -51,6 +51,30 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("hour() returns a hour, can specify min and max", function () {
+            _(1000).times(function () {
+                hour = chance.hour({min: 7, max: 10});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(7, 10);
+            });
+        });
+
+        it("hour() returns a hour, can specify just min", function () {
+            _(1000).times(function () {
+                hour = chance.hour({min: 5});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(5, 12);
+            });
+        });
+
+        it("hour() returns a hour, can specify just max", function () {
+            _(1000).times(function () {
+                hour = chance.hour({max: 7});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(1, 7);
+            });
+        });
+
         it("minute() returns a minute", function () {
             _(1000).times(function () {
                 minute = chance.minute();
