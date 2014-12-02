@@ -50,6 +50,14 @@ then in the HTML of your app:
 </script>
 ```
 
+### spm [![](http://spmjs.io/badge/chance)](http://spmjs.io/package/chance)
+
+It can also be used with [spm](http://spmjs.io/package/chance).
+
+```
+spm install chance
+```
+
 ### Component
 
 It can also be used with [Component](http://component.io)
@@ -106,43 +114,50 @@ THANK YOU!
 
 ```
 project  : chancejs
- repo age : 1 year, 2 months
- active   : 89 days
- commits  : 346
- files    : 21
+ repo age : 1 year, 5 months
+ active   : 103 days
+ commits  : 387
+ files    : 22
  authors  :
-   257	Victor Quinn            74.3%
-    13	Tim Petricola           3.8%
-    11	davmillar               3.2%
-     5	Alex DiLiberto          1.4%
-     5	Matt Klaber             1.4%
-     5	Michael Cordingley      1.4%
-     4	Kevin Garnett           1.2%
-     4	Avishaan                1.2%
-     4	Abhijeet Pawar          1.2%
-     3	qjcg                    0.9%
-     3	Alexandr Lozovyuk       0.9%
-     3	Nicholas Johnson        0.9%
-     2	xshyamx                 0.6%
-     2	Adam Krebs              0.6%
-     2	Andreas Koeberle        0.6%
-     2	Chris Villarreal        0.6%
-     2	Iskren Chernev          0.6%
-     2	Pascal Borreli          0.6%
-     2	dhilipsiva              0.6%
-     2	path411                 0.6%
-     2	shyam                   0.6%
-     1	Richard Anaya           0.3%
-     1	Johannes Stein          0.3%
-     1	ddunning                0.3%
-     1	Doug Lawrence           0.3%
-     1	flrent                  0.3%
-     1	leesei                  0.3%
-     1	lkptrzk                 0.3%
-     1	Dominic Barnes          0.3%
-     1	Ryan Tenney             0.3%
-     1	Samuel Greene           0.3%
-     1	Ng, Patrick             0.3%
+   274	Victor Quinn        70.8%
+    13	Oliver Salzburg     3.4%
+    13	Tim Petricola       3.4%
+    11	davmillar           2.8%
+     5	Michael Cordingley  1.3%
+     5	Alex DiLiberto      1.3%
+     5	Matt Klaber         1.3%
+     4	Avishaan            1.0%
+     4	Kevin Garnett       1.0%
+     4	Abhijeet Pawar      1.0%
+     4	Chris Villarreal    1.0%
+     3	Alexandr Lozovyuk   0.8%
+     3	qjcg                0.8%
+     3	Nicholas Johnson    0.8%
+     2	xshyamx             0.5%
+     2	Adam Krebs          0.5%
+     2	Andreas Koeberle    0.5%
+     2	Iskren Chernev      0.5%
+     2	Nathan MacInnes     0.5%
+     2	Pascal Borreli      0.5%
+     2	SeeSchloss          0.5%
+     2	Stefan Penner       0.5%
+     2	dhilipsiva          0.5%
+     2	path411             0.5%
+     2	shyam               0.5%
+     1	Brian.Barnett       0.3%
+     1	Johannes Stein      0.3%
+     1	afc163              0.3%
+     1	Doug Lawrence       0.3%
+     1	ddunning            0.3%
+     1	Dominic Barnes      0.3%
+     1	flrent              0.3%
+     1	kkroner             0.3%
+     1	leesei              0.3%
+     1	Richard Anaya       0.3%
+     1	Ryan Tenney         0.3%
+     1	Samuel Greene       0.3%
+     1	lkptrzk             0.3%
+     1	Ng Patrick          0.3%
 ```
 
 ### Contribute! 
