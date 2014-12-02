@@ -558,6 +558,12 @@
     Chance.prototype.apple_token = function (options) {
         return this.string({ pool: "abcdef1234567890", length: 64 });
     };
+
+    // BlackBerry Device PIN
+    Chance.prototype.bb_pin = function (options) {
+        return this.hash({ length: 8 });
+    };
+
     // -- End Mobile --
 
     // -- Web --
