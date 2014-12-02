@@ -66,6 +66,31 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("month() returns a month, can specify min and max", function () {
+            _(1000).times(function () {
+                month = chance.month({raw: true, min: 5, max: 10});
+                expect(month).to.not.be.a('string');
+                expect(month.numeric).to.be.within(5, 10);
+            });
+        });
+
+        it("month() returns a month, can specify just min", function () {
+            _(1000).times(function () {
+                month = chance.month({raw: true, min: 5});
+                expect(month).to.not.be.a('string');
+                expect(month.numeric).to.be.within(5, 12);
+            });
+        });
+
+        it("month() returns a month, can specify just max", function () {
+            _(1000).times(function () {
+                month = chance.month({raw: true, max: 7});
+                expect(month).to.not.be.a('string');
+                expect(month.numeric).to.be.within(1, 7);
+            });
+        });
+
+
         it("timestamp() returns a timestamp", function () {
             _(1000).times(function () {
                 timestamp = chance.timestamp();
