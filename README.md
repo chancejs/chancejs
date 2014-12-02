@@ -50,6 +50,14 @@ then in the HTML of your app:
 </script>
 ```
 
+### spm [![](http://spmjs.io/badge/chance)](http://spmjs.io/package/chance)
+
+It can also be used with [spm](http://spmjs.io/package/chance).
+
+```
+spm install chance
+```
+
 ### RequireJS
 
 Chance also includes an AMD define so it can be used with RequireJS.
