@@ -23,6 +23,18 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         });
     });
 
+    describe("Windows Phone 8 ANID2", function(){
+        var wp8_anid2, chance = new Chance();
+
+        it("returns a proper windows phone 8 anid2", function () {
+            _(1000).times(function () {
+                wp8_anid2 = chance.wp8_anid2();
+                console.log(wp8_anid2);
+                expect(wp8_anid2).to.match(/^([0-9a-zA-Z]){43}=$/);
+            });
+        });
+    });
+
     describe("Windows Phone 7 ANID", function(){
         var wp7_anid, chance = new Chance();
 
