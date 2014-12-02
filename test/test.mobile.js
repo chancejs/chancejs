@@ -29,7 +29,6 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         it("returns a proper windows phone 8 anid2", function () {
             _(1000).times(function () {
                 wp8_anid2 = chance.wp8_anid2();
-                console.log(wp8_anid2);
                 expect(wp8_anid2).to.match(/^([0-9a-zA-Z]){43}=$/);
             });
         });
