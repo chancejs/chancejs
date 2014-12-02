@@ -558,6 +558,11 @@
     Chance.prototype.apple_token = function (options) {
         return this.string({ pool: "abcdef1234567890", length: 64 });
     };
+
+    // Windows Phone 8 ANID2
+    Chance.prototype.wp8_anid2 = function (options) {
+        return btoa( this.hash( { length : 32 } ) )
+    };
     // -- End Mobile --
 
     // -- Web --
