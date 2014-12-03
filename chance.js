@@ -85,16 +85,17 @@
      * @param input
      */
     var base64 = function(input) {
-        throw new Error("No Base64 encoder available.");
+        throw new Error('No Base64 encoder available.');
     };
+
     // Select proper Base64 encoder.
     (function determineBase64Encoder() {
         if (typeof btoa === 'function') {
             base64 = btoa;
         } else if (typeof Buffer === 'function') {
             base64 = function(input) {
-                return Buffer(input).toString('base64');
-            }
+                return new Buffer(input).toString('base64');
+            };
         }
     })();
 
@@ -770,6 +771,7 @@
         if (!options.formatted) {
             options.parens = false;
         }
+        var phone;
         switch (options.country) {
             case 'fr':
                 if (!options.mobile) {
@@ -782,11 +784,12 @@
                         '05' + this.pick(['08', '16', '17', '19', '24', '31', '32', '33', '34', '35', '40', '45', '46', '47', '49', '53', '55', '56', '57', '58', '59', '61', '62', '63', '64', '65', '67', '79', '81', '82', '86', '87', '90', '94']) + self.string({ pool: '0123456789', length: 6}),
                         '09' + self.string({ pool: '0123456789', length: 8}),
                     ]);
-                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                    phone = options.formatted ? numPick.match(/../g).join(' ') : numPick;
                 } else {
                     numPick = this.pick(['06', '07']) + self.string({ pool: '0123456789', length: 8});
-                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                    phone = options.formatted ? numPick.match(/../g).join(' ') : numPick;
                 }
+                break;
             case 'uk':
                 if (!options.mobile) {
                     numPick = this.pick([
@@ -805,22 +808,24 @@
                         { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [5] },
                         { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [5] }
                     ]);
-                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
+                    phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
                 } else {
                     numPick = this.pick([
                         { area: '07' + this.pick(['4','5','7','8','9']), sections: [2,6] },
                         { area: '07624 ', sections: [6] }
                     ]);
-                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
+                    phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
                 }
+                break;
             case 'us':
                 var areacode = this.areacode(options).toString();
                 var exchange = this.natural({ min: 2, max: 9 }).toString() +
                     this.natural({ min: 0, max: 9 }).toString() +
                     this.natural({ min: 0, max: 9 }).toString();
                 var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
-                return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
+                phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
         }
+        return phone;
     };
 
     Chance.prototype.postal = function () {
