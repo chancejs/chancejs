@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Time", function () {
-        var date, hour, minute, time, timestamp, month, year, chance = new Chance();
+        var date, hour, minute, time, timestamp, month, year, bounds, chance = new Chance();
 
         it("date() returns a date", function () {
             _(1000).times(function () {
@@ -25,6 +25,35 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 date = chance.date({day: 21});
                 expect(date).to.be.a('Date');
                 expect(date.getDate()).to.equal(21);
+            });
+        });
+
+        it("date() returns a date, can specify min and max", function () {
+            _(1000).times(function () {
+                bounds = {min: new Date(), max: new Date(new Date().getTime() + 1234567890123)};
+                date = chance.date(bounds);
+                expect(date).to.be.a('Date');
+                expect(date).to.be.within(bounds.min, bounds.max);
+            });
+        });
+
+        it("date() returns a date, can specify just min", function () {
+            _(1000).times(function () {
+                bounds = {min: new Date()};
+                date = chance.date(bounds);
+                expect(date).to.be.a('Date');
+                expect(date).to.be.above(bounds.min);
+            });
+        });
+
+        it("date() returns a date, can specify just max", function () {
+            _(1000).times(function () {
+                bounds = {max: new Date()};
+                date = chance.date(bounds);
+                expect(date).to.be.below(bounds.max);
+                // Ensure date not negative. Perhaps add BCE/AD and such later,
+                // but for now just positive is good enough.
+                expect(date).to.be.above(0);
             });
         });
 
