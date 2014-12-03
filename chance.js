@@ -80,6 +80,24 @@
         }
     }
 
+    /**
+     * Encode the input string with Base64.
+     * @param input
+     */
+    var base64 = function(input) {
+        throw new Error("No Base64 encoder available.");
+    };
+    // Select proper Base64 encoder.
+    (function determineBase64Encoder() {
+        if (typeof btoa === 'function') {
+            base64 = btoa;
+        } else if (typeof Buffer === 'function') {
+            base64 = function(input) {
+                return Buffer(input).toString('base64');
+            }
+        }
+    })();
+
     // -- Basics --
 
     Chance.prototype.bool = function (options) {
@@ -576,7 +594,7 @@
 
     // Windows Phone 8 ANID2
     Chance.prototype.wp8_anid2 = function (options) {
-        return btoa( this.hash( { length : 32 } ) );
+        return base64( this.hash( { length : 32 } ) );
     };
 
     // Windows Phone 7 ANID
