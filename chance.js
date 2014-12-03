@@ -918,41 +918,19 @@
     };
 
     Chance.prototype.date = function (options) {
-        var date_string;
+        var date_string, date;
 
         // If interval is specified we ignore preset
         if(options && (options.min || options.max)) {
-            var minBorder = typeof options.min !== "undefined",
-                maxBorder = typeof options.max !== "undefined";
-            var year = parseInt(this.year({min: minBorder ? options.min.getUTCFullYear() : undefined, max: maxBorder ? options.max.getUTCFullYear() : undefined}), 10);
-            minBorder = minBorder && options.min.getUTCFullYear() === year;
-            maxBorder = maxBorder && options.max.getUTCFullYear() === year;
-            var month = this.month({min: minBorder ? options.min.getUTCMonth() + 1 : undefined, max: maxBorder ? options.max.getUTCMonth() + 1 : undefined, raw: true, test: true});
-            minBorder = minBorder && options.min.getUTCMonth() === month.numeric - 1;
-            maxBorder = maxBorder && options.max.getUTCMonth() === month.numeric - 1;
-            var day = this.natural({min: minBorder ? options.min.getUTCDate() : 1, max: maxBorder ? options.max.getUTCDate() : month.days});
-            minBorder = minBorder && options.min.getUTCDate() === day;
-            maxBorder = maxBorder && options.max.getUTCDate() === day;
-            // this.hour() works with values in range [1,24] so we have to add and then subtract 1.
-            var hour = this.hour({min: minBorder ? options.min.getUTCHours() + 1 : undefined, max: maxBorder ? options.max.getUTCHours() + 1 : undefined, twentyfour: true}) - 1;
-            minBorder = minBorder && options.min.getUTCHours() === hour;
-            maxBorder = maxBorder && options.max.getUTCHours() === hour;
-            var minute = this.minute({min: minBorder ? options.min.getUTCMinutes() : undefined, max: maxBorder ? options.max.getUTCMinutes() : undefined});
-            minBorder = minBorder && options.min.getUTCMinutes() === minute;
-            maxBorder = maxBorder && options.max.getUTCMinutes() === minute;
-            var second = this.second({min: minBorder ? options.min.getUTCSeconds() : undefined, max: maxBorder ? options.max.getUTCSeconds() : undefined});
-
             options = initOptions(options, {
-                year: year,
-                month: month.numeric - 1,
-                day: day,
-                hour: hour,
-                minute: minute,
-                second: second,
-                millisecond: this.millisecond(),
                 american: true,
                 string: false
             });
+            var min = typeof options.min !== "undefined" ? options.min.getTime() : 1;
+            // 100,000,000 days measured relative to midnight at the beginning of 01 January, 1970 UTC. http://es5.github.io/#x15.9.1.1
+            var max = typeof options.max !== "undefined" ? options.max.getTime() : 8640000000000000;
+
+            date = new Date(this.natural({min: min, max: max}));
         } else {
             var m = this.month({raw: true});
 
@@ -969,9 +947,9 @@
                 american: true,
                 string: false
             });
-        }
 
-        var date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
+            date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
+        }
 
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
