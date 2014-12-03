@@ -913,22 +913,58 @@
     };
 
     Chance.prototype.date = function (options) {
-        var m = this.month({raw: true}),
-            date_string;
+        var date_string;
 
-        options = initOptions(options, {
-            year: parseInt(this.year(), 10),
-            // Necessary to subtract 1 because Date() 0-indexes month but not day or year
-            // for some reason.
-            month: m.numeric - 1,
-            day: this.natural({min: 1, max: m.days}),
-            hour: this.hour(),
-            minute: this.minute(),
-            second: this.second(),
-            millisecond: this.millisecond(),
-            american: true,
-            string: false
-        });
+        // If interval is specified we ignore preset
+        if(options && (options.min || options.max)) {
+            var minBorder = typeof options.min !== "undefined",
+                maxBorder = typeof options.max !== "undefined";
+            var year = parseInt(this.year({min: minBorder ? options.min.getFullYear() : undefined, max: maxBorder ? options.max.getFullYear() : undefined}), 10);
+            minBorder = minBorder && options.min.getFullYear() === year;
+            maxBorder = maxBorder && options.max.getFullYear() === year;
+            var month = this.month({min: minBorder ? options.min.getMonth() + 1 : undefined, max: maxBorder ? options.max.getMonth() + 1 : undefined, raw: true, test: true});
+            minBorder = minBorder && options.min.getMonth() === month.numeric - 1;
+            maxBorder = maxBorder && options.max.getMonth() === month.numeric - 1;
+            var day = this.natural({min: minBorder ? options.min.getDate() : 1, max: maxBorder ? options.max.getDate() : month.days});
+            minBorder = minBorder && options.min.getDate() === day;
+            maxBorder = maxBorder && options.max.getDate() === day;
+            // this.hour() works with values in range [1,24] so we have to add and then subtract 1.
+            var hour = this.hour({min: minBorder ? options.min.getHours() + 1 : undefined, max: maxBorder ? options.max.getHours() + 1 : undefined}) - 1;
+            minBorder = minBorder && options.min.getHours() === hour;
+            maxBorder = maxBorder && options.max.getHours() === hour;
+            var minute = this.minute({min: minBorder ? options.min.getMinutes() : undefined, max: maxBorder ? options.max.getMinutes() : undefined});
+            minBorder = minBorder && options.min.getMinutes() === minute;
+            maxBorder = maxBorder && options.max.getMinutes() === minute;
+            var second = this.second({min: minBorder ? options.min.getSeconds() : undefined, max: maxBorder ? options.max.getSeconds() : undefined});
+
+            options = initOptions(options, {
+                year: year,
+                month: month.numeric - 1,
+                day: day,
+                hour: hour,
+                minute: minute,
+                second: second,
+                millisecond: this.millisecond(),
+                american: true,
+                string: false
+            });
+        } else {
+            var m = this.month({raw: true});
+
+            options = initOptions(options, {
+                year: parseInt(this.year(), 10),
+                // Necessary to subtract 1 because Date() 0-indexes month but not day or year
+                // for some reason.
+                month: m.numeric - 1,
+                day: this.natural({min: 1, max: m.days}),
+                hour: this.hour(),
+                minute: this.minute(),
+                second: this.second(),
+                millisecond: this.millisecond(),
+                american: true,
+                string: false
+            });
+        }
 
         var date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
 
@@ -948,22 +984,38 @@
     };
 
     Chance.prototype.hour = function (options) {
-        options = initOptions(options);
-        var max = options.twentyfour ? 24 : 12;
-        return this.natural({min: 1, max: max});
+        options = initOptions(options, {min: 1, max: options && options.twentyfour ? 24 : 12});
+
+        testRange(options.min < 1, "Chance: Min cannot be less than 1.");
+        testRange(options.twentyfour && options.max > 24, "Chance: Max cannot be greater than 24 for twentyfour option.");
+        testRange(!options.twentyfour && options.max > 12, "Chance: Max cannot be greater than 12.");
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        return this.natural({min: options.min, max: options.max});
     };
 
     Chance.prototype.millisecond = function () {
         return this.natural({max: 999});
     };
 
-    Chance.prototype.minute = Chance.prototype.second = function () {
-        return this.natural({max: 59});
+    Chance.prototype.minute = Chance.prototype.second = function (options) {
+        options = initOptions(options, {min: 0, max: 59});
+
+        testRange(options.min < 0, "Chance: Min cannot be less than 0.");
+        testRange(options.max > 59, "Chance: Max cannot be greater than 59.");
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        return this.natural({min: options.min, max: options.max});
     };
 
     Chance.prototype.month = function (options) {
-        options = initOptions(options);
-        var month = this.pick(this.months());
+        options = initOptions(options, {min: 1, max: 12});
+
+        testRange(options.min < 1, "Chance: Min cannot be less than 1.");
+        testRange(options.max > 12, "Chance: Max cannot be greater than 12.");
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        var month = this.pick(this.months().slice(options.min - 1, options.max));
         return options.raw ? month : month.name;
     };
 
