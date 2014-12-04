@@ -43,7 +43,7 @@
                     seedling += (arguments[i].length - j) * arguments[i].charCodeAt(j);
                 }
             } else {
-                seedling = this.seed;
+                seedling = arguments[i];
             }
             this.seed += (arguments.length - i) * seedling;
         }
