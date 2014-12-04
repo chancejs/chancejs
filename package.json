@@ -33,6 +33,7 @@
   "scripts": {
     "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
   },
+  "bin": "./bin/chance.js",
   "keywords": [
     "chance",
     "random",
