@@ -16,20 +16,7 @@ It includes the basic building blocks for all these items and is built on top
 of a Mersenne Twister so it can generate these things with repeatability, if
 desired.
 
-## Usage
-
-### Browser
-
-Chance instantiates itself onto the window. This means that in the simplest case you can just include the script tag then use an instance of Chance immediately.
-
-```html
-<script src="chance.js"></script>
-<script>
-    console.log(chance.string());
-</script>
-```
-
-[More info](http://chancejs.com#browser)
+## Packages
 
 ### Bower
 
@@ -50,12 +37,63 @@ then in the HTML of your app:
 </script>
 ```
 
+### npm
+
+```shell
+npm install chance
+```
+
 ### spm [![](http://spmjs.io/badge/chance)](http://spmjs.io/package/chance)
 
 It can also be used with [spm](http://spmjs.io/package/chance).
 
 ```
 spm install chance
+```
+
+## Usage
+
+### Browser
+
+Chance instantiates itself onto the window. This means that in the simplest case you can just include the script tag then use an instance of Chance immediately.
+
+```html
+<script src="chance.js"></script>
+<script>
+    console.log(chance.string());
+</script>
+```
+
+[More info](http://chancejs.com#browser)
+
+### CLI
+
+To use Chance from the command line, install it globally with:
+
+```shell
+npm install -g chance
+```
+
+Then invoke any generator by name, like so:
+
+```shell
+$ chance name --prefix
+Dr. Georgia Sanchez
+
+$ chance latitude --min=12.34 --max 56.78
+22.01836
+```
+
+### Node.js
+
+And it can be used in Node.js.
+
+```js
+var Chance = require('chance'),
+    chance = new Chance();
+    
+// Get a random zip code
+chance.zip();
 ```
 
 ### RequireJS
@@ -70,18 +108,6 @@ require(['Chance'], function(Chance) {
     // Then just use it:
     var my_random_integer = chance.integer();
 });
-```
-
-### Node.js
-
-And it can be used in Node.js.
-
-```js
-var Chance = require('chance'),
-    chance = new Chance();
-    
-// Get a random zip code
-chance.zip();
 ```
 
 ## Author
