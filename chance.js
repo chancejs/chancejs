@@ -1,4 +1,4 @@
-//  Chance.js 0.6.4
+//  Chance.js 0.7.0
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -43,7 +43,7 @@
                     seedling += (arguments[i].length - j) * arguments[i].charCodeAt(j);
                 }
             } else {
-                seedling = this.seed;
+                seedling = arguments[i];
             }
             this.seed += (arguments.length - i) * seedling;
         }
@@ -57,7 +57,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "0.6.4";
+    Chance.prototype.VERSION = "0.7.0";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -79,6 +79,25 @@
             throw new RangeError(errorMessage);
         }
     }
+
+    /**
+     * Encode the input string with Base64.
+     * @param input
+     */
+    var base64 = function(input) {
+        throw new Error('No Base64 encoder available.');
+    };
+
+    // Select proper Base64 encoder.
+    (function determineBase64Encoder() {
+        if (typeof btoa === 'function') {
+            base64 = btoa;
+        } else if (typeof Buffer === 'function') {
+            base64 = function(input) {
+                return new Buffer(input).toString('base64');
+            };
+        }
+    })();
 
     // -- Basics --
 
@@ -270,6 +289,9 @@
     };
 
     Chance.prototype.pick = function (arr, count) {
+        if (arr.length === 0) {
+            throw new RangeError("Chance: Cannot pick() from an empty array");
+        }
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
         } else {
@@ -510,12 +532,17 @@
             name = this.prefix(options) + ' ' + name;
         }
 
+        if (options.suffix) {
+            name = name + ' ' + this.suffix(options);
+        }
+
         return name;
     };
 
     // Return the list of available name prefixes based on supplied gender.
     Chance.prototype.name_prefixes = function (gender) {
         gender = gender || "all";
+        gender = gender.toLowerCase();
 
         var prefixes = [
             { name: 'Doctor', abbreviation: 'Dr.' }
@@ -561,6 +588,37 @@
         return ssn;
     };
 
+    // Return the list of available name suffixes
+    Chance.prototype.name_suffixes = function () {
+        var suffixes = [
+            { name: 'Doctor of Osteopathic Medicine', abbreviation: 'D.O.' },
+            { name: 'Doctor of Philosophy', abbreviation: 'Ph.D.' },
+            { name: 'Esquire', abbreviation: 'Esq.' },
+            { name: 'Junior', abbreviation: 'Jr.' },
+            { name: 'Juris Doctor', abbreviation: 'J.D.' },
+            { name: 'Master of Arts', abbreviation: 'M.A.' },
+            { name: 'Master of Business Administration', abbreviation: 'M.B.A.' },
+            { name: 'Master of Science', abbreviation: 'M.S.' },
+            { name: 'Medical Doctor', abbreviation: 'M.D.' },
+            { name: 'Senior', abbreviation: 'Sr.' },
+            { name: 'The Third', abbreviation: 'III' },
+            { name: 'The Fourth', abbreviation: 'IV' }
+        ];
+        return suffixes;
+    };
+
+    // Alias for name_suffix
+    Chance.prototype.suffix = function (options) {
+        return this.name_suffix(options);
+    };
+
+    Chance.prototype.name_suffix = function (options) {
+        options = initOptions(options);
+        return options.full ?
+            this.pick(this.name_suffixes()).name :
+            this.pick(this.name_suffixes()).abbreviation;
+    };
+
     // -- End Person --
 
     // -- Mobile --
@@ -576,7 +634,7 @@
 
     // Windows Phone 8 ANID2
     Chance.prototype.wp8_anid2 = function (options) {
-        return btoa( this.hash( { length : 32 } ) );
+        return base64( this.hash( { length : 32 } ) );
     };
 
     // Windows Phone 7 ANID
@@ -597,26 +655,33 @@
             return [value, value, value].join(delimiter || '');
         }
 
-        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb']), grayscale: false});
+        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb', '0x']), grayscale: false, casing: 'lower'});
         var isGrayscale = options.grayscale;
+        var colorValue;
 
         if (options.format === 'hex') {
-            return '#' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
-        }
+            colorValue = '#' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
 
-        if (options.format === 'shorthex') {
-            return '#' + (isGrayscale ? gray(this.hash({length: 1})) : this.hash({length: 3}));
-        }
+        } else if (options.format === 'shorthex') {
+            colorValue = '#' + (isGrayscale ? gray(this.hash({length: 1})) : this.hash({length: 3}));
 
-        if (options.format === 'rgb') {
+        } else if (options.format === 'rgb') {
             if (isGrayscale) {
-                return 'rgb(' + gray(this.natural({max: 255}), ',') + ')';
+                colorValue = 'rgb(' + gray(this.natural({max: 255}), ',') + ')';
             } else {
-                return 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
+                colorValue = 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
             }
+        } else if (options.format === '0x') {
+            colorValue = '0x' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
+        } else {
+            throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", "rgb" or "0x".');
         }
 
-        throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", or "rgb"');
+        if (options.casing === 'upper' ) {
+            colorValue = colorValue.toUpperCase();
+        }
+
+        return colorValue;
     };
 
     Chance.prototype.domain = function (options) {
@@ -673,6 +738,15 @@
 
     Chance.prototype.twitter = function () {
         return '@' + this.word();
+    };
+
+    Chance.prototype.url = function (options) {
+        options = initOptions(options, { protocol: "http", domain: this.domain(options), domain_prefix: "", path: this.word(), extensions: []});
+
+        var extension = options.extensions.length > 0 ? "." + this.pick(options.extensions) : "";
+        var domain = options.domain_prefix ? options.domain_prefix + "." + options.domain : options.domain;
+
+        return options.protocol + "://" + domain + "/" + options.path + extension;
     };
 
     // -- End Web --
@@ -752,6 +826,7 @@
         if (!options.formatted) {
             options.parens = false;
         }
+        var phone;
         switch (options.country) {
             case 'fr':
                 if (!options.mobile) {
@@ -764,11 +839,12 @@
                         '05' + this.pick(['08', '16', '17', '19', '24', '31', '32', '33', '34', '35', '40', '45', '46', '47', '49', '53', '55', '56', '57', '58', '59', '61', '62', '63', '64', '65', '67', '79', '81', '82', '86', '87', '90', '94']) + self.string({ pool: '0123456789', length: 6}),
                         '09' + self.string({ pool: '0123456789', length: 8}),
                     ]);
-                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                    phone = options.formatted ? numPick.match(/../g).join(' ') : numPick;
                 } else {
                     numPick = this.pick(['06', '07']) + self.string({ pool: '0123456789', length: 8});
-                    return options.formatted ? numPick.match(/../g).join(' ') : numPick;
+                    phone = options.formatted ? numPick.match(/../g).join(' ') : numPick;
                 }
+                break;
             case 'uk':
                 if (!options.mobile) {
                     numPick = this.pick([
@@ -787,22 +863,24 @@
                         { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [5] },
                         { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [5] }
                     ]);
-                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
+                    phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
                 } else {
                     numPick = this.pick([
                         { area: '07' + this.pick(['4','5','7','8','9']), sections: [2,6] },
                         { area: '07624 ', sections: [6] }
                     ]);
-                    return options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
+                    phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
                 }
+                break;
             case 'us':
                 var areacode = this.areacode(options).toString();
                 var exchange = this.natural({ min: 2, max: 9 }).toString() +
                     this.natural({ min: 0, max: 9 }).toString() +
                     this.natural({ min: 0, max: 9 }).toString();
                 var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
-                return options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
+                phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
         }
+        return phone;
     };
 
     Chance.prototype.postal = function () {
@@ -895,24 +973,38 @@
     };
 
     Chance.prototype.date = function (options) {
-        var m = this.month({raw: true}),
-            date_string;
+        var date_string, date;
 
-        options = initOptions(options, {
-            year: parseInt(this.year(), 10),
-            // Necessary to subtract 1 because Date() 0-indexes month but not day or year
-            // for some reason.
-            month: m.numeric - 1,
-            day: this.natural({min: 1, max: m.days}),
-            hour: this.hour(),
-            minute: this.minute(),
-            second: this.second(),
-            millisecond: this.millisecond(),
-            american: true,
-            string: false
-        });
+        // If interval is specified we ignore preset
+        if(options && (options.min || options.max)) {
+            options = initOptions(options, {
+                american: true,
+                string: false
+            });
+            var min = typeof options.min !== "undefined" ? options.min.getTime() : 1;
+            // 100,000,000 days measured relative to midnight at the beginning of 01 January, 1970 UTC. http://es5.github.io/#x15.9.1.1
+            var max = typeof options.max !== "undefined" ? options.max.getTime() : 8640000000000000;
 
-        var date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
+            date = new Date(this.natural({min: min, max: max}));
+        } else {
+            var m = this.month({raw: true});
+
+            options = initOptions(options, {
+                year: parseInt(this.year(), 10),
+                // Necessary to subtract 1 because Date() 0-indexes month but not day or year
+                // for some reason.
+                month: m.numeric - 1,
+                day: this.natural({min: 1, max: m.days}),
+                hour: this.hour(),
+                minute: this.minute(),
+                second: this.second(),
+                millisecond: this.millisecond(),
+                american: true,
+                string: false
+            });
+
+            date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
+        }
 
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
@@ -930,22 +1022,38 @@
     };
 
     Chance.prototype.hour = function (options) {
-        options = initOptions(options);
-        var max = options.twentyfour ? 24 : 12;
-        return this.natural({min: 1, max: max});
+        options = initOptions(options, {min: 1, max: options && options.twentyfour ? 24 : 12});
+
+        testRange(options.min < 1, "Chance: Min cannot be less than 1.");
+        testRange(options.twentyfour && options.max > 24, "Chance: Max cannot be greater than 24 for twentyfour option.");
+        testRange(!options.twentyfour && options.max > 12, "Chance: Max cannot be greater than 12.");
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        return this.natural({min: options.min, max: options.max});
     };
 
     Chance.prototype.millisecond = function () {
         return this.natural({max: 999});
     };
 
-    Chance.prototype.minute = Chance.prototype.second = function () {
-        return this.natural({max: 59});
+    Chance.prototype.minute = Chance.prototype.second = function (options) {
+        options = initOptions(options, {min: 0, max: 59});
+
+        testRange(options.min < 0, "Chance: Min cannot be less than 0.");
+        testRange(options.max > 59, "Chance: Max cannot be greater than 59.");
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        return this.natural({min: options.min, max: options.max});
     };
 
     Chance.prototype.month = function (options) {
-        options = initOptions(options);
-        var month = this.pick(this.months());
+        options = initOptions(options, {min: 1, max: 12});
+
+        testRange(options.min < 1, "Chance: Min cannot be less than 1.");
+        testRange(options.max > 12, "Chance: Max cannot be greater than 12.");
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+
+        var month = this.pick(this.months().slice(options.min - 1, options.max));
         return options.raw ? month : month.name;
     };
 

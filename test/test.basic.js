@@ -289,6 +289,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         var seed, chance1, chance2;
 
         describe("random", function () {
+            it("does return differing results if differing seeds provided", function (done) {
+                chance1 = new Chance(12345);
+                // Wait 5 ms before creating chance2 else sometimes they happen on the same
+                // tick and end up with the same seed!
+                setTimeout(function () {
+                    chance2 = new Chance(54321);
+                    expect(chance1.random()).to.not.equal(chance2.random());
+                    done();
+                }, 5);
+            });
+
             it("does not return repeatable results if no seed provided", function (done) {
                 chance1 = new Chance();
                 // Wait 5 ms before creating chance2 else sometimes they happen on the same

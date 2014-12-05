@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Time", function () {
-        var date, hour, minute, time, timestamp, month, year, chance = new Chance();
+        var date, hour, minute, time, timestamp, month, year, bounds, chance = new Chance();
 
         it("date() returns a date", function () {
             _(1000).times(function () {
@@ -28,6 +28,35 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("date() returns a date, can specify min and max", function () {
+            _(1000).times(function () {
+                bounds = {min: new Date(), max: new Date(new Date().getTime() + 1234567890123)};
+                date = chance.date(bounds);
+                expect(date).to.be.a('Date');
+                expect(date).to.be.within(bounds.min, bounds.max);
+            });
+        });
+
+        it("date() returns a date, can specify just min", function () {
+            _(1000).times(function () {
+                bounds = {min: new Date()};
+                date = chance.date(bounds);
+                expect(date).to.be.a('Date');
+                expect(date).to.be.above(bounds.min);
+            });
+        });
+
+        it("date() returns a date, can specify just max", function () {
+            _(1000).times(function () {
+                bounds = {max: new Date()};
+                date = chance.date(bounds);
+                expect(date).to.be.below(bounds.max);
+                // Ensure date not negative. Perhaps add BCE/AD and such later,
+                // but for now just positive is good enough.
+                expect(date).to.be.above(0);
+            });
+        });
+
         it("date() can return a string date", function () {
             _(1000).times(function () {
                 expect(chance.date({string: true})).to.be.a('string');
@@ -43,11 +72,67 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
         });
 
+        it("hour() returns a hour in 24 hour format", function () {
+            _(1000).times(function () {
+                hour = chance.hour({twentyfour: true});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(1, 24);
+            });
+        });
+
+        it("hour() returns a hour, can specify min and max", function () {
+            _(1000).times(function () {
+                hour = chance.hour({min: 7, max: 10});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(7, 10);
+            });
+        });
+
+        it("hour() returns a hour, can specify just min", function () {
+            _(1000).times(function () {
+                hour = chance.hour({min: 5});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(5, 12);
+            });
+        });
+
+        it("hour() returns a hour, can specify just max", function () {
+            _(1000).times(function () {
+                hour = chance.hour({max: 7});
+                expect(hour).to.be.a('number');
+                expect(hour).to.be.within(1, 7);
+            });
+        });
+
         it("minute() returns a minute", function () {
             _(1000).times(function () {
                 minute = chance.minute();
                 expect(minute).to.be.a('number');
                 expect(minute).to.be.within(0, 59);
+            });
+        });
+
+        it("minute() returns a minute, can specify min and max", function () {
+            _(1000).times(function () {
+                minute = chance.minute({min: 18, max: 35});
+                expect(minute).to.be.a('number');
+                expect(minute).to.be.within(18, 35);
+            });
+        });
+
+        it("minute() returns a minute, can specify just min", function () {
+            _(1000).times(function () {
+                minute = chance.minute({min: 5});
+                expect(minute).to.be.a('number');
+                expect(minute).to.be.within(5, 59);
+            });
+        });
+
+        it("minute() returns a minute, can specify just max", function () {
+            _(1000).times(function () {
+                minute = chance.minute({max: 32});
+                expect(minute).to.be.a('number');
+                expect(minute).to.be.within(0, 32);
             });
         });
 
@@ -65,6 +150,31 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(month).to.be.an('object');
             });
         });
+
+        it("month() returns a month, can specify min and max", function () {
+            _(1000).times(function () {
+                month = chance.month({raw: true, min: 5, max: 10});
+                expect(month).to.not.be.a('string');
+                expect(month.numeric).to.be.within(5, 10);
+            });
+        });
+
+        it("month() returns a month, can specify just min", function () {
+            _(1000).times(function () {
+                month = chance.month({raw: true, min: 5});
+                expect(month).to.not.be.a('string');
+                expect(month.numeric).to.be.within(5, 12);
+            });
+        });
+
+        it("month() returns a month, can specify just max", function () {
+            _(1000).times(function () {
+                month = chance.month({raw: true, max: 7});
+                expect(month).to.not.be.a('string');
+                expect(month.numeric).to.be.within(1, 7);
+            });
+        });
+
 
         it("timestamp() returns a timestamp", function () {
             _(1000).times(function () {

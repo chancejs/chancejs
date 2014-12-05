@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Web", function () {
-        var tld, domain, email, hashtag, ip, ipv6, tracking_code, twitter, chance = new Chance();
+        var tld, domain, email, hashtag, ip, ipv6, tracking_code, twitter, url, chance = new Chance();
 
         it("tld() returns a tld", function () {
             _(1000).times(function () {
@@ -170,6 +170,66 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(match[1]).to.be.within(0, 255);
                     expect(match[1]).to.equal(match[2]);
                     expect(match[1]).to.equal(match[3]);
+                });
+            });
+
+            it("({format: '0x'}) returns what looks a 0x color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: '0x'});
+                    expect(color).to.be.a('string');
+                    expect(color).to.have.length(8);
+                    expect(color).to.match(/0x[a-z0-9]+/m);
+                });
+            });
+        });
+
+        describe("url()", function() {
+            it("returns a legit url", function () {
+                _(1000).times(function () {
+                    url = chance.url();
+                    expect(url).to.be.a('string');
+                    expect(url.split('.')).to.have.length.above(1);
+                    expect(url.split('://')).to.have.length.above(1);
+                });
+            });
+
+            it("can take and respect a domain", function () {
+                _(1000).times(function () {
+                    url = chance.url({ domain: "socialradar.com" });
+                    expect(url).to.be.a('string');
+                    expect(url.split('.')).to.have.length.above(1);
+                    expect(url.split('://')).to.have.length.above(1);
+                    expect(url.split('socialradar.com')).to.have.length.above(1);
+                });
+            });
+
+            it("can take and respect a domain prefix", function () {
+                _(1000).times(function () {
+                    url = chance.url({ domain_prefix: "www" });
+                    expect(url).to.be.a('string');
+                    expect(url.split('.')).to.have.length.above(1);
+                    expect(url.split('://')).to.have.length.above(1);
+                    expect(url.split('www.')).to.have.length.above(1);
+                });
+            });
+
+            it("can take and respect a path", function () {
+                _(1000).times(function () {
+                    url = chance.url({ path: "images" });
+                    expect(url).to.be.a('string');
+                    expect(url.split('.')).to.have.length.above(1);
+                    expect(url.split('://')).to.have.length.above(1);
+                    expect(url.split('/images')).to.have.length.above(1);
+                });
+            });
+
+            it("can take and respect extensions", function () {
+                _(1000).times(function () {
+                    url = chance.url({ extensions: ["html"] });
+                    expect(url).to.be.a('string');
+                    expect(url.split('.')).to.have.length.above(1);
+                    expect(url.split('://')).to.have.length.above(1);
+                    expect(url.indexOf('.html')).to.not.equal(-1);
                 });
             });
         });
