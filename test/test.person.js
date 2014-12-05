@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Person", function () {
-        var age, name, first, last, prefix, chance = new Chance();
+        var age, name, first, last, prefix, suffix, ssn, chance = new Chance();
 
         describe("age()", function () {
             it("returns a random age within expected bounds", function () {
@@ -141,6 +141,24 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     prefix = chance.name_prefix({full: true});
                     expect(prefix).to.be.a('string');
                     expect(prefix).to.have.length.above(3);
+                });
+            });
+        });
+
+        describe("name_suffix()", function () {
+            it("returns a random suffix", function () {
+                _(1000).times(function () {
+                    suffix = chance.name_suffix();
+                    expect(suffix).to.be.a('string');
+                    expect(suffix).to.have.length.below(7);
+                });
+            });
+
+            it("can get full suffix", function () {
+                _(1000).times(function () {
+                    suffix = chance.name_suffix({full: true});
+                    expect(suffix).to.be.a('string');
+                    expect(suffix).to.have.length.above(5);
                 });
             });
         });

@@ -532,6 +532,10 @@
             name = this.prefix(options) + ' ' + name;
         }
 
+        if (options.suffix) {
+            name = name + ' ' + this.suffix(options);
+        }
+
         return name;
     };
 
@@ -582,6 +586,37 @@
             ssn = this.string({pool: ssn_pool, length: 4});
         }
         return ssn;
+    };
+
+    // Return the list of available name suffixes
+    Chance.prototype.name_suffixes = function () {
+        var suffixes = [
+            { name: 'Doctor of Osteopathic Medicine', abbreviation: 'D.O.' },
+            { name: 'Doctor of Philosophy', abbreviation: 'Ph.D.' },
+            { name: 'Esquire', abbreviation: 'Esq.' },
+            { name: 'Junior', abbreviation: 'Jr.' },
+            { name: 'Juris Doctor', abbreviation: 'J.D.' },
+            { name: 'Master of Arts', abbreviation: 'M.A.' },
+            { name: 'Master of Business Administration', abbreviation: 'M.B.A.' },
+            { name: 'Master of Science', abbreviation: 'M.S.' },
+            { name: 'Medical Doctor', abbreviation: 'M.D.' },
+            { name: 'Senior', abbreviation: 'Sr.' },
+            { name: 'The Third', abbreviation: 'III' },
+            { name: 'The Fourth', abbreviation: 'IV' }
+        ];
+        return suffixes;
+    };
+
+    // Alias for name_suffix
+    Chance.prototype.suffix = function (options) {
+        return this.name_suffix(options);
+    };
+
+    Chance.prototype.name_suffix = function (options) {
+        options = initOptions(options);
+        return options.full ?
+            this.pick(this.name_suffixes()).name :
+            this.pick(this.name_suffixes()).abbreviation;
     };
 
     // -- End Person --
