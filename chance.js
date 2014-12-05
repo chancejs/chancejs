@@ -617,26 +617,33 @@
             return [value, value, value].join(delimiter || '');
         }
 
-        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb']), grayscale: false});
+        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb', '0x']), grayscale: false, casing: 'lower'});
         var isGrayscale = options.grayscale;
+        var colorValue;
 
         if (options.format === 'hex') {
-            return '#' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
-        }
+            colorValue = '#' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
 
-        if (options.format === 'shorthex') {
-            return '#' + (isGrayscale ? gray(this.hash({length: 1})) : this.hash({length: 3}));
-        }
+        } else if (options.format === 'shorthex') {
+            colorValue = '#' + (isGrayscale ? gray(this.hash({length: 1})) : this.hash({length: 3}));
 
-        if (options.format === 'rgb') {
+        } else if (options.format === 'rgb') {
             if (isGrayscale) {
-                return 'rgb(' + gray(this.natural({max: 255}), ',') + ')';
+                colorValue = 'rgb(' + gray(this.natural({max: 255}), ',') + ')';
             } else {
-                return 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
+                colorValue = 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
             }
+        } else if (options.format === '0x') {
+            colorValue = '0x' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
+        } else {
+            throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", "rgb" or "0x".');
         }
 
-        throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", or "rgb"');
+        if (options.casing === 'upper' ) {
+            colorValue = colorValue.toUpperCase();
+        }
+
+        return colorValue;
     };
 
     Chance.prototype.domain = function (options) {

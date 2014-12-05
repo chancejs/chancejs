@@ -172,6 +172,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(match[1]).to.equal(match[3]);
                 });
             });
+
+            it("({format: '0x'}) returns what looks a 0x color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: '0x'});
+                    expect(color).to.be.a('string');
+                    expect(color).to.have.length(8);
+                    expect(color).to.match(/0x[a-z0-9]+/m);
+                });
+            });
         });
     });
 });
