@@ -535,6 +535,7 @@
     // Return the list of available name prefixes based on supplied gender.
     Chance.prototype.name_prefixes = function (gender) {
         gender = gender || "all";
+        gender = gender.toLowerCase();
 
         var prefixes = [
             { name: 'Doctor', abbreviation: 'Dr.' }
