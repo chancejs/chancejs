@@ -705,6 +705,15 @@
         return '@' + this.word();
     };
 
+    Chance.prototype.url = function (options) {
+        options = initOptions(options, { protocol: "http", domain: this.domain(options), domain_prefix: "", path: this.word(), extensions: []});
+
+        var extension = options.extensions.length > 0 ? "." + this.pick(options.extensions) : "";
+        var domain = options.domain_prefix ? options.domain_prefix + "." + options.domain : options.domain;
+
+        return options.protocol + "://" + domain + "/" + options.path + extension;
+    };
+
     // -- End Web --
 
     // -- Location --
