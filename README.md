@@ -122,25 +122,26 @@ THANK YOU!
 
 ```
 project  : chancejs
- repo age : 1 year, 5 months
- active   : 103 days
- commits  : 387
- files    : 22
+ repo age : 1 year, 6 months
+ active   : 106 days
+ commits  : 419
+ files    : 24
  authors  :
-   274	Victor Quinn        70.8%
-    13	Oliver Salzburg     3.4%
-    13	Tim Petricola       3.4%
-    11	davmillar           2.8%
-     5	Michael Cordingley  1.3%
-     5	Alex DiLiberto      1.3%
-     5	Matt Klaber         1.3%
+   290	Victor Quinn        69.2%
+    22	Oliver Salzburg     5.3%
+    13	Tim Petricola       3.1%
+    11	davmillar           2.6%
+     7	Jan Tojnar          1.7%
+     5	Michael Cordingley  1.2%
+     5	Alex DiLiberto      1.2%
+     5	Matt Klaber         1.2%
      4	Avishaan            1.0%
-     4	Kevin Garnett       1.0%
      4	Abhijeet Pawar      1.0%
+     4	Kevin Garnett       1.0%
      4	Chris Villarreal    1.0%
-     3	Alexandr Lozovyuk   0.8%
-     3	qjcg                0.8%
-     3	Nicholas Johnson    0.8%
+     3	Nicholas Johnson    0.7%
+     3	Alexandr Lozovyuk   0.7%
+     3	qjcg                0.7%
      2	xshyamx             0.5%
      2	Adam Krebs          0.5%
      2	Andreas Koeberle    0.5%
@@ -152,20 +153,20 @@ project  : chancejs
      2	dhilipsiva          0.5%
      2	path411             0.5%
      2	shyam               0.5%
-     1	Brian.Barnett       0.3%
-     1	Johannes Stein      0.3%
-     1	afc163              0.3%
-     1	Doug Lawrence       0.3%
-     1	ddunning            0.3%
-     1	Dominic Barnes      0.3%
-     1	flrent              0.3%
-     1	kkroner             0.3%
-     1	leesei              0.3%
-     1	Richard Anaya       0.3%
-     1	Ryan Tenney         0.3%
-     1	Samuel Greene       0.3%
-     1	lkptrzk             0.3%
-     1	Ng Patrick          0.3%
+     1	Brian.Barnett       0.2%
+     1	Johannes Stein      0.2%
+     1	afc163              0.2%
+     1	Doug Lawrence       0.2%
+     1	ddunning            0.2%
+     1	Dominic Barnes      0.2%
+     1	flrent              0.2%
+     1	kkroner             0.2%
+     1	leesei              0.2%
+     1	Richard Anaya       0.2%
+     1	Ryan Tenney         0.2%
+     1	Samuel Greene       0.2%
+     1	lkptrzk             0.2%
+     1	Ng Patrick          0.2%
 ```
 
 ### Contribute! 

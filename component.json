@@ -2,7 +2,7 @@
   "name": "chance",
   "repo": "victorquinn/chancejs",
   "description": "Minimalist generator of random strings, numbers, etc.",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "keywords": ["chance", "random", "generator", "test"],
   "main": "chance.js",
   "scripts": ["chance.js"]
