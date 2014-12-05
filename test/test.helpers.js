@@ -38,6 +38,13 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(arr).to.have.length(6);
                 });
             });
+
+            it("throws good error if zero elements in array", function () {
+                arr = [];
+                expect(function () {
+                    chance.pick(arr);
+                }).to.throw(RangeError, "Chance: Cannot pick() from an empty array");
+            });
         });
 
         describe("weighted()", function () {

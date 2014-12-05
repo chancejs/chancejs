@@ -289,6 +289,9 @@
     };
 
     Chance.prototype.pick = function (arr, count) {
+        if (arr.length === 0) {
+            throw new RangeError("Chance: Cannot pick() from an empty array");
+        }
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
         } else {
