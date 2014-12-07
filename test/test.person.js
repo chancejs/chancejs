@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Person", function () {
-        var age, name, first, last, prefix, suffix, ssn, chance = new Chance();
+        var age, name, first, baby, last, prefix, suffix, ssn, chance = new Chance();
 
         describe("age()", function () {
             it("returns a random age within expected bounds", function () {
@@ -102,7 +102,17 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(first.split(' ')).to.have.length(1);
                 });
             });
+        });
 
+        describe("baby()", function() {
+            it("returns a random baby first name", function() {
+                _(1000).times(function() {
+                    baby = chance.baby();
+                    expect(baby).to.be.a('string');
+                    expect(baby).to.have.length.within(2, 20);
+                    expect(baby.split(' ')).to.have.length(1);
+                });
+            });
         });
 
         describe("last()", function () {
