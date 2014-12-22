@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var Chance = require('../chance.js');
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2),{string:"pool"});
 
 // Check which generator the user wants to invoke.
 var generator = process.argv[2];
