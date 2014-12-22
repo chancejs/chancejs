@@ -3,7 +3,7 @@ define(['Chance', 'mocha', 'chai', 'underscore', 'phoneTest'], function (Chance,
         expect = chai.expect;
 
     describe("Address", function () {
-        var zip, suffix, suffixes, state, address, phone, coordinates, chance = new Chance();
+        var zip, suffix, suffixes, state, address, phone, coordinates, country, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
@@ -230,6 +230,26 @@ define(['Chance', 'mocha', 'chai', 'underscore', 'phoneTest'], function (Chance,
             it('phone({country: "fr", mobile: true, formatted: false}) looks right', function () {
                 _(1000).times(function () {
                     expect(chance.phone({country: 'fr', mobile: true, formatted: false})).match(/0[67]......../);
+                });
+            });
+        });
+
+        describe("Country", function () {
+            it("countries() returns an array of countries", function () {
+                expect(chance.countries()).to.be.an('array');
+            });
+
+            it("country() returns a random (short) country name", function () {
+                _(1000).times(function () {
+                    country = chance.country();
+                    expect(country.length).to.equal(2);
+                });
+            });
+
+            it("country({full: true}) returns a random country name", function () {
+                _(1000).times(function () {
+                    country = chance.country({full: true});
+                    expect(country.length).to.be.above(2);
                 });
             });
         });
