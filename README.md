@@ -123,22 +123,22 @@ THANK YOU!
 ```
 project  : chancejs
  repo age : 1 year, 6 months
- active   : 106 days
- commits  : 419
+ active   : 109 days
+ commits  : 426
  files    : 24
  authors  :
-   290	Victor Quinn        69.2%
-    22	Oliver Salzburg     5.3%
+   294	Victor Quinn        69.0%
+    25	Oliver Salzburg     5.9%
     13	Tim Petricola       3.1%
     11	davmillar           2.6%
-     7	Jan Tojnar          1.7%
+     7	Jan Tojnar          1.6%
      5	Michael Cordingley  1.2%
      5	Alex DiLiberto      1.2%
      5	Matt Klaber         1.2%
-     4	Avishaan            1.0%
-     4	Abhijeet Pawar      1.0%
-     4	Kevin Garnett       1.0%
-     4	Chris Villarreal    1.0%
+     4	Avishaan            0.9%
+     4	Abhijeet Pawar      0.9%
+     4	Kevin Garnett       0.9%
+     4	Chris Villarreal    0.9%
      3	Nicholas Johnson    0.7%
      3	Alexandr Lozovyuk   0.7%
      3	qjcg                0.7%
