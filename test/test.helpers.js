@@ -133,6 +133,16 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect((picked.c / picked.b) * 100).to.be.within(50, 150);
                 });
             });
+
+            it("works with weights of 0", function () {
+                picked = chance.weighted(['a', 'b', 'c'], [1, 0, 1]);
+                expect(picked).to.be.a('string');
+            });
+
+            it("works with negative weights", function () {
+                picked = chance.weighted(['a', 'b', 'c'], [1, -2, 1]);
+                expect(picked).to.be.a('string');
+            });
         });
 
         describe("shuffle()", function () {
