@@ -325,6 +325,15 @@
             throw new RangeError("Chance: length of array and weights must match");
         }
 
+        // Handle weights that are less or equal to zero.
+        for (var weightIndex = weights.length - 1; weightIndex >= 0; --weightIndex) {
+            // If the weight is less or equal to zero, remove it and the value.
+            if (weights[weightIndex] <= 0) {
+                arr.splice(weightIndex,1);
+                weights.splice(weightIndex,1);
+            }
+        }
+
         // If any of the weights are less than 1, we want to scale them up to whole
         //   numbers for the rest of this logic to work
         if (weights.some(function(weight) { return weight < 1; })) {
