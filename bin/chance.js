@@ -11,7 +11,7 @@ var chance = new Chance(new Date().getTime().toString());
 // Does the given generator exist in Chance?
 if(generator && chance[generator]) {
     // Invoke the generator on our Chance instance and print the result.
-    process.stdout.write(chance[generator](options) + '\n');
+    process.stdout.write(chance[generator](options));
 } else {
-    process.stderr.write('Unknown generator "' + generator + '"\n');
+    process.stderr.write('Unknown generator "' + generator + '"');
 }
