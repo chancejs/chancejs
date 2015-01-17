@@ -31,7 +31,8 @@
     "uglify-js": "1.2.6"
   },
   "scripts": {
-    "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
+    "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html",
+    "test-win": "node ./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
   },
   "bin": "./bin/chance.js",
   "keywords": [
