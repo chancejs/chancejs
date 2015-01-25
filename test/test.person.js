@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Person", function () {
-        var age, name, first, last, prefix, suffix, ssn, chance = new Chance();
+        var name, first, last, prefix, suffix, ssn, chance = new Chance();
 
         describe("age()", function () {
             it("returns a random age within expected bounds", function () {
@@ -175,6 +175,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
         });
 
         describe("cpf()", function () {
+            var cpf;
             it("returns a random valid taxpayer number for Brazil citizens (CPF)", function () {
                 _(1000).times(function () {
                     cpf = chance.cpf();

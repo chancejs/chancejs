@@ -185,7 +185,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     });
                 });
 
-                _.forEach(positions, function(position, index) {
+                _.forEach(positions, function(position) {
                     _.forEach(position, function(item) {
                         // This should be around 20% give or take a bit since there are
                         // 5 elements and they should be evenly distributed
