@@ -2,6 +2,7 @@ node_modules
 *~
 .idea
 chance.min.js
+chance.min.js.map
 test/lib
 # Ignore gh-pages specific content
 public

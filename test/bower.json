@@ -2,10 +2,9 @@
   "name": "chance-test",
   "version": "0.0.1",
   "devDependencies": {
-    "mocha": "1.18.0",
-    "chai": "~1.9.0",
-    "requirejs": "~2.1.11",
-    "lodash": "~2.4.1",
-    "phone_number_js": "~1.0.0"
+    "chai": "~1.10.0",
+    "mocha": "~2.1.0",
+    "phone_number_js": "~1.0.0",
+    "requirejs": "~2.1.15"
   }
 }

@@ -3,7 +3,7 @@ require.config({
         'Chance': '../chance',
         'chai': 'lib/chai/chai',
         'mocha': 'lib/mocha/mocha',
-        'underscore': 'lib/lodash/dist/lodash',
+        'underscore': 'lib/lodash/lodash.build.min',
         'phoneTest': 'lib/phone_number_js/dist/phoneNumber.min'
     },
     shim: {
