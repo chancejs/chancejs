@@ -10,7 +10,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 data = chance.get("lastNames");
                 expect(data).to.be.an('array');
             });
-            
+
             it("set custom data", function () {
                 cData = {lastNames: ["customName", "testLast"]};
                 chance.set(cData);
@@ -19,7 +19,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(data).to.have.length(2);
             });
         });
-        
+
         describe("Bool", function () {
             it("returns a random boolean", function () {
                 bool = chance.bool();
