@@ -2,7 +2,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
     var expect = chai.expect;
 
     describe("Time", function () {
-        var date, hour, minute, time, timestamp, month, year, bounds, chance = new Chance();
+        var date, hour, minute, timestamp, month, year, bounds, chance = new Chance();
 
         it("date() returns a date", function () {
             _(1000).times(function () {

@@ -233,6 +233,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
     describe("CNPJ", function () {
         var chance = new Chance();
+        var cnpj;
 
         it("returns a valid Brazil company ID (CNPJ)", function () {
             _(1000).times(function () {
