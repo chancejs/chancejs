@@ -185,7 +185,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     });
                 });
 
-                _.forEach(positions, function(position, index) {
+                _.forEach(positions, function(position) {
                     _.forEach(position, function(item) {
                         // This should be around 20% give or take a bit since there are
                         // 5 elements and they should be evenly distributed
@@ -249,7 +249,7 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(arr.length).to.equal(1);
             });
         });
-        
+
         describe("pad()", function () {
             it("always returns same number when width same as the length of the number", function () {
                 _(1000).times(function () {

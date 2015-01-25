@@ -26,8 +26,7 @@ require.config({
     }
 });
 
-require(['mocha', 'chai'], function (mocha, chai) {
-    var assert = chai.assert;
+require(['mocha', 'chai'], function (mocha) {
     require(['test.address', 'test.basic', 'test.finance', 'test.helpers', 'test.misc', 'test.person', 'test.text', 'test.time', 'test.web', 'test.mobile'], function () {
         mocha.reporter('html');
 
