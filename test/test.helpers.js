@@ -248,6 +248,11 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(arr).to.be.an('array');
                 expect(arr.length).to.equal(1);
             });
+            it("gives an empty array when n is set to 0", function () {
+                var arr = chance.n(chance.email, 0);
+                expect(arr).to.be.an('array');
+                expect(arr.length).to.equal(0);
+            });
         });
 
         describe("pad()", function () {

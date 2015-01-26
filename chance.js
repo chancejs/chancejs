@@ -269,6 +269,7 @@
      */
     Chance.prototype.n = function(fn, n) {
         var i = n || 1, arr = [], params = slice.call(arguments, 2);
+
         // Providing a negative count should result in a noop.
         i = Math.max( 0, i );
 
