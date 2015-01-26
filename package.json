@@ -30,7 +30,7 @@
     "mocha-phantomjs": "^3.5.3"
   },
   "scripts": {
-    "postinstall": "lodash compat -o test/lib/lodash/lodash.build.js",
+    "pretest": "lodash compat -o test/lib/lodash/lodash.build.js",
     "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
   },
   "bin": "./bin/chance.js",
