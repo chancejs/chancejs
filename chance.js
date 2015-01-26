@@ -1,4 +1,4 @@
-//  Chance.js 0.7.1
+//  Chance.js 0.7.2
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -29,7 +29,7 @@
         }
 
         var seedling;
-        
+
         if (arguments.length) {
             // set a starting value of zero so we can add to it
             this.seed = 0;
@@ -57,7 +57,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "0.7.1";
+    Chance.prototype.VERSION = "0.7.2";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -82,9 +82,8 @@
 
     /**
      * Encode the input string with Base64.
-     * @param input
      */
-    var base64 = function(input) {
+    var base64 = function() {
         throw new Error('No Base64 encoder available.');
     };
 
@@ -266,11 +265,14 @@
      *  Gives an array of n random terms
      *  @param fn the function that generates something random
      *  @param n number of terms to generate
-     *  @param options options for the function fn. 
      *  There can be more parameters after these. All additional parameters are provided to the given function
      */
-    Chance.prototype.n = function(fn, n, options) {
-        var i = n || 1, arr = [], params = slice.call(arguments, 2);
+    Chance.prototype.n = function(fn, n) {
+        if (typeof n === 'undefined') {
+            n = 1;
+        }
+        var i = n, arr = [], params = slice.call(arguments, 2);
+
         // Providing a negative count should result in a noop.
         i = Math.max( 0, i );
 
@@ -323,6 +325,15 @@
     Chance.prototype.weighted = function(arr, weights) {
         if (arr.length !== weights.length) {
             throw new RangeError("Chance: length of array and weights must match");
+        }
+
+        // Handle weights that are less or equal to zero.
+        for (var weightIndex = weights.length - 1; weightIndex >= 0; --weightIndex) {
+            // If the weight is less or equal to zero, remove it and the value.
+            if (weights[weightIndex] <= 0) {
+                arr.splice(weightIndex,1);
+                weights.splice(weightIndex,1);
+            }
         }
 
         // If any of the weights are less than 1, we want to scale them up to whole
@@ -625,27 +636,27 @@
 
     // -- Mobile --
     // Android GCM Registration ID
-    Chance.prototype.android_id = function (options) {
+    Chance.prototype.android_id = function () {
         return "APA91" + this.string({ pool: "0123456789abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", length: 178 });
     };
 
     // Apple Push Token
-    Chance.prototype.apple_token = function (options) {
+    Chance.prototype.apple_token = function () {
         return this.string({ pool: "abcdef1234567890", length: 64 });
     };
 
     // Windows Phone 8 ANID2
-    Chance.prototype.wp8_anid2 = function (options) {
+    Chance.prototype.wp8_anid2 = function () {
         return base64( this.hash( { length : 32 } ) );
     };
 
     // Windows Phone 7 ANID
-    Chance.prototype.wp7_anid = function (options) {
+    Chance.prototype.wp7_anid = function () {
         return 'A=' + this.guid().replace(/-/g, '').toUpperCase() + '&E=' + this.hash({ length:3 }) + '&W=' + this.integer({ min:0, max:9 });
     };
 
     // BlackBerry Device PIN
-    Chance.prototype.bb_pin = function (options) {
+    Chance.prototype.bb_pin = function () {
         return this.hash({ length: 8 });
     };
 
@@ -1285,7 +1296,7 @@
                    this.string({ pool: guid_pool, length: 12 });
         return guid;
     };
-    
+
     // Hash
     Chance.prototype.hash = function (options) {
         options = initOptions(options, {length : 40, casing: 'lower'});
@@ -1677,6 +1688,7 @@
 
     function _copyObject(source, target) {
       var keys = o_keys(source);
+      var key;
 
       for (var i = 0, l = keys.length; i < l; i++) {
         key = keys[i];

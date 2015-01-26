@@ -3,7 +3,7 @@ require.config({
         'Chance': '../chance',
         'chai': 'lib/chai/chai',
         'mocha': 'lib/mocha/mocha',
-        'underscore': 'lib/lodash/dist/lodash',
+        'underscore': 'lib/lodash/lodash.build.min',
         'phoneTest': 'lib/phone_number_js/dist/phoneNumber.min'
     },
     shim: {
@@ -15,7 +15,7 @@ require.config({
                 this.mocha.setup({
                     ui: 'bdd',
                     ignoreLeaks: true,
-                    timeout: 5000 // ms
+                    timeout: 8000 // ms
                 });
                 return this.mocha;
             }
@@ -26,8 +26,7 @@ require.config({
     }
 });
 
-require(['mocha', 'chai'], function (mocha, chai) {
-    var assert = chai.assert;
+require(['mocha', 'chai'], function (mocha) {
     require(['test.address', 'test.basic', 'test.finance', 'test.helpers', 'test.misc', 'test.person', 'test.text', 'test.time', 'test.web', 'test.mobile'], function () {
         mocha.reporter('html');
 

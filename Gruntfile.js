@@ -4,24 +4,34 @@ module.exports = function (grunt) {
     grunt.initConfig({
         jshint: {
             options: {
+                // Enforcing
                 curly: true,
                 eqeqeq: true,
-                expr: true,
                 immed: true,
                 indent: 4,
                 latedef: true,
                 newcap: true,
                 noarg: true,
-                sub: true,
-                trailing: true,
+                undef: true,
+                unused: true,
+
+                // Relaxing
                 boss: true,
                 eqnull: true,
+                expr: true,
+                sub: true,
+
+                // Environments
                 browser: true,
-                white: false
-            },
-            globals: {
-                exports: true,
-                module: false
+                mocha: true,
+                node: true,
+
+                // Custom Globals
+                globals: {
+                    define: false,
+                    mochaPhantomJS: false,
+                    chance: true
+                }
             },
             all: js_files
         },
@@ -30,6 +40,10 @@ module.exports = function (grunt) {
         },
         uglify: {
             my_target: {
+                options: {
+                  sourceMap: true,
+                  sourceMapName: 'chance.min.js.map'
+                },
                 files: {
                     'chance.min.js': ['chance.js']
                 }
