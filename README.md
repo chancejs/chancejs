@@ -139,51 +139,51 @@ Please feel free to reach out to me if you have any questions or suggestions.
 THANK YOU!
 
 ```
-project  : chancejs
- repo age : 1 year, 6 months
- active   : 109 days
- commits  : 426
+ project  : chancejs
+ repo age : 1 year, 7 months
+ active   : 120 days
+ commits  : 447
  files    : 24
  authors  :
-   294	Victor Quinn        69.0%
-    25	Oliver Salzburg     5.9%
-    13	Tim Petricola       3.1%
-    11	davmillar           2.6%
+   305	Victor Quinn        68.2%
+    26	Oliver Salzburg     5.8%
+    13	Tim Petricola       2.9%
+    12	Alex DiLiberto      2.7%
+    11	davmillar           2.5%
      7	Jan Tojnar          1.6%
-     5	Michael Cordingley  1.2%
-     5	Alex DiLiberto      1.2%
-     5	Matt Klaber         1.2%
-     4	Avishaan            0.9%
-     4	Abhijeet Pawar      0.9%
-     4	Kevin Garnett       0.9%
+     5	Michael Cordingley  1.1%
+     5	Matt Klaber         1.1%
      4	Chris Villarreal    0.9%
+     4	Abhijeet Pawar      0.9%
+     4	Avishaan            0.9%
+     4	Kevin Garnett       0.9%
      3	Nicholas Johnson    0.7%
-     3	Alexandr Lozovyuk   0.7%
      3	qjcg                0.7%
-     2	xshyamx             0.5%
-     2	Adam Krebs          0.5%
-     2	Andreas Koeberle    0.5%
-     2	Iskren Chernev      0.5%
-     2	Nathan MacInnes     0.5%
-     2	Pascal Borreli      0.5%
-     2	SeeSchloss          0.5%
-     2	Stefan Penner       0.5%
-     2	dhilipsiva          0.5%
-     2	path411             0.5%
-     2	shyam               0.5%
-     1	Brian.Barnett       0.2%
-     1	Johannes Stein      0.2%
+     3	Alexandr Lozovyuk   0.7%
+     3	Dominic Barnes      0.7%
+     2	xshyamx             0.4%
+     2	Adam Krebs          0.4%
+     2	Andreas Koeberle    0.4%
+     2	Iskren Chernev      0.4%
+     2	Nathan MacInnes     0.4%
+     2	Pascal Borreli      0.4%
+     2	SeeSchloss          0.4%
+     2	Stefan Penner       0.4%
+     2	dhilipsiva          0.4%
+     2	path411             0.4%
+     2	shyam               0.4%
+     1	Richard Anaya       0.2%
      1	afc163              0.2%
-     1	Doug Lawrence       0.2%
+     1	Johannes Stein      0.2%
      1	ddunning            0.2%
-     1	Dominic Barnes      0.2%
+     1	Doug Lawrence       0.2%
      1	flrent              0.2%
      1	kkroner             0.2%
      1	leesei              0.2%
-     1	Richard Anaya       0.2%
      1	Ryan Tenney         0.2%
      1	Samuel Greene       0.2%
      1	lkptrzk             0.2%
+     1	Brian.Barnett       0.2%
      1	Ng Patrick          0.2%
 ```
 

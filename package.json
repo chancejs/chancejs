@@ -1,7 +1,7 @@
 {
   "name": "chance",
   "main": "./chance.js",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
@@ -30,7 +30,7 @@
     "mocha-phantomjs": "^3.5.3"
   },
   "scripts": {
-    "postinstall": "lodash compat -o test/lib/lodash/lodash.build.js",
+    "pretest": "lodash compat -o test/lib/lodash/lodash.build.js",
     "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
   },
   "bin": "./bin/chance.js",
