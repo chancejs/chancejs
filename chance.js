@@ -29,7 +29,7 @@
         }
 
         var seedling;
-        
+
         if (arguments.length) {
             // set a starting value of zero so we can add to it
             this.seed = 0;
@@ -266,11 +266,12 @@
      *  Gives an array of n random terms
      *  @param fn the function that generates something random
      *  @param n number of terms to generate
-     *  @param options options for the function fn. 
+     *  @param options options for the function fn.
      *  There can be more parameters after these. All additional parameters are provided to the given function
      */
     Chance.prototype.n = function(fn, n, options) {
-        var i = n || 1, arr = [], params = slice.call(arguments, 2);
+        if (typeof n === 'undefined') n = 1;
+        var i = n, arr = [], params = slice.call(arguments, 2);
         // Providing a negative count should result in a noop.
         i = Math.max( 0, i );
 
@@ -1294,7 +1295,7 @@
                    this.string({ pool: guid_pool, length: 12 });
         return guid;
     };
-    
+
     // Hash
     Chance.prototype.hash = function (options) {
         options = initOptions(options, {length : 40, casing: 'lower'});
