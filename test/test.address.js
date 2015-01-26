@@ -1,9 +1,8 @@
 define(['Chance', 'mocha', 'chai', 'underscore', 'phoneTest'], function (Chance, mocha, chai, _, phoneTest) {
-    var assert = chai.assert,
-        expect = chai.expect;
+    var expect = chai.expect;
 
     describe("Address", function () {
-        var zip, suffix, suffixes, state, address, phone, coordinates, country, chance = new Chance();
+        var zip, suffix, suffixes, state, address, country, chance = new Chance();
 
         describe("Zip", function () {
             it("returns a valid basic zip code", function () {
