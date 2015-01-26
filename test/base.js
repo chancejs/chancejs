@@ -15,7 +15,7 @@ require.config({
                 this.mocha.setup({
                     ui: 'bdd',
                     ignoreLeaks: true,
-                    timeout: 5000 // ms
+                    timeout: 8000 // ms
                 });
                 return this.mocha;
             }
