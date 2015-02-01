@@ -19,7 +19,7 @@
     // Constructor
     function Chance (seed) {
         if (!(this instanceof Chance)) {
-            return new Chance(seed);
+            return seed == null ? new Chance() : new Chance(seed);
         }
 
         // if user has provided a function, use that as the generator
@@ -1826,7 +1826,8 @@
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
         if (seed === undefined) {
-            seed = new Date().getTime();
+            // kept random number same size as time used previously to ensure no unexpected results downstream
+            seed = Math.floor(Math.random()*Math.pow(10,13));
         }
         /* Period parameters */
         this.N = 624;
