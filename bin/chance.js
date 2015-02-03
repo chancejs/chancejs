@@ -12,6 +12,8 @@ var chance = new Chance(new Date().getTime().toString());
 if(generator && chance[generator]) {
     // Invoke the generator on our Chance instance and print the result.
     process.stdout.write(chance[generator](options));
+    if (process.stdout.isTTY) process.stdout.write('\n');
 } else {
     process.stderr.write('Unknown generator "' + generator + '"');
+    if (process.stderr.isTTY) process.stderr.write('\n');
 }
