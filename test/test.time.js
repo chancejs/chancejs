@@ -14,13 +14,16 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
 
         it("date() can have some defaults provided and obeys them", function () {
             _(1000).times(function () {
+                // One of each month type in terms of number of days.
+                var month = [0, 1, 3][Math.floor(Math.random() * 3)];
+
                 date = chance.date({year: 1983});
                 expect(date).to.be.a('Date');
                 expect(date.getFullYear()).to.equal(1983);
 
-                date = chance.date({month: 0});
+                date = chance.date({month: month});
                 expect(date).to.be.a('Date');
-                expect(date.getMonth()).to.equal(0);
+                expect(date.getMonth()).to.equal(month);
 
                 date = chance.date({day: 21});
                 expect(date).to.be.a('Date');
