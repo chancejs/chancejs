@@ -1011,13 +1011,19 @@
             date = new Date(this.natural({min: min, max: max}));
         } else {
             var m = this.month({raw: true});
+            var daysInMonth = m.days;
+
+            if(options && options.month) {
+                // Mod 12 to allow months outside range of 0-11 (not encouraged, but also not prevented).
+                daysInMonth = this.get('months')[((options.month % 12) + 12) % 12].days;
+            }
 
             options = initOptions(options, {
                 year: parseInt(this.year(), 10),
                 // Necessary to subtract 1 because Date() 0-indexes month but not day or year
                 // for some reason.
                 month: m.numeric - 1,
-                day: this.natural({min: 1, max: m.days}),
+                day: this.natural({min: 1, max: daysInMonth}),
                 hour: this.hour(),
                 minute: this.minute(),
                 second: this.second(),
