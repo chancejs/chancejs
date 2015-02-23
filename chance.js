@@ -615,7 +615,9 @@
             { name: 'Medical Doctor', abbreviation: 'M.D.' },
             { name: 'Senior', abbreviation: 'Sr.' },
             { name: 'The Third', abbreviation: 'III' },
-            { name: 'The Fourth', abbreviation: 'IV' }
+            { name: 'The Fourth', abbreviation: 'IV' },
+            { name: 'Bachelor of Engineering', abbreviation: 'B.E' },
+            { name: 'Bachelor of Technology', abbreviation: 'B.TECH' }
         ];
         return suffixes;
     };
