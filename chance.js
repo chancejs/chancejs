@@ -668,7 +668,7 @@
             return [value, value, value].join(delimiter || '');
         }
 
-        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb', '0x']), grayscale: false, casing: 'lower'});
+        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x']), grayscale: false, casing: 'lower'});
         var isGrayscale = options.grayscale;
         var colorValue;
 
@@ -684,10 +684,16 @@
             } else {
                 colorValue = 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
             }
+        } else if (options.format === 'rgba') {
+            if (isGrayscale) {
+                colorValue = 'rgba(' + gray(this.natural({max: 255}), ',') + ',' + this.floating({min:0, max:1}) + ')';
+            } else {
+                colorValue = 'rgba(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.floating({min:0, max:1}) + ')';
+            }
         } else if (options.format === '0x') {
             colorValue = '0x' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
         } else {
-            throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", "rgb" or "0x".');
+            throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", "rgb", "rgba", or "0x".');
         }
 
         if (options.casing === 'upper' ) {
