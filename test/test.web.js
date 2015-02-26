@@ -173,6 +173,34 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+            it("({format: 'rgba'}) returns what looks a rgba color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'rgba'});
+                    expect(color).to.be.a('string');
+                    var matchColors = /rgba\((\d{1,3}),(\d{1,3}),(\d{1,3}),([01]\.?\d*?)\)/;
+                    var match = matchColors.exec(color);
+                    expect(match).to.have.length.of(5);
+                    expect(match[1]).to.be.within(0, 255);
+                    expect(match[2]).to.be.within(0, 255);
+                    expect(match[3]).to.be.within(0, 255);
+                    expect(match[4]).to.be.within(0, 1);
+                });
+            });
+
+            it("({format: 'rgba', grayScale: true}) returns what looks a gray scale rgba color", function () {
+                _(1000).times(function () {
+                    var color = chance.color({format: 'rgba', grayscale: true});
+                    expect(color).to.be.a('string');
+                    var matchColors = /rgba\((\d{1,3}),(\d{1,3}),(\d{1,3}),([01]\.?\d*?)\)/;
+                    var match = matchColors.exec(color);
+                    expect(match).to.have.length.of(5);
+                    expect(match[1]).to.be.within(0, 255);
+                    expect(match[1]).to.equal(match[2]);
+                    expect(match[1]).to.equal(match[3]);
+                    expect(match[4]).to.be.within(0, 1);
+                });
+            });
+
             it("({format: '0x'}) returns what looks a 0x color", function () {
                 _(1000).times(function () {
                     var color = chance.color({format: '0x'});
