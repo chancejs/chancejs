@@ -212,8 +212,7 @@
         options = initOptions(options);
 
         var length = options.length || this.natural({min: 5, max: 20}),
-            pool = options.pool,
-            text = this.n(this.character, length, {pool: pool});
+            text = this.n(this.character, length, options);
 
         return text.join("");
     };
