@@ -282,6 +282,32 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(string).to.have.length(length);
                 });
             });
+            
+            it("obeys case", function () {
+                _(1000).times(function () {
+                    string = chance.string({alpha: true});
+                    expect(string).to.match(/[a-zA-Z]+/);
+                });
+
+                _(1000).times(function () {
+                    string = chance.string({alpha: true, casing: 'upper'});
+                    expect(string).to.match(/[A-Z]+/);
+                });
+
+                _(1000).times(function () {
+                    string = chance.string({alpha: true, casing: 'lower'});
+                    expect(string).to.match(/[a-z]+/);
+                });
+                
+            });
+            
+            it("obeys symbol", function () {
+                _(1000).times(function () {
+                    string = chance.string({symbols: true});
+                    expect(string).to.match(/[\!\@\#\$\%\^\&\*\(\)\[\]]+/);
+                });
+            });
+
         });
     });
 
