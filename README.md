@@ -172,6 +172,7 @@ THANK YOU!
 ### Contribute! 
 
 Be a part of this project! You can run the test using the following.
+
 1. Install dependencies from package.json by running `npm install`
 2. Install dependencies for testing by running `bower install`
 3. Run the test via `npm test`
