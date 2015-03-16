@@ -631,6 +631,70 @@
             this.pick(this.name_suffixes()).abbreviation;
     };
 
+    Chance.prototype.mrz = function (options) {
+        var checkDigit = function (input) {
+            var alpha = "<ABCDEFGHIJKLMNOPQRSTUVWXYXZ".split(''),
+                multipliers = [ 7, 3, 1 ],
+                runningTotal = 0;
+            
+            if(typeof input !== 'string') input = input.toString();
+
+            input.split('').forEach(function(character, idx) {
+                var pos = alpha.indexOf(character);
+
+                if(pos !== -1)
+                    character = pos === 0 ? 0 : pos + 9;
+                else
+                    character = parseInt(character, 10);
+                character *= multipliers[idx % multipliers.length];
+                runningTotal += character;
+            });
+            return runningTotal % 10;
+        },
+        generate = function (opts) {
+            var pad = function (length) {
+                    return new Array(length + 1).join('<');
+                },
+                number = [ 'P<',
+                    opts.issuer,
+                    opts.last.toUpperCase(),
+                    '<<',
+                    opts.first.toUpperCase(),
+                    pad(39 - (opts.last.length + opts.first.length + 2)),
+                    opts.passportNumber,
+                    checkDigit(opts.passportNumber),
+                    opts.nationality,
+                    opts.dob,
+                    checkDigit(opts.dob),
+                    opts.gender,
+                    opts.expiry,
+                    checkDigit(opts.expiry),
+                    pad(14),
+                    checkDigit(pad(14)) ].join('');
+
+               return number + (checkDigit(number.substr(44, 10) + number.substr(57, 7) + number.substr(65, 7)));
+            }
+        options = initOptions(options, {
+            first: chance.first(),    
+            last: chance.last(),    
+            passportNumber: chance.integer({min: 100000000, max: 999999999}),    
+            dob: (function () {
+                var date = chance.birthday({type: 'adult'});
+                return [date.getFullYear().toString().substr(2), chance.pad(date.getMonth() + 1, 2),
+                    chance.pad(date.getDate(), 2)].join('');
+            }()),
+            expiry: (function () {
+                var date = new Date();
+                return [(date.getFullYear() + 5).toString().substr(2), chance.pad(date.getMonth() + 1, 2),
+                    chance.pad(date.getDate(), 2)].join('');
+            }()),
+            gender: chance.gender() === 'Female' ? 'F': 'M',   
+            issuer: 'GBR',
+            nationality: 'GBR'
+        } );
+        return generate (options);        
+    };
+
     // -- End Person --
 
     // -- Mobile --

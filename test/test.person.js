@@ -185,5 +185,40 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
         });
+
+        describe('mrz()', function() {
+            it('should return a valid passport number when given valid inputs', function() {
+                var sample = "P<GBRFOLKS<<JOANNE<<<<<<<<<<<<<<<<<<<<<<<<<<2321126135GBR6902069F1601013<<<<<<<<<<<<<<02",
+                    actual = chance.mrz({
+                        first: 'Joanne',
+                        last: 'Folks',
+                        gender: 'F',
+                        dob: '690206',
+                        expiry: '160101',
+                        passportNumber: '232112613',
+                    });
+
+                expect(actual).to.equal(sample);
+
+                sample = "P<GBRKELLY<<LIDA<<<<<<<<<<<<<<<<<<<<<<<<<<<<3071365913GBR6606068F2003131<<<<<<<<<<<<<<04";
+                actual = chance.mrz({
+                        first: 'Lida',
+                        last: 'Kelly',
+                        gender: 'F',
+                        dob: '660606',
+                        expiry: '200313',
+                        passportNumber: '307136591',
+                    });
+
+                expect(actual).to.equal(sample);
+           });
+           it('should return a valid random passport number when not given any inputs', function() {
+               var actual = chance.mrz();
+               expect(actual).to.be.a.string;
+               expect(actual.substr(0, 5)).to.equal('P<GBR');
+               expect(actual).to.have.length(88);
+               expect(actual.substr(44)).to.match(/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/);
+           });
+        });
     });
 });
