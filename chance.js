@@ -295,7 +295,7 @@
         if (arr.length === 0) {
             throw new RangeError("Chance: Cannot pick() from an empty array");
         }
-        if (!count || count === 1) {
+        if (!count) {
             return arr[this.natural({max: arr.length - 1})];
         } else {
             return this.shuffle(arr).slice(0, count);
