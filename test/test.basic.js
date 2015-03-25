@@ -139,6 +139,10 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(natural).to.be.a('number');
             });
 
+            it("throws an error if min < 0", function () {
+                expect(function () { chance.natural({min: -23}); }).to.throw(RangeError);
+            });
+
             it("is always positive", function () {
                 var positive_count = 0;
                 _(1000).times(function () {
@@ -284,7 +288,11 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                     expect(string).to.have.length(length);
                 });
             });
-            
+
+            it("throws an error if length < 0", function () {
+                expect(function () { chance.string({length: -23}); }).to.throw(RangeError);
+            });
+
             it("obeys case", function () {
                 _(1000).times(function () {
                     string = chance.string({alpha: true});

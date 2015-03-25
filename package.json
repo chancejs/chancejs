@@ -31,7 +31,7 @@
   },
   "scripts": {
     "pretest": "lodash compat -o test/lib/lodash/lodash.build.js",
-    "test": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/runner.html"
+    "test": "grunt jshint && grunt test"
   },
   "bin": "./bin/chance.js",
   "keywords": [

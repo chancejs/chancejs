@@ -19,25 +19,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 arr = ['a', 'b', 'c', 'd'];
                 _(1000).times(function () {
                     picked = chance.pick(arr);
-                    expect(picked).to.be.a('string');
-                    expect(arr).to.include(picked);
-                });
-            });
-
-            it("returns an array of single elements when called with a count argument", function () {
-                arr = ['a', 'b', 'c', 'd'];
-                _(1000).times(function () {
-                    picked = chance.pick(arr, 1);
-                    expect(picked).to.be.instanceof(Array);
                     expect(picked).to.have.length(1);
                 });
             });
 
-            it("returns an array of elements when called with a count argument", function () {
+            it("returns multiple elements when called with a count argument", function () {
                 arr = ['a', 'b', 'c', 'd'];
                 _(1000).times(function () {
                     picked = chance.pick(arr, 3);
-                    expect(picked).to.be.instanceof(Array);
                     expect(picked).to.have.length(3);
                 });
             });
@@ -217,19 +206,15 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
 
             it("throws a RangeError when num is likely out of range", function () {
-                _(1000).times(function () {
-                    expect(function () {
-                        chance.unique(chance.character, 10, {pool: 'abcde'});
-                    }).to.throw(RangeError, /too large/);
-                });
+                expect(function () {
+                    chance.unique(chance.character, 10, {pool: 'abcde'});
+                }).to.throw(RangeError, /too large/);
             });
 
             it("throws a RangeError when first argument is not a function", function () {
-                _(1000).times(function () {
-                    expect(function () {
-                        chance.unique(chance.character({pool: 'abcde'}), 10);
-                    }).to.throw(RangeError, /first argument must be a function/);
-                });
+                expect(function () {
+                    chance.unique(chance.character({pool: 'abcde'}), 10);
+                }).to.throw(RangeError, /first argument must be a function/);
             });
 
             it("will take a custom comparator for comparing complex objects", function () {
@@ -270,11 +255,9 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
             });
 
             it("throws a RangeError when first argument is not a function", function () {
-                _(1000).times(function () {
-                    expect(function () {
-                        chance.n(chance.character({pool: 'abcde'}), 10);
-                    }).to.throw(RangeError, /first argument must be a function/);
-                });
+                expect(function () {
+                    chance.n(chance.character({pool: 'abcde'}), 10);
+                }).to.throw(RangeError, /first argument must be a function/);
             });
 
             it("gives an empty array when n is set to 0", function () {
