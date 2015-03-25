@@ -1,3 +1,5 @@
+/* jshint newcap:false */
+
 define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai, _) {
     var expect = chai.expect;
 

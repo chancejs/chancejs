@@ -224,6 +224,14 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 });
             });
 
+            it("throws a RangeError when first argument is not a function", function () {
+                _(1000).times(function () {
+                    expect(function () {
+                        chance.unique(chance.character({pool: 'abcde'}), 10);
+                    }).to.throw(RangeError, /first argument must be a function/);
+                });
+            });
+
             it("will take a custom comparator for comparing complex objects", function () {
                 _(1000).times(function () {
                     var arr = chance.unique(chance.currency, 25, {
@@ -254,11 +262,21 @@ define(['Chance', 'mocha', 'chai', 'underscore'], function (Chance, mocha, chai,
                 expect(arr[0]).to.match(/example\.com$/);
                 expect(arr.length).to.equal(25);
             });
+
             it("gives an array of 1 term when n is not given", function () {
                 var arr = chance.n(chance.email);
                 expect(arr).to.be.an('array');
                 expect(arr.length).to.equal(1);
             });
+
+            it("throws a RangeError when first argument is not a function", function () {
+                _(1000).times(function () {
+                    expect(function () {
+                        chance.n(chance.character({pool: 'abcde'}), 10);
+                    }).to.throw(RangeError, /first argument must be a function/);
+                });
+            });
+
             it("gives an empty array when n is set to 0", function () {
                 var arr = chance.n(chance.email, 0);
                 expect(arr).to.be.an('array');
