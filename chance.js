@@ -363,11 +363,17 @@
     };
 
     Chance.prototype.pick = function (arr, count) {
-        if (arr.length === 0) {
+        if (arr.length === 0 && count > 0) {
             throw new RangeError("Chance: Cannot pick() from an empty array");
         }
+        if (count < 0) {
+            throw new RangeError("Chance: count must be positive");
+        }
+        if (count === 0) {
+            return [];
+        }
         if (!count || count === 1) {
-            return arr[this.natural({max: arr.length - 1})];
+            return [ arr[this.natural({max: arr.length - 1})] ];
         } else {
             return this.shuffle(arr).slice(0, count);
         }
