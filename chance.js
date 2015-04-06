@@ -373,10 +373,14 @@
             return [];
         }
         if (!count || count === 1) {
-            return [ arr[this.natural({max: arr.length - 1})] ];
+            return arr[this.natural({max: arr.length - 1})];
         } else {
             return this.shuffle(arr).slice(0, count);
         }
+    };
+    Chance.prototype.select = function (arr, count) {
+        var selection = this.pick(arr, count);
+        return (count === 1) ? [ selection ] : selection;
     };
 
     Chance.prototype.shuffle = function (arr) {
