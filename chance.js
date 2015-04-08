@@ -942,7 +942,6 @@
     };
 
     Chance.prototype.coordinates = function (options) {
-        options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options);
     };
 
@@ -967,7 +966,6 @@
     };
 
     Chance.prototype.geojson = function (options) {
-        options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
     };
 
