@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/victorquinn/chancejs.png)](https://travis-ci.org/victorquinn/chancejs)
 
+[![Coverage Status](https://coveralls.io/repos/victorquinn/chancejs/badge.svg?branch=develop)](https://coveralls.io/r/victorquinn/chancejs?branch=develop)
+
 Chance - Random generator helper for JavaScript
 
 Homepage: [http://chancejs.com](http://chancejs.com)

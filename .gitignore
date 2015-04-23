@@ -4,5 +4,6 @@ node_modules
 chance.min.js
 chance.min.js.map
 test/lib
+coverage
 # Ignore gh-pages specific content
 public

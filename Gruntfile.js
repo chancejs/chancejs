@@ -2,6 +2,16 @@ module.exports = function (grunt) {
     var js_files = ['Gruntfile.js', 'chance.js', 'test/*.js'];
 
     grunt.initConfig({
+        'js-test': {
+            options: {
+                coverage: true,
+                coverageTool: 'istanbul',
+                coverageFormat: 'lcov',
+                identifier: 'chance-coverage',
+                pattern: 'test/*.js',
+                root: '.'
+            }
+        },
         jshint: {
             options: {
                 // Enforcing
@@ -28,15 +38,22 @@ module.exports = function (grunt) {
 
                 // Custom Globals
                 globals: {
+                    _: true,
+                    chai: true,
+                    chance: true,
+                    Chance: true,
                     define: false,
+                    mocha: true,
                     mochaPhantomJS: false,
-                    chance: true
+                    phoneNumber: true
                 }
             },
             all: js_files
         },
-        mocha_phantomjs: {
-            all: ["test/runner.html"]
+        shell: {
+            target: {
+                command: 'cat coverage/chance-coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage'
+            }
         },
         uglify: {
             my_target: {
@@ -52,7 +69,7 @@ module.exports = function (grunt) {
         watch: {
             options: { livereload: true },
             files: js_files,
-            tasks: ['jshint', 'mocha_phantomjs', 'uglify']
+            tasks: ['jshint', 'js-test', 'uglify']
         }
     });
 
@@ -60,8 +77,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-mocha-phantomjs');
+    grunt.loadNpmTasks('grunt-js-test');
+    grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('test', ['mocha_phantomjs']);
+    grunt.registerTask('test', ['js-test', 'shell']);
 };
