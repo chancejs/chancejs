@@ -19,15 +19,13 @@
     }
   ],
   "devDependencies": {
-    "blanket": "^1.1.6",
     "coveralls": "^2.11.2",
     "grunt": "0.4.5",
     "grunt-bump": "0.0.16",
     "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "0.6.1",
-    "grunt-js-test": "git://github.com/victorquinn/grunt-js-test#177a865259b619e6230ca7fc5afb293574385840",
-    "grunt-mocha-phantomjs": "^0.6.0",
+    "grunt-js-test": "git://github.com/victorquinn/grunt-js-test#ffc580375f0ff7b496026ab87b4a9666992d2f33",
     "grunt-shell": "^1.1.2",
     "istanbul": "^0.3.13",
     "line-by-line": "^0.1.3",
