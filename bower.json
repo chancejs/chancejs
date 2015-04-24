@@ -17,7 +17,7 @@
     "web": "http://victorquinn.com"
   },
   "devDependencies": {
-    "blanket": "~1.1.5"
+    "blanket": "~1.1.5",
     "chai": "~1.10.0",
     "mocha": "~2.1.0",
     "phone_number_js": "~1.0.0",
