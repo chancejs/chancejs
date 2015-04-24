@@ -65,7 +65,7 @@ describe("Helpers", function () {
             var chance = new Chance(Math.random);
             var picked = { a: 0, b: 0 };
             // This makes it a tad slow, but we need a large enough sample size to adequately test
-            _(100000).times(function () {
+            _(50000).times(function () {
                 picked[chance.weighted(['a', 'b'], [1, 100])]++;
             });
 
@@ -74,7 +74,7 @@ describe("Helpers", function () {
 
             picked = { a: 0, b: 0 };
             // This makes it a tad slow, but we need a large enough sample size to adequately test
-            _(100000).times(function () {
+            _(50000).times(function () {
                 picked[chance.weighted(['a', 'b'], [100, 1])]++;
             });
 
@@ -199,7 +199,7 @@ describe("Helpers", function () {
 
     describe("unique", function () {
         it("gives a unique array of the selected function", function () {
-            _(1000).times(function () {
+            _(500).times(function () {
                 var arr = chance.unique(chance.email, 25, {domain: "example.com"});
                 expect(arr).to.be.an('array');
                 expect(arr[0]).to.match(/example\.com$/);
