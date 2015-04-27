@@ -4,6 +4,7 @@
 var expect = chai.expect;
 
 describe("Android Registration ID", function(){
+    this.timeout(8000);
     var android_id, chance = new Chance();
 
     it("returns a proper android id", function () {
