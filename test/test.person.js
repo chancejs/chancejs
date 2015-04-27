@@ -85,6 +85,7 @@ describe("Person", function () {
                 expect(name.indexOf('.')).to.be.ok;
             });
         });
+
         it("can have the prefix specified", function () {
             _(1000).times(function () {
                 name = chance.name({prefix: true});
@@ -93,6 +94,13 @@ describe("Person", function () {
             });
         });
 
+        it("can have the suffix specified", function () {
+            _(1000).times(function () {
+                name = chance.name({suffix: true});
+                expect(name).to.be.a('string');
+                expect(name.split(' ')).to.have.length(3);
+            });
+        });
     });
 
     describe("first()", function () {
@@ -104,7 +112,6 @@ describe("Person", function () {
                 expect(first.split(' ')).to.have.length(1);
             });
         });
-
     });
 
     describe("last()", function () {
@@ -159,6 +166,24 @@ describe("Person", function () {
         it("can get full suffix", function () {
             _(1000).times(function () {
                 suffix = chance.name_suffix({full: true});
+                expect(suffix).to.be.a('string');
+                expect(suffix).to.have.length.above(5);
+            });
+        });
+    });
+
+    describe("suffix()", function () {
+        it("returns a random suffix", function () {
+            _(1000).times(function () {
+                suffix = chance.suffix();
+                expect(suffix).to.be.a('string');
+                expect(suffix).to.have.length.below(7);
+            });
+        });
+
+        it("can get full suffix", function () {
+            _(1000).times(function () {
+                suffix = chance.suffix({full: true});
                 expect(suffix).to.be.a('string');
                 expect(suffix).to.have.length.above(5);
             });
