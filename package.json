@@ -32,7 +32,7 @@
   },
   "scripts": {
     "pretest": "lodash compat -o dependencies/lodash/lodash.build.js",
-    "test": "grunt jshint && grunt test"
+    "test": "grunt test-ci"
   },
   "bin": "./bin/chance.js",
   "keywords": [
