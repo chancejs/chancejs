@@ -50,6 +50,7 @@ describe("Helpers", function () {
     });
 
     describe("weighted()", function () {
+        this.timeout(10000);
         it("returns an element", function () {
             _(1000).times(function () {
                 picked = chance.weighted(['a', 'b', 'c', 'd'], [1, 1, 1, 1]);
@@ -74,7 +75,7 @@ describe("Helpers", function () {
 
             picked = { a: 0, b: 0 };
             // This makes it a tad slow, but we need a large enough sample size to adequately test
-            _(50000).times(function () {
+            _(100000).times(function () {
                 picked[chance.weighted(['a', 'b'], [100, 1])]++;
             });
 
@@ -105,7 +106,7 @@ describe("Helpers", function () {
             _(10).times(function() {
                 var picked = { a: 0, b: 0, c: 0, d: 0 };
                 // This makes it a tad slow, but we need a large enough sample size to adequately test
-                _(15000).times(function () {
+                _(100000).times(function () {
                     picked[chance.weighted(['a', 'b', 'c', 'd'], [1, 100, 100, 1])]++;
                 });
 
@@ -125,7 +126,7 @@ describe("Helpers", function () {
             _(10).times(function() {
                 var picked = { a: 0, b: 0, c: 0, d: 0 };
                 // This makes it a tad slow, but we need a large enough sample size to adequately test
-                _(15000).times(function () {
+                _(50000).times(function () {
                     picked[chance.weighted(['a', 'b', 'c', 'd'], [0.001, 0.1, 0.1, 0.001])]++;
                 });
 
@@ -200,9 +201,8 @@ describe("Helpers", function () {
     describe("unique", function () {
         it("gives a unique array of the selected function", function () {
             _(500).times(function () {
-                var arr = chance.unique(chance.email, 25, {domain: "example.com"});
+                var arr = chance.unique(chance.character, 25, {pool: "abcdefghijklmnopqrstuvwxyz"});
                 expect(arr).to.be.an('array');
-                expect(arr[0]).to.match(/example\.com$/);
                 expect(_.uniq(arr).length).to.equal(25);
             });
         });
