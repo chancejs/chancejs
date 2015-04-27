@@ -211,6 +211,25 @@ describe("Web", function () {
                 expect(color).to.match(/0x[a-z0-9]+/m);
             });
         });
+
+        it("({casing: upper}) returns upper cased color", function () {
+            _(1000).times(function () {
+                var color = chance.color({format: 'hex', casing: 'upper'});
+                console.log(color);
+                expect(color).to.be.a('string');
+                expect(color).to.have.length(7);
+                expect(color.charAt(1).toUpperCase()).to.equal(color.charAt(1));
+                expect(color.charAt(2).toUpperCase()).to.equal(color.charAt(2));
+                expect(color.charAt(3).toUpperCase()).to.equal(color.charAt(3));
+                expect(color.charAt(4).toUpperCase()).to.equal(color.charAt(4));
+                expect(color.charAt(5).toUpperCase()).to.equal(color.charAt(5));
+                expect(color.charAt(6).toUpperCase()).to.equal(color.charAt(6));
+            });
+        });
+
+        it("bogus format throws an error", function () {
+            expect(function() { chance.color({ format: "banana" }); }).to.throw(RangeError);
+        });
     });
 
     describe("url()", function() {

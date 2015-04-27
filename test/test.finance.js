@@ -43,6 +43,10 @@ describe("Credit Card", function () {
                 expect(type.name).to.equal("Visa");
             });
         });
+
+        it("bogus cc_type() throws an error", function () {
+            expect(function() { chance.cc_type({ name: 'potato' }); }).to.throw(RangeError);
+        });
     });
 
     describe("Number", function () {

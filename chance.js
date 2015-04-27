@@ -813,7 +813,12 @@
             return [value, value, value].join(delimiter || '');
         }
 
-        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x']), grayscale: false, casing: 'lower'});
+        options = initOptions(options, {
+            format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x']),
+            grayscale: false,
+            casing: 'lower'
+        });
+
         var isGrayscale = options.grayscale;
         var colorValue;
 
@@ -838,7 +843,7 @@
         } else if (options.format === '0x') {
             colorValue = '0x' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
         } else {
-            throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", "rgb", "rgba", or "0x".');
+            throw new RangeError('Invalid format provided. Please provide one of "hex", "shorthex", "rgb", "rgba", or "0x".');
         }
 
         if (options.casing === 'upper' ) {
@@ -923,8 +928,12 @@
     };
 
     Chance.prototype.altitude = function (options) {
-        options = initOptions(options, {fixed : 5, max: 8848});
-        return this.floating({min: 0, max: options.max, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: 0, max: 8848});
+        return this.floating({
+            min: options.min,
+            max: options.max,
+            fixed: options.fixed
+        });
     };
 
     Chance.prototype.areacode = function (options) {
@@ -956,8 +965,12 @@
     };
 
     Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed: 5, min: -2550});
-        return this.floating({min: options.min, max: 0, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: -2550, max: 0});
+        return this.floating({
+            min: options.min,
+            max: options.max,
+            fixed: options.fixed
+        });
     };
 
     Chance.prototype.geohash = function (options) {
@@ -1301,7 +1314,7 @@
                 }
             }
             if (type === null) {
-                throw new Error("Credit card type '" + options.name + "'' is not supported");
+                throw new RangeError("Credit card type '" + options.name + "'' is not supported");
             }
         } else {
             type = this.pick(types);
@@ -1418,8 +1431,8 @@
 
     Chance.prototype.rpg = function (thrown, options) {
         options = initOptions(options);
-        if (thrown === null) {
-            throw new Error("A type of die roll must be included");
+        if (!thrown) {
+            throw new RangeError("A type of die roll must be included");
         } else {
             var bits = thrown.toLowerCase().split("d"),
                 rolls = [];

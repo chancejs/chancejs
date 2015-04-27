@@ -288,6 +288,58 @@ describe("Address", function () {
         });
     });
 
+    describe("Altitude", function () {
+        it("looks right", function () {
+            expect(chance.altitude()).to.be.a('number');
+        });
+
+        it("is in the right range", function () {
+            _(1000).times(function () {
+                expect(chance.altitude()).to.be.within(0, 8848);
+            });
+        });
+
+        it("will accept a min and obey it", function () {
+            _(1000).times(function () {
+                var min = chance.floating({min: 0, max: 8848});
+                expect(chance.altitude({min: min})).to.be.within(min, 8848);
+            });
+        });
+
+        it("will accept a max and obey it", function () {
+            _(1000).times(function () {
+                var max = chance.floating({min: 1000, max: 9000});
+                expect(chance.altitude({max: max})).to.be.within(0, max);
+            });
+        });
+    });
+
+    describe("Depth", function () {
+        it("looks right", function () {
+            expect(chance.depth()).to.be.a('number');
+        });
+
+        it("is in the right range", function () {
+            _(1000).times(function () {
+                expect(chance.depth()).to.be.within(-2550, 0);
+            });
+        });
+
+        it("will accept a min and obey it", function () {
+            _(1000).times(function () {
+                var min = chance.floating({min: -2500, max: 0});
+                expect(chance.depth({min: min})).to.be.within(min, 0);
+            });
+        });
+
+        it("will accept a max and obey it", function () {
+            _(1000).times(function () {
+                var max = chance.floating({min: -2500, max: 0});
+                expect(chance.depth({max: max})).to.be.within(-2550, max);
+            });
+        });
+    });
+
     describe("Longitude", function () {
         it("longitude() looks right", function () {
             expect(chance.longitude()).to.be.a('number');

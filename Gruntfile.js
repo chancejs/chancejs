@@ -3,14 +3,23 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         'js-test': {
-            options: {
-                coverage: true,
-                coverageTool: 'istanbul',
-                coverageFormat: 'lcov',
-                identifier: 'chance-coverage',
-                reporter: "Dot",
-                pattern: 'test/*.js',
-                root: '.'
+            default: {
+                options: {
+                    coverage: true,
+                    coverageTool: 'istanbul',
+                    coverageFormat: 'lcov',
+                    identifier: 'chance-coverage',
+                    reporter: "Dot",
+                    pattern: 'test/*.js',
+                    root: '.'
+                }
+            },
+            watch: {
+                options: {
+                    reporter: "Dot",
+                    pattern: 'test/*.js',
+                    root: '.'
+                }
             }
         },
         jshint: {
@@ -70,7 +79,7 @@ module.exports = function (grunt) {
         watch: {
             options: { livereload: true },
             files: js_files,
-            tasks: ['jshint', 'js-test', 'uglify']
+            tasks: ['jshint', 'js-test:watch', 'uglify']
         }
     });
 

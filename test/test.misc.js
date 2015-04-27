@@ -85,6 +85,10 @@ describe("Dice", function () {
             expect(rpg).to.be.within(4, 80);
         });
     });
+
+    it("rpg without a die roll throws an error", function () {
+        expect(function() { chance.rpg(); }).to.throw(RangeError);
+    });
 });
 
 describe("Mac Address", function () {
