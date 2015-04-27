@@ -3,6 +3,5 @@ before_script:
   - npm install -g bower
   - npm install -g grunt-cli
   - bower install
-sudo: false
 node_js:
   - "0.10"
