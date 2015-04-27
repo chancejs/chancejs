@@ -1,5 +1,5 @@
-/// <reference path="../../chance.js" />
-/// <reference path="../lib/lodash/lodash.build.js" />
+/// <reference path="../chance.js" />
+/// <reference path="../dependencies/lodash/lodash.build.js" />
 
 var expect = chai.expect;
 

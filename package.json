@@ -31,7 +31,7 @@
     "poncho": "^0.1.1"
   },
   "scripts": {
-    "pretest": "lodash compat -o test/lib/lodash/lodash.build.js",
+    "pretest": "lodash compat -o dependencies/lodash/lodash.build.js",
     "test": "grunt jshint && grunt test"
   },
   "bin": "./bin/chance.js",
