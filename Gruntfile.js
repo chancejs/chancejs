@@ -3,21 +3,20 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         'js-test': {
-            default: {
-                options: {
-                    coverage: true,
-                    coverageTool: 'istanbul',
-                    coverageFormat: 'lcov',
-                    identifier: 'chance-coverage',
-                    reporter: "Dot",
-                    pattern: './test/*.js',
-                    root: '.'
-                }
+            options: {
+                coverage: true,
+                coverageTool: 'istanbul',
+                coverageFormat: 'lcov',
+                identifier: 'chance-coverage',
+                reporter: "Spec",
+                pattern: 'test/*.js',
+                root: '.'
             },
             watch: {
                 options: {
+                    coverage: false,
                     reporter: "Dot",
-                    pattern: './test/*.js',
+                    pattern: 'test/*.js',
                     root: '.'
                 }
             }
@@ -91,5 +90,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('test', ['js-test:default', 'shell']);
+    grunt.registerTask('test', ['js-test', 'shell']);
 };

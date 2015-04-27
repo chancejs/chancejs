@@ -12,12 +12,7 @@
     "type": "git",
     "url": "https://github.com/victorquinn/chancejs.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://chancejs.com/license/"
-    }
-  ],
+  "license": "MIT",
   "devDependencies": {
     "coveralls": "^2.11.2",
     "grunt": "0.4.5",
