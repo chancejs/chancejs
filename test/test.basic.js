@@ -1,6 +1,6 @@
 /* jshint newcap:false */
 /// <reference path="../chance.js" />
-/// <reference path="../dependencies/lodash/lodash.build.js" />
+/// <reference path="../node_modules/underscore/underscore-min.js" />
 
 var expect = chai.expect;
 
@@ -309,9 +309,9 @@ describe("Basics", function () {
                 string = chance.string({alpha: true, casing: 'lower'});
                 expect(string).to.match(/[a-z]+/);
             });
-            
+
         });
-        
+
         it("obeys symbol", function () {
             _(1000).times(function () {
                 string = chance.string({symbols: true});
@@ -399,4 +399,3 @@ describe("Seed", function () {
         });
     });
 });
-

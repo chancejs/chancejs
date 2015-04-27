@@ -1,5 +1,5 @@
 /// <reference path="../chance.js" />
-/// <reference path="../dependencies/lodash/lodash.build.js" />
+/// <reference path="../node_modules/underscore/underscore-min.js" />
 
 var expect = chai.expect;
 
@@ -248,4 +248,3 @@ describe("Person", function () {
         });
     });
 });
-
