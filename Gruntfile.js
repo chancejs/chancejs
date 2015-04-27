@@ -91,5 +91,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('test', ['js-test', 'shell']);
+    grunt.registerTask('test', ['js-test:default', 'shell']);
 };
