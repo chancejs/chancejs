@@ -1,6 +1,8 @@
 # Chance
 
-[![Chance Logo](http://chancejs.com/logo.png)](http://chancejs.com) [![Build Status](https://travis-ci.org/victorquinn/chancejs.svg?branch=develop)](https://travis-ci.org/victorquinn/chancejs) [![GitHub license](https://img.shields.io/github/license/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![GitHub stars](https://img.shields.io/github/stars/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![npm](https://img.shields.io/npm/dm/chance.svg)](https://npmjs.com/package/chance) [![npm](https://img.shields.io/npm/v/chance.svg)](https://npmjs.com/package/chance) [![Coverage Status](https://coveralls.io/repos/victorquinn/chancejs/badge.svg?branch=develop)](https://coveralls.io/r/victorquinn/chancejs?branch=develop) [![awesomeness](https://img.shields.io/badge/awesomeness-maximum-red.svg)](https://github.com/victorquinn/chancejs)
+[![Chance Logo](http://chancejs.com/logo.png)](http://chancejs.com)
+
+[![Build Status](https://travis-ci.org/victorquinn/chancejs.svg?branch=develop)](https://travis-ci.org/victorquinn/chancejs) [![GitHub license](https://img.shields.io/github/license/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![GitHub stars](https://img.shields.io/github/stars/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![npm](https://img.shields.io/npm/dm/chance.svg)](https://npmjs.com/package/chance) [![npm](https://img.shields.io/npm/v/chance.svg)](https://npmjs.com/package/chance) [![Coverage Status](https://coveralls.io/repos/victorquinn/chancejs/badge.svg?branch=develop)](https://coveralls.io/r/victorquinn/chancejs?branch=develop) [![awesomeness](https://img.shields.io/badge/awesomeness-maximum-red.svg)](https://github.com/victorquinn/chancejs)
 
 Chance - Random generator helper for JavaScript
 

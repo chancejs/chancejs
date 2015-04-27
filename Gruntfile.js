@@ -9,14 +9,14 @@ module.exports = function (grunt) {
                 coverageFormat: 'lcov',
                 identifier: 'chance-coverage',
                 reporter: "Spec",
-                pattern: 'test/*.js',
+                pattern: 'test/tests/*.js',
                 root: '.'
             },
             watch: {
                 options: {
                     coverage: false,
                     reporter: "Dot",
-                    pattern: 'test/*.js',
+                    pattern: 'test/tests/*.js',
                     root: '.'
                 }
             }
