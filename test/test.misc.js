@@ -91,6 +91,48 @@ describe("Dice", function () {
     });
 });
 
+describe("tv and radio", function() {
+    it("radio works", function() {
+        var radio;
+        _(1000).times(function () {
+            radio = chance.radio();
+            expect(radio).to.be.a.string;
+            expect(radio).to.have.length(4);
+            expect(radio).to.match(/^[KW][A-Z][A-Z][A-Z]/);
+        });
+    });
+
+    it("radio accepts east", function() {
+        var radio;
+        _(1000).times(function () {
+            radio = chance.radio({ side: 'east' });
+            expect(radio).to.be.a.string;
+            expect(radio).to.have.length(4);
+            expect(radio).to.match(/^W[A-Z][A-Z][A-Z]/);
+        });
+    });
+
+    it("radio accepts west", function() {
+        var radio;
+        _(1000).times(function () {
+            radio = chance.radio({ side: 'west' });
+            expect(radio).to.be.a.string;
+            expect(radio).to.have.length(4);
+            expect(radio).to.match(/^K[A-Z][A-Z][A-Z]/);
+        });
+    });
+
+    it("tv works", function() {
+        var tv;
+        _(1000).times(function () {
+            tv = chance.tv();
+            expect(tv).to.be.a.string;
+            expect(tv).to.have.length(4);
+            expect(tv).to.match(/^[KW][A-Z][A-Z][A-Z]/);
+        });
+    });
+});
+
 describe("Mac Address", function () {
     var mac, chance = new Chance();
 

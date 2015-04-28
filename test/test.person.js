@@ -10,7 +10,43 @@ describe("Person", function () {
         it("returns a random age within expected bounds", function () {
             _(1000).times(function () {
                 expect(chance.age()).to.be.a('number');
-                expect(chance.age()).to.be.within(1, 120);
+                expect(chance.age()).to.be.within(1, 100);
+            });
+        });
+
+        describe("ranges", function() {
+            var age;
+
+            it("child", function () {
+                _(1000).times(function () {
+                    age = chance.age({ type: 'child' });
+                    expect(age).to.be.a('number');
+                    expect(age).to.be.within(1, 12);
+                });
+            });
+
+            it("teen", function () {
+                _(1000).times(function () {
+                    age = chance.age({ type: 'teen' });
+                    expect(age).to.be.a('number');
+                    expect(age).to.be.within(13, 19);
+                });
+            });
+
+            it("adult", function () {
+                _(1000).times(function () {
+                    age = chance.age({ type: 'adult' });
+                    expect(age).to.be.a('number');
+                    expect(age).to.be.within(18, 65);
+                });
+            });
+
+            it("senior", function () {
+                _(1000).times(function () {
+                    age = chance.age({ type: 'senior' });
+                    expect(age).to.be.a('number');
+                    expect(age).to.be.within(65, 100);
+                });
             });
         });
 
@@ -197,6 +233,15 @@ describe("Person", function () {
                 expect(ssn).to.be.a('string');
                 expect(ssn).to.match(/^\d{3}-\d{2}-\d{4}$/m);
                 expect(ssn).to.have.length(11);
+            });
+        });
+
+        it("can get just last 4", function () {
+            _(1000).times(function () {
+                ssn = chance.ssn({ ssnFour: true });
+                expect(ssn).to.be.a('string');
+                expect(ssn).to.match(/^\d{4}$/m);
+                expect(ssn).to.have.length(4);
             });
         });
     });

@@ -1346,7 +1346,7 @@
         });
 
         if (returnAsString) {
-            return  currencies[0] + '/' + currencies[1];
+            return currencies[0].code + '/' + currencies[1].code;
         } else {
             return currencies;
         }

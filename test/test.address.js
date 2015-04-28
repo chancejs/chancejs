@@ -5,7 +5,7 @@
 var expect = chai.expect;
 
 describe("Address", function () {
-    var zip, suffix, suffixes, state, address, country, chance = new Chance();
+    var zip, postal, suffix, suffixes, state, address, country, chance = new Chance();
 
     describe("Zip", function () {
         it("returns a valid basic zip code", function () {
@@ -21,6 +21,18 @@ describe("Address", function () {
                 zip = chance.zip({plusfour: true});
                 expect(zip.length).to.equal(10);
                 expect(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip)).to.be.true;
+            });
+        });
+    });
+
+    describe("Postal", function () {
+        it("returns a valid basic postal code", function () {
+            _(1000).times(function () {
+                postal = chance.postal();
+                expect(postal.length).to.equal(7);
+                _.times(6, function(n) {
+                    expect(postal.charAt(n).toUpperCase()).to.equal(postal.charAt(n));
+                });
             });
         });
     });

@@ -325,6 +325,20 @@ describe("Basics", function () {
 describe("Seed", function () {
     var seed, chance1, chance2;
 
+    describe("null works", function () {
+        it("works with a null seed", function(done) {
+            chance1 = Chance(null);
+
+            // Wait 5 ms before creating chance2 else sometimes they happen on the same
+            // tick and end up with the same seed!
+            setTimeout(function () {
+                chance2 = Chance(null);
+                expect(chance1.random()).to.not.equal(chance2.random());
+                done();
+            }, 5);
+        });
+    });
+
     describe("random", function () {
         it("does return differing results if differing seeds provided", function (done) {
             chance1 = new Chance(12345);

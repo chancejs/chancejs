@@ -4,13 +4,37 @@
 var expect = chai.expect;
 
 describe("Time", function () {
-    var date, hour, minute, timestamp, month, year, bounds, chance = new Chance();
+    var ampm, date, hammertime, hour, minute, timestamp, month, year, bounds, chance = new Chance();
+
+    it("ampm() returns am or pm", function () {
+        _(1000).times(function () {
+            ampm = chance.ampm();
+            expect(ampm).to.be.a('string');
+            expect(ampm).to.match(/^([ap]m)$/m);
+        });
+    });
 
     it("date() returns a date", function () {
         _(1000).times(function () {
             date = chance.date();
             expect(date).to.be.a('Date');
             expect(date.getTime()).to.be.ok;
+        });
+    });
+
+    it("date() accepts an american option", function () {
+        _(1000).times(function () {
+            date = chance.date({ american: true });
+            expect(date).to.be.a('Date');
+            expect(date.getTime()).to.be.ok;
+        });
+    });
+
+    it("hammertime() works", function () {
+        _(1000).times(function () {
+            hammertime = chance.hammertime();
+            expect(hammertime).to.be.a('number');
+            expect(hammertime).to.be.within(1, 8640000000000000);
         });
     });
 

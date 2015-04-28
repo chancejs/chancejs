@@ -94,6 +94,13 @@ describe("Credit Card", function () {
                 expect(dollar).to.not.be.above(20);
             });
         });
+
+        it("negative works", function () {
+            _(1000).times(function () {
+                dollar = chance.dollar({min: -200, max: -1});
+                expect(dollar.charAt(0)).to.equal('-');
+            });
+        });
     });
 
     describe("currency", function () {
@@ -115,6 +122,28 @@ describe("Credit Card", function () {
                 expect(currency_pair).to.be.an("array");
                 expect(currency_pair.length).to.equal(2);
                 expect(currency_pair[0].code).to.not.equal(currency_pair[1].code);
+            });
+        });
+    });
+
+    describe("currency_pair", function () {
+        var currency_pair, chance = new Chance();
+
+        it("returns a currency_pair", function () {
+            _(1000).times(function () {
+                currency_pair = chance.currency_pair();
+                expect(currency_pair).to.be.an("array");
+                expect(currency_pair.length).to.equal(2);
+                expect(currency_pair[0]).to.be.an("object");
+            });
+        });
+
+        it("returns a currency pair", function () {
+            _(1000).times(function () {
+                currency_pair = chance.currency_pair(true);
+                expect(currency_pair).to.be.a("string");
+                expect(currency_pair.length).to.equal(7);
+                expect(currency_pair).to.match(/^[A-Z][A-Z][A-Z]+\/[A-Z][A-Z][A-Z]$/);
             });
         });
     });
