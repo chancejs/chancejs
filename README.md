@@ -2,7 +2,7 @@
 
 [![Chance Logo](http://chancejs.com/logo.png)](http://chancejs.com)
 
-[![Build Status](https://travis-ci.org/victorquinn/chancejs.png)](https://travis-ci.org/victorquinn/chancejs)
+[![Build Status](https://travis-ci.org/victorquinn/chancejs.svg?branch=develop)](https://travis-ci.org/victorquinn/chancejs) [![GitHub license](https://img.shields.io/github/license/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![GitHub stars](https://img.shields.io/github/stars/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![npm](https://img.shields.io/npm/dm/chance.svg)](https://npmjs.com/package/chance) [![npm](https://img.shields.io/npm/v/chance.svg)](https://npmjs.com/package/chance) [![Coverage Status](https://coveralls.io/repos/victorquinn/chancejs/badge.svg?branch=develop)](https://coveralls.io/r/victorquinn/chancejs?branch=develop) [![awesomeness](https://img.shields.io/badge/awesomeness-maximum-red.svg)](https://github.com/victorquinn/chancejs)
 
 Chance - Random generator helper for JavaScript
 
@@ -140,56 +140,64 @@ THANK YOU!
 
 ```
  project  : chancejs
- repo age : 1 year, 7 months
- active   : 120 days
- commits  : 447
- files    : 24
+ repo age : 1 year, 10 months
+ active   : 137 days
+ commits  : 492
+ files    : 23
  authors  :
-   305	Victor Quinn        68.2%
-    26	Oliver Salzburg     5.8%
-    13	Tim Petricola       2.9%
-    12	Alex DiLiberto      2.7%
-    11	davmillar           2.5%
-     7	Jan Tojnar          1.6%
-     5	Michael Cordingley  1.1%
-     5	Matt Klaber         1.1%
-     4	Chris Villarreal    0.9%
-     4	Abhijeet Pawar      0.9%
-     4	Avishaan            0.9%
-     4	Kevin Garnett       0.9%
-     3	Nicholas Johnson    0.7%
-     3	qjcg                0.7%
-     3	Alexandr Lozovyuk   0.7%
-     3	Dominic Barnes      0.7%
-     2	xshyamx             0.4%
+   339	Victor Quinn        68.9%
+    26	Oliver Salzburg     5.3%
+    13	Tim Petricola       2.6%
+    12	Alex DiLiberto      2.4%
+    11	davmillar           2.2%
+     7	Jan Tojnar          1.4%
+     5	Matt Klaber         1.0%
+     5	Michael Cordingley  1.0%
+     4	Kevin Garnett       0.8%
+     4	Avishaan            0.8%
+     4	Abhijeet Pawar      0.8%
+     4	Chris Villarreal    0.8%
+     3	Dominic Barnes      0.6%
+     3	leesei              0.6%
+     3	qjcg                0.6%
+     3	Nicholas Johnson    0.6%
+     3	Alexandr Lozovyuk   0.6%
+     2	dhilipsiva          0.4%
      2	Adam Krebs          0.4%
      2	Andreas Koeberle    0.4%
      2	Iskren Chernev      0.4%
      2	Nathan MacInnes     0.4%
      2	Pascal Borreli      0.4%
+     2	Patrick Mowrer      0.4%
      2	SeeSchloss          0.4%
      2	Stefan Penner       0.4%
-     2	dhilipsiva          0.4%
      2	path411             0.4%
      2	shyam               0.4%
-     1	Richard Anaya       0.2%
-     1	afc163              0.2%
+     2	somejeff            0.4%
+     2	xshyamx             0.4%
+     1	mamrehn             0.2%
      1	Johannes Stein      0.2%
-     1	ddunning            0.2%
      1	Doug Lawrence       0.2%
+     1	afc163              0.2%
+     1	Danny Yates         0.2%
+     1	ddunning            0.2%
+     1	Brian.Barnett       0.2%
      1	flrent              0.2%
      1	kkroner             0.2%
-     1	leesei              0.2%
+     1	Ng Patrick          0.2%
+     1	Matt Altermatt      0.2%
+     1	Billy Moon          0.2%
+     1	lkptrzk             0.2%
+     1	Richard Anaya       0.2%
      1	Ryan Tenney         0.2%
      1	Samuel Greene       0.2%
-     1	lkptrzk             0.2%
-     1	Brian.Barnett       0.2%
-     1	Ng Patrick          0.2%
+     1	Adam Pointer        0.2%
 ```
 
 ### Contribute! 
 
 Be a part of this project! You can run the test using the following.
+
 1. Install dependencies from package.json by running `npm install`
 2. Install dependencies for testing by running `bower install`
 3. Run the test via `npm test`
