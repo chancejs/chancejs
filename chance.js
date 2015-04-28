@@ -1,4 +1,4 @@
-//  Chance.js 0.7.3
+//  Chance.js 0.7.4
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -19,7 +19,7 @@
     // Constructor
     function Chance (seed) {
         if (!(this instanceof Chance)) {
-            return new Chance(seed);
+            return seed == null ? new Chance() : new Chance(seed);
         }
 
         // if user has provided a function, use that as the generator
@@ -57,7 +57,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "0.7.3";
+    Chance.prototype.VERSION = "0.7.4";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -100,11 +100,25 @@
 
     // -- Basics --
 
+    /**
+     *  Return a random bool, either true or false
+     *
+     *  @param {Object} [options={ likelihood: 50 }] alter the likelihood of
+     *    receiving a true or false value back.
+     *  @throws {RangeError} if the likelihood is out of bounds
+     *  @returns {Bool} either true or false
+     */
     Chance.prototype.bool = function (options) {
-
         // likelihood of success (true)
         options = initOptions(options, {likelihood : 50});
 
+        // Note, we could get some minor perf optimizations by checking range
+        // prior to initializing defaults, but that makes code a bit messier
+        // and the check more complicated as we have to check existence of
+        // the object then existence of the key before checking constraints.
+        // Since the options initialization should be minor computationally,
+        // decision made for code cleanliness intentionally. This is mentioned
+        // here as it's the first occurrence, will not be mentioned again.
         testRange(
             options.likelihood < 0 || options.likelihood > 100,
             "Chance: Likelihood accepts values from 0 to 100."
@@ -113,17 +127,23 @@
         return this.random() * 100 < options.likelihood;
     };
 
+    /**
+     *  Return a random character.
+     *
+     *  @param {Object} [options={}] can specify a character pool, only alpha,
+     *    only symbols, and casing (lower or upper)
+     *  @returns {String} a single random character
+     *  @throws {RangeError} Can only specify alpha or symbols, not both
+     */
     Chance.prototype.character = function (options) {
         options = initOptions(options);
-
-        var symbols = "!@#$%^&*()[]",
-            letters, pool;
-
         testRange(
             options.alpha && options.symbols,
             "Chance: Cannot specify both alpha and symbols."
         );
 
+        var symbols = "!@#$%^&*()[]",
+            letters, pool;
 
         if (options.casing === 'lower') {
             letters = CHARS_LOWER;
@@ -152,16 +172,23 @@
     // It could be 14.9000 but in JavaScript, when this is cast as a number,
     // the trailing zeroes are dropped. Left to the consumer if trailing zeroes are
     // needed
+    /**
+     *  Return a random floating point number
+     *
+     *  @param {Object} [options={}] can specify a fixed precision, min, max
+     *  @returns {Number} a single floating point number
+     *  @throws {RangeError} Can only specify fixed or precision, not both. Also
+     *    min cannot be greater than max
+     */
     Chance.prototype.floating = function (options) {
-        var num;
-
         options = initOptions(options, {fixed : 4});
-        var fixed = Math.pow(10, options.fixed);
-
         testRange(
             options.fixed && options.precision,
             "Chance: Cannot specify both fixed and precision."
         );
+
+        var num;
+        var fixed = Math.pow(10, options.fixed);
 
         var max = MAX_INT / fixed;
         var min = -max;
@@ -175,7 +202,7 @@
             "Chance: Max specified is out of range with fixed. Max should be, at most, " + max
         );
 
-        options = initOptions(options, {min : min, max : max});
+        options = initOptions(options, { min : min, max : max });
 
         // Todo - Make this work!
         // options.precision = (typeof options.precision !== "undefined") ? options.precision : false;
@@ -186,34 +213,55 @@
         return parseFloat(num_fixed);
     };
 
-    // NOTE the max and min are INCLUDED in the range. So:
-    //
-    // chance.natural({min: 1, max: 3});
-    //
-    // would return either 1, 2, or 3.
-
+    /**
+     *  Return a random integer
+     *
+     *  NOTE the max and min are INCLUDED in the range. So:
+     *  chance.integer({min: 1, max: 3});
+     *  would return either 1, 2, or 3.
+     *
+     *  @param {Object} [options={}] can specify a min and/or max
+     *  @returns {Number} a single random integer number
+     *  @throws {RangeError} min cannot be greater than max
+     */
     Chance.prototype.integer = function (options) {
-
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
         options = initOptions(options, {min: MIN_INT, max: MAX_INT});
-
         testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
         return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
     };
 
+    /**
+     *  Return a random natural
+     *
+     *  NOTE the max and min are INCLUDED in the range. So:
+     *  chance.natural({min: 1, max: 3});
+     *  would return either 1, 2, or 3.
+     *
+     *  @param {Object} [options={}] can specify a min and/or max
+     *  @returns {Number} a single random integer number
+     *  @throws {RangeError} min cannot be greater than max
+     */
     Chance.prototype.natural = function (options) {
         options = initOptions(options, {min: 0, max: MAX_INT});
+        testRange(options.min < 0, "Chance: Min cannot be less than zero.");
         return this.integer(options);
     };
 
+    /**
+     *  Return a random string
+     *
+     *  @param {Object} [options={}] can specify a length
+     *  @returns {String} a string of random length
+     *  @throws {RangeError} length cannot be less than zero
+     */
     Chance.prototype.string = function (options) {
-        options = initOptions(options);
-
-        var length = options.length || this.natural({min: 5, max: 20}),
-            pool = options.pool,
-            text = this.n(this.character, length, {pool: pool});
+        options = initOptions(options, { length: this.natural({min: 5, max: 20}) });
+        testRange(options.length < 0, "Chance: Length cannot be less than zero.");
+        var length = options.length,
+            text = this.n(this.character, length, options);
 
         return text.join("");
     };
@@ -233,9 +281,23 @@
         return this;
     };
 
-    // Given a function that generates something random and a number of items to generate,
-    // return an array of items where none repeat.
+    /**
+     *  Given a function that generates something random and a number of items to generate,
+     *    return an array of items where none repeat.
+     *
+     *  @param {Function} fn the function that generates something random
+     *  @param {Number} num number of terms to generate
+     *  @param {Object} options any options to pass on to the generator function
+     *  @returns {Array} an array of length `num` with every item generated by `fn` and unique
+     *
+     *  There can be more parameters after these. All additional parameters are provided to the given function
+     */
     Chance.prototype.unique = function(fn, num, options) {
+        testRange(
+            typeof fn !== "function",
+            "Chance: The first argument must be a function."
+        );
+
         options = initOptions(options, {
             // Default comparator to check that val is not already in arr.
             // Should return `false` if item not in array, `true` otherwise
@@ -263,11 +325,19 @@
 
     /**
      *  Gives an array of n random terms
-     *  @param fn the function that generates something random
-     *  @param n number of terms to generate
+     *
+     *  @param {Function} fn the function that generates something random
+     *  @param {Number} n number of terms to generate
+     *  @returns {Array} an array of length `n` with items generated by `fn`
+     *
      *  There can be more parameters after these. All additional parameters are provided to the given function
      */
     Chance.prototype.n = function(fn, n) {
+        testRange(
+            typeof fn !== "function",
+            "Chance: The first argument must be a function."
+        );
+
         if (typeof n === 'undefined') {
             n = 1;
         }
@@ -526,6 +596,81 @@
         return this.pick(this.get("lastNames"));
     };
 
+    Chance.prototype.mrz = function (options) {
+        var checkDigit = function (input) {
+            var alpha = "<ABCDEFGHIJKLMNOPQRSTUVWXYXZ".split(''),
+                multipliers = [ 7, 3, 1 ],
+                runningTotal = 0;
+
+            if (typeof input !== 'string') {
+                input = input.toString();
+            }
+
+            input.split('').forEach(function(character, idx) {
+                var pos = alpha.indexOf(character);
+
+                if(pos !== -1) {
+                    character = pos === 0 ? 0 : pos + 9;
+                } else {
+                    character = parseInt(character, 10);
+                }
+                character *= multipliers[idx % multipliers.length];
+                runningTotal += character;
+            });
+            return runningTotal % 10;
+        };
+        var generate = function (opts) {
+            var pad = function (length) {
+                return new Array(length + 1).join('<');
+            };
+            var number = [ 'P<',
+                           opts.issuer,
+                           opts.last.toUpperCase(),
+                           '<<',
+                           opts.first.toUpperCase(),
+                           pad(39 - (opts.last.length + opts.first.length + 2)),
+                           opts.passportNumber,
+                           checkDigit(opts.passportNumber),
+                           opts.nationality,
+                           opts.dob,
+                           checkDigit(opts.dob),
+                           opts.gender,
+                           opts.expiry,
+                           checkDigit(opts.expiry),
+                           pad(14),
+                           checkDigit(pad(14)) ].join('');
+
+            return number +
+                (checkDigit(number.substr(44, 10) +
+                            number.substr(57, 7) +
+                            number.substr(65, 7)));
+        };
+
+        var that = this;
+
+        options = initOptions(options, {
+            first: this.first(),
+            last: this.last(),
+            passportNumber: this.integer({min: 100000000, max: 999999999}),
+            dob: (function () {
+                var date = that.birthday({type: 'adult'});
+                return [date.getFullYear().toString().substr(2),
+                        that.pad(date.getMonth() + 1, 2),
+                        that.pad(date.getDate(), 2)].join('');
+            }()),
+            expiry: (function () {
+                var date = new Date();
+                return [(date.getFullYear() + 5).toString().substr(2),
+                        that.pad(date.getMonth() + 1, 2),
+                        that.pad(date.getDate(), 2)].join('');
+            }()),
+            gender: this.gender() === 'Female' ? 'F': 'M',
+            issuer: 'GBR',
+            nationality: 'GBR'
+        });
+        return generate (options);
+    };
+
     Chance.prototype.name = function (options) {
         options = initOptions(options);
 
@@ -668,7 +813,12 @@
             return [value, value, value].join(delimiter || '');
         }
 
-        options = initOptions(options, {format: this.pick(['hex', 'shorthex', 'rgb', '0x']), grayscale: false, casing: 'lower'});
+        options = initOptions(options, {
+            format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x']),
+            grayscale: false,
+            casing: 'lower'
+        });
+
         var isGrayscale = options.grayscale;
         var colorValue;
 
@@ -684,10 +834,16 @@
             } else {
                 colorValue = 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
             }
+        } else if (options.format === 'rgba') {
+            if (isGrayscale) {
+                colorValue = 'rgba(' + gray(this.natural({max: 255}), ',') + ',' + this.floating({min:0, max:1}) + ')';
+            } else {
+                colorValue = 'rgba(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.floating({min:0, max:1}) + ')';
+            }
         } else if (options.format === '0x') {
             colorValue = '0x' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
         } else {
-            throw new Error('Invalid format provided. Please provide one of "hex", "shorthex", "rgb" or "0x".');
+            throw new RangeError('Invalid format provided. Please provide one of "hex", "shorthex", "rgb", "rgba", or "0x".');
         }
 
         if (options.casing === 'upper' ) {
@@ -772,8 +928,12 @@
     };
 
     Chance.prototype.altitude = function (options) {
-        options = initOptions(options, {fixed : 5, max: 8848});
-        return this.floating({min: 0, max: options.max, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: 0, max: 8848});
+        return this.floating({
+            min: options.min,
+            max: options.max,
+            fixed: options.fixed
+        });
     };
 
     Chance.prototype.areacode = function (options) {
@@ -791,7 +951,6 @@
     };
 
     Chance.prototype.coordinates = function (options) {
-        options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options);
     };
 
@@ -806,8 +965,12 @@
     };
 
     Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed: 5, min: -2550});
-        return this.floating({min: options.min, max: 0, fixed: options.fixed});
+        options = initOptions(options, {fixed: 5, min: -2550, max: 0});
+        return this.floating({
+            min: options.min,
+            max: options.max,
+            fixed: options.fixed
+        });
     };
 
     Chance.prototype.geohash = function (options) {
@@ -816,7 +979,6 @@
     };
 
     Chance.prototype.geojson = function (options) {
-        options = initOptions(options);
         return this.latitude(options) + ', ' + this.longitude(options) + ', ' + this.altitude(options);
     };
 
@@ -1011,13 +1173,19 @@
             date = new Date(this.natural({min: min, max: max}));
         } else {
             var m = this.month({raw: true});
+            var daysInMonth = m.days;
+
+            if(options && options.month) {
+                // Mod 12 to allow months outside range of 0-11 (not encouraged, but also not prevented).
+                daysInMonth = this.get('months')[((options.month % 12) + 12) % 12].days;
+            }
 
             options = initOptions(options, {
                 year: parseInt(this.year(), 10),
                 // Necessary to subtract 1 because Date() 0-indexes month but not day or year
                 // for some reason.
                 month: m.numeric - 1,
-                day: this.natural({min: 1, max: m.days}),
+                day: this.natural({min: 1, max: daysInMonth}),
                 hour: this.hour(),
                 minute: this.minute(),
                 second: this.second(),
@@ -1146,7 +1314,7 @@
                 }
             }
             if (type === null) {
-                throw new Error("Credit card type '" + options.name + "'' is not supported");
+                throw new RangeError("Credit card type '" + options.name + "'' is not supported");
             }
         } else {
             type = this.pick(types);
@@ -1178,7 +1346,7 @@
         });
 
         if (returnAsString) {
-            return  currencies[0] + '/' + currencies[1];
+            return currencies[0].code + '/' + currencies[1].code;
         } else {
             return currencies;
         }
@@ -1263,8 +1431,8 @@
 
     Chance.prototype.rpg = function (thrown, options) {
         options = initOptions(options);
-        if (thrown === null) {
-            throw new Error("A type of die roll must be included");
+        if (!thrown) {
+            throw new RangeError("A type of die roll must be included");
         } else {
             var bits = thrown.toLowerCase().split("d"),
                 rolls = [];
@@ -1826,7 +1994,8 @@
     // Mersenne Twister from https://gist.github.com/banksean/300494
     var MersenneTwister = function (seed) {
         if (seed === undefined) {
-            seed = new Date().getTime();
+            // kept random number same size as time used previously to ensure no unexpected results downstream
+            seed = Math.floor(Math.random()*Math.pow(10,13));
         }
         /* Period parameters */
         this.N = 624;
