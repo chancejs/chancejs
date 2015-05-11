@@ -1580,9 +1580,13 @@
 
     // MD5 Hash
     Chance.prototype.md5 = function(options) {
-        var opts = { str: "", key: null, raw: false };
+        var opts = { str: '', key: null, raw: false };
 
-        if(typeof options === 'string') {
+        if (!options) {
+            opts.str = this.string();
+            options = {};
+        }
+        else if (typeof options === 'string') {
             opts.str = options;
             options = {};
         }

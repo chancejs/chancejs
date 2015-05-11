@@ -413,6 +413,11 @@ describe("Web", function () {
     });
 
     describe('md5()', function () {
+        it('should create a hex-encoded MD5 hash of a random ASCII value when passed nothing', function () {
+            var md5 = chance.md5();
+            expect(md5.length).to.be.eql('2063c1608d6e0baf80249c42e2be5804'.length);
+        });
+
         it('should create a hex-encoded MD5 hash of an ASCII value when passed a string', function () {
             expect(chance.md5('value')).to.be.eql('2063c1608d6e0baf80249c42e2be5804');
         });
