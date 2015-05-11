@@ -4,7 +4,136 @@
 var expect = chai.expect;
 
 describe("Web", function () {
-    var tld, domain, email, hashtag, ip, ipv6, tracking_code, twitter, url, chance = new Chance();
+    var avatar, tld, domain, email, hashtag, ip, ipv6, tracking_code, twitter, url, chance = new Chance();
+
+    describe("avatar()", function() {
+        it("returns a legit avatar", function () {
+            _(1000).times(function () {
+                avatar = chance.avatar();
+                expect(avatar).to.be.a('string');
+                expect(avatar.split('/').length).to.equal(5);
+            });
+        });
+
+        it("can take and ignore an invalid protocol", function () {
+            _(1000).times(function () {
+                avatar = chance.avatar({ protocol: 'invalid' });
+                expect(avatar).to.be.a('string');
+                expect(avatar.indexOf('//')).to.eql(0);
+            });
+        });
+
+        it("can take and respect a protocol", function () {
+            var PROTOCOLS = [
+                'http',
+                'https'
+            ];
+            _(500).times(function () {
+                _(PROTOCOLS.length).times(function(n){
+                    avatar = chance.avatar({ protocol: PROTOCOLS[n] });
+                    expect(avatar).to.be.a('string');
+                    expect(avatar.indexOf(PROTOCOLS[n] + ':')).to.eql(0);
+                });
+            });
+        });
+
+        it("can take and respect an email", function () {
+            _(1000).times(function () {
+                avatar = chance.avatar({ email: chance.email() });
+                expect(avatar).to.be.a('string');
+                expect(avatar.split('/').length).to.eql(5);
+            });
+        });
+
+
+        it("can take and ignore an invalid fileExtension", function () {
+            _(1000).times(function () {
+                avatar = chance.avatar({ fileExtension: 'invalid' });
+                expect(avatar).to.be.a('string');
+                expect(avatar).to.not.contain('.jpg');
+                expect(avatar).to.not.contain('.bmp');
+                expect(avatar).to.not.contain('.png');
+            });
+        });
+
+        it("can take and respect a fileExtension", function () {
+            var FILE_TYPES = [
+                'bmp',
+                'gif',
+                'jpg',
+                'png'
+            ];
+            _(250).times(function () {
+                _(FILE_TYPES.length).times(function(n){
+                    avatar = chance.avatar({ fileExtension: FILE_TYPES[n] });
+                    expect(avatar).to.be.a('string');
+                    expect(avatar).to.contain('.' + FILE_TYPES[n]);
+                });
+            });
+        });
+
+        it("can take and ignore an invalid size", function () {
+            _(1000).times(function () {
+                avatar = chance.avatar({ size: 'abc' });
+                expect(avatar).to.be.a('string');
+                expect(avatar).to.not.contain('&s=');
+            });
+        });
+
+        it("can take and respect a size", function () {
+            _(1000).times(function (n) {
+                avatar = chance.avatar({ size: n + 1 });
+                expect(avatar).to.be.a('string');
+                expect(avatar).to.contain('&s=' + (n + 1).toString());
+            });
+        });
+
+        it("can take and ignore an invalid rating", function () {
+            _(1000).times(function () {
+                avatar = chance.avatar({ rating: 'invalid' });
+                expect(avatar).to.be.a('string');
+                expect(avatar).to.not.contain('&r=');
+            });
+        });
+
+        it("can take and respect a rating", function () {
+            var RATINGS = ['g', 'pg', 'r', 'x'];
+            _(250).times(function(){
+                _(RATINGS.length).times(function (n) {
+                    avatar = chance.avatar({ rating: RATINGS[n] });
+                    expect(avatar).to.be.a('string');
+                    expect(avatar).to.contain('&r=' + RATINGS[n].toString());
+                });
+            });
+        });
+
+        it("can take and ignore an invalid fallback image", function () {
+            _(1000).times(function () {
+                avatar = chance.avatar({ fallback: 'invalid' });
+                expect(avatar).to.be.a('string');
+                expect(avatar).to.not.contain('&d=');
+            });
+        });
+
+        it("can take and respect a fallback image", function () {
+            var FALLBACKS = [
+                '404', // Return 404 if not found
+                'mm', // Mystery man
+                'identicon', // Geometric pattern based on hash
+                'monsterid', // A generated monster icon
+                'wavatar', // A generated face
+                'retro', // 8-bit icon
+                'blank' // A transparent png
+            ];
+            _(100).times(function(){
+                _(FALLBACKS.length).times(function (n) {
+                    avatar = chance.avatar({ fallback: FALLBACKS[n] });
+                    expect(avatar).to.be.a('string');
+                    expect(avatar).to.contain('&d=' + FALLBACKS[n].toString());
+                });
+            });
+        });
+    });
 
     it("tld() returns a tld", function () {
         _(1000).times(function () {
@@ -282,4 +411,43 @@ describe("Web", function () {
             });
         });
     });
+
+    describe('md5()', function () {
+        it('should create a hex-encoded MD5 hash of an ASCII value when passed a string', function () {
+            expect(chance.md5('value')).to.be.eql('2063c1608d6e0baf80249c42e2be5804');
+        });
+
+        it('should create a hex-encoded MD5 hash of an ASCII value when passed an object', function () {
+            expect(chance.md5({ str: 'value' })).to.be.eql('2063c1608d6e0baf80249c42e2be5804');
+        });
+
+        it('should create a hex-encoded MD5 hash of an UTF-8 value', function () {
+            expect(chance.md5('日本')).to.be.eql('4dbed2e657457884e67137d3514119b3');
+        });
+
+        it('should create a hex-encoded HMAC-MD5 hash of an ASCII value and key', function () {
+            expect(chance.md5({ str: 'value', key: 'key' })).to.be.eql('01433efd5f16327ea4b31144572c67f6');
+        });
+
+        it('should create a hex-encoded HMAC-MD5 hash of an UTF-8 value and key', function () {
+            expect(chance.md5({ str: '日本', key: '日本' })).to.be.eql('c78b8c7357926981cc04740bd3e9d015');
+        });
+
+        it('should create a raw MD5 hash of an ASCII value', function () {
+            expect(chance.md5({ str: 'value', key: null, raw: true })).to.be.eql(' c\xc1`\x8dn\x0b\xaf\x80$\x9cB\xe2\xbeX\x04');
+        });
+
+        it('should create a raw MD5 hash of an UTF-8 value', function () {
+            expect(chance.md5({ str: '日本', key: null, raw: true })).to.be.eql('M\xbe\xd2\xe6WEx\x84\xe6q7\xd3QA\x19\xb3');
+        });
+
+        it('should create a raw HMAC-MD5 hash of an ASCII value and key', function () {
+            expect(chance.md5({ str: 'value', key: 'key', raw: true })).to.be.eql('\x01C>\xfd_\x162~\xa4\xb3\x11DW,g\xf6');
+        });
+
+        it('should create a raw HMAC-MD5 hash of an UTF-8 value and key', function () {
+            expect(chance.md5({ str: '日本', key: '日本', raw: true })).to.be.eql('\xc7\x8b\x8csW\x92i\x81\xcc\x04t\x0b\xd3\xe9\xd0\x15');
+        });
+    });
+
 });
