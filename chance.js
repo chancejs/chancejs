@@ -1000,10 +1000,6 @@
         return options.protocol + "://" + domain + "/" + options.path + extension;
     };
 
-    // Chance.prototype.avatar = function(options) {
-
-    // }
-
     // -- End Web --
 
     // -- Location --
