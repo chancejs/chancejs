@@ -53,7 +53,8 @@ module.exports = function (grunt) {
                     define: false,
                     mocha: true,
                     mochaPhantomJS: false,
-                    phoneNumber: true
+                    phoneNumber: true,
+                    unescape: true
                 }
             },
             all: js_files
