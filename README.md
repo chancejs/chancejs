@@ -110,6 +110,13 @@ require(['Chance'], function(Chance) {
 });
 ```
 
+## Dependent tools
+
+### Fake JSON Schema
+
+Use chance generators to populate JSON Schema samples.
+See: https://github.com/pateketrueke/json-schema-faker/
+
 ## Author
 ### Victor Quinn
 [http://victorquinn.com](http://victorquinn.com)
