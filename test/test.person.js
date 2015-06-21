@@ -197,7 +197,7 @@ describe("Person", function () {
                 expect(suffix).to.be.a('string');
                 expect(suffix).to.have.length.below(7);
             });
-        })
+        });
 
         it("can get full suffix", function () {
             _(1000).times(function () {
