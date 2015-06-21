@@ -272,7 +272,7 @@ describe("Person", function () {
                         }
                 var lastDigit=(10-parseInt(y.toString().slice(-1)).toString().slice(-1)).toString().slice(-1);
                 expect(x[8]).to.equal(lastDigit);
-            })
+            });
         });
     });
 
