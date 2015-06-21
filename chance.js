@@ -596,6 +596,19 @@
     Chance.prototype.last = function () {
         return this.pick(this.get("lastNames"));
     };
+    
+    Chance.prototype.israelId=function(){
+        var x=this.string({pool: '0123456789',length:8})
+        var y=0;
+        for(var i=0;i<x.length;i++){
+        var thisDigit=  x[i] *  (i/2==parseInt(i/2) ? 1 : 2)
+        thisDigit=this.pad(thisDigit,2).toString();
+        thisDigit=parseInt(thisDigit[0]) + parseInt(thisDigit[1]);
+        y=y+thisDigit
+        }
+        x=x+(10-parseInt(y.toString().slice(-1))).toString().slice(-1)
+        return x
+    }
 
     Chance.prototype.mrz = function (options) {
         var checkDigit = function (input) {
