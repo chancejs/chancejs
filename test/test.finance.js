@@ -167,6 +167,25 @@ describe("Credit Card", function () {
             });
         });
 
+        it("exp() returns a valid credit card expiration date (ie a future date)", function () {
+            _(1000).times(function () {
+                exp = chance.exp({raw: true});
+
+                var now = new Date();
+                var nowMonth = now.getMonth() + 1;
+                var nowYear = now.getFullYear();
+                var expMonth = parseInt(exp.month, 10);
+                var expYear = parseInt(exp.year, 10);
+
+                expect(expYear).to.be.at.least(nowYear);
+
+                if(expYear === nowYear) {
+                    expect(expMonth).to.be.above(nowMonth);
+                }
+
+            });
+        });
+
         it("exp_month() returns a numeric month with leading 0", function () {
             _(1000).times(function () {
                 month = chance.exp_month();
