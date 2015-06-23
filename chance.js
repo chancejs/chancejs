@@ -1464,7 +1464,7 @@
 
         // If the year is this year, need to ensure month is greater than the
         // current month or this expiration will not be valid
-        if (exp.year === (new Date().getFullYear())) {
+        if (exp.year === (new Date().getFullYear()).toString()) {
             exp.month = this.exp_month({future: true});
         } else {
             exp.month = this.exp_month();
