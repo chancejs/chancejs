@@ -181,5 +181,14 @@ describe("Credit Card", function () {
                 expect(year).to.be.within(new Date().getFullYear(), new Date().getFullYear() + 10);
             });
         });
+
+        it("exp_month() will return a future month if passed {future: true}", function () {
+            _(1000).times(function () {
+                var nowMonth = new Date().getMonth() + 1;
+                var expMonth = parseInt(chance.exp_month({ future: true }), 10);
+
+                expect(expMonth).to.be.above(nowMonth);
+            });
+        });        
     });
 });
