@@ -1,4 +1,4 @@
-//  Chance.js 0.7.5
+//  Chance.js 0.7.6
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -58,7 +58,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "0.7.5";
+    Chance.prototype.VERSION = "0.7.6";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -1464,7 +1464,7 @@
 
         // If the year is this year, need to ensure month is greater than the
         // current month or this expiration will not be valid
-        if (exp.year === (new Date().getFullYear())) {
+        if (exp.year === (new Date().getFullYear()).toString()) {
             exp.month = this.exp_month({future: true});
         } else {
             exp.month = this.exp_month();
@@ -1476,13 +1476,14 @@
     Chance.prototype.exp_month = function (options) {
         options = initOptions(options);
         var month, month_int,
-            curMonth = new Date().getMonth();
+            // Date object months are 0 indexed
+            curMonth = new Date().getMonth() + 1;
 
         if (options.future) {
             do {
                 month = this.month({raw: true}).numeric;
                 month_int = parseInt(month, 10);
-            } while (month_int < curMonth);
+            } while (month_int <= curMonth);
         } else {
             month = this.month({raw: true}).numeric;
         }
