@@ -1476,13 +1476,14 @@
     Chance.prototype.exp_month = function (options) {
         options = initOptions(options);
         var month, month_int,
-            curMonth = new Date().getMonth();
+            // Date object months are 0 indexed
+            curMonth = new Date().getMonth() + 1;
 
         if (options.future) {
             do {
                 month = this.month({raw: true}).numeric;
                 month_int = parseInt(month, 10);
-            } while (month_int < curMonth);
+            } while (month_int <= curMonth);
         } else {
             month = this.month({raw: true}).numeric;
         }
