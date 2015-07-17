@@ -471,10 +471,14 @@
         text = this.capitalize(text);
         
         // Make sure punctuation has a usable value
-        if (punctuation !== false && !/^[\.\?;!:]$/.test(punctuation)) punctuation = '.';
+        if (punctuation !== false && !/^[\.\?;!:]$/.test(punctuation)) {
+            punctuation = '.';
+        }
         
         // Add punctuation mark
-        if (punctuation) text += punctuation;
+        if (punctuation) {
+            text += punctuation;
+        }
 
         return text;
     };
