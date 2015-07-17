@@ -258,6 +258,24 @@ describe("Person", function () {
         });
     });
 
+    describe("israelId()",function(){
+        it("Should return a valid israel ID",function(){
+            _(1000).times(function () {
+                var x=chance.israelId();
+                expect(x).to.have.length(9);
+                var y=0;
+                for (var i=0;i<8;i++){
+                        var thisDigit=  x[i] *  (i/2===parseInt(i/2) ? 1 : 2);
+                        thisDigit=chance.pad(thisDigit,2).toString();
+                        thisDigit=parseInt(thisDigit[0]) + parseInt(thisDigit[1]);
+                        y=y+thisDigit;
+                        }
+                var lastDigit=(10-parseInt(y.toString().slice(-1)).toString().slice(-1)).toString().slice(-1);
+                expect(x[8]).to.equal(lastDigit);
+            });
+        });
+    });
+
     describe('mrz()', function() {
         it('should return a valid passport number when given valid inputs', function() {
             var sample = "P<GBRFOLKS<<JOANNE<<<<<<<<<<<<<<<<<<<<<<<<<<2321126135GBR6902069F1601013<<<<<<<<<<<<<<02",
