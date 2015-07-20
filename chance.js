@@ -1073,7 +1073,7 @@
     };
 
     Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed: 5, min: -2550, max: 0});
+        options = initOptions(options, {fixed: 5, min: -10994, max: 0});
         return this.floating({
             min: options.min,
             max: options.max,
