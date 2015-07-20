@@ -333,21 +333,21 @@ describe("Address", function () {
 
         it("is in the right range", function () {
             _(1000).times(function () {
-                expect(chance.depth()).to.be.within(-2550, 0);
+                expect(chance.depth()).to.be.within(-10994, 0);
             });
         });
 
         it("will accept a min and obey it", function () {
             _(1000).times(function () {
-                var min = chance.floating({min: -2500, max: 0});
+                var min = chance.floating({min: -10994, max: 0});
                 expect(chance.depth({min: min})).to.be.within(min, 0);
             });
         });
 
         it("will accept a max and obey it", function () {
             _(1000).times(function () {
-                var max = chance.floating({min: -2500, max: 0});
-                expect(chance.depth({max: max})).to.be.within(-2550, max);
+                var max = chance.floating({min: -10994, max: 0});
+                expect(chance.depth({max: max})).to.be.within(-10994, max);
             });
         });
     });
