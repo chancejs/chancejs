@@ -350,7 +350,7 @@ describe("Basics", function () {
             expect(function () { chance.array({length: -23}); }).to.throw(RangeError);
         });
 
-        it("obeys fill, when specified", function () {
+        it("obeys fill with chance method, when specified", function () {
             _(100).times(function () {
                 array = chance.array({ length: 5, fill: 'string' });
                 array.forEach(function(element){
@@ -361,6 +361,18 @@ describe("Basics", function () {
                 array = chance.array({ length: 5, fill: 'bool' });
                 array.forEach(function(element){
                     expect(element).to.be.a('boolean');
+                });
+            });
+        });
+
+        it("obeys fill with callback, when specified", function () {
+            _(100).times(function () {
+                var randnum = Math.random();
+                array = chance.array({ length: 5, fill: function(){
+                    return randnum;
+                }});
+                array.forEach(function(element){
+                    expect(element).to.equal(randnum);
                 });
             });
         });
