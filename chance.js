@@ -267,6 +267,24 @@
         return text.join("");
     };
 
+    /**
+     *  Return a random array
+     *
+     *  @param {Object} [options={}] can specify a length and fill method
+     *  @returns {Array} an array of random length and content
+     *  @throws {RangeError} length cannot be less than zero
+     */
+    Chance.prototype.array = function(options){
+        options = initOptions(options, { length: this.natural({min: 1, max: 100}), fill: 'natural' });
+        testRange(options.length < 0, "Chance: Length cannot be less than zero.");
+        
+        // Allow for a callback to generate the variables
+        var callback = typeof options.fill === 'function' ? options.fill : this[options.fill];
+
+        return new Array(options.length).join().split(',').map(callback, this);
+    };
+
+
     // -- End Basics --
 
     // -- Helpers --

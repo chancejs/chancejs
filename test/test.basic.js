@@ -5,7 +5,7 @@
 var expect = chai.expect;
 
 describe("Basics", function () {
-    var bool, integer, natural, floating, character, string, temp, chance = new Chance(),
+    var bool, integer, natural, floating, character, string, array, temp, chance = new Chance(),
         data, cData;
 
     describe("Data", function () {
@@ -319,6 +319,51 @@ describe("Basics", function () {
             });
         });
 
+    });
+
+    describe("Array", function () {
+        it("returns an array", function () {
+            array = chance.array();
+            expect(array).to.be.a('array');
+        });
+
+        it("fills with naturals", function () {
+            _(100).times(function () {
+                array = chance.array();
+                array.forEach(function(element){
+                    expect(element).to.be.a('number');
+                });
+            });
+        });
+
+        it("obeys length, when specified", function () {
+            var length;
+            _(1000).times(function () {
+                // Generate a random length from 1-25
+                length = chance.natural({min: 1, max: 25});
+                array = chance.array({length: length});
+                expect(array).to.have.length(length);
+            });
+        });
+
+        it("throws an error if length < 0", function () {
+            expect(function () { chance.array({length: -23}); }).to.throw(RangeError);
+        });
+
+        it("obeys fill, when specified", function () {
+            _(100).times(function () {
+                array = chance.array({ length: 5, fill: 'string' });
+                array.forEach(function(element){
+                    expect(element).to.be.a('string');
+                });
+            });
+            _(100).times(function () {
+                array = chance.array({ length: 5, fill: 'bool' });
+                array.forEach(function(element){
+                    expect(element).to.be.a('boolean');
+                });
+            });
+        });
     });
 });
 
