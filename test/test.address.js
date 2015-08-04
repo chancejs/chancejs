@@ -98,12 +98,24 @@ describe("Address", function () {
             expect(chance.states({territories: true})).to.have.length(58);
         });
 
+        it("states({territories: true, us_states_and_dc: false}) returns 7 US Territories", function () {
+            expect(chance.states({territories: true, us_states_and_dc: false})).to.have.length(7);
+        });
+
         it("states({armed_forces: true}) returns 50 US States, DC, and 3 Armed Forces Military States", function () {
             expect(chance.states({armed_forces: true})).to.have.length(54);
         });
 
+        it("states({armed_forces: true, us_states_and_dc: false}) returns 3 Armed Forces Military States", function () {
+            expect(chance.states({armed_forces: true, us_states_and_dc: false})).to.have.length(3);
+        });
+
         it("states({territories: true, armed_forces: true}) returns 50 US States, DC, 7 US Territories, and 3 Armed Forces Military States", function () {
             expect(chance.states({territories: true, armed_forces: true})).to.have.length(61);
+        });
+
+        it("states({territories: true, armed_forces: true, us_states_and_dc: false}) returns 7 US Territories and 3 Armed Forces Military States", function () {
+            expect(chance.states({territories: true, armed_forces: true, us_states_and_dc: false})).to.have.length(10);
         });
     });
 
