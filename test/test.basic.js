@@ -38,11 +38,9 @@ describe("Basics", function () {
                 }
             });
 
-            // Note: In very extreme circumstances this test may fail as, by its
-            // nature it's random. But it's a low enough percentage that I'm
-            // willing to accept it.
-            // Award to anyone that calculates the actual probability of this
-            // test failing and submits a pull request adding it to this comment!
+            // The probability of this test failing is approximately 4.09e-86.
+            // So, in theory, it could give a false negative, but the sun will
+            // probably die long before that happens.
             expect(true_count).to.be.within(200, 800);
         });
 
