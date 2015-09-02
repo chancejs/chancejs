@@ -462,12 +462,23 @@
         options = initOptions(options);
 
         var words = options.words || this.natural({min: 12, max: 18}),
+            punctuation = options.punctuation,
             text, word_array = this.n(this.word, words);
 
         text = word_array.join(' ');
-
-        // Capitalize first letter of sentence, add period at end
-        text = this.capitalize(text) + '.';
+        
+        // Capitalize first letter of sentence
+        text = this.capitalize(text);
+        
+        // Make sure punctuation has a usable value
+        if (punctuation !== false && !/^[\.\?;!:]$/.test(punctuation)) {
+            punctuation = '.';
+        }
+        
+        // Add punctuation mark
+        if (punctuation) {
+            text += punctuation;
+        }
 
         return text;
     };
@@ -595,6 +606,19 @@
 
     Chance.prototype.last = function () {
         return this.pick(this.get("lastNames"));
+    };
+    
+    Chance.prototype.israelId=function(){
+        var x=this.string({pool: '0123456789',length:8});
+        var y=0;
+        for (var i=0;i<x.length;i++){
+            var thisDigit=  x[i] *  (i/2===parseInt(i/2) ? 1 : 2);
+            thisDigit=this.pad(thisDigit,2).toString();
+            thisDigit=parseInt(thisDigit[0]) + parseInt(thisDigit[1]);
+            y=y+thisDigit;
+        }
+        x=x+(10-parseInt(y.toString().slice(-1))).toString().slice(-1);
+        return x;
     };
 
     Chance.prototype.mrz = function (options) {
@@ -1049,7 +1073,7 @@
     };
 
     Chance.prototype.depth = function (options) {
-        options = initOptions(options, {fixed: 5, min: -2550, max: 0});
+        options = initOptions(options, {fixed: 5, min: -10994, max: 0});
         return this.floating({
             min: options.min,
             max: options.max,
@@ -1180,15 +1204,18 @@
     };
 
     Chance.prototype.states = function (options) {
-        options = initOptions(options);
+        options = initOptions(options, { us_states_and_dc: true });
 
         var states,
             us_states_and_dc = this.get("us_states_and_dc"),
             territories = this.get("territories"),
             armed_forces = this.get("armed_forces");
 
-        states = us_states_and_dc;
+        states = [];
 
+        if (options.us_states_and_dc) {
+            states = states.concat(us_states_and_dc);
+        }
         if (options.territories) {
             states = states.concat(territories);
         }
@@ -1496,6 +1523,55 @@
     };
 
     // -- End Finance
+
+    // -- Regional
+
+    Chance.prototype.pl_pesel = function () {
+        var number = this.natural({min: 1, max: 9999999999});
+        var arr = this.pad(number, 10).split('');
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = parseInt(arr[i]);
+        }
+
+        var controlNumber = (1 * arr[0] + 3 * arr[1] + 7 * arr[2] + 9 * arr[3] + 1 * arr[4] + 3 * arr[5] + 7 * arr[6] + 9 * arr[7] + 1 * arr[8] + 3 * arr[9]) % 10;
+        if(controlNumber !== 0) {
+            controlNumber = 10 - controlNumber;
+        }
+
+        return arr.join('') + controlNumber;
+    };
+
+    Chance.prototype.pl_nip = function () {
+        var number = this.natural({min: 1, max: 999999999});
+        var arr = this.pad(number, 9).split('');
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = parseInt(arr[i]);
+        }
+
+        var controlNumber = (6 * arr[0] + 5 * arr[1] + 7 * arr[2] + 2 * arr[3] + 3 * arr[4] + 4 * arr[5] + 5 * arr[6] + 6 * arr[7] + 7 * arr[8]) % 11;
+        if(controlNumber === 10) {
+            return this.pl_nip();
+        }
+
+        return arr.join('') + controlNumber;
+    };
+
+    Chance.prototype.pl_regon = function () {
+        var number = this.natural({min: 1, max: 99999999});
+        var arr = this.pad(number, 8).split('');
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = parseInt(arr[i]);
+        }
+
+        var controlNumber = (8 * arr[0] + 9 * arr[1] + 2 * arr[2] + 3 * arr[3] + 4 * arr[4] + 5 * arr[5] + 6 * arr[6] + 7 * arr[7]) % 11;
+        if(controlNumber === 10) {
+            controlNumber = 0;
+        }
+
+        return arr.join('') + controlNumber;
+    };
+
+    // -- End Regional
 
     // -- Miscellaneous --
 

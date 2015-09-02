@@ -98,12 +98,24 @@ describe("Address", function () {
             expect(chance.states({territories: true})).to.have.length(58);
         });
 
+        it("states({territories: true, us_states_and_dc: false}) returns 7 US Territories", function () {
+            expect(chance.states({territories: true, us_states_and_dc: false})).to.have.length(7);
+        });
+
         it("states({armed_forces: true}) returns 50 US States, DC, and 3 Armed Forces Military States", function () {
             expect(chance.states({armed_forces: true})).to.have.length(54);
         });
 
+        it("states({armed_forces: true, us_states_and_dc: false}) returns 3 Armed Forces Military States", function () {
+            expect(chance.states({armed_forces: true, us_states_and_dc: false})).to.have.length(3);
+        });
+
         it("states({territories: true, armed_forces: true}) returns 50 US States, DC, 7 US Territories, and 3 Armed Forces Military States", function () {
             expect(chance.states({territories: true, armed_forces: true})).to.have.length(61);
+        });
+
+        it("states({territories: true, armed_forces: true, us_states_and_dc: false}) returns 7 US Territories and 3 Armed Forces Military States", function () {
+            expect(chance.states({territories: true, armed_forces: true, us_states_and_dc: false})).to.have.length(10);
         });
     });
 
@@ -333,21 +345,21 @@ describe("Address", function () {
 
         it("is in the right range", function () {
             _(1000).times(function () {
-                expect(chance.depth()).to.be.within(-2550, 0);
+                expect(chance.depth()).to.be.within(-10994, 0);
             });
         });
 
         it("will accept a min and obey it", function () {
             _(1000).times(function () {
-                var min = chance.floating({min: -2500, max: 0});
+                var min = chance.floating({min: -10994, max: 0});
                 expect(chance.depth({min: min})).to.be.within(min, 0);
             });
         });
 
         it("will accept a max and obey it", function () {
             _(1000).times(function () {
-                var max = chance.floating({min: -2500, max: 0});
-                expect(chance.depth({max: max})).to.be.within(-2550, max);
+                var max = chance.floating({min: -10994, max: 0});
+                expect(chance.depth({max: max})).to.be.within(-10994, max);
             });
         });
     });
