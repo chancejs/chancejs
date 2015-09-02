@@ -65,13 +65,13 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
-            my_target: {
+            dist: {
                 options: {
                   sourceMap: true,
-                  sourceMapName: 'chance.min.js.map'
+                  sourceMapName: 'dist/chance.min.js.map'
                 },
                 files: {
-                    'chance.min.js': ['chance.js']
+                    'dist/chance.min.js': ['chance.js']
                 }
             }
         },
