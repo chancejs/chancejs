@@ -41,6 +41,8 @@ describe("Basics", function () {
             // The probability of this test failing is approximately 4.09e-86.
             // So, in theory, it could give a false negative, but the sun will
             // probably die long before that happens.
+            //
+            // See calculation here https://gist.github.com/BlaMaeda/cfd886f84dd093cb2ead
             expect(true_count).to.be.within(200, 800);
         });
 
