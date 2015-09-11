@@ -2,7 +2,7 @@
 
 [![Chance Logo](http://chancejs.com/logo.png)](http://chancejs.com)
 
-[![Build Status](https://travis-ci.org/victorquinn/chancejs.svg?branch=develop)](https://travis-ci.org/victorquinn/chancejs) [![GitHub license](https://img.shields.io/github/license/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![GitHub stars](https://img.shields.io/github/stars/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![npm](https://img.shields.io/npm/dm/chance.svg)](https://npmjs.com/package/chance) [![npm](https://img.shields.io/npm/v/chance.svg)](https://npmjs.com/package/chance) [![Coverage Status](https://coveralls.io/repos/victorquinn/chancejs/badge.svg?branch=develop)](https://coveralls.io/r/victorquinn/chancejs?branch=develop) [![awesomeness](https://img.shields.io/badge/awesomeness-maximum-red.svg)](https://github.com/victorquinn/chancejs)
+[![Build Status](https://travis-ci.org/victorquinn/chancejs.svg?branch=develop)](https://travis-ci.org/victorquinn/chancejs) [![GitHub license](https://img.shields.io/github/license/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![GitHub stars](https://img.shields.io/github/stars/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![npm](https://img.shields.io/npm/dm/chance.svg)](https://npmjs.com/package/chance) [![npm](https://img.shields.io/npm/v/chance.svg)](https://npmjs.com/package/chance) [![Coverage Status](https://coveralls.io/repos/victorquinn/chancejs/badge.svg?branch=master)](https://coveralls.io/r/victorquinn/chancejs?branch=master) [![awesomeness](https://img.shields.io/badge/awesomeness-maximum-red.svg)](https://github.com/victorquinn/chancejs)
 
 Chance - Random generator helper for JavaScript
 
@@ -195,9 +195,13 @@ project  : chancejs
 Be a part of this project! You can run the test using the following.
 
 1. Install dependencies from package.json by running `npm install`
-2. Install dependencies for testing by running `bower install`
-3. Run the test via `npm test`
-4. Make some fun new modules!
+2. Run the test via `npm test`
+3. Make some fun new modules!
+
+*Note: Formerly, there was a `develop` branch where active development would
+happen, but now it's all on `master` baby. Just submit PRs directly to `master`.
+Sorry if the `develop` branch going away caused any trouble, but it was time to
+rip the bandaid off.*
 
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
 
