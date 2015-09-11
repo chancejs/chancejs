@@ -1,7 +1,7 @@
 {
   "name": "chance",
   "main": "./chance.js",
-  "version": "0.7.7",
+  "version": "0.8.0",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
@@ -17,7 +17,7 @@
     "coveralls": "^2.11.2",
     "grunt": "0.4.5",
     "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-uglify": "^0.7.0",
+    "grunt-contrib-uglify": "^0.9.2",
     "grunt-contrib-watch": "0.6.1",
     "grunt-js-test": "git://github.com/victorquinn/grunt-js-test#ffc580375f0ff7b496026ab87b4a9666992d2f33",
     "grunt-shell": "^1.1.2",
@@ -30,7 +30,6 @@
   "scripts": {
     "test": "grunt test-ci"
   },
-  "bin": "./bin/chance.js",
   "keywords": [
     "chance",
     "random",
@@ -41,13 +40,19 @@
     "address",
     "dice"
   ],
+  "jam": {
+      "main": "chance.js"
+  },
+  "github": "https://github.com/victorquinn/chancejs",
+  "maintainers": [{
+    "name": "Victor Quinn",
+    "email": "mail@victorquinn.com",
+    "web": "http://victorquinn.com"
+  }],
   "spm": {
     "main": "chance.js",
     "ignore": [
       "test"
     ]
-  },
-  "dependencies": {
-    "minimist": "^1.1.0"
   }
 }

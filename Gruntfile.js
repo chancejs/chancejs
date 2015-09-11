@@ -8,7 +8,7 @@ module.exports = function (grunt) {
                 coverageTool: 'istanbul',
                 coverageFormat: 'lcov',
                 identifier: 'chance-coverage',
-                reporter: "Spec",
+                reporter: 'Spec',
                 pattern: 'test/*.js'
             },
             watch: {

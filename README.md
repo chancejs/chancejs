@@ -86,21 +86,7 @@ Chance instantiates itself onto the window. This means that in the simplest case
 
 ### CLI
 
-To use Chance from the command line, install it globally with:
-
-```shell
-npm install -g chance
-```
-
-Then invoke any generator by name, like so:
-
-```shell
-$ chance name --prefix
-Dr. Georgia Sanchez
-
-$ chance latitude --min 12.34 --max 56.78
-22.01836
-```
+Chance CLI has moved to its [own repository](https://github.com/victorquinn/chancejs-cli)!
 
 ### Node.js
 
