@@ -41,6 +41,15 @@
     "address",
     "dice"
   ],
+  "jam": {
+      "main": "chance.js"
+  },
+  "github": "https://github.com/victorquinn/chancejs",
+  "maintainers": [{
+    "name": "Victor Quinn",
+    "email": "mail@victorquinn.com",
+    "web": "http://victorquinn.com"
+  }],
   "spm": {
     "main": "chance.js",
     "ignore": [
