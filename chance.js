@@ -28,19 +28,23 @@
             return this;
         }
 
-        var seedling;
-
         if (arguments.length) {
             // set a starting value of zero so we can add to it
             this.seed = 0;
         }
-        // otherwise, leave this.seed blank so that MT will recieve a blank
+
+        // otherwise, leave this.seed blank so that MT will receive a blank
 
         for (var i = 0; i < arguments.length; i++) {
-            seedling = 0;
-            if (typeof arguments[i] === 'string') {
+            var seedling = 0;
+            if (Object.prototype.toString.call(arguments[i]) === '[object String]') {
                 for (var j = 0; j < arguments[i].length; j++) {
-                    seedling += (arguments[i].length - j) * arguments[i].charCodeAt(j);
+                    // create a numeric hash for each argument, add to seedling
+                    var hash = 0;
+                    for (var k = 0; k < arguments[i].length; k++) {
+                        hash = arguments[i].charCodeAt(k) + (hash << 6) + (hash << 16) - hash;
+                    }
+                    seedling += hash;
                 }
             } else {
                 seedling = arguments[i];
