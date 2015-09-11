@@ -1,7 +1,7 @@
 {
   "name": "chance",
   "main": "./chance.js",
-  "version": "0.7.7",
+  "version": "0.8.0",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
@@ -30,7 +30,6 @@
   "scripts": {
     "test": "grunt test-ci"
   },
-  "bin": "./bin/chance.js",
   "keywords": [
     "chance",
     "random",
@@ -55,8 +54,5 @@
     "ignore": [
       "test"
     ]
-  },
-  "dependencies": {
-    "minimist": "^1.1.0"
   }
 }
