@@ -22,14 +22,34 @@ describe("Helpers", function () {
             _(1000).times(function () {
                 picked = chance.pick(arr);
                 expect(picked).to.have.length(1);
+                expect(picked).to.not.be.an('array');
             });
         });
 
-        it("returns multiple elements when called with a count argument", function () {
+        it("returns multiple element array when called with a count argument > 1", function () {
             arr = ['a', 'b', 'c', 'd'];
             _(1000).times(function () {
                 picked = chance.pick(arr, 3);
                 expect(picked).to.have.length(3);
+                expect(picked).to.be.an('array');
+            });
+        });
+
+        it("returns single element array when called with a count argument == 1", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            _(1000).times(function () {
+                picked = chance.pick(arr, 1);
+                expect(picked).to.have.length(1);
+                expect(picked).to.be.an('array');
+            });
+        });
+
+        it("returns empty array when called with a count argument == 0", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            _(1000).times(function () {
+                picked = chance.pick(arr, 0);
+                expect(picked).to.have.length(0);
+                expect(picked).to.be.an('array');
             });
         });
 
@@ -39,6 +59,13 @@ describe("Helpers", function () {
                 picked = chance.pick(arr, 3);
                 expect(arr).to.have.length(6);
             });
+        });
+
+        it("throws good error if called with negative count argument", function () {
+            arr = ['a', 'b', 'c', 'd', 'e', 'f'];
+            expect(function () {
+                chance.pick(arr,-1);
+            }).to.throw(RangeError, "Chance: count must be positive");
         });
 
         it("throws good error if zero elements in array", function () {
