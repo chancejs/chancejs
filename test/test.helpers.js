@@ -49,6 +49,85 @@ describe("Helpers", function () {
         });
     });
 
+    describe("pickone()", function () {
+        it("returns a single element", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            _(1000).times(function () {
+                picked = chance.pickone(arr);
+                expect(picked).to.have.length(1);
+                expect(picked).to.not.be.an('array');
+            });
+        });
+  
+        it("throws good error if zero elements in array", function () {
+            arr = [];
+            expect(function () {
+                chance.pickone(arr);
+            }).to.throw(RangeError, "Chance: Cannot pickone() from an empty array");
+        });
+    });
+
+    describe("pickset()", function () {
+        it("returns an empty array when count is 0", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            _(1000).times(function () {
+                picked = chance.pickset(arr,0);
+                expect(picked).to.have.length(0);
+                expect(picked).to.be.an('array');
+            });
+        });
+
+        it("throws good error if zero elements in array", function () {
+            arr = [];
+            expect(function () {
+                chance.pickset(arr);
+            }).to.throw(RangeError, "Chance: Cannot pickset() from an empty array");
+        });
+
+        it("returns single element array if count is not passed", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            _(1000).times(function () {
+                picked = chance.pickset(arr);
+                expect(picked).to.have.length(1);
+                expect(picked).to.be.an('array');
+            });
+        });
+
+        it("throws good error if count is not positive number", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            expect(function () {
+                chance.pickset(arr,-1);
+            }).to.throw(RangeError, "Chance: count must be positive number");
+        });
+
+        it("returns single element array when called with a count argument == 1", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            _(1000).times(function () {
+                picked = chance.pickset(arr, 1);
+                expect(picked).to.have.length(1);
+                expect(picked).to.be.an('array');
+            });
+        });
+
+        it("returns multiple elements when called with a count argument > 1", function () {
+            arr = ['a', 'b', 'c', 'd'];
+            _(1000).times(function () {
+                picked = chance.pickset(arr, 3);
+                expect(picked).to.have.length(3);
+                expect(picked).to.be.an('array');
+            });
+        });
+
+        it("doesn't destroy the original array when called with a count argument", function () {
+            arr = ['a', 'b', 'c', 'd', 'e', 'f'];
+            _(1000).times(function () {
+                picked = chance.pickset(arr, 3);
+                expect(arr).to.have.length(6);
+                expect(picked).to.be.an('array');
+            });
+        });
+    });
+
     describe("weighted()", function () {
         this.timeout(10000);
         it("returns an element", function () {
