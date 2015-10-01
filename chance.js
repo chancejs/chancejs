@@ -367,12 +367,39 @@
         return number.length >= width ? number : new Array(width - number.length + 1).join(pad) + number;
     };
 
+    // DEPRECATED on 2015-10-01
     Chance.prototype.pick = function (arr, count) {
         if (arr.length === 0) {
             throw new RangeError("Chance: Cannot pick() from an empty array");
         }
         if (!count || count === 1) {
             return arr[this.natural({max: arr.length - 1})];
+        } else {
+            return this.shuffle(arr).slice(0, count);
+        }
+    };
+
+    // Given an array, returns a single random element
+    Chance.prototype.pickone = function (arr) {
+        if (arr.length === 0) {
+          throw new RangeError("Chance: Cannot pickone() from an empty array");
+        }
+        return arr[this.natural({max: arr.length - 1})];
+    };
+
+    // Given an array, returns a random set with 'count' elements
+    Chance.prototype.pickset = function (arr, count) {
+        if (count === 0) {
+            return [];
+        }
+        if (arr.length === 0) {
+            throw new RangeError("Chance: Cannot pickset() from an empty array");
+        }
+        if (count < 0) {
+            throw new RangeError("Chance: count must be positive number");
+        }
+        if (!count || count === 1) {
+            return [ this.pickone(arr) ];
         } else {
             return this.shuffle(arr).slice(0, count);
         }
