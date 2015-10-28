@@ -11,7 +11,7 @@ describe("Basics", function () {
     describe("Data", function () {
         it("get data", function () {
             data = chance.get("lastNames");
-            expect(data).to.be.an('array');
+            expect(data).to.be.an('object');
         });
 
         it("set custom data", function () {
