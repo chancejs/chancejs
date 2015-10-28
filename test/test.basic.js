@@ -18,7 +18,7 @@ describe("Basics", function () {
             cData = {lastNames: ["customName", "testLast"]};
             chance.set(cData);
             data = chance.get("lastNames");
-            expect(data).to.be.an('object');
+            expect(data).to.be.an('array');
             expect(data).to.have.length(2);
         });
     });
