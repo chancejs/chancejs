@@ -382,7 +382,7 @@
     // Given an array, returns a single random element
     Chance.prototype.pickone = function (arr) {
         if (arr.length === 0) {
-            throw new RangeError("Chance: Cannot pickone() from an empty array");
+          throw new RangeError("Chance: Cannot pickone() from an empty array");
         }
         return arr[this.natural({max: arr.length - 1})];
     };
@@ -681,26 +681,26 @@
                 return new Array(length + 1).join('<');
             };
             var number = [ 'P<',
-                opts.issuer,
-                opts.last.toUpperCase(),
-                '<<',
-                opts.first.toUpperCase(),
-                pad(39 - (opts.last.length + opts.first.length + 2)),
-                opts.passportNumber,
-                checkDigit(opts.passportNumber),
-                opts.nationality,
-                opts.dob,
-                checkDigit(opts.dob),
-                opts.gender,
-                opts.expiry,
-                checkDigit(opts.expiry),
-                pad(14),
-                checkDigit(pad(14)) ].join('');
+                           opts.issuer,
+                           opts.last.toUpperCase(),
+                           '<<',
+                           opts.first.toUpperCase(),
+                           pad(39 - (opts.last.length + opts.first.length + 2)),
+                           opts.passportNumber,
+                           checkDigit(opts.passportNumber),
+                           opts.nationality,
+                           opts.dob,
+                           checkDigit(opts.dob),
+                           opts.gender,
+                           opts.expiry,
+                           checkDigit(opts.expiry),
+                           pad(14),
+                           checkDigit(pad(14)) ].join('');
 
             return number +
-            (checkDigit(number.substr(44, 10) +
-            number.substr(57, 7) +
-            number.substr(65, 7)));
+                (checkDigit(number.substr(44, 10) +
+                            number.substr(57, 7) +
+                            number.substr(65, 7)));
         };
 
         var that = this;
@@ -712,14 +712,14 @@
             dob: (function () {
                 var date = that.birthday({type: 'adult'});
                 return [date.getFullYear().toString().substr(2),
-                    that.pad(date.getMonth() + 1, 2),
-                    that.pad(date.getDate(), 2)].join('');
+                        that.pad(date.getMonth() + 1, 2),
+                        that.pad(date.getDate(), 2)].join('');
             }()),
             expiry: (function () {
                 var date = new Date();
                 return [(date.getFullYear() + 5).toString().substr(2),
-                    that.pad(date.getMonth() + 1, 2),
-                    that.pad(date.getDate(), 2)].join('');
+                        that.pad(date.getMonth() + 1, 2),
+                        that.pad(date.getDate(), 2)].join('');
             }()),
             gender: this.gender() === 'Female' ? 'F': 'M',
             issuer: 'GBR',
@@ -945,7 +945,7 @@
             (opts.size ? '&s=' + opts.size.toString() : '') +
             (opts.rating ? '&r=' + opts.rating : '') +
             (opts.fallback ? '&d=' + opts.fallback : '')
-        ;
+            ;
 
         return url;
     };
@@ -1024,9 +1024,9 @@
         // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
         // this should probably be updated to account for that rare as it may be
         return this.natural({max: 255}) + '.' +
-        this.natural({max: 255}) + '.' +
-        this.natural({max: 255}) + '.' +
-        this.natural({max: 255});
+               this.natural({max: 255}) + '.' +
+               this.natural({max: 255}) + '.' +
+               this.natural({max: 255});
     };
 
     Chance.prototype.ipv6 = function () {
@@ -1082,8 +1082,8 @@
         options = initOptions(options, {parens : true});
         // Don't want area codes to start with 1, or have a 9 as the second digit
         var areacode = this.natural({min: 2, max: 9}).toString() +
-            this.natural({min: 0, max: 8}).toString() +
-            this.natural({min: 0, max: 9}).toString();
+                this.natural({min: 0, max: 8}).toString() +
+                this.natural({min: 0, max: 9}).toString();
 
         return options.parens ? '(' + areacode + ')' : areacode;
     };
@@ -1425,8 +1425,8 @@
         var type, number, to_generate;
 
         type = (options.type) ?
-            this.cc_type({ name: options.type, raw: true }) :
-            this.cc_type({ raw: true });
+                    this.cc_type({ name: options.type, raw: true }) :
+                    this.cc_type({ raw: true });
 
         number = type.prefix.split("");
         to_generate = type.length - type.prefix.length - 1;
@@ -1537,7 +1537,7 @@
     Chance.prototype.exp_month = function (options) {
         options = initOptions(options);
         var month, month_int,
-        // Date object months are 0 indexed
+            // Date object months are 0 indexed
             curMonth = new Date().getMonth() + 1;
 
         if (options.future) {
@@ -1649,14 +1649,14 @@
         var guid_pool = "abcdef1234567890",
             variant_pool = "ab89",
             guid = this.string({ pool: guid_pool, length: 8 }) + '-' +
-                this.string({ pool: guid_pool, length: 4 }) + '-' +
-                    // The Version
-                options.version +
-                this.string({ pool: guid_pool, length: 3 }) + '-' +
-                    // The Variant
-                this.string({ pool: variant_pool, length: 1 }) +
-                this.string({ pool: guid_pool, length: 3 }) + '-' +
-                this.string({ pool: guid_pool, length: 12 });
+                   this.string({ pool: guid_pool, length: 4 }) + '-' +
+                   // The Version
+                   options.version +
+                   this.string({ pool: guid_pool, length: 3 }) + '-' +
+                   // The Variant
+                   this.string({ pool: variant_pool, length: 1 }) +
+                   this.string({ pool: guid_pool, length: 3 }) + '-' +
+                   this.string({ pool: guid_pool, length: 12 });
         return guid;
     };
 
@@ -2075,30 +2075,30 @@
 
     var o_hasOwnProperty = Object.prototype.hasOwnProperty;
     var o_keys = (Object.keys || function(obj) {
-        var result = [];
-        for (var key in obj) {
-            if (o_hasOwnProperty.call(obj, key)) {
-                result.push(key);
-            }
+      var result = [];
+      for (var key in obj) {
+        if (o_hasOwnProperty.call(obj, key)) {
+          result.push(key);
         }
+      }
 
-        return result;
+      return result;
     });
 
     function _copyObject(source, target) {
-        var keys = o_keys(source);
-        var key;
+      var keys = o_keys(source);
+      var key;
 
-        for (var i = 0, l = keys.length; i < l; i++) {
-            key = keys[i];
-            target[key] = source[key] || target[key];
-        }
+      for (var i = 0, l = keys.length; i < l; i++) {
+        key = keys[i];
+        target[key] = source[key] || target[key];
+      }
     }
 
     function _copyArray(source, target) {
-        for (var i = 0, l = source.length; i < l; i++) {
-            target[i] = source[i];
-        }
+      for (var i = 0, l = source.length; i < l; i++) {
+        target[i] = source[i];
+      }
     }
 
     function copyObject(source, _target) {
@@ -2106,9 +2106,9 @@
         var target = _target || (isArray ? new Array(source.length) : {});
 
         if (isArray) {
-            _copyArray(source, target);
+          _copyArray(source, target);
         } else {
-            _copyObject(source, target);
+          _copyObject(source, target);
         }
 
         return target;
@@ -2169,22 +2169,22 @@
         options = initOptions(options, {side : "?"});
         var fl = "";
         switch (options.side.toLowerCase()) {
-            case "east":
-            case "e":
-                fl = "W";
-                break;
-            case "west":
-            case "w":
-                fl = "K";
-                break;
-            default:
-                fl = this.character({pool: "KW"});
-                break;
+        case "east":
+        case "e":
+            fl = "W";
+            break;
+        case "west":
+        case "w":
+            fl = "K";
+            break;
+        default:
+            fl = this.character({pool: "KW"});
+            break;
         }
 
         return fl + this.character({alpha: true, casing: "upper"}) +
-        this.character({alpha: true, casing: "upper"}) +
-        this.character({alpha: true, casing: "upper"});
+                this.character({alpha: true, casing: "upper"}) +
+                this.character({alpha: true, casing: "upper"});
     };
 
     // Set the data as key and data or the data map
@@ -2360,9 +2360,9 @@
     BlueImpMD5.prototype.VERSION = '1.0.1';
 
     /*
-     * Add integers, wrapping at 2^32. This uses 16-bit operations internally
-     * to work around bugs in some JS interpreters.
-     */
+    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+    * to work around bugs in some JS interpreters.
+    */
     BlueImpMD5.prototype.safe_add = function safe_add(x, y) {
         var lsw = (x & 0xFFFF) + (y & 0xFFFF),
             msw = (x >> 16) + (y >> 16) + (lsw >> 16);
@@ -2370,15 +2370,15 @@
     };
 
     /*
-     * Bitwise rotate a 32-bit number to the left.
-     */
+    * Bitwise rotate a 32-bit number to the left.
+    */
     BlueImpMD5.prototype.bit_roll = function (num, cnt) {
         return (num << cnt) | (num >>> (32 - cnt));
     };
 
     /*
-     * These functions implement the five basic operations the algorithm uses.
-     */
+    * These functions implement the five basic operations the algorithm uses.
+    */
     BlueImpMD5.prototype.md5_cmn = function (q, a, b, x, s, t) {
         return this.safe_add(this.bit_roll(this.safe_add(this.safe_add(a, q), this.safe_add(x, t)), s), b);
     };
@@ -2396,8 +2396,8 @@
     };
 
     /*
-     * Calculate the MD5 of an array of little-endian words, and a bit length.
-     */
+    * Calculate the MD5 of an array of little-endian words, and a bit length.
+    */
     BlueImpMD5.prototype.binl_md5 = function (x, len) {
         /* append padding */
         x[len >> 5] |= 0x80 << (len % 32);
@@ -2492,8 +2492,8 @@
     };
 
     /*
-     * Convert an array of little-endian words to a string
-     */
+    * Convert an array of little-endian words to a string
+    */
     BlueImpMD5.prototype.binl2rstr = function (input) {
         var i,
             output = '';
@@ -2504,9 +2504,9 @@
     };
 
     /*
-     * Convert a raw string to an array of little-endian words
-     * Characters >255 have their high-byte silently ignored.
-     */
+    * Convert a raw string to an array of little-endian words
+    * Characters >255 have their high-byte silently ignored.
+    */
     BlueImpMD5.prototype.rstr2binl = function (input) {
         var i,
             output = [];
@@ -2521,15 +2521,15 @@
     };
 
     /*
-     * Calculate the MD5 of a raw string
-     */
+    * Calculate the MD5 of a raw string
+    */
     BlueImpMD5.prototype.rstr_md5 = function (s) {
         return this.binl2rstr(this.binl_md5(this.rstr2binl(s), s.length * 8));
     };
 
     /*
-     * Calculate the HMAC-MD5, of a key and some data (raw strings)
-     */
+    * Calculate the HMAC-MD5, of a key and some data (raw strings)
+    */
     BlueImpMD5.prototype.rstr_hmac_md5 = function (key, data) {
         var i,
             bkey = this.rstr2binl(key),
@@ -2549,8 +2549,8 @@
     };
 
     /*
-     * Convert a raw string to a hex string
-     */
+    * Convert a raw string to a hex string
+    */
     BlueImpMD5.prototype.rstr2hex = function (input) {
         var hex_tab = '0123456789abcdef',
             output = '',
@@ -2559,21 +2559,21 @@
         for (i = 0; i < input.length; i += 1) {
             x = input.charCodeAt(i);
             output += hex_tab.charAt((x >>> 4) & 0x0F) +
-            hex_tab.charAt(x & 0x0F);
+                hex_tab.charAt(x & 0x0F);
         }
         return output;
     };
 
     /*
-     * Encode a string as utf-8
-     */
+    * Encode a string as utf-8
+    */
     BlueImpMD5.prototype.str2rstr_utf8 = function (input) {
         return unescape(encodeURIComponent(input));
     };
 
     /*
-     * Take string arguments and return either raw or hex encoded strings
-     */
+    * Take string arguments and return either raw or hex encoded strings
+    */
     BlueImpMD5.prototype.raw_md5 = function (s) {
         return this.rstr_md5(this.str2rstr_utf8(s));
     };
