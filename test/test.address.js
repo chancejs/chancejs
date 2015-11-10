@@ -1,6 +1,6 @@
 /// <reference path="../chance.js" />
 /// <reference path="../node_modules/underscore/underscore-min.js" />
-/// <reference path="test/lib/phone_number_js/dist/phoneNumber.min.js" />
+/// <reference path="lib/phone_number_js/dist/phoneNumber.min.js" />
 
 var expect = chai.expect;
 
