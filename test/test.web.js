@@ -341,10 +341,17 @@ describe("Web", function () {
             });
         });
 
+        it("(format : 'name') returns a valide color name", function() {
+            _(1000).times(function() {
+                
+                var color = chance.color({format : 'name'});
+                expect(color).to.be.a('string');
+            });
+        });        
+
         it("({casing: upper}) returns upper cased color", function () {
             _(1000).times(function () {
                 var color = chance.color({format: 'hex', casing: 'upper'});
-                console.log(color);
                 expect(color).to.be.a('string');
                 expect(color).to.have.length(7);
                 expect(color.charAt(1).toUpperCase()).to.equal(color.charAt(1));
