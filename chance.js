@@ -950,13 +950,66 @@
         return url;
     };
 
+    /**
+     * #Description:
+     * ===============================================
+     * Generate random color value base on color type:
+     * -> hex
+     * -> rgb
+     * -> rgba
+     * -> 0x
+     * -> named color
+     *
+     * #Examples: 
+     * ===============================================
+     * * Geerate random hex color
+     * chance.color() => '#79c157' / 'rgb(110,52,164)' / '0x67ae0b' / '#e2e2e2' / '#29CFA7'
+     * 
+     * * Generate Hex based color value
+     * chance.color({format: 'hex'})    => '#d67118'
+     *
+     * * Generate simple rgb value
+     * chance.color({format: 'rgb'})    => 'rgb(110,52,164)'
+     *
+     * * Generate Ox based color value
+     * chance.color({format: '0x'})     => '0x67ae0b' 
+     *
+     * * Generate graiscale based value
+     * chance.color({grayscale: true})  => '#e2e2e2'
+     *
+     * * Return valide color name
+     * chance.color({format: 'name'})   => 'red'
+     * 
+     * * Make color uppercase
+     * chance.color({casing: 'upper'})  => '#29CFA7'
+     *
+     * @param  [object] options
+     * @return [string] color value
+     */
     Chance.prototype.color = function (options) {
+
         function gray(value, delimiter) {
             return [value, value, value].join(delimiter || '');
         }
 
+        function rgb(hasAlpha) {
+
+            var rgbValue    = (hasAlpha)    ? 'rgba' : 'rgb'; 
+            var alphaChanal = (hasAlpha)    ? (',' + this.floating({min:0, max:1})) : "";
+            var colorValue  = (isGrayscale) ? (gray(this.natural({max: 255}), ',')) : (this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}));
+
+            return rgbValue + '(' + colorValue + alphaChanal + ')';
+        }
+
+        function hex(start, end, withHash) {
+
+            var simbol = (withHash) ? "#" : "";
+            var expression  = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end})); 
+            return simbol + expression;
+        }
+
         options = initOptions(options, {
-            format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x']),
+            format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x', 'name']),
             grayscale: false,
             casing: 'lower'
         });
@@ -965,27 +1018,25 @@
         var colorValue;
 
         if (options.format === 'hex') {
-            colorValue = '#' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
-
-        } else if (options.format === 'shorthex') {
-            colorValue = '#' + (isGrayscale ? gray(this.hash({length: 1})) : this.hash({length: 3}));
-
-        } else if (options.format === 'rgb') {
-            if (isGrayscale) {
-                colorValue = 'rgb(' + gray(this.natural({max: 255}), ',') + ')';
-            } else {
-                colorValue = 'rgb(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ')';
-            }
-        } else if (options.format === 'rgba') {
-            if (isGrayscale) {
-                colorValue = 'rgba(' + gray(this.natural({max: 255}), ',') + ',' + this.floating({min:0, max:1}) + ')';
-            } else {
-                colorValue = 'rgba(' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.floating({min:0, max:1}) + ')';
-            }
-        } else if (options.format === '0x') {
-            colorValue = '0x' + (isGrayscale ? gray(this.hash({length: 2})) : this.hash({length: 6}));
-        } else {
-            throw new RangeError('Invalid format provided. Please provide one of "hex", "shorthex", "rgb", "rgba", or "0x".');
+            colorValue =  hex.call(this, 2, 6, true);
+        }
+        else if (options.format === 'shorthex') {
+            colorValue = hex.call(this, 1, 3, true);
+        } 
+        else if (options.format === 'rgb') {
+            colorValue = rgb.call(this, false);
+        } 
+        else if (options.format === 'rgba') {
+            colorValue = rgb.call(this, true);
+        } 
+        else if (options.format === '0x') {
+            colorValue = '0x' + hex.call(this, 2, 6);
+        } 
+        else if(options.format === 'name') {
+            return this.pick(this.get("colorNames"));
+        }
+        else {
+            throw new RangeError('Invalid format provided. Please provide one of "hex", "shorthex", "rgb", "rgba", "0x" or "name".');
         }
 
         if (options.casing === 'upper' ) {
@@ -2070,7 +2121,20 @@
             {'code' : 'ZAR', 'name' : 'South Africa Rand'},
             {'code' : 'ZMW', 'name' : 'Zambia Kwacha'},
             {'code' : 'ZWD', 'name' : 'Zimbabwe Dollar'}
+        ],
+
+        // return the names of all valide colors
+        colorNames : [  "AliceBlue", "Black", "Navy", "DarkBlue", "MediumBlue", "Blue", "DarkGreen", "Green", "Teal", "DarkCyan", "DeepSkyBlue", "DarkTurquoise", "MediumSpringGreen", "Lime", "SpringGreen",
+            "Aqua", "Cyan", "MidnightBlue", "DodgerBlue", "LightSeaGreen", "ForestGreen", "SeaGreen", "DarkSlateGray", "LimeGreen", "MediumSeaGreen", "Turquoise", "RoyalBlue", "SteelBlue", "DarkSlateBlue", "MediumTurquoise",
+            "Indigo", "DarkOliveGreen", "CadetBlue", "CornflowerBlue", "RebeccaPurple", "MediumAquaMarine", "DimGray", "SlateBlue", "OliveDrab", "SlateGray", "LightSlateGray", "MediumSlateBlue", "LawnGreen", "Chartreuse",
+            "Aquamarine", "Maroon", "Purple", "Olive", "Gray", "SkyBlue", "LightSkyBlue", "BlueViolet", "DarkRed", "DarkMagenta", "SaddleBrown", "Ivory", "White",
+            "DarkSeaGreen", "LightGreen", "MediumPurple", "DarkViolet", "PaleGreen", "DarkOrchid", "YellowGreen", "Sienna", "Brown", "DarkGray", "LightBlue", "GreenYellow", "PaleTurquoise", "LightSteelBlue", "PowderBlue",
+            "FireBrick", "DarkGoldenRod", "MediumOrchid", "RosyBrown", "DarkKhaki", "Silver", "MediumVioletRed", "IndianRed", "Peru", "Chocolate", "Tan", "LightGray", "Thistle", "Orchid", "GoldenRod", "PaleVioletRed",
+            "Crimson", "Gainsboro", "Plum", "BurlyWood", "LightCyan", "Lavender", "DarkSalmon", "Violet", "PaleGoldenRod", "LightCoral", "Khaki", "AliceBlue", "HoneyDew", "Azure", "SandyBrown", "Wheat", "Beige", "WhiteSmoke",
+            "MintCream", "GhostWhite", "Salmon", "AntiqueWhite", "Linen", "LightGoldenRodYellow", "OldLace", "Red", "Fuchsia", "Magenta", "DeepPink", "OrangeRed", "Tomato", "HotPink", "Coral", "DarkOrange", "LightSalmon", "Orange",
+            "LightPink", "Pink", "Gold", "PeachPuff", "NavajoWhite", "Moccasin", "Bisque", "MistyRose", "BlanchedAlmond", "PapayaWhip", "LavenderBlush", "SeaShell", "Cornsilk", "LemonChiffon", "FloralWhite", "Snow", "Yellow", "LightYellow"
         ]
+
     };
 
     var o_hasOwnProperty = Object.prototype.hasOwnProperty;
