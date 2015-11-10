@@ -1772,6 +1772,123 @@
         return this.bimd5.md5(opts.str, opts.key, opts.raw);
     };
 
+    /**
+     * #Description:
+     * =====================================================
+     * Generate random file name with extention
+     *
+     * The argument provide extention type 
+     * -> raster 
+     * -> vector
+     * -> 3d
+     * -> document
+     *
+     * If noting is provided the function return random file name with random 
+     * extention type of any kind
+     *
+     * The user can validate the file name length range 
+     * If noting provided the generated file name is radom
+     *
+     * #Extention Pool :
+     * * Currently the supported extentions are 
+     *  -> some of the most popular raster image extentions
+     *  -> some of the most popular vector image extentions
+     *  -> some of the most popular 3d image extentions
+     *  -> some of the most popular document extentions
+     * 
+     * #Examples :
+     * =====================================================
+     *
+     * Return random file name with random extention. The file extention
+     * is provided by a predifined collection of extentions. More abouth the extention
+     * pool can be fond in #Extention Pool section
+     * 
+     * chance.file()                        
+     * => dsfsdhjf.xml
+     *
+     * In order to generate a file name with sspecific length, specify the 
+     * length property and integer value. The extention is going to be random
+     *  
+     * chance.file({length : 10})           
+     * => asrtineqos.pdf
+     *
+     * In order to geerate file with extention form some of the predifined groups
+     * of the extention pool just specify the extenton pool category in fileType property
+     *  
+     * chance.file({fileType : 'raster'})   
+     * => dshgssds.psd
+     *
+     * You can provide specific extention for your files
+     * chance.file({extention : 'html'})    
+     * => djfsd.html
+     *
+     * Or you could pass custom collection of extentons bt array or by object
+     * chance.file({extentions : [...]})    
+     * => dhgsdsd.psd
+     *  
+     * chance.file({extentions : { key : [...], key : [...]}})
+     * => djsfksdjsd.xml
+     * 
+     * @param  [collection] options 
+     * @return [string]
+     * 
+     */
+    Chance.prototype.file = function(options) {
+        
+        var fileOptions = options || {};
+        var poolCollectionKey = "fileExtension";
+        var typeRange   = Object.keys(this.get("fileExtension"));//['raster', 'vector', '3d', 'document'];
+        var fileName;
+        var fileExtention;
+
+        // Generate random file name 
+        fileName = chance.word({length : fileOptions.length});
+
+        // Generate file by specific extention provided by the user
+        if(fileOptions.extention) {
+
+            fileExtention = fileOptions.extention;
+            return (fileName + '.' + fileExtention);
+        }
+
+        // Generate file by specific axtention collection
+        if(fileOptions.extentions) {
+
+            if(Array.isArray(fileOptions.extentions)) {
+
+                fileExtention = this.pickone(fileOptions.extentions);
+                return (fileName + '.' + fileExtention);
+            }
+            else if(fileOptions.extentions.constructor === Object) {
+                
+                var extentionObjectCollection = fileOptions.extentions;
+                var keys = Object.keys(extentionObjectCollection);
+
+                fileExtention = this.pickone(extentionObjectCollection[this.pickone(keys)]);
+                return (fileName + '.' + fileExtention);
+            }
+
+            throw new Error("Expect collection of type Array or Object to be passed as an argument ");
+        } 
+
+        // Generate file extention based on specific file type
+        if(fileOptions.fileType) {
+
+            var fileType = fileOptions.fileType;
+            if(typeRange.indexOf(fileType) !== -1) {
+
+                fileExtention = this.pickone(this.get(poolCollectionKey)[fileType]);
+                return (fileName + '.' + fileExtention);
+            }
+
+            throw new Error("Expect file type value to be 'raster', 'vector', '3d' or 'document' ");
+        }
+
+        // Generate random file name if no extenton options are passed
+        fileExtention = this.pickone(this.get(poolCollectionKey)[this.pickone(typeRange)]);
+        return (fileName + '.' + fileExtention);
+    };     
+
     var data = {
 
         firstNames: {
@@ -2136,6 +2253,13 @@
             "MintCream", "GhostWhite", "Salmon", "AntiqueWhite", "Linen", "LightGoldenRodYellow", "OldLace", "Red", "Fuchsia", "Magenta", "DeepPink", "OrangeRed", "Tomato", "HotPink", "Coral", "DarkOrange", "LightSalmon", "Orange",
             "LightPink", "Pink", "Gold", "PeachPuff", "NavajoWhite", "Moccasin", "Bisque", "MistyRose", "BlanchedAlmond", "PapayaWhip", "LavenderBlush", "SeaShell", "Cornsilk", "LemonChiffon", "FloralWhite", "Snow", "Yellow", "LightYellow"
         ],        
+
+        fileExtension : {
+            "raster"    : ["bmp", "gif", "gpl", "ico", "jpeg", "psd", "png", "psp", "raw", "tiff"],
+            "vector"    : ["3dv", "amf", "awg", "ai", "cgm", "cdr", "cmx", "dxf", "e2d", "egt", "eps", "fs", "odg", "svg", "xar"],
+            "3d"        : ["3dmf", "3dm", "3mf", "3ds", "an8", "aoi", "blend", "cal3d", "cob", "ctm", "iob", "jas", "max", "mb", "mdx", "obj", "x", "x3d"],
+            "document"  : ["doc", "docx", "dot", "html", "xml", "odt", "odm", "ott", "csv", "rtf", "tex", "xhtml", "xps"]
+        }
     };
 
     var o_hasOwnProperty = Object.prototype.hasOwnProperty;
