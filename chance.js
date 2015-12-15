@@ -1076,10 +1076,10 @@
     Chance.prototype.ip = function () {
         // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
         // this should probably be updated to account for that rare as it may be
-        return this.natural({max: 255}) + '.' +
+        return this.natural({min: 1, max: 254}) + '.' +
                this.natural({max: 255}) + '.' +
                this.natural({max: 255}) + '.' +
-               this.natural({max: 255});
+               this.natural({min: 1, max: 254});
     };
 
     Chance.prototype.ipv6 = function () {
