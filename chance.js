@@ -1593,7 +1593,7 @@
             // Date object months are 0 indexed
             curMonth = new Date().getMonth() + 1;
 
-        if (options.future) {
+        if (options.future && (curMonth !== 12)) {
             do {
                 month = this.month({raw: true}).numeric;
                 month_int = parseInt(month, 10);
@@ -1606,7 +1606,10 @@
     };
 
     Chance.prototype.exp_year = function () {
-        return this.year({max: new Date().getFullYear() + 10});
+        var curMonth = new Date().getMonth() + 1,
+            curYear = new Date().getFullYear();
+
+        return this.year({min: ((curMonth === 12) ? (curYear + 1) : curYear), max: (curYear + 10)});
     };
 
     // -- End Finance
