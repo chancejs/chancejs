@@ -12,7 +12,7 @@ describe("Company", function () {
             _(1000).times(function () {
                 cnpj = chance.cnpj();
                 expect(cnpj).to.be.a('string');
-                expect(cnpj).to.match(/^\d{2}.\d{3}.\d{3}\/\d{3}-\d{2}$/m);
+                expect(cnpj).to.match(/^\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}$/m);
                 expect(cnpj).to.have.length(18);
             });
         });
