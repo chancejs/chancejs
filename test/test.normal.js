@@ -119,6 +119,14 @@ describe("Normal Distribution", function () {
             expect(fn).to.throw(RangeError);
         });
 
+        it("should throw an error if the pool provided is not an array", function () {
+            var fn = function() {
+                chance.normal({ pool: 'not an array'});
+            };
+
+            expect(fn).to.throw(RangeError);
+        });
+
     });
 
 });
