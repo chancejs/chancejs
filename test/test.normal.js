@@ -35,7 +35,7 @@ describe("Normal Distribution", function () {
             group = chance.n(chance.normal, 10000);
 
             expect(Math.abs(Math.mean(group) - mean)).to.be.below(stddev);
-            expect(Math.abs(Math.stddev(group) - stddev)).to.be.below(stddev *.05);
+            expect(Math.abs(Math.stddev(group) - stddev)).to.be.below(stddev *0.05);
         });
     });
 
@@ -56,7 +56,7 @@ describe("Normal Distribution", function () {
             group = chance.n(chance.normal, 10000, { mean: mean, dev: stddev});
 
             expect(Math.abs(Math.mean(group) - mean)).to.be.below(stddev);
-            expect(Math.abs(Math.stddev(group) - stddev)).to.be.below(stddev *.05);
+            expect(Math.abs(Math.stddev(group) - stddev)).to.be.below(stddev *0.05);
         });
     });
 
@@ -125,6 +125,19 @@ describe("Normal Distribution", function () {
             };
 
             expect(fn).to.throw(RangeError);
+        });
+
+        it("should work with objects", function () {
+            stddev = 1;
+            mean = 1;
+            group = chance.n(chance.normal, 50, { mean: mean, dev: stddev, pool: [
+                { a: 1, b: 10},
+                { a: 2, b: 20},
+                { a: 3, b: 30}
+            ]});
+
+            expect(group).to.have.length(50);
+            expect(group[0]).to.include.keys('a');
         });
 
     });
