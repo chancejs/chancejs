@@ -95,18 +95,16 @@ describe("Normal Distribution", function () {
             stddev = 2;
             mean = 6;
 
-            _(10).times(function () {
-                group = chance.n(chance.normal, 10000, {mean: mean, dev: stddev, pool: pool});
-                var counts = _.countBy(group);
+            group = chance.n(chance.normal, 10000, {mean: mean, dev: stddev, pool: pool});
+            var counts = _.countBy(group);
 
-                expect(counts["Sunday"])
-                    .to.be.above(counts["Saturday"])
-                    .to.be.above(counts["Friday"])
-                    .to.be.above(counts["Thursday"])
-                    .to.be.above(counts["Wednesday"])
-                    .to.be.above(counts["Tuesday"])
-                    .to.be.above(counts["Monday"]);
-            });
+            expect(counts["Sunday"])
+                .to.be.above(counts["Saturday"])
+                .to.be.above(counts["Friday"])
+                .to.be.above(counts["Thursday"])
+                .to.be.above(counts["Wednesday"])
+                .to.be.above(counts["Tuesday"])
+                .to.be.above(counts["Monday"]);
         });
 
         it("should throw an error quickly if the user has provided bad pool/mean/dev values", function () {
