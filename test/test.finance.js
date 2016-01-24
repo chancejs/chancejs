@@ -205,8 +205,11 @@ describe("Credit Card", function () {
             _(1000).times(function () {
                 var nowMonth = new Date().getMonth() + 1;
                 var expMonth = parseInt(chance.exp_month({ future: true }), 10);
-
-                expect(expMonth).to.be.above(nowMonth);
+                if(nowMonth !== 12) {
+                    expect(expMonth).to.be.above(nowMonth);
+                } else {
+                    expect(expMonth).to.be.within(1, 12);
+                }
             });
         });        
     });
