@@ -1465,6 +1465,16 @@
         return this.natural({min: 1, max: parseInt(new Date().getTime() / 1000, 10)});
     };
 
+    Chance.prototype.weekday = function (options) {
+        options = initOptions(options, {weekday_only: false});
+        var weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+        if (!options.weekday_only) {
+            weekdays.push("Saturday");
+            weekdays.push("Sunday");
+        }
+        return this.pickone(weekdays);
+    };
+
     Chance.prototype.year = function (options) {
         // Default to current year as min if none specified
         options = initOptions(options, {min: new Date().getFullYear()});

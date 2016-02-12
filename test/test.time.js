@@ -4,7 +4,7 @@
 var expect = chai.expect;
 
 describe("Time", function () {
-    var ampm, date, hammertime, hour, minute, timestamp, month, year, bounds, chance = new Chance();
+    var ampm, date, hammertime, hour, minute, timestamp, month, weekday, year, bounds, chance = new Chance();
 
     it("ampm() returns am or pm", function () {
         _(1000).times(function () {
@@ -210,6 +210,23 @@ describe("Time", function () {
             timestamp = chance.timestamp();
             expect(timestamp).to.be.a('number');
             expect(timestamp).to.be.within(1, parseInt(new Date().getTime() / 1000, 10));
+        });
+    });
+
+    it("weekday() will return a weekday as a string", function () {
+        _(1000).times(function () {
+            weekday = chance.weekday();
+            expect(weekday).to.be.a('string');
+        });
+    });
+
+    it("weekday() can take work: true and obey it", function () {
+        _(1000).times(function () {
+            weekday = chance.weekday({work: true});
+            expect(weekday).to.be.a('string');
+            expect(weekday).to.not.equal('Saturday');
+            expect(weekday).to.not.equal('Sunday');
+            console.log(weekday);
         });
     });
 
