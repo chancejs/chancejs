@@ -540,9 +540,9 @@
 
             text += chr;
         }
-        
+
         if (options.capitalize) {
-            text = this.capitalize(text);   
+            text = this.capitalize(text);
         }
 
         return text;
@@ -571,11 +571,11 @@
                 text += this.syllable();
             }
         }
-        
+
         if (options.capitalize) {
-            text = this.capitalize(text);   
+            text = this.capitalize(text);
         }
-        
+
         return text;
     };
 
@@ -1054,8 +1054,6 @@
 
         return colorValue;
     };
-
-
 
     Chance.prototype.domain = function (options) {
         options = initOptions(options);
