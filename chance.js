@@ -540,6 +540,10 @@
 
             text += chr;
         }
+        
+        if (options.capitalize) {
+            text = this.capitalize(text);   
+        }
 
         return text;
     };
@@ -567,6 +571,11 @@
                 text += this.syllable();
             }
         }
+        
+        if (options.capitalize) {
+            text = this.capitalize(text);   
+        }
+        
         return text;
     };
 
