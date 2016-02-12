@@ -222,7 +222,7 @@ describe("Time", function () {
 
     it("weekday() can take work: true and obey it", function () {
         _(1000).times(function () {
-            weekday = chance.weekday({work: true});
+            weekday = chance.weekday({weekday_only: true});
             expect(weekday).to.be.a('string');
             expect(weekday).to.not.equal('Saturday');
             expect(weekday).to.not.equal('Sunday');
