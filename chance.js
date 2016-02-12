@@ -2340,7 +2340,18 @@
     };
 
     Chance.prototype.normal = function (options) {
-        options = initOptions(options, {mean : 0, dev : 1});
+        options = initOptions(options, {mean : 0, dev : 1, pool : []});
+
+        testRange(
+            options.pool.constructor !== Array,
+            "Chance: The pool option must be a valid array."
+        );
+
+        // If a pool has been passed, then we are returning an item from that pool,
+        // using the normal distribution settings that were passed in
+        if (options.pool.length > 0) {
+            return this.normal_pool(options);
+        }
 
         // The Marsaglia Polar method
         var s, u, v, norm,
@@ -2360,6 +2371,20 @@
 
         // Shape and scale
         return dev * norm + mean;
+    };
+
+    Chance.prototype.normal_pool = function(options) {
+        var performanceCounter = 0;
+        do {
+            var idx = Math.round(this.normal({ mean: options.mean, dev: options.dev }));
+            if (idx < options.pool.length && idx >= 0) {
+                return options.pool[idx];
+            } else {
+                performanceCounter++;
+            }
+        } while(performanceCounter < 100);
+
+        throw new RangeError("Chance: Your pool is too small for the given mean and standard deviation. Please adjust.");
     };
 
     Chance.prototype.radio = function (options) {
