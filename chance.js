@@ -1099,6 +1099,21 @@
         return this.natural({min: 1, max: 99});
     };
 
+    Chance.prototype.semver = function (options) {
+        options = initOptions(options, { include_prerelease: true });
+
+        var range = this.pickone(["^", "~", "<", ">", "<=", ">=", "="]);
+        if (options.range) {
+            range = options.range;
+        }
+
+        var prerelease = "";
+        if (options.include_prerelease) {
+            prerelease = this.weighted(["", "-dev", "-beta", "-alpha"], [50, 10, 5, 1]);
+        }
+        return range + this.rpg('3d10').join('.') + prerelease;
+    };
+
     Chance.prototype.tlds = function () {
         return ['com', 'org', 'edu', 'gov', 'co.uk', 'net', 'io'];
     };
