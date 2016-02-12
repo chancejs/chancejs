@@ -86,7 +86,7 @@ Chance instantiates itself onto the window. This means that in the simplest case
 
 ### CLI
 
-Chance CLI has moved to its [own repository](https://github.com/victorquinn/chancejs-cli)!
+Chance CLI has moved to its [own project](https://github.com/victorquinn/chancejs-cli)!
 
 ### Node.js
 
@@ -116,10 +116,12 @@ require(['Chance'], function(Chance) {
 
 ## Dependent tools
 
-### Fake JSON Schema
+* [Chance CLI](https://github.com/victorquinn/chancejs-cli) - Use Chance on the command line.
+* [Chance Token Replacer](https://github.com/drewbrokke/chance-token-replacer) - Replace tokens in a string with Chance generated items.
+* [Dream.js](https://github.com/adleroliveira/dreamjs) - Lightweight json data generator
+* [Fake JSON Schema](https://github.com/pateketrueke/json-schema-faker/) - Use chance generators to populate JSON Schema samples.
 
-Use chance generators to populate JSON Schema samples.
-See: https://github.com/pateketrueke/json-schema-faker/
+*Know a library that uses Chance that isn't here? Update the README and submit a PR!*
 
 ## Author
 ### Victor Quinn
@@ -132,62 +134,73 @@ Please feel free to reach out to me if you have any questions or suggestions.
 THANK YOU!
 
 ```
-project  : chancejs
- repo age : 2 years
- active   : 143 days
- commits  : 508
- files    : 23
+ project  : chancejs
+ repo age : 2 years, 8 months
+ active   : 165 days
+ commits  : 597
+ files    : 27
  authors  :
-   346	Victor Quinn        68.1%
-    26	Oliver Salzburg     5.1%
-    13	Tim Petricola       2.6%
-    12	Alex DiLiberto      2.4%
-    11	davmillar           2.2%
-     7	Jan Tojnar          1.4%
-     6	Patrick Mowrer      1.2%
-     5	Michael Cordingley  1.0%
-     5	Matt Klaber         1.0%
-     4	Abhijeet Pawar      0.8%
-     4	Kevin Garnett       0.8%
-     4	Avishaan            0.8%
-     4	Chris Villarreal    0.8%
-     3	Alexandr Lozovyuk   0.6%
-     3	Nate Clark          0.6%
-     3	leesei              0.6%
-     3	Dominic Barnes      0.6%
-     3	qjcg                0.6%
-     3	Nicholas Johnson    0.6%
-     2	Stefan Penner       0.4%
-     2	Adam Krebs          0.4%
-     2	Andreas Koeberle    0.4%
-     2	Iskren Chernev      0.4%
-     2	Nathan MacInnes     0.4%
-     2	Pascal Borreli      0.4%
-     2	SeeSchloss          0.4%
-     2	dhilipsiva          0.4%
-     2	path411             0.4%
-     2	shyam               0.4%
-     2	somejeff            0.4%
-     2	xshyamx             0.4%
-     1	mamrehn             0.2%
-     1	Doug Lawrence       0.2%
-     1	Tomasz Ducin        0.2%
-     1	Danny Yates         0.2%
-     1	afc163              0.2%
-     1	Brian.Barnett       0.2%
-     1	ddunning            0.2%
-     1	Adam Pointer        0.2%
-     1	flrent              0.2%
-     1	kiran               0.2%
-     1	kkroner             0.2%
-     1	Billy Moon          0.2%
-     1	Ng Patrick          0.2%
+   407	Victor Quinn        68.2%
+    26	Oliver Salzburg     4.4%
+    13	Tim Petricola       2.2%
+    12	Alex DiLiberto      2.0%
+    11	davmillar           1.8%
+     7	Jan Tojnar          1.2%
+     7	AminaG              1.2%
+     6	Patrick Mowrer      1.0%
+     6	Matt Klaber         1.0%
+     5	Michael Cordingley  0.8%
+     4	Abhijeet Pawar      0.7%
+     4	Kevin Garnett       0.7%
+     4	Chris Villarreal    0.7%
+     4	Avishaan            0.7%
+     4	Dominic Barnes      0.7%
+     4	Geoff Russel        0.7%
+     3	Nate Clark          0.5%
+     3	leesei              0.5%
+     3	Alexandr Lozovyuk   0.5%
+     3	qjcg                0.5%
+     3	Nicholas Johnson    0.5%
+     2	SeeSchloss          0.3%
+     2	The Usual Coder     0.3%
+     2	Andreas Koeberle    0.3%
+     2	Franco Victorio     0.3%
+     2	dhilipsiva          0.3%
+     2	Iskren Chernev      0.3%
+     2	Adam Krebs          0.3%
+     2	path411             0.3%
+     2	shyam               0.3%
+     2	somejeff            0.3%
+     2	vird                0.3%
+     2	xshyamx             0.3%
+     2	Kris Van Houten     0.3%
+     2	Mihail Petrov       0.3%
+     2	Nathan MacInnes     0.3%
+     2	Ng Patrick          0.3%
+     2	Pascal Borreli      0.3%
+     2	Stefan Penner       0.3%
      1	lkptrzk             0.2%
+     1	Adam Pointer        0.2%
+     1	Billy Moon          0.2%
+     1	Bitdeli Chef        0.2%
+     1	Brian.Barnett       0.2%
+     1	Danny Yates         0.2%
+     1	Doug Lawrence       0.2%
+     1	Drew Brokke         0.2%
+     1	Johannes Stein      0.2%
      1	Matt Altermatt      0.2%
+     1	Piotrek Dąbrowski   0.2%
      1	Richard Anaya       0.2%
      1	Ryan Tenney         0.2%
      1	Samuel Greene       0.2%
-     1	Johannes Stein      0.2%
+     1	Tomasz Ducin        0.2%
+     1	afc163              0.2%
+     1	ddunning            0.2%
+     1	flaviolivolsi       0.2%
+     1	flrent              0.2%
+     1	kiran               0.2%
+     1	kkroner             0.2%
+     1	mamrehn             0.2%
 ```
 
 ### Contribute! 
