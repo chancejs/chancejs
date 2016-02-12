@@ -105,7 +105,7 @@ describe("Time", function () {
         _(1000).times(function () {
             hour = chance.hour({twentyfour: true});
             expect(hour).to.be.a('number');
-            expect(hour).to.be.within(1, 24);
+            expect(hour).to.be.within(0, 23);
         });
     });
 
