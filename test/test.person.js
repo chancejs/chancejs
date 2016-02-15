@@ -211,7 +211,7 @@ describe("Person", function () {
     describe("nationality()", function () {
         it("returns a nationality that looks right", function () {
             _(1000).times(function () {
-                nationality = chance.nationalitiy();
+                nationality = chance.nationality();
                 expect(nationality).to.be.a('string');
                 expect(nationality).to.have.length.below(3);
             });
