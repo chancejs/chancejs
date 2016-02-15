@@ -4,7 +4,7 @@
 var expect = chai.expect;
 
 describe("Person", function () {
-    var name, first, last, prefix, suffix, ssn, chance = new Chance();
+    var name, first, last, nationality, prefix, suffix, ssn, chance = new Chance();
 
     describe("age()", function () {
         it("returns a random age within expected bounds", function () {
@@ -204,6 +204,16 @@ describe("Person", function () {
                 suffix = chance.name_suffix({full: true});
                 expect(suffix).to.be.a('string');
                 expect(suffix).to.have.length.above(5);
+            });
+        });
+    });
+
+    describe("nationality()", function () {
+        it("returns a nationality that looks right", function () {
+            _(1000).times(function () {
+                nationality = chance.nationalitiy();
+                expect(nationality).to.be.a('string');
+                expect(nationality).to.have.length.below(3);
             });
         });
     });
