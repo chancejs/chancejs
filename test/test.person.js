@@ -213,7 +213,8 @@ describe("Person", function () {
             _(1000).times(function () {
                 nationality = chance.nationality();
                 expect(nationality).to.be.a('string');
-                expect(nationality).to.have.length.below(3);
+                expect(nationality).to.have.length.above(3);
+                expect(nationality).to.have.length.below(26);
             });
         });
     });
