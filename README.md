@@ -120,6 +120,7 @@ require(['Chance'], function(Chance) {
 * [Chance Token Replacer](https://github.com/drewbrokke/chance-token-replacer) - Replace tokens in a string with Chance generated items.
 * [Dream.js](https://github.com/adleroliveira/dreamjs) - Lightweight json data generator
 * [Fake JSON Schema](https://github.com/pateketrueke/json-schema-faker/) - Use chance generators to populate JSON Schema samples.
+* [Moker Data Generator](https://github.com/danibram/mocker-data-generator/) - Minimal JSON data generator.
 
 *Know a library that uses Chance that isn't here? Update the README and submit a PR!*
 
