@@ -626,7 +626,7 @@
         return ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
     };
 
-    // CNPJ; ID to identify companies in Brazil
+    // CNPJ: ID to identify companies in Brazil
     Chance.prototype.cnpj = function () {
         var n = this.n(this.natural, 12, { max: 12 });
         var d1 = n[11]*2+n[10]*3+n[9]*4+n[8]*5+n[7]*6+n[6]*7+n[5]*8+n[4]*9+n[3]*2+n[2]*3+n[1]*4+n[0]*5;
