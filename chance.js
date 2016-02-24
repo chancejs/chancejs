@@ -1887,7 +1887,7 @@
         var fileExtention;
 
         // Generate random file name 
-        fileName = chance.word({length : fileOptions.length});
+        fileName = this.word({length : fileOptions.length});
 
         // Generate file by specific extention provided by the user
         if(fileOptions.extention) {
