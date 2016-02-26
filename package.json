@@ -6,11 +6,11 @@
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
   "bugs": {
-    "url": "https://github.com/victorquinn/chancejs/issues"
+    "url": "https://github.com/chancejs/chancejs/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/victorquinn/chancejs.git"
+    "url": "https://github.com/chancejs/chancejs.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -43,7 +43,7 @@
   "jam": {
       "main": "chance.js"
   },
-  "github": "https://github.com/victorquinn/chancejs",
+  "github": "https://github.com/chancejs/chancejs",
   "maintainers": [{
     "name": "Victor Quinn",
     "email": "mail@victorquinn.com",

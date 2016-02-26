@@ -2,7 +2,7 @@
 
 [![Chance Logo](http://chancejs.com/logo.png)](http://chancejs.com)
 
-[![Build Status](https://travis-ci.org/victorquinn/chancejs.svg?branch=develop)](https://travis-ci.org/victorquinn/chancejs) [![GitHub license](https://img.shields.io/github/license/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![GitHub stars](https://img.shields.io/github/stars/victorquinn/chancejs.svg)](https://github.com/victorquinn/chancejs) [![npm](https://img.shields.io/npm/dm/chance.svg)](https://npmjs.com/package/chance) [![npm](https://img.shields.io/npm/v/chance.svg)](https://npmjs.com/package/chance) [![Coverage Status](https://coveralls.io/repos/victorquinn/chancejs/badge.svg?branch=master)](https://coveralls.io/r/victorquinn/chancejs?branch=master) [![awesomeness](https://img.shields.io/badge/awesomeness-maximum-red.svg)](https://github.com/victorquinn/chancejs)
+[![Build Status](https://travis-ci.org/chancejs/chancejs.svg?branch=develop)](https://travis-ci.org/chancejs/chancejs) [![GitHub license](https://img.shields.io/github/license/chancejs/chancejs.svg)](https://github.com/chancejs/chancejs) [![GitHub stars](https://img.shields.io/github/stars/chancejs/chancejs.svg)](https://github.com/chancejs/chancejs) [![npm](https://img.shields.io/npm/dm/chance.svg)](https://npmjs.com/package/chance) [![npm](https://img.shields.io/npm/v/chance.svg)](https://npmjs.com/package/chance) [![Coverage Status](https://coveralls.io/repos/chancejs/chancejs/badge.svg?branch=master)](https://coveralls.io/r/chancejs/chancejs?branch=master) [![awesomeness](https://img.shields.io/badge/awesomeness-maximum-red.svg)](https://github.com/chancejs/chancejs)
 
 Chance - Random generator helper for JavaScript
 
@@ -42,14 +42,14 @@ then in the HTML of your app:
 It can also be used with [Component](http://component.io)
 
 ```
-component install victorquinn/chancejs
+component install chancejs/chancejs
 ```
 
 then in the HTML of your app:
 
 ```html
 <!-- Load Chance -->
-<script type="text/javascript" src="components/victorquinn-chancejs/chance.js"></script>
+<script type="text/javascript" src="components/chancejs-chancejs/chance.js"></script>
 <script>
     // Use Chance immediately!
     alert(chance.string());
@@ -86,7 +86,7 @@ Chance instantiates itself onto the window. This means that in the simplest case
 
 ### CLI
 
-Chance CLI has moved to its [own project](https://github.com/victorquinn/chancejs-cli)!
+Chance CLI has moved to its [own project](https://github.com/chancejs/chancejs-cli)!
 
 ### Node.js
 
@@ -116,7 +116,7 @@ require(['Chance'], function(Chance) {
 
 ## Dependent tools
 
-* [Chance CLI](https://github.com/victorquinn/chancejs-cli) - Use Chance on the command line.
+* [Chance CLI](https://github.com/chancejs/chance-cli) - Use Chance on the command line.
 * [Chance Token Replacer](https://github.com/drewbrokke/chance-token-replacer) - Replace tokens in a string with Chance generated items.
 * [Dream.js](https://github.com/adleroliveira/dreamjs) - Lightweight json data generator
 * [Fake JSON Schema](https://github.com/pateketrueke/json-schema-faker/) - Use chance generators to populate JSON Schema samples.
@@ -217,8 +217,6 @@ Sorry if the `develop` branch going away caused any trouble, but it was time to
 rip the bandaid off.*
 
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/victorquinn/chancejs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Proudly written in Washington, D.C.
 
