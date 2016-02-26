@@ -438,26 +438,12 @@
             }
         }
 
-        // If any of the weights are less than 1, we want to scale them up to whole
-        //   numbers for the rest of this logic to work
-        if (weights.some(function(weight) { return weight < 1; })) {
-            var min = weights.reduce(function(min, weight) {
-                return (weight < min) ? weight : min;
-            }, weights[0]);
-
-            var scaling_factor = 1 / min;
-
-            weights = weights.map(function(weight) {
-                return weight * scaling_factor;
-            });
-        }
-
         var sum = weights.reduce(function(total, weight) {
             return total + weight;
         }, 0);
 
         // get an index
-        var selected = this.natural({ min: 1, max: sum });
+        var selected = this.random() * sum;
 
         var total = 0;
         var chosen;
