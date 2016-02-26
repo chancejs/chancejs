@@ -1,7 +1,7 @@
 {
   "name": "chance",
   "main": "./chance.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
