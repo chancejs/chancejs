@@ -2,7 +2,6 @@ permalink:   none
 lsi:         false
 pygments:    true
 destination: public
-rdiscount:   { extensions: [smart] }
 exclude:
   - script
   - Guardfile
