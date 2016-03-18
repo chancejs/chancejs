@@ -1,5 +1,7 @@
 node_modules
 *~
+*.swp
+*.swo
 .idea
 dependencies
 test/lib

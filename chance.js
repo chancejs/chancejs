@@ -1095,10 +1095,10 @@
     Chance.prototype.ip = function () {
         // Todo: This could return some reserved IPs. See http://vq.io/137dgYy
         // this should probably be updated to account for that rare as it may be
-        return this.natural({max: 255}) + '.' +
+        return this.natural({min: 1, max: 254}) + '.' +
                this.natural({max: 255}) + '.' +
                this.natural({max: 255}) + '.' +
-               this.natural({max: 255});
+               this.natural({min: 1, max: 254});
     };
 
     Chance.prototype.ipv6 = function () {
@@ -1640,7 +1640,7 @@
             // Date object months are 0 indexed
             curMonth = new Date().getMonth() + 1;
 
-        if (options.future) {
+        if (options.future && (curMonth !== 12)) {
             do {
                 month = this.month({raw: true}).numeric;
                 month_int = parseInt(month, 10);
@@ -1653,7 +1653,10 @@
     };
 
     Chance.prototype.exp_year = function () {
-        return this.year({max: new Date().getFullYear() + 10});
+        var curMonth = new Date().getMonth() + 1,
+            curYear = new Date().getFullYear();
+
+        return this.year({min: ((curMonth === 12) ? (curYear + 1) : curYear), max: (curYear + 10)});
     };
 
     // -- End Finance
