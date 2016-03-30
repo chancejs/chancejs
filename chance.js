@@ -1356,24 +1356,38 @@
     };
 
     Chance.prototype.street = function (options) {
-        options = initOptions(options);
+        options = initOptions(options, { country: 'us', syllables: 2 });
+        var     street;
 
-        var street = this.word({syllables: 2});
-        street = this.capitalize(street);
-        street += ' ';
-        street += options.short_suffix ?
-            this.street_suffix().abbreviation :
-            this.street_suffix().name;
+        switch (options.country.toLowerCase()) {
+            case 'us':
+                street = this.word({ syllables: options.syllables });
+                street = this.capitalize(street);
+                street += ' ';
+                street += options.short_suffix ?
+                    this.street_suffix(options).abbreviation :
+                    this.street_suffix(options).name;
+                break;
+            case 'it':
+                street = this.word({ syllables: options.syllables });
+                street = this.capitalize(street);
+                street = (options.short_suffix ?
+                    this.street_suffix(options).abbreviation :
+                    this.street_suffix(options).name) + " " + street;
+                break;
+        }
         return street;
     };
 
-    Chance.prototype.street_suffix = function () {
-        return this.pick(this.street_suffixes());
+    Chance.prototype.street_suffix = function (options) {
+        options = initOptions(options, { country: 'us' });
+        return this.pick(this.street_suffixes(options));
     };
 
-    Chance.prototype.street_suffixes = function () {
+    Chance.prototype.street_suffixes = function (options) {
+        options = initOptions(options, { country: 'us' });
         // These are the most common suffixes.
-        return this.get("street_suffixes");
+        return this.get("street_suffixes")[options.country.toLowerCase()];
     };
 
     // Note: only returning US zip codes, internationalization will be a whole
@@ -2394,43 +2408,115 @@
             ]
         },
 
-        street_suffixes: [
-            {name: 'Avenue', abbreviation: 'Ave'},
-            {name: 'Boulevard', abbreviation: 'Blvd'},
-            {name: 'Center', abbreviation: 'Ctr'},
-            {name: 'Circle', abbreviation: 'Cir'},
-            {name: 'Court', abbreviation: 'Ct'},
-            {name: 'Drive', abbreviation: 'Dr'},
-            {name: 'Extension', abbreviation: 'Ext'},
-            {name: 'Glen', abbreviation: 'Gln'},
-            {name: 'Grove', abbreviation: 'Grv'},
-            {name: 'Heights', abbreviation: 'Hts'},
-            {name: 'Highway', abbreviation: 'Hwy'},
-            {name: 'Junction', abbreviation: 'Jct'},
-            {name: 'Key', abbreviation: 'Key'},
-            {name: 'Lane', abbreviation: 'Ln'},
-            {name: 'Loop', abbreviation: 'Loop'},
-            {name: 'Manor', abbreviation: 'Mnr'},
-            {name: 'Mill', abbreviation: 'Mill'},
-            {name: 'Park', abbreviation: 'Park'},
-            {name: 'Parkway', abbreviation: 'Pkwy'},
-            {name: 'Pass', abbreviation: 'Pass'},
-            {name: 'Path', abbreviation: 'Path'},
-            {name: 'Pike', abbreviation: 'Pike'},
-            {name: 'Place', abbreviation: 'Pl'},
-            {name: 'Plaza', abbreviation: 'Plz'},
-            {name: 'Point', abbreviation: 'Pt'},
-            {name: 'Ridge', abbreviation: 'Rdg'},
-            {name: 'River', abbreviation: 'Riv'},
-            {name: 'Road', abbreviation: 'Rd'},
-            {name: 'Square', abbreviation: 'Sq'},
-            {name: 'Street', abbreviation: 'St'},
-            {name: 'Terrace', abbreviation: 'Ter'},
-            {name: 'Trail', abbreviation: 'Trl'},
-            {name: 'Turnpike', abbreviation: 'Tpke'},
-            {name: 'View', abbreviation: 'Vw'},
-            {name: 'Way', abbreviation: 'Way'}
-        ],
+        street_suffixes: {
+            'us': [
+                {name: 'Avenue', abbreviation: 'Ave'},
+                {name: 'Boulevard', abbreviation: 'Blvd'},
+                {name: 'Center', abbreviation: 'Ctr'},
+                {name: 'Circle', abbreviation: 'Cir'},
+                {name: 'Court', abbreviation: 'Ct'},
+                {name: 'Drive', abbreviation: 'Dr'},
+                {name: 'Extension', abbreviation: 'Ext'},
+                {name: 'Glen', abbreviation: 'Gln'},
+                {name: 'Grove', abbreviation: 'Grv'},
+                {name: 'Heights', abbreviation: 'Hts'},
+                {name: 'Highway', abbreviation: 'Hwy'},
+                {name: 'Junction', abbreviation: 'Jct'},
+                {name: 'Key', abbreviation: 'Key'},
+                {name: 'Lane', abbreviation: 'Ln'},
+                {name: 'Loop', abbreviation: 'Loop'},
+                {name: 'Manor', abbreviation: 'Mnr'},
+                {name: 'Mill', abbreviation: 'Mill'},
+                {name: 'Park', abbreviation: 'Park'},
+                {name: 'Parkway', abbreviation: 'Pkwy'},
+                {name: 'Pass', abbreviation: 'Pass'},
+                {name: 'Path', abbreviation: 'Path'},
+                {name: 'Pike', abbreviation: 'Pike'},
+                {name: 'Place', abbreviation: 'Pl'},
+                {name: 'Plaza', abbreviation: 'Plz'},
+                {name: 'Point', abbreviation: 'Pt'},
+                {name: 'Ridge', abbreviation: 'Rdg'},
+                {name: 'River', abbreviation: 'Riv'},
+                {name: 'Road', abbreviation: 'Rd'},
+                {name: 'Square', abbreviation: 'Sq'},
+                {name: 'Street', abbreviation: 'St'},
+                {name: 'Terrace', abbreviation: 'Ter'},
+                {name: 'Trail', abbreviation: 'Trl'},
+                {name: 'Turnpike', abbreviation: 'Tpke'},
+                {name: 'View', abbreviation: 'Vw'},
+                {name: 'Way', abbreviation: 'Way'}
+            ],
+            'it': [
+                { name: 'accesso', abbreviation: 'Acc.' },
+                { name: 'alzaia', abbreviation: 'Alz.' },
+                { name: 'arco', abbreviation: 'Arco' },
+                { name: 'archivolto', abbreviation: 'Acv.' },
+                { name: 'arena', abbreviation: 'Arena' },
+                { name: 'argine', abbreviation: 'Argine' },
+                { name: 'bacino', abbreviation: 'Bacino' },
+                { name: 'banchi', abbreviation: 'Banchi' },
+                { name: 'banchina', abbreviation: 'Ban.' },
+                { name: 'bastioni', abbreviation: 'Bas.' },
+                { name: 'belvedere', abbreviation: 'Belv.' },
+                { name: 'borgata', abbreviation: 'B.ta' },
+                { name: 'borgo', abbreviation: 'B.go' },
+                { name: 'calata', abbreviation: 'Cal.' },
+                { name: 'calle', abbreviation: 'Calle' },
+                { name: 'campiello', abbreviation: 'Cam.' },
+                { name: 'campo', abbreviation: 'Cam.' },
+                { name: 'canale', abbreviation: 'Can.' },
+                { name: 'carraia', abbreviation: 'Carr.' },
+                { name: 'cascina', abbreviation: 'Cascina' },
+                { name: 'case sparse', abbreviation: 'c.s.' },
+                { name: 'cavalcavia', abbreviation: 'Cv.' },
+                { name: 'circonvallazione', abbreviation: 'Cv.' },
+                { name: 'complanare', abbreviation: 'C.re' },
+                { name: 'contrada', abbreviation: 'C.da' },
+                { name: 'corso', abbreviation: 'C.so' },
+                { name: 'corte', abbreviation: 'C.te' },
+                { name: 'cortile', abbreviation: 'C.le' },
+                { name: 'diramazione', abbreviation: 'Dir.' },
+                { name: 'fondaco', abbreviation: 'F.co' },
+                { name: 'fondamenta', abbreviation: 'F.ta' },
+                { name: 'fondo', abbreviation: 'F.do' },
+                { name: 'frazione', abbreviation: 'Fr.' },
+                { name: 'isola', abbreviation: 'Is.' },
+                { name: 'largo', abbreviation: 'L.go' },
+                { name: 'litoranea', abbreviation: 'Lit.' },
+                { name: 'lungolago', abbreviation: 'L.go lago' },
+                { name: 'lungo Po', abbreviation: 'l.go Po' },
+                { name: 'molo', abbreviation: 'Molo' },
+                { name: 'mura', abbreviation: 'Mura' },
+                { name: 'passaggio privato', abbreviation: 'pass. priv.' },
+                { name: 'passeggiata', abbreviation: 'Pass.' },
+                { name: 'piazza', abbreviation: 'P.zza' },
+                { name: 'piazzale', abbreviation: 'P.le' },
+                { name: 'ponte', abbreviation: 'P.te' },
+                { name: 'portico', abbreviation: 'P.co' },
+                { name: 'rampa', abbreviation: 'Rampa' },
+                { name: 'regione', abbreviation: 'Reg.' },
+                { name: 'rione', abbreviation: 'R.ne' },
+                { name: 'rio', abbreviation: 'Rio' },
+                { name: 'ripa', abbreviation: 'Ripa' },
+                { name: 'riva', abbreviation: 'Riva' },
+                { name: 'rondò', abbreviation: 'Rondò' },
+                { name: 'rotonda', abbreviation: 'Rot.' },
+                { name: 'sagrato', abbreviation: 'Sagr.' },
+                { name: 'salita', abbreviation: 'Sal.' },
+                { name: 'scalinata', abbreviation: 'Scal.' },
+                { name: 'scalone', abbreviation: 'Scal.' },
+                { name: 'slargo', abbreviation: 'Sl.' },
+                { name: 'sottoportico', abbreviation: 'Sott.' },
+                { name: 'strada', abbreviation: 'Str.' },
+                { name: 'stradale', abbreviation: 'Str.le' },
+                { name: 'strettoia', abbreviation: 'Strett.' },
+                { name: 'traversa', abbreviation: 'Trav.' },
+                { name: 'via', abbreviation: 'V.' },
+                { name: 'viale', abbreviation: 'V.le' },
+                { name: 'vicinale', abbreviation: 'Vic.le' },
+                { name: 'vicolo', abbreviation: 'Vic.' }
+            ]
+        },
 
         months: [
             {name: 'January', short_name: 'Jan', numeric: '01', days: 31},
