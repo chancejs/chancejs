@@ -1639,6 +1639,10 @@
         }
     };
 
+    Chance.prototype.euro = function (options) {
+        return Number(this.dollar(options).replace("$", "")).toLocaleString() + "€";
+    };
+
     Chance.prototype.exp = function (options) {
         options = initOptions(options);
         var exp = {};
@@ -1681,9 +1685,24 @@
         return this.year({min: ((curMonth === 12) ? (curYear + 1) : curYear), max: (curYear + 10)});
     };
 
+    Chance.prototype.vat = function (options) {
+        options = initOptions(options, { country: 'it' });
+        switch (options.country.toLowerCase()) {
+            case 'it':
+                return this.it_vat();
+        }
+    };
+
     // -- End Finance
 
     // -- Regional
+
+    Chance.prototype.it_vat = function () {
+        var it_vat = this.natural({min: 1, max: 1800000});
+
+        it_vat = this.pad(it_vat, 7) + this.pad(this.pick(this.provinces({ country: 'it' })).code, 3);
+        return it_vat + this.luhn_calculate(it_vat);
+    };
 
     Chance.prototype.pl_pesel = function () {
         var number = this.natural({min: 1, max: 9999999999});
