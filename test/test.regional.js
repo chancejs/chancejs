@@ -33,4 +33,31 @@ describe("Regional", function () {
             });
         });
     });
+
+    describe("Italian Specific", function (){
+        var vat;
+
+        describe("Luhn Check on Italian VAT number", function () {
+            it("checks if number passes Luhn algorithm", function () {
+                expect(chance.luhn_check(11203700015)).to.be.true;
+                expect(chance.luhn_check('10384030010')).to.be.true;
+                expect(chance.luhn_check(11401610016)).to.be.true;
+                expect(chance.luhn_check(09105080015)).to.be.true;
+                expect(chance.luhn_check(11203700011)).to.be.false;
+                expect(chance.luhn_check(09105080010)).to.be.false;
+            });
+        });
+
+
+        describe("Check on Italian VAT number", function () {
+            it("checks if VAT code is 11 numbers", function () {
+                _(1000).times(function () {
+                    vat = chance.vat( { country: 'it' });
+                    expect(vat).to.be.a("string");
+                    expect(vat).to.have.length(11);
+                    expect(vat[0]).to.be.within(0,1);
+                });
+            });
+        });
+    });
 });
