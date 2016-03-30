@@ -1308,14 +1308,15 @@
         return fsa + " " + ldu;
     };
 
-    Chance.prototype.provinces = function () {
-        return this.get("provinces");
+    Chance.prototype.provinces = function (options) {
+        options = initOptions(options, { country: 'ca' });
+        return this.get("provinces")[options.country.toLowerCase()];
     };
 
     Chance.prototype.province = function (options) {
         return (options && options.full) ?
-            this.pick(this.provinces()).name :
-            this.pick(this.provinces()).abbreviation;
+            this.pick(this.provinces(options)).name :
+            this.pick(this.provinces(options)).abbreviation;
     };
 
     Chance.prototype.state = function (options) {
@@ -1960,25 +1961,139 @@
         // Data taken from https://github.com/umpirsky/country-list/blob/master/country/cldr/en_US/country.json
         countries: [{"name":"Afghanistan","abbreviation":"AF"},{"name":"Albania","abbreviation":"AL"},{"name":"Algeria","abbreviation":"DZ"},{"name":"American Samoa","abbreviation":"AS"},{"name":"Andorra","abbreviation":"AD"},{"name":"Angola","abbreviation":"AO"},{"name":"Anguilla","abbreviation":"AI"},{"name":"Antarctica","abbreviation":"AQ"},{"name":"Antigua and Barbuda","abbreviation":"AG"},{"name":"Argentina","abbreviation":"AR"},{"name":"Armenia","abbreviation":"AM"},{"name":"Aruba","abbreviation":"AW"},{"name":"Australia","abbreviation":"AU"},{"name":"Austria","abbreviation":"AT"},{"name":"Azerbaijan","abbreviation":"AZ"},{"name":"Bahamas","abbreviation":"BS"},{"name":"Bahrain","abbreviation":"BH"},{"name":"Bangladesh","abbreviation":"BD"},{"name":"Barbados","abbreviation":"BB"},{"name":"Belarus","abbreviation":"BY"},{"name":"Belgium","abbreviation":"BE"},{"name":"Belize","abbreviation":"BZ"},{"name":"Benin","abbreviation":"BJ"},{"name":"Bermuda","abbreviation":"BM"},{"name":"Bhutan","abbreviation":"BT"},{"name":"Bolivia","abbreviation":"BO"},{"name":"Bosnia and Herzegovina","abbreviation":"BA"},{"name":"Botswana","abbreviation":"BW"},{"name":"Bouvet Island","abbreviation":"BV"},{"name":"Brazil","abbreviation":"BR"},{"name":"British Antarctic Territory","abbreviation":"BQ"},{"name":"British Indian Ocean Territory","abbreviation":"IO"},{"name":"British Virgin Islands","abbreviation":"VG"},{"name":"Brunei","abbreviation":"BN"},{"name":"Bulgaria","abbreviation":"BG"},{"name":"Burkina Faso","abbreviation":"BF"},{"name":"Burundi","abbreviation":"BI"},{"name":"Cambodia","abbreviation":"KH"},{"name":"Cameroon","abbreviation":"CM"},{"name":"Canada","abbreviation":"CA"},{"name":"Canton and Enderbury Islands","abbreviation":"CT"},{"name":"Cape Verde","abbreviation":"CV"},{"name":"Cayman Islands","abbreviation":"KY"},{"name":"Central African Republic","abbreviation":"CF"},{"name":"Chad","abbreviation":"TD"},{"name":"Chile","abbreviation":"CL"},{"name":"China","abbreviation":"CN"},{"name":"Christmas Island","abbreviation":"CX"},{"name":"Cocos [Keeling] Islands","abbreviation":"CC"},{"name":"Colombia","abbreviation":"CO"},{"name":"Comoros","abbreviation":"KM"},{"name":"Congo - Brazzaville","abbreviation":"CG"},{"name":"Congo - Kinshasa","abbreviation":"CD"},{"name":"Cook Islands","abbreviation":"CK"},{"name":"Costa Rica","abbreviation":"CR"},{"name":"Croatia","abbreviation":"HR"},{"name":"Cuba","abbreviation":"CU"},{"name":"Cyprus","abbreviation":"CY"},{"name":"Czech Republic","abbreviation":"CZ"},{"name":"Côte d’Ivoire","abbreviation":"CI"},{"name":"Denmark","abbreviation":"DK"},{"name":"Djibouti","abbreviation":"DJ"},{"name":"Dominica","abbreviation":"DM"},{"name":"Dominican Republic","abbreviation":"DO"},{"name":"Dronning Maud Land","abbreviation":"NQ"},{"name":"East Germany","abbreviation":"DD"},{"name":"Ecuador","abbreviation":"EC"},{"name":"Egypt","abbreviation":"EG"},{"name":"El Salvador","abbreviation":"SV"},{"name":"Equatorial Guinea","abbreviation":"GQ"},{"name":"Eritrea","abbreviation":"ER"},{"name":"Estonia","abbreviation":"EE"},{"name":"Ethiopia","abbreviation":"ET"},{"name":"Falkland Islands","abbreviation":"FK"},{"name":"Faroe Islands","abbreviation":"FO"},{"name":"Fiji","abbreviation":"FJ"},{"name":"Finland","abbreviation":"FI"},{"name":"France","abbreviation":"FR"},{"name":"French Guiana","abbreviation":"GF"},{"name":"French Polynesia","abbreviation":"PF"},{"name":"French Southern Territories","abbreviation":"TF"},{"name":"French Southern and Antarctic Territories","abbreviation":"FQ"},{"name":"Gabon","abbreviation":"GA"},{"name":"Gambia","abbreviation":"GM"},{"name":"Georgia","abbreviation":"GE"},{"name":"Germany","abbreviation":"DE"},{"name":"Ghana","abbreviation":"GH"},{"name":"Gibraltar","abbreviation":"GI"},{"name":"Greece","abbreviation":"GR"},{"name":"Greenland","abbreviation":"GL"},{"name":"Grenada","abbreviation":"GD"},{"name":"Guadeloupe","abbreviation":"GP"},{"name":"Guam","abbreviation":"GU"},{"name":"Guatemala","abbreviation":"GT"},{"name":"Guernsey","abbreviation":"GG"},{"name":"Guinea","abbreviation":"GN"},{"name":"Guinea-Bissau","abbreviation":"GW"},{"name":"Guyana","abbreviation":"GY"},{"name":"Haiti","abbreviation":"HT"},{"name":"Heard Island and McDonald Islands","abbreviation":"HM"},{"name":"Honduras","abbreviation":"HN"},{"name":"Hong Kong SAR China","abbreviation":"HK"},{"name":"Hungary","abbreviation":"HU"},{"name":"Iceland","abbreviation":"IS"},{"name":"India","abbreviation":"IN"},{"name":"Indonesia","abbreviation":"ID"},{"name":"Iran","abbreviation":"IR"},{"name":"Iraq","abbreviation":"IQ"},{"name":"Ireland","abbreviation":"IE"},{"name":"Isle of Man","abbreviation":"IM"},{"name":"Israel","abbreviation":"IL"},{"name":"Italy","abbreviation":"IT"},{"name":"Jamaica","abbreviation":"JM"},{"name":"Japan","abbreviation":"JP"},{"name":"Jersey","abbreviation":"JE"},{"name":"Johnston Island","abbreviation":"JT"},{"name":"Jordan","abbreviation":"JO"},{"name":"Kazakhstan","abbreviation":"KZ"},{"name":"Kenya","abbreviation":"KE"},{"name":"Kiribati","abbreviation":"KI"},{"name":"Kuwait","abbreviation":"KW"},{"name":"Kyrgyzstan","abbreviation":"KG"},{"name":"Laos","abbreviation":"LA"},{"name":"Latvia","abbreviation":"LV"},{"name":"Lebanon","abbreviation":"LB"},{"name":"Lesotho","abbreviation":"LS"},{"name":"Liberia","abbreviation":"LR"},{"name":"Libya","abbreviation":"LY"},{"name":"Liechtenstein","abbreviation":"LI"},{"name":"Lithuania","abbreviation":"LT"},{"name":"Luxembourg","abbreviation":"LU"},{"name":"Macau SAR China","abbreviation":"MO"},{"name":"Macedonia","abbreviation":"MK"},{"name":"Madagascar","abbreviation":"MG"},{"name":"Malawi","abbreviation":"MW"},{"name":"Malaysia","abbreviation":"MY"},{"name":"Maldives","abbreviation":"MV"},{"name":"Mali","abbreviation":"ML"},{"name":"Malta","abbreviation":"MT"},{"name":"Marshall Islands","abbreviation":"MH"},{"name":"Martinique","abbreviation":"MQ"},{"name":"Mauritania","abbreviation":"MR"},{"name":"Mauritius","abbreviation":"MU"},{"name":"Mayotte","abbreviation":"YT"},{"name":"Metropolitan France","abbreviation":"FX"},{"name":"Mexico","abbreviation":"MX"},{"name":"Micronesia","abbreviation":"FM"},{"name":"Midway Islands","abbreviation":"MI"},{"name":"Moldova","abbreviation":"MD"},{"name":"Monaco","abbreviation":"MC"},{"name":"Mongolia","abbreviation":"MN"},{"name":"Montenegro","abbreviation":"ME"},{"name":"Montserrat","abbreviation":"MS"},{"name":"Morocco","abbreviation":"MA"},{"name":"Mozambique","abbreviation":"MZ"},{"name":"Myanmar [Burma]","abbreviation":"MM"},{"name":"Namibia","abbreviation":"NA"},{"name":"Nauru","abbreviation":"NR"},{"name":"Nepal","abbreviation":"NP"},{"name":"Netherlands","abbreviation":"NL"},{"name":"Netherlands Antilles","abbreviation":"AN"},{"name":"Neutral Zone","abbreviation":"NT"},{"name":"New Caledonia","abbreviation":"NC"},{"name":"New Zealand","abbreviation":"NZ"},{"name":"Nicaragua","abbreviation":"NI"},{"name":"Niger","abbreviation":"NE"},{"name":"Nigeria","abbreviation":"NG"},{"name":"Niue","abbreviation":"NU"},{"name":"Norfolk Island","abbreviation":"NF"},{"name":"North Korea","abbreviation":"KP"},{"name":"North Vietnam","abbreviation":"VD"},{"name":"Northern Mariana Islands","abbreviation":"MP"},{"name":"Norway","abbreviation":"NO"},{"name":"Oman","abbreviation":"OM"},{"name":"Pacific Islands Trust Territory","abbreviation":"PC"},{"name":"Pakistan","abbreviation":"PK"},{"name":"Palau","abbreviation":"PW"},{"name":"Palestinian Territories","abbreviation":"PS"},{"name":"Panama","abbreviation":"PA"},{"name":"Panama Canal Zone","abbreviation":"PZ"},{"name":"Papua New Guinea","abbreviation":"PG"},{"name":"Paraguay","abbreviation":"PY"},{"name":"People's Democratic Republic of Yemen","abbreviation":"YD"},{"name":"Peru","abbreviation":"PE"},{"name":"Philippines","abbreviation":"PH"},{"name":"Pitcairn Islands","abbreviation":"PN"},{"name":"Poland","abbreviation":"PL"},{"name":"Portugal","abbreviation":"PT"},{"name":"Puerto Rico","abbreviation":"PR"},{"name":"Qatar","abbreviation":"QA"},{"name":"Romania","abbreviation":"RO"},{"name":"Russia","abbreviation":"RU"},{"name":"Rwanda","abbreviation":"RW"},{"name":"Réunion","abbreviation":"RE"},{"name":"Saint Barthélemy","abbreviation":"BL"},{"name":"Saint Helena","abbreviation":"SH"},{"name":"Saint Kitts and Nevis","abbreviation":"KN"},{"name":"Saint Lucia","abbreviation":"LC"},{"name":"Saint Martin","abbreviation":"MF"},{"name":"Saint Pierre and Miquelon","abbreviation":"PM"},{"name":"Saint Vincent and the Grenadines","abbreviation":"VC"},{"name":"Samoa","abbreviation":"WS"},{"name":"San Marino","abbreviation":"SM"},{"name":"Saudi Arabia","abbreviation":"SA"},{"name":"Senegal","abbreviation":"SN"},{"name":"Serbia","abbreviation":"RS"},{"name":"Serbia and Montenegro","abbreviation":"CS"},{"name":"Seychelles","abbreviation":"SC"},{"name":"Sierra Leone","abbreviation":"SL"},{"name":"Singapore","abbreviation":"SG"},{"name":"Slovakia","abbreviation":"SK"},{"name":"Slovenia","abbreviation":"SI"},{"name":"Solomon Islands","abbreviation":"SB"},{"name":"Somalia","abbreviation":"SO"},{"name":"South Africa","abbreviation":"ZA"},{"name":"South Georgia and the South Sandwich Islands","abbreviation":"GS"},{"name":"South Korea","abbreviation":"KR"},{"name":"Spain","abbreviation":"ES"},{"name":"Sri Lanka","abbreviation":"LK"},{"name":"Sudan","abbreviation":"SD"},{"name":"Suriname","abbreviation":"SR"},{"name":"Svalbard and Jan Mayen","abbreviation":"SJ"},{"name":"Swaziland","abbreviation":"SZ"},{"name":"Sweden","abbreviation":"SE"},{"name":"Switzerland","abbreviation":"CH"},{"name":"Syria","abbreviation":"SY"},{"name":"São Tomé and Príncipe","abbreviation":"ST"},{"name":"Taiwan","abbreviation":"TW"},{"name":"Tajikistan","abbreviation":"TJ"},{"name":"Tanzania","abbreviation":"TZ"},{"name":"Thailand","abbreviation":"TH"},{"name":"Timor-Leste","abbreviation":"TL"},{"name":"Togo","abbreviation":"TG"},{"name":"Tokelau","abbreviation":"TK"},{"name":"Tonga","abbreviation":"TO"},{"name":"Trinidad and Tobago","abbreviation":"TT"},{"name":"Tunisia","abbreviation":"TN"},{"name":"Turkey","abbreviation":"TR"},{"name":"Turkmenistan","abbreviation":"TM"},{"name":"Turks and Caicos Islands","abbreviation":"TC"},{"name":"Tuvalu","abbreviation":"TV"},{"name":"U.S. Minor Outlying Islands","abbreviation":"UM"},{"name":"U.S. Miscellaneous Pacific Islands","abbreviation":"PU"},{"name":"U.S. Virgin Islands","abbreviation":"VI"},{"name":"Uganda","abbreviation":"UG"},{"name":"Ukraine","abbreviation":"UA"},{"name":"Union of Soviet Socialist Republics","abbreviation":"SU"},{"name":"United Arab Emirates","abbreviation":"AE"},{"name":"United Kingdom","abbreviation":"GB"},{"name":"United States","abbreviation":"US"},{"name":"Unknown or Invalid Region","abbreviation":"ZZ"},{"name":"Uruguay","abbreviation":"UY"},{"name":"Uzbekistan","abbreviation":"UZ"},{"name":"Vanuatu","abbreviation":"VU"},{"name":"Vatican City","abbreviation":"VA"},{"name":"Venezuela","abbreviation":"VE"},{"name":"Vietnam","abbreviation":"VN"},{"name":"Wake Island","abbreviation":"WK"},{"name":"Wallis and Futuna","abbreviation":"WF"},{"name":"Western Sahara","abbreviation":"EH"},{"name":"Yemen","abbreviation":"YE"},{"name":"Zambia","abbreviation":"ZM"},{"name":"Zimbabwe","abbreviation":"ZW"},{"name":"Åland Islands","abbreviation":"AX"}],
 
-        provinces: [
-            {name: 'Alberta', abbreviation: 'AB'},
-            {name: 'British Columbia', abbreviation: 'BC'},
-            {name: 'Manitoba', abbreviation: 'MB'},
-            {name: 'New Brunswick', abbreviation: 'NB'},
-            {name: 'Newfoundland and Labrador', abbreviation: 'NL'},
-            {name: 'Nova Scotia', abbreviation: 'NS'},
-            {name: 'Ontario', abbreviation: 'ON'},
-            {name: 'Prince Edward Island', abbreviation: 'PE'},
-            {name: 'Quebec', abbreviation: 'QC'},
-            {name: 'Saskatchewan', abbreviation: 'SK'},
+        provinces: {
+            "ca": [
+                {name: 'Alberta', abbreviation: 'AB'},
+                {name: 'British Columbia', abbreviation: 'BC'},
+                {name: 'Manitoba', abbreviation: 'MB'},
+                {name: 'New Brunswick', abbreviation: 'NB'},
+                {name: 'Newfoundland and Labrador', abbreviation: 'NL'},
+                {name: 'Nova Scotia', abbreviation: 'NS'},
+                {name: 'Ontario', abbreviation: 'ON'},
+                {name: 'Prince Edward Island', abbreviation: 'PE'},
+                {name: 'Quebec', abbreviation: 'QC'},
+                {name: 'Saskatchewan', abbreviation: 'SK'},
 
-            // The case could be made that the following are not actually provinces
-            // since they are technically considered "territories" however they all
-            // look the same on an envelope!
-            {name: 'Northwest Territories', abbreviation: 'NT'},
-            {name: 'Nunavut', abbreviation: 'NU'},
-            {name: 'Yukon', abbreviation: 'YT'}
-        ],
+                // The case could be made that the following are not actually provinces
+                // since they are technically considered "territories" however they all
+                // look the same on an envelope!
+                {name: 'Northwest Territories', abbreviation: 'NT'},
+                {name: 'Nunavut', abbreviation: 'NU'},
+                {name: 'Yukon', abbreviation: 'YT'}
+            ],
+            "it": [
+                { name: "Agrigento", abbreviation: "AG", code: 84 },
+                { name: "Alessandria", abbreviation: "AL", code: 6 },
+                { name: "Ancona", abbreviation: "AN", code: 42 },
+                { name: "Aosta", abbreviation: "AO", code: 7 },
+                { name: "L'Aquila", abbreviation: "AQ", code: 66 },
+                { name: "Arezzo", abbreviation: "AR", code: 51 },
+                { name: "Ascoli-Piceno", abbreviation: "AP", code: 44 },
+                { name: "Asti", abbreviation: "AT", code: 5 },
+                { name: "Avellino", abbreviation: "AV", code: 64 },
+                { name: "Bari", abbreviation: "BA", code: 72 },
+                { name: "Barletta-Andria-Trani", abbreviation: "BT", code: 72 },
+                { name: "Belluno", abbreviation: "BL", code: 25 },
+                { name: "Benevento", abbreviation: "BN", code: 62 },
+                { name: "Bergamo", abbreviation: "BG", code: 16 },
+                { name: "Biella", abbreviation: "BI", code: 96 },
+                { name: "Bologna", abbreviation: "BO", code: 37 },
+                { name: "Bolzano", abbreviation: "BZ", code: 21 },
+                { name: "Brescia", abbreviation: "BS", code: 17 },
+                { name: "Brindisi", abbreviation: "BR", code: 74 },
+                { name: "Cagliari", abbreviation: "CA", code: 92 },
+                { name: "Caltanissetta", abbreviation: "CL", code: 85 },
+                { name: "Campobasso", abbreviation: "CB", code: 70 },
+                { name: "Carbonia Iglesias", abbreviation: "CI", code: 70 },
+                { name: "Caserta", abbreviation: "CE", code: 61 },
+                { name: "Catania", abbreviation: "CT", code: 87 },
+                { name: "Catanzaro", abbreviation: "CZ", code: 79 },
+                { name: "Chieti", abbreviation: "CH", code: 69 },
+                { name: "Como", abbreviation: "CO", code: 13 },
+                { name: "Cosenza", abbreviation: "CS", code: 78 },
+                { name: "Cremona", abbreviation: "CR", code: 19 },
+                { name: "Crotone", abbreviation: "KR", code: 101 },
+                { name: "Cuneo", abbreviation: "CN", code: 4 },
+                { name: "Enna", abbreviation: "EN", code: 86 },
+                { name: "Fermo", abbreviation: "FM", code: 86 },
+                { name: "Ferrara", abbreviation: "FE", code: 38 },
+                { name: "Firenze", abbreviation: "FI", code: 48 },
+                { name: "Foggia", abbreviation: "FG", code: 71 },
+                { name: "Forli-Cesena", abbreviation: "FC", code: 71 },
+                { name: "Frosinone", abbreviation: "FR", code: 60 },
+                { name: "Genova", abbreviation: "GE", code: 10 },
+                { name: "Gorizia", abbreviation: "GO", code: 31 },
+                { name: "Grosseto", abbreviation: "GR", code: 53 },
+                { name: "Imperia", abbreviation: "IM", code: 8 },
+                { name: "Isernia", abbreviation: "IS", code: 94 },
+                { name: "La-Spezia", abbreviation: "SP", code: 66 },
+                { name: "Latina", abbreviation: "LT", code: 59 },
+                { name: "Lecce", abbreviation: "LE", code: 75 },
+                { name: "Lecco", abbreviation: "LC", code: 97 },
+                { name: "Livorno", abbreviation: "LI", code: 49 },
+                { name: "Lodi", abbreviation: "LO", code: 98 },
+                { name: "Lucca", abbreviation: "LU", code: 46 },
+                { name: "Macerata", abbreviation: "MC", code: 43 },
+                { name: "Mantova", abbreviation: "MN", code: 20 },
+                { name: "Massa-Carrara", abbreviation: "MS", code: 45 },
+                { name: "Matera", abbreviation: "MT", code: 77 },
+                { name: "Medio Campidano", abbreviation: "VS", code: 77 },
+                { name: "Messina", abbreviation: "ME", code: 83 },
+                { name: "Milano", abbreviation: "MI", code: 15 },
+                { name: "Modena", abbreviation: "MO", code: 36 },
+                { name: "Monza-Brianza", abbreviation: "MB", code: 36 },
+                { name: "Napoli", abbreviation: "NA", code: 63 },
+                { name: "Novara", abbreviation: "NO", code: 3 },
+                { name: "Nuoro", abbreviation: "NU", code: 91 },
+                { name: "Ogliastra", abbreviation: "OG", code: 91 },
+                { name: "Olbia Tempio", abbreviation: "OT", code: 91 },
+                { name: "Oristano", abbreviation: "OR", code: 95 },
+                { name: "Padova", abbreviation: "PD", code: 28 },
+                { name: "Palermo", abbreviation: "PA", code: 82 },
+                { name: "Parma", abbreviation: "PR", code: 34 },
+                { name: "Pavia", abbreviation: "PV", code: 18 },
+                { name: "Perugia", abbreviation: "PG", code: 54 },
+                { name: "Pesaro-Urbino", abbreviation: "PU", code: 41 },
+                { name: "Pescara", abbreviation: "PE", code: 68 },
+                { name: "Piacenza", abbreviation: "PC", code: 33 },
+                { name: "Pisa", abbreviation: "PI", code: 50 },
+                { name: "Pistoia", abbreviation: "PT", code: 47 },
+                { name: "Pordenone", abbreviation: "PN", code: 93 },
+                { name: "Potenza", abbreviation: "PZ", code: 76 },
+                { name: "Prato", abbreviation: "PO", code: 100 },
+                { name: "Ragusa", abbreviation: "RG", code: 88 },
+                { name: "Ravenna", abbreviation: "RA", code: 39 },
+                { name: "Reggio-Calabria", abbreviation: "RC", code: 35 },
+                { name: "Reggio-Emilia", abbreviation: "RE", code: 35 },
+                { name: "Rieti", abbreviation: "RI", code: 57 },
+                { name: "Rimini", abbreviation: "RN", code: 99 },
+                { name: "Roma", abbreviation: "Roma", code: 58 },
+                { name: "Rovigo", abbreviation: "RO", code: 29 },
+                { name: "Salerno", abbreviation: "SA", code: 65 },
+                { name: "Sassari", abbreviation: "SS", code: 90 },
+                { name: "Savona", abbreviation: "SV", code: 9 },
+                { name: "Siena", abbreviation: "SI", code: 52 },
+                { name: "Siracusa", abbreviation: "SR", code: 89 },
+                { name: "Sondrio", abbreviation: "SO", code: 14 },
+                { name: "Taranto", abbreviation: "TA", code: 73 },
+                { name: "Teramo", abbreviation: "TE", code: 67 },
+                { name: "Terni", abbreviation: "TR", code: 55 },
+                { name: "Torino", abbreviation: "TO", code: 1 },
+                { name: "Trapani", abbreviation: "TP", code: 81 },
+                { name: "Trento", abbreviation: "TN", code: 22 },
+                { name: "Treviso", abbreviation: "TV", code: 26 },
+                { name: "Trieste", abbreviation: "TS", code: 32 },
+                { name: "Udine", abbreviation: "UD", code: 30 },
+                { name: "Varese", abbreviation: "VA", code: 12 },
+                { name: "Venezia", abbreviation: "VE", code: 27 },
+                { name: "Verbania", abbreviation: "VB", code: 27 },
+                { name: "Vercelli", abbreviation: "VC", code: 2 },
+                { name: "Verona", abbreviation: "VR", code: 23 },
+                { name: "Vibo-Valentia", abbreviation: "VV", code: 102 },
+                { name: "Vicenza", abbreviation: "VI", code: 24 },
+                { name: "Viterbo", abbreviation: "VT", code: 56 }   
+            ]
+        },
 
             // from: https://github.com/samsargent/Useful-Autocomplete-Data/blob/master/data/nationalities.json
         nationalities: [
