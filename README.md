@@ -54,6 +54,7 @@ then in the HTML of your app:
     // Use Chance immediately!
     alert(chance.string());
 </script>
+```
 
 ### npm
 
