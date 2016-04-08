@@ -303,7 +303,7 @@
             "Chance: The first argument must be a function."
         );
 
-        var comparator = options.comparator || function(arr, val) { return arr.indexOf(val) !== -1; }
+        var comparator = options.comparator || function(arr, val) { return arr.indexOf(val) !== -1; };
 
         var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, params = slice.call(arguments, 2);
 
