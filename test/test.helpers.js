@@ -286,6 +286,14 @@ describe("Helpers", function () {
             });
         });
 
+        it("works properly with options", function () {
+            _(500).times(function () {
+                var arr = chance.unique(chance.date, 20, { year: 2016 });
+                expect(arr).to.be.an('array');
+                expect(_.uniq(arr).length).to.equal(20);
+            });
+        });
+
         it("throws a RangeError when num is likely out of range", function () {
             expect(function () {
                 chance.unique(chance.character, 10, {pool: 'abcde'});

@@ -303,19 +303,14 @@
             "Chance: The first argument must be a function."
         );
 
-        options = initOptions(options, {
-            // Default comparator to check that val is not already in arr.
-            // Should return `false` if item not in array, `true` otherwise
-            comparator: function(arr, val) {
-                return arr.indexOf(val) !== -1;
-            }
-        });
+        var comparator = options.comparator || function(arr, val) { return arr.indexOf(val) !== -1; }
 
         var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, params = slice.call(arguments, 2);
 
         while (arr.length < num) {
-            result = fn.apply(this, params);
-            if (!options.comparator(arr, result)) {
+            var clonedParams = JSON.parse(JSON.stringify(params));
+            result = fn.apply(this, clonedParams);
+            if (!comparator(arr, result)) {
                 arr.push(result);
                 // reset count when unique found
                 count = 0;
