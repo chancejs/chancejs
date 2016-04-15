@@ -83,9 +83,23 @@ describe("Address", function () {
             });
         });
 
+        it("state( { country: 'it' } ) returns a random (short) state name", function () {
+            _(1000).times(function () {
+                state = chance.state( { country: 'it' } );
+                expect(state.length).to.equal(3);
+            });
+        });
+
         it("state({full: true}) returns a random (long) state name", function () {
             _(1000).times(function () {
                 state = chance.state({full: true});
+                expect(state.length).to.be.above(2);
+            });
+        });
+
+        it("state({country: 'it', full: true}) returns a random (long) state name", function () {
+            _(1000).times(function () {
+                state = chance.state({country: 'it', full: true});
                 expect(state.length).to.be.above(2);
             });
         });
@@ -117,11 +131,19 @@ describe("Address", function () {
         it("states({territories: true, armed_forces: true, us_states_and_dc: false}) returns 7 US Territories and 3 Armed Forces Military States", function () {
             expect(chance.states({territories: true, armed_forces: true, us_states_and_dc: false})).to.have.length(10);
         });
+
+        it("states({country: 'it') returns 20 Italian Regions", function () {
+            expect(chance.states({country: 'it'})).to.have.length(20);
+        });
     });
 
     describe("Province", function () {
         it("provinces() returns an array of provinces", function () {
             expect(chance.provinces()).to.be.an('array');
+        });
+
+        it("provinces() to support internationalization", function () {
+            expect(chance.provinces()).not.to.equal(chance.provinces( { country: 'it' } ));
         });
 
         it("province() returns a random (short) province name", function () {
@@ -133,6 +155,12 @@ describe("Address", function () {
         it("province({full: true}) returns a random (long) province name", function () {
             _(1000).times(function () {
                 expect(chance.province({full: true})).to.have.length.above(2);
+            });
+        });
+
+        it("province({ country: 'it', full: true}) returns a random (long) province name", function () {
+            _(1000).times(function () {
+                expect(chance.province({country: 'it', full: true})).to.have.length.above(2);
             });
         });
     });
