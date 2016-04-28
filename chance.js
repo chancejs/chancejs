@@ -420,8 +420,8 @@
 
     // Returns a single item from an array with relative weighting of odds
     Chance.prototype.weighted = function (arr, weights) {
-        if (arr.length < weights.length) {
-            throw new RangeError("Chance: length of array must be at least as long as weights array");
+        if (arr.length !== weights.length) {
+            throw new RangeError("Chance: length of array and weights must match");
         }
 
         // scan weights array and sum valid entries
