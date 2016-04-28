@@ -426,14 +426,15 @@
 
         // scan weights array and sum valid entries
         var sum = 0;
+        var val;
         for (var weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
-            var val = weights[weightIndex];
+            val = weights[weightIndex];
             if (val > 0) {
                 sum += val;
             }
         }
 
-        if (sum == 0) {
+        if (sum === 0) {
             throw new RangeError("Chance: no valid entries in array weights");
         }
 
@@ -444,8 +445,8 @@
         var chosen;
         var total = 0;
         var lastGoodIdx = -1;
-        for (var weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
-            var val = weights[weightIndex];
+        for (weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
+            val = weights[weightIndex];
             if (val > 0) {
                 if (selected <= total + val) {
                     chosen = arr[weightIndex];
@@ -456,7 +457,7 @@
             }
 
             // handle any possible rounding error comparison to ensure something is picked
-            if (weightIndex == (weights.length - 1)) {
+            if (weightIndex === (weights.length - 1)) {
                 chosen = arr[lastGoodIdx];
             }
         }
