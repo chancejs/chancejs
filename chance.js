@@ -303,9 +303,11 @@
             "Chance: The first argument must be a function."
         );
 
-        options = initOptions(options, {
-            comparator: function(arr, val) { return arr.indexOf(val) !== -1; }
-        });
+        var comparator = function(arr, val) { return arr.indexOf(val) !== -1; };
+
+        if (options) {
+            comparator = options.comparator || comparator;
+        }
 
         var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, params = slice.call(arguments, 2);
 
