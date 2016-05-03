@@ -1,4 +1,4 @@
-//  Chance.js 1.0.2
+//  Chance.js 1.0.3
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -62,7 +62,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.0.2";
+    Chance.prototype.VERSION = "1.0.3";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -303,7 +303,11 @@
             "Chance: The first argument must be a function."
         );
 
-        var comparator = options.comparator || function(arr, val) { return arr.indexOf(val) !== -1; };
+        var comparator = function(arr, val) { return arr.indexOf(val) !== -1; };
+
+        if (options) {
+            comparator = options.comparator || comparator;
+        }
 
         var arr = [], count = 0, result, MAX_DUPLICATES = num * 50, params = slice.call(arguments, 2);
 
@@ -419,38 +423,55 @@
     };
 
     // Returns a single item from an array with relative weighting of odds
-    Chance.prototype.weighted = function(arr, weights) {
+    Chance.prototype.weighted = function (arr, weights, trim) {
         if (arr.length !== weights.length) {
             throw new RangeError("Chance: length of array and weights must match");
         }
 
-        // Handle weights that are less or equal to zero.
-        for (var weightIndex = weights.length - 1; weightIndex >= 0; --weightIndex) {
-            // If the weight is less or equal to zero, remove it and the value.
-            if (weights[weightIndex] <= 0) {
-                arr.splice(weightIndex,1);
-                weights.splice(weightIndex,1);
+        // scan weights array and sum valid entries
+        var sum = 0;
+        var val;
+        for (var weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
+            val = weights[weightIndex];
+            if (val > 0) {
+                sum += val;
             }
         }
 
-        var sum = weights.reduce(function(total, weight) {
-            return total + weight;
-        }, 0);
+        if (sum === 0) {
+            throw new RangeError("Chance: no valid entries in array weights");
+        }
 
-        // get an index
+        // select a value within range
         var selected = this.random() * sum;
 
+        // find array entry corresponding to selected value
         var total = 0;
-        var chosen;
-        // Using some() here so we can bail as soon as we get our match
-        weights.some(function(weight, index) {
-            if (selected <= total + weight) {
-                chosen = arr[index];
-                return true;
+        var lastGoodIdx = -1;
+        var chosenIdx;
+        for (weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
+            val = weights[weightIndex];
+            total += val;
+            if (val > 0) {
+                if (selected <= total) {
+                    chosenIdx = weightIndex;
+                    break;
+                }
+                lastGoodIdx = weightIndex;
             }
-            total += weight;
-            return false;
-        });
+
+            // handle any possible rounding error comparison to ensure something is picked
+            if (weightIndex === (weights.length - 1)) {
+                chosenIdx = lastGoodIdx;
+            }
+        }
+
+        var chosen = arr[chosenIdx];
+        trim = (typeof trim === 'undefined') ? false : trim;
+        if (trim) {
+            arr.splice(chosenIdx, 1);
+            weights.splice(chosenIdx, 1);
+        }
 
         return chosen;
     };
