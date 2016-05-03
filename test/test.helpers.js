@@ -327,6 +327,12 @@ describe("Helpers", function () {
                 expect(_.uniq(arr).length).to.equal(25);
             });
         });
+
+        it("works without a third argument", function () {
+            _(200).times(function() {
+                expect(chance.unique(chance.character, 10)).to.be.a('string');
+            });
+        });
     });
 
     describe("n random terms", function () {
