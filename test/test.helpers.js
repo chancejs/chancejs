@@ -330,7 +330,7 @@ describe("Helpers", function () {
 
         it("works without a third argument", function () {
             _(200).times(function() {
-                expect(chance.unique(chance.character, 10)).to.be.a('string');
+                expect(chance.unique(chance.character, 10)).to.be.an('array');
             });
         });
     });
