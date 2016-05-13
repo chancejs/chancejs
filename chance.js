@@ -591,7 +591,7 @@
 
         switch (options.type) {
             case 'child':
-                ageRange = {min: 1, max: 12};
+                ageRange = {min: 0, max: 12};
                 break;
             case 'teen':
                 ageRange = {min: 13, max: 19};
@@ -603,7 +603,7 @@
                 ageRange = {min: 65, max: 100};
                 break;
             case 'all':
-                ageRange = {min: 1, max: 100};
+                ageRange = {min: 0, max: 100};
                 break;
             default:
                 ageRange = {min: 18, max: 65};

@@ -4,13 +4,23 @@
 var expect = chai.expect;
 
 describe("Person", function () {
-    var name, first, last, nationality, prefix, suffix, ssn, chance = new Chance();
+    var name, first, last, nationality, prefix, suffix, ssn, chance = new Chance(),
+    CHILD_AGE_MIN = 0,
+    CHILD_AGE_MAX = 12,
+    TEEN_AGE_MIN = 13,
+    TEEN_AGE_MAX = 19,
+    ADULT_AGE_MIN = 18,
+    ADULT_AGE_MAX = 65,
+    SENIOR_AGE_MIN = 65,
+    SENIOR_AGE_MAX = 100,
+    AGE_MIN = 0,
+    AGE_MAX = 100;
 
     describe("age()", function () {
         it("returns a random age within expected bounds", function () {
             _(1000).times(function () {
                 expect(chance.age()).to.be.a('number');
-                expect(chance.age()).to.be.within(1, 100);
+                expect(chance.age()).to.be.within(AGE_MIN, AGE_MAX);
             });
         });
 
@@ -21,7 +31,7 @@ describe("Person", function () {
                 _(1000).times(function () {
                     age = chance.age({ type: 'child' });
                     expect(age).to.be.a('number');
-                    expect(age).to.be.within(1, 12);
+                    expect(age).to.be.within(CHILD_AGE_MIN, CHILD_AGE_MAX);
                 });
             });
 
@@ -29,7 +39,7 @@ describe("Person", function () {
                 _(1000).times(function () {
                     age = chance.age({ type: 'teen' });
                     expect(age).to.be.a('number');
-                    expect(age).to.be.within(13, 19);
+                    expect(age).to.be.within(TEEN_AGE_MIN, TEEN_AGE_MAX);
                 });
             });
 
@@ -37,7 +47,7 @@ describe("Person", function () {
                 _(1000).times(function () {
                     age = chance.age({ type: 'adult' });
                     expect(age).to.be.a('number');
-                    expect(age).to.be.within(18, 65);
+                    expect(age).to.be.within(ADULT_AGE_MIN, ADULT_AGE_MAX);
                 });
             });
 
@@ -45,15 +55,15 @@ describe("Person", function () {
                 _(1000).times(function () {
                     age = chance.age({ type: 'senior' });
                     expect(age).to.be.a('number');
-                    expect(age).to.be.within(65, 100);
+                    expect(age).to.be.within(SENIOR_AGE_MIN, SENIOR_AGE_MAX);
                 });
             });
         });
 
         it("can have the type specified", function () {
             _(1000).times(function () {
-                expect(chance.age({type: 'child'})).to.be.within(1, 13);
-                expect(chance.age({type: 'senior'})).to.be.within(65, 120);
+                expect(chance.age({type: 'child'})).to.be.within(CHILD_AGE_MIN, CHILD_AGE_MAX);
+                expect(chance.age({type: 'senior'})).to.be.within(SENIOR_AGE_MIN, SENIOR_AGE_MAX);
             });
         });
     });
@@ -62,7 +72,7 @@ describe("Person", function () {
         it("returns a random birthday", function () {
             _(1000).times(function () {
                 expect(chance.birthday()).to.be.a('Date');
-                expect(chance.birthday().getFullYear()).to.be.within((new Date().getFullYear() - 120), (new Date().getFullYear()));
+                expect(chance.birthday().getFullYear()).to.be.within((new Date().getFullYear() - AGE_MAX), (new Date().getFullYear()));
             });
         });
 
@@ -81,7 +91,7 @@ describe("Person", function () {
 
         it("can have an age range specified", function () {
             _(1000).times(function () {
-                expect(chance.birthday({type: 'child'}).getFullYear()).to.be.within((new Date().getFullYear() - 13), (new Date().getFullYear()));
+                expect(chance.birthday({type: 'child'}).getFullYear()).to.be.within((new Date().getFullYear() - CHILD_AGE_MAX), (new Date().getFullYear()));
             });
         });
     });
