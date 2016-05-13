@@ -614,9 +614,24 @@
     };
 
     Chance.prototype.birthday = function (options) {
-        options = initOptions(options, {
-            year: (new Date().getFullYear() - this.age(options))
-        });
+        var age = this.age(options);
+        var currentYear = new Date().getFullYear();
+
+        if (options && options.type) {
+            var min = new Date();
+            var max = new Date();
+            min.setFullYear(currentYear - age - 1);
+            max.setFullYear(currentYear - age);
+
+            options = initOptions(options, {
+                min: min,
+                max: max
+            });
+        } else {
+            options = initOptions(options, {
+                year: currentYear - age
+            });
+        }
 
         return this.date(options);
     };
@@ -1440,7 +1455,7 @@
             // 100,000,000 days measured relative to midnight at the beginning of 01 January, 1970 UTC. http://es5.github.io/#x15.9.1.1
             var max = typeof options.max !== "undefined" ? options.max.getTime() : 8640000000000000;
 
-            date = new Date(this.natural({min: min, max: max}));
+            date = new Date(this.integer({min: min, max: max}));
         } else {
             var m = this.month({raw: true});
             var daysInMonth = m.days;

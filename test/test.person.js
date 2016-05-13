@@ -89,9 +89,53 @@ describe("Person", function () {
             });
         });
 
-        it("can have an age range specified", function () {
-            _(1000).times(function () {
-                expect(chance.birthday({type: 'child'}).getFullYear()).to.be.within((new Date().getFullYear() - CHILD_AGE_MAX), (new Date().getFullYear()));
+        describe("can have an age range specified", function () {
+            var currentYear = new Date().getFullYear();
+
+            it("for an adult", function () {
+                _(1000).times(function () {
+                    // "Age" is the floor of someone's decimal age - if you are 65.75 years old, you are considered "65"
+                    // Someone who is "65" was born between 66 and 65 years ago
+                    var min = (new Date().setFullYear(currentYear - ADULT_AGE_MAX - 1));
+                    var max = (new Date().setFullYear(currentYear - ADULT_AGE_MIN));
+
+                    expect(chance.birthday({
+                        type: 'adult'
+                    }).getTime()).to.be.within(min, max);
+                });
+            });
+
+            it("for a teen", function () {
+                _(1000).times(function () {
+                    var min = (new Date().setFullYear(currentYear - TEEN_AGE_MAX - 1));
+                    var max = (new Date().setFullYear(currentYear - TEEN_AGE_MIN));
+
+                    expect(chance.birthday({
+                        type: 'teen'
+                    }).getTime()).to.be.within(min, max);
+                });
+            });
+
+            it("for a child", function () {
+                _(1000).times(function () {
+                    var min = (new Date().setFullYear(currentYear - CHILD_AGE_MAX - 1));
+                    var max = (new Date().setFullYear(currentYear - CHILD_AGE_MIN));
+
+                    expect(chance.birthday({
+                        type: 'child'
+                    }).getTime()).to.be.within(min, max);
+                });
+            });
+
+            it("for a senior", function () {
+                _(1000).times(function () {
+                    var min = (new Date().setFullYear(currentYear - SENIOR_AGE_MAX - 1));
+                    var max = (new Date().setFullYear(currentYear - SENIOR_AGE_MIN));
+
+                    expect(chance.birthday({
+                        type: 'senior'
+                    }).getTime()).to.be.within(min, max);
+                });
             });
         });
     });
