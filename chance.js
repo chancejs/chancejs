@@ -673,8 +673,9 @@
         return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);
     };
 
-    Chance.prototype.gender = function () {
-        return this.pick(['Male', 'Female']);
+    Chance.prototype.gender = function (options) {
+        options = initOptions(options, {extraGenders: []});
+        return this.pick(['Male', 'Female'].concat(options.extraGenders));
     };
 
     Chance.prototype.last = function (options) {
