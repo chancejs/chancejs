@@ -146,6 +146,13 @@ describe("Person", function () {
                 expect(chance.gender()).to.be.match(/(Male|Female)/);
             });
         });
+        describe("extra genders", function () {
+            it("returns a random gender", function () {
+                _(1000).times(function() {
+                    expect(chance.gender({extraGenders: ['Unknown', 'Transgender']})).to.be.match(/(Male|Female|Unknown|Transgender)/);
+                });     
+            });
+        });
     });
 
     describe("name()", function () {
