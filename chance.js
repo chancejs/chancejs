@@ -834,14 +834,12 @@
     Chance.prototype.HIDN= function(){
      //Hungarian ID nuber structure: XXXXXXYY (X=number,Y=Capital Latin letter)
       var idn_pool="0123456789";
-      var idn_length=6;
       var idn_chrs="ABCDEFGHIJKLMNOPQRSTUVWXYXZ";
       var idn="";
-
         idn+=this.string({pool:idn_pool,length:6});
         idn+=this.string({pool:idn_chrs,length:2});
         return idn;
-    }
+    };
 
 
     Chance.prototype.ssn = function (options) {
