@@ -499,15 +499,15 @@
             text, word_array = this.n(this.word, words);
 
         text = word_array.join(' ');
-        
+
         // Capitalize first letter of sentence
         text = this.capitalize(text);
-        
+
         // Make sure punctuation has a usable value
         if (punctuation !== false && !/^[\.\?;!:]$/.test(punctuation)) {
             punctuation = '.';
         }
-        
+
         // Add punctuation mark
         if (punctuation) {
             text += punctuation;
@@ -682,7 +682,7 @@
         options = initOptions(options, {nationality: 'en'});
         return this.pick(this.get("lastNames")[options.nationality.toLowerCase()]);
     };
-    
+
     Chance.prototype.israelId=function(){
         var x=this.string({pool: '0123456789',length:8});
         var y=0;
@@ -830,6 +830,17 @@
             this.pick(this.name_prefixes(options.gender)).name :
             this.pick(this.name_prefixes(options.gender)).abbreviation;
     };
+    //Hungarian ID number
+    Chance.prototype.HIDN= function(){
+     //Hungarian ID nuber structure: XXXXXXYY (X=number,Y=Capital Latin letter)
+      var idn_pool="0123456789";
+      var idn_chrs="ABCDEFGHIJKLMNOPQRSTUVWXYXZ";
+      var idn="";
+        idn+=this.string({pool:idn_pool,length:6});
+        idn+=this.string({pool:idn_chrs,length:2});
+        return idn;
+    };
+
 
     Chance.prototype.ssn = function (options) {
         options = initOptions(options, {ssnFour: false, dashes: true});
@@ -1013,11 +1024,11 @@
      * -> 0x
      * -> named color
      *
-     * #Examples: 
+     * #Examples:
      * ===============================================
      * * Geerate random hex color
      * chance.color() => '#79c157' / 'rgb(110,52,164)' / '0x67ae0b' / '#e2e2e2' / '#29CFA7'
-     * 
+     *
      * * Generate Hex based color value
      * chance.color({format: 'hex'})    => '#d67118'
      *
@@ -1025,14 +1036,14 @@
      * chance.color({format: 'rgb'})    => 'rgb(110,52,164)'
      *
      * * Generate Ox based color value
-     * chance.color({format: '0x'})     => '0x67ae0b' 
+     * chance.color({format: '0x'})     => '0x67ae0b'
      *
      * * Generate graiscale based value
      * chance.color({grayscale: true})  => '#e2e2e2'
      *
      * * Return valide color name
      * chance.color({format: 'name'})   => 'red'
-     * 
+     *
      * * Make color uppercase
      * chance.color({casing: 'upper'})  => '#29CFA7'
      *
@@ -1047,7 +1058,7 @@
 
         function rgb(hasAlpha) {
 
-            var rgbValue    = (hasAlpha)    ? 'rgba' : 'rgb'; 
+            var rgbValue    = (hasAlpha)    ? 'rgba' : 'rgb';
             var alphaChanal = (hasAlpha)    ? (',' + this.floating({min:0, max:1})) : "";
             var colorValue  = (isGrayscale) ? (gray(this.natural({max: 255}), ',')) : (this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}));
 
@@ -1057,7 +1068,7 @@
         function hex(start, end, withHash) {
 
             var simbol = (withHash) ? "#" : "";
-            var expression  = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end})); 
+            var expression  = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end}));
             return simbol + expression;
         }
 
@@ -1075,16 +1086,16 @@
         }
         else if (options.format === 'shorthex') {
             colorValue = hex.call(this, 1, 3, true);
-        } 
+        }
         else if (options.format === 'rgb') {
             colorValue = rgb.call(this, false);
-        } 
+        }
         else if (options.format === 'rgba') {
             colorValue = rgb.call(this, true);
-        } 
+        }
         else if (options.format === '0x') {
             colorValue = '0x' + hex.call(this, 2, 6);
-        } 
+        }
         else if(options.format === 'name') {
             return this.pick(this.get("colorNames"));
         }
@@ -1772,7 +1783,7 @@
                     if (temp.length > 3) {
                         if (isLast) {
                             temp = temp.substr(0,3);
-                        } else {                        
+                        } else {
                             temp = temp[0] + temp.substr(2,2);
                         }
                     }
@@ -1790,7 +1801,7 @@
             date_generator = function(birthday, gender, that) {
                 var lettermonths = ['A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T'];
 
-                return  birthday.getFullYear().toString().substr(2) + 
+                return  birthday.getFullYear().toString().substr(2) +
                         lettermonths[birthday.getMonth()] +
                         that.pad(birthday.getDate() + ((gender.toLowerCase() === "female") ? 40 : 0), 2);
             },
@@ -1983,71 +1994,71 @@
      * =====================================================
      * Generate random file name with extention
      *
-     * The argument provide extention type 
-     * -> raster 
+     * The argument provide extention type
+     * -> raster
      * -> vector
      * -> 3d
      * -> document
      *
-     * If noting is provided the function return random file name with random 
+     * If noting is provided the function return random file name with random
      * extention type of any kind
      *
-     * The user can validate the file name length range 
+     * The user can validate the file name length range
      * If noting provided the generated file name is radom
      *
      * #Extention Pool :
-     * * Currently the supported extentions are 
+     * * Currently the supported extentions are
      *  -> some of the most popular raster image extentions
      *  -> some of the most popular vector image extentions
      *  -> some of the most popular 3d image extentions
      *  -> some of the most popular document extentions
-     * 
+     *
      * #Examples :
      * =====================================================
      *
      * Return random file name with random extention. The file extention
      * is provided by a predifined collection of extentions. More abouth the extention
      * pool can be fond in #Extention Pool section
-     * 
-     * chance.file()                        
+     *
+     * chance.file()
      * => dsfsdhjf.xml
      *
-     * In order to generate a file name with sspecific length, specify the 
+     * In order to generate a file name with sspecific length, specify the
      * length property and integer value. The extention is going to be random
-     *  
-     * chance.file({length : 10})           
+     *
+     * chance.file({length : 10})
      * => asrtineqos.pdf
      *
      * In order to geerate file with extention form some of the predifined groups
      * of the extention pool just specify the extenton pool category in fileType property
-     *  
-     * chance.file({fileType : 'raster'})   
+     *
+     * chance.file({fileType : 'raster'})
      * => dshgssds.psd
      *
      * You can provide specific extention for your files
-     * chance.file({extention : 'html'})    
+     * chance.file({extention : 'html'})
      * => djfsd.html
      *
      * Or you could pass custom collection of extentons bt array or by object
-     * chance.file({extentions : [...]})    
+     * chance.file({extentions : [...]})
      * => dhgsdsd.psd
-     *  
+     *
      * chance.file({extentions : { key : [...], key : [...]}})
      * => djsfksdjsd.xml
-     * 
-     * @param  [collection] options 
+     *
+     * @param  [collection] options
      * @return [string]
-     * 
+     *
      */
     Chance.prototype.file = function(options) {
-        
+
         var fileOptions = options || {};
         var poolCollectionKey = "fileExtension";
         var typeRange   = Object.keys(this.get("fileExtension"));//['raster', 'vector', '3d', 'document'];
         var fileName;
         var fileExtention;
 
-        // Generate random file name 
+        // Generate random file name
         fileName = this.word({length : fileOptions.length});
 
         // Generate file by specific extention provided by the user
@@ -2066,7 +2077,7 @@
                 return (fileName + '.' + fileExtention);
             }
             else if(fileOptions.extentions.constructor === Object) {
-                
+
                 var extentionObjectCollection = fileOptions.extentions;
                 var keys = Object.keys(extentionObjectCollection);
 
@@ -2075,7 +2086,7 @@
             }
 
             throw new Error("Expect collection of type Array or Object to be passed as an argument ");
-        } 
+        }
 
         // Generate file extention based on specific file type
         if(fileOptions.fileType) {
@@ -2093,7 +2104,7 @@
         // Generate random file name if no extenton options are passed
         fileExtention = this.pickone(this.get(poolCollectionKey)[this.pickone(typeRange)]);
         return (fileName + '.' + fileExtention);
-    };     
+    };
 
     var data = {
 
@@ -2249,7 +2260,7 @@
                 { name: "Verona", abbreviation: "VR", code: 23 },
                 { name: "Vibo-Valentia", abbreviation: "VV", code: 102 },
                 { name: "Vicenza", abbreviation: "VI", code: 24 },
-                { name: "Viterbo", abbreviation: "VT", code: 56 }   
+                { name: "Viterbo", abbreviation: "VT", code: 56 }
             ]
         },
 
@@ -2399,7 +2410,7 @@
            {name: 'Polish'},
            {name: 'Portuguese'},
            {name: 'Qatari'},
-           {name: 'Romani'},          
+           {name: 'Romani'},
            {name: 'Russian'},
            {name: 'Rwandan'},
            {name: 'Saint Lucian'},
@@ -2858,7 +2869,7 @@
             {'code' : 'ZMW', 'name' : 'Zambia Kwacha'},
             {'code' : 'ZWD', 'name' : 'Zimbabwe Dollar'}
         ],
-        
+
         // return the names of all valide colors
         colorNames : [  "AliceBlue", "Black", "Navy", "DarkBlue", "MediumBlue", "Blue", "DarkGreen", "Green", "Teal", "DarkCyan", "DeepSkyBlue", "DarkTurquoise", "MediumSpringGreen", "Lime", "SpringGreen",
             "Aqua", "Cyan", "MidnightBlue", "DodgerBlue", "LightSeaGreen", "ForestGreen", "SeaGreen", "DarkSlateGray", "LimeGreen", "MediumSeaGreen", "Turquoise", "RoyalBlue", "SteelBlue", "DarkSlateBlue", "MediumTurquoise",
@@ -2869,7 +2880,7 @@
             "Crimson", "Gainsboro", "Plum", "BurlyWood", "LightCyan", "Lavender", "DarkSalmon", "Violet", "PaleGoldenRod", "LightCoral", "Khaki", "AliceBlue", "HoneyDew", "Azure", "SandyBrown", "Wheat", "Beige", "WhiteSmoke",
             "MintCream", "GhostWhite", "Salmon", "AntiqueWhite", "Linen", "LightGoldenRodYellow", "OldLace", "Red", "Fuchsia", "Magenta", "DeepPink", "OrangeRed", "Tomato", "HotPink", "Coral", "DarkOrange", "LightSalmon", "Orange",
             "LightPink", "Pink", "Gold", "PeachPuff", "NavajoWhite", "Moccasin", "Bisque", "MistyRose", "BlanchedAlmond", "PapayaWhip", "LavenderBlush", "SeaShell", "Cornsilk", "LemonChiffon", "FloralWhite", "Snow", "Yellow", "LightYellow"
-        ],        
+        ],
 
         fileExtension : {
             "raster"    : ["bmp", "gif", "gpl", "ico", "jpeg", "psd", "png", "psp", "raw", "tiff"],
