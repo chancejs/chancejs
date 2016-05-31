@@ -1472,7 +1472,7 @@
                 // for some reason.
                 month: m.numeric - 1,
                 day: this.natural({min: 1, max: daysInMonth}),
-                hour: this.hour(),
+                hour: this.hour({twentyfour: true}),
                 minute: this.minute(),
                 second: this.second(),
                 millisecond: this.millisecond(),
