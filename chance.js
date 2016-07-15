@@ -637,7 +637,11 @@
     };
 
     // CPF; ID to identify taxpayers in Brazil
-    Chance.prototype.cpf = function () {
+    Chance.prototype.cpf = function (options) {
+        options = initOptions(options, {
+            formatted: true
+        });
+        
         var n = this.n(this.natural, 9, { max: 9 });
         var d1 = n[8]*2+n[7]*3+n[6]*4+n[5]*5+n[4]*6+n[3]*7+n[2]*8+n[1]*9+n[0]*10;
         d1 = 11 - (d1 % 11);
@@ -649,11 +653,16 @@
         if (d2>=10) {
             d2 = 0;
         }
-        return ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
+        var cpf = ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
+        return options.formatted ? cpf : cpf.replace(/\D/g,'');
     };
 
     // CNPJ: ID to identify companies in Brazil
-    Chance.prototype.cnpj = function () {
+    Chance.prototype.cnpj = function (options) {
+        options = initOptions(options, {
+            formatted: true
+        });
+        
         var n = this.n(this.natural, 12, { max: 12 });
         var d1 = n[11]*2+n[10]*3+n[9]*4+n[8]*5+n[7]*6+n[6]*7+n[5]*8+n[4]*9+n[3]*2+n[2]*3+n[1]*4+n[0]*5;
         d1 = 11 - (d1 % 11);
@@ -665,7 +674,8 @@
         if (d2<2) {
             d2 = 0;
         }
-        return ''+n[0]+n[1]+'.'+n[2]+n[3]+n[4]+'.'+n[5]+n[6]+n[7]+'/'+n[8]+n[9]+n[10]+n[11]+'-'+d1+d2;
+        var cnpj = ''+n[0]+n[1]+'.'+n[2]+n[3]+n[4]+'.'+n[5]+n[6]+n[7]+'/'+n[8]+n[9]+n[10]+n[11]+'-'+d1+d2;
+        return options.formatted ? cnpj : cnpj.replace(/\D/g,'');
     };
 
     Chance.prototype.first = function (options) {
