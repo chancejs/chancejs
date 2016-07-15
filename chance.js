@@ -1321,14 +1321,14 @@
                         { area: '023 ' + this.character({ pool: '89' }), sections: [3,4] },
                         { area: '024 7', sections: [3,4] },
                         { area: '028 ' + this.pick(['25','28','37','71','82','90','92','95']), sections: [2,4] },
-                        { area: '012' + this.pick(['04','08','54','76','97','98']) + ' ', sections: [5] },
-                        { area: '013' + this.pick(['63','64','84','86']) + ' ', sections: [5] },
-                        { area: '014' + this.pick(['04','20','60','61','80','88']) + ' ', sections: [5] },
-                        { area: '015' + this.pick(['24','27','62','66']) + ' ', sections: [5] },
-                        { area: '016' + this.pick(['06','29','35','47','59','95']) + ' ', sections: [5] },
-                        { area: '017' + this.pick(['26','44','50','68']) + ' ', sections: [5] },
-                        { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [5] },
-                        { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [5] }
+                        { area: '012' + this.pick(['04','08','54','76','97','98']) + ' ', sections: [6] },
+                        { area: '013' + this.pick(['63','64','84','86']) + ' ', sections: [6] },
+                        { area: '014' + this.pick(['04','20','60','61','80','88']) + ' ', sections: [6] },
+                        { area: '015' + this.pick(['24','27','62','66']) + ' ', sections: [6] },
+                        { area: '016' + this.pick(['06','29','35','47','59','95']) + ' ', sections: [6] },
+                        { area: '017' + this.pick(['26','44','50','68']) + ' ', sections: [6] },
+                        { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [6] },
+                        { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [6] }
                     ]);
                     phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
                 } else {
