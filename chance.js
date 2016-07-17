@@ -1412,8 +1412,10 @@
                 break;
             case 'it':
                 states = this.get("country_regions")[options.country.toLowerCase()];
+                break;
             case 'uk':
                 states = this.get("counties")[options.country.toLowerCase()];
+                break;
         }
 
         return states;
