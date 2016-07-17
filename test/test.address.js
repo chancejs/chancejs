@@ -144,7 +144,7 @@ describe("Address", function () {
         });
 
         it("states({country: 'uk') returns 90 UK Conties", function () {
-            expect(chance.states({country: 'uk'})).to.have.length(20);
+            expect(chance.states({country: 'uk'})).to.have.length(90);
         });
     });
 
