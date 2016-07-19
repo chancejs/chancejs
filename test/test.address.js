@@ -104,6 +104,13 @@ describe("Address", function () {
             });
         });
 
+        it("state({country: 'uk', full: true}) returns a random (long) state name", function () {
+            _(1000).times(function () {
+                state = chance.state({country: 'uk', full: true});
+                expect(state.length).to.be.above(2);
+            });
+        });
+
         it("states() returns all 50 US States and DC", function () {
             expect(chance.states()).to.have.length(51);
         });
@@ -135,6 +142,10 @@ describe("Address", function () {
         it("states({country: 'it') returns 20 Italian Regions", function () {
             expect(chance.states({country: 'it'})).to.have.length(20);
         });
+
+        it("states({country: 'uk') returns 90 UK Conties", function () {
+            expect(chance.states({country: 'uk'})).to.have.length(90);
+        });
     });
 
     describe("Province", function () {
@@ -161,6 +172,24 @@ describe("Address", function () {
         it("province({ country: 'it', full: true}) returns a random (long) province name", function () {
             _(1000).times(function () {
                 expect(chance.province({country: 'it', full: true})).to.have.length.above(2);
+            });
+        });
+    });
+
+    describe("Counties", function () {
+        it("provinces() returns an array of counties", function () {
+            expect(chance.counties()).to.be.an('array');
+        });
+
+        it("counties({full: true}) returns a random (long) county name", function () {
+            _(1000).times(function () {
+                expect(chance.counties({full: true})).to.have.length.above(2);
+            });
+        });
+
+        it("province({ country: 'uk', full: true}) returns a random (long) county name", function () {
+            _(1000).times(function () {
+                expect(chance.counties({country: 'uk', full: true})).to.have.length.above(2);
             });
         });
     });
