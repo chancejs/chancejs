@@ -136,83 +136,91 @@ Please feel free to reach out to me if you have any questions or suggestions.
 THANK YOU!
 
 ```
- project  : chancejs
- repo age : 2 years, 10 months
- active   : 184 days
- commits  : 654
+project  : chancejs
+ repo age : 3 years, 1 month
+ active   : 195 days
+ commits  : 682
  files    : 28
  authors  :
-   434	Victor Quinn                66.4%
-    26	Oliver Salzburg             4.0%
-    13	Tim Petricola               2.0%
+   446	Victor Quinn                65.4%
+    26	Oliver Salzburg             3.8%
+    13	Tim Petricola               1.9%
     12	Alex DiLiberto              1.8%
-    11	Matteo Fogli                1.7%
-    11	davmillar                   1.7%
-     7	Jan Tojnar                  1.1%
-     7	AminaG                      1.1%
+    11	davmillar                   1.6%
+    11	Matteo Fogli                1.6%
+     7	Jan Tojnar                  1.0%
+     7	AminaG                      1.0%
+     7	jonbev                      1.0%
      6	Matt Klaber                 0.9%
      6	Patrick Mowrer              0.9%
-     5	Michael Cordingley          0.8%
-     4	anio                        0.6%
+     5	Michael Cordingley          0.7%
      4	Geoff Russel                0.6%
-     4	Abhijeet Pawar              0.6%
-     4	Avishaan                    0.6%
-     4	spayton                     0.6%
-     4	leesei                      0.6%
+     4	anio                        0.6%
      4	Chris Villarreal            0.6%
+     4	leesei                      0.6%
      4	Kevin Garnett               0.6%
+     4	Abhijeet Pawar              0.6%
+     4	spayton                     0.6%
      4	Dominic Barnes              0.6%
-     3	Alexandr Lozovyuk           0.5%
-     3	Nicholas Johnson            0.5%
-     3	qjcg                        0.5%
-     3	Nate Clark                  0.5%
+     4	Avishaan                    0.6%
+     3	Nicholas Johnson            0.4%
+     3	Nate Clark                  0.4%
+     3	qjcg                        0.4%
+     3	Alexandr Lozovyuk           0.4%
+     2	somejeff                    0.3%
+     2	Rafael Andrade de Oliveira  0.3%
+     2	Kris Van Houten             0.3%
+     2	vird                        0.3%
      2	xshyamx                     0.3%
      2	Adam Krebs                  0.3%
-     2	Andreas Koeberle            0.3%
-     2	Daniel Biedma               0.3%
      2	Franco Victorio             0.3%
-     2	Iskren Chernev              0.3%
-     2	Kris Van Houten             0.3%
+     2	The Usual Coder             0.3%
+     2	Michael Sakaluk             0.3%
      2	Mihail Petrov               0.3%
      2	Nathan MacInnes             0.3%
-     2	Ng Patrick                   0.3%
-     2	Pascal Borreli              0.3%
-     2	Rafael Andrade de Oliveira  0.3%
-     2	SeeSchloss                  0.3%
-     2	Stefan Penner               0.3%
-     2	The Usual Coder             0.3%
+     2	Ng Patrick                 0.3%
      2	dhilipsiva                  0.3%
+     2	Stefan Penner               0.3%
+     2	Iskren Chernev              0.3%
+     2	Cube ix                     0.3%
+     2	Daniel Biedma               0.3%
+     2	Pascal Borreli              0.3%
+     2	Andreas Koeberle            0.3%
+     2	SeeSchloss                  0.3%
      2	max4ever                    0.3%
      2	path411                     0.3%
      2	shyam                       0.3%
-     2	somejeff                    0.3%
-     2	vird                        0.3%
-     1	Billy Moon                  0.2%
-     1	Eu Rafa                     0.2%
-     1	Tomasz Ducin                0.2%
-     1	Drew Brokke                 0.2%
-     1	Winker Xiao                 0.2%
-     1	afc163                      0.2%
-     1	Doug Lawrence               0.2%
-     1	Danny Yates                 0.2%
-     1	ddunning                    0.2%
-     1	tsc                         0.2%
-     1	flaviolivolsi               0.2%
-     1	flrent                      0.2%
-     1	kiran                       0.2%
-     1	kkroner                     0.2%
-     1	Brian.Barnett               0.2%
-     1	Matt Altermatt              0.2%
-     1	Joshua Bemenderfer          0.2%
-     1	lkptrzk                     0.2%
-     1	Johannes Stein              0.2%
-     1	Piotrek Dąbrowski           0.2%
-     1	mamrehn                     0.2%
-     1	Richard Anaya               0.2%
-     1	Ryan Tenney                 0.2%
-     1	Samuel Greene               0.2%
-     1	Adam Pointer                0.2%
-     1	Bitdeli Chef                0.2%
+     1	mamrehn                     0.1%
+     1	Adam Pointer                0.1%
+     1	Amit Merchant               0.1%
+     1	Billy Moon                  0.1%
+     1	Bitdeli Chef                0.1%
+     1	Brian.Barnett               0.1%
+     1	Danny Yates                 0.1%
+     1	Doug Lawrence               0.1%
+     1	Drew Brokke                 0.1%
+     1	Eu Rafa                     0.1%
+     1	Guillaume Bourel            0.1%
+     1	Hilke Heremans              0.1%
+     1	Jean Paulo de Almeida       0.1%
+     1	Johannes Stein              0.1%
+     1	Joshua Bemenderfer          0.1%
+     1	Matt Altermatt              0.1%
+     1	Piotrek Dąbrowski           0.1%
+     1	Richard Anaya               0.1%
+     1	Ryan Tenney                 0.1%
+     1	Samuel Greene               0.1%
+     1	Thomas Rueckstiess          0.1%
+     1	Tomasz Ducin                0.1%
+     1	Winker Xiao                 0.1%
+     1	afc163                      0.1%
+     1	ddunning                    0.1%
+     1	flaviolivolsi               0.1%
+     1	flrent                      0.1%
+     1	kiran                       0.1%
+     1	kkroner                     0.1%
+     1	lkptrzk                     0.1%
+     1	tsc                         0.1%
 ```
 
 ### Contribute! 
