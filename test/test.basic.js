@@ -148,7 +148,7 @@ describe("Basics", function () {
             var positive_count = 0;
             _(1000).times(function () {
                 natural = chance.natural();
-                if (natural > 0) {
+                if (natural >= 0) {
                     positive_count++;
                 }
             });
