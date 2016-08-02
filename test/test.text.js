@@ -21,7 +21,7 @@ describe("Text", function () {
             _(1000).times(function () {
                 word = chance.word();
                 expect(word).to.be.a('string');
-                expect(syllable).to.have.length.within(2, 9);
+                expect(word).to.have.length.within(2, 9);
             });
         });
 
