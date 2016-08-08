@@ -1316,6 +1316,7 @@
                 if (!options.mobile) {
                     numPick = this.pick([
                         //valid area codes of major cities/counties followed by random numbers in required format.
+
                         { area: '01' + this.character({ pool: '234569' }) + '1 ', sections: [3,4] },
                         { area: '020 ' + this.character({ pool: '378' }), sections: [3,4] },
                         { area: '023 ' + this.character({ pool: '89' }), sections: [3,4] },
@@ -1339,6 +1340,30 @@
                     phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '');
                 }
                 break;
+            case 'za':
+                if (!options.mobile) {
+                    numPick = this.pick([
+                       '01' + this.pick(['0', '1', '2', '3', '4', '5', '6', '7', '8']) + self.string({ pool: '0123456789', length: 7}),
+                       '02' + this.pick(['1', '2', '3', '4', '7', '8']) + self.string({ pool: '0123456789', length: 7}),
+                       '03' + this.pick(['1', '2', '3', '5', '6', '9']) + self.string({ pool: '0123456789', length: 7}),
+                       '04' + this.pick(['1', '2', '3', '4', '5','6','7', '8','9']) + self.string({ pool: '0123456789', length: 7}),   
+                       '05' + this.pick(['1', '3', '4', '6', '7', '8']) + self.string({ pool: '0123456789', length: 7}),
+                    ]);
+                    phone = options.formatted ? numPick : numPick;
+                } else {
+                    numPick = this.pick([
+                        '060' + this.pick(['3','4','5','6','7','8','9']) + self.string({ pool: '0123456789', length: 6}),
+                        '061' + this.pick(['0','1','2','3','4','5','8']) + self.string({ pool: '0123456789', length: 6}),
+                        '06'  + self.string({ pool: '0123456789', length: 7}),
+                        '071' + this.pick(['0','1','2','3','4','5','6','7','8','9']) + self.string({ pool: '0123456789', length: 6}),
+                        '07'  + this.pick(['2','3','4','6','7','8','9']) + self.string({ pool: '0123456789', length: 7}),
+                        '08'  + this.pick(['0','1','2','3','4','5']) + self.string({ pool: '0123456789', length: 7}),                     
+                    ]);
+                    phone = options.formatted ? (numPick) : (numPick);
+                }
+                
+                break;
+
             case 'us':
                 var areacode = this.areacode(options).toString();
                 var exchange = this.natural({ min: 2, max: 9 }).toString() +
