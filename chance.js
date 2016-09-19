@@ -1200,6 +1200,10 @@
         return options.protocol + "://" + domain + "/" + options.path + extension;
     };
 
+    Chance.prototype.port = function() {
+        return this.integer({min: 0, max: 65535});
+    };
+
     // -- End Web --
 
     // -- Location --
