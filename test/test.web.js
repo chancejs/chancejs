@@ -463,9 +463,9 @@ describe("Web", function () {
     });
 
     describe('port()', function () {
-        it('should create an integer in the valid port range (0 - 65535)', function () {
+        it('should create a number in the valid port range (0 - 65535)', function () {
             var port = chance.port();
-            expect(port).to.be.a('integer');
+            expect(port).to.be.a('number');
             expect(port).to.be.at.least(0);
             expect(port).to.be.at.most(65535);
         });
