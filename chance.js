@@ -1,4 +1,4 @@
-//  Chance.js 1.0.3
+//  Chance.js 1.0.4
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -62,7 +62,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.0.3";
+    Chance.prototype.VERSION = "1.0.4";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -499,15 +499,15 @@
             text, word_array = this.n(this.word, words);
 
         text = word_array.join(' ');
-        
+
         // Capitalize first letter of sentence
         text = this.capitalize(text);
-        
+
         // Make sure punctuation has a usable value
         if (punctuation !== false && !/^[\.\?;!:]$/.test(punctuation)) {
             punctuation = '.';
         }
-        
+
         // Add punctuation mark
         if (punctuation) {
             text += punctuation;
@@ -591,7 +591,7 @@
 
         switch (options.type) {
             case 'child':
-                ageRange = {min: 1, max: 12};
+                ageRange = {min: 0, max: 12};
                 break;
             case 'teen':
                 ageRange = {min: 13, max: 19};
@@ -603,7 +603,7 @@
                 ageRange = {min: 65, max: 100};
                 break;
             case 'all':
-                ageRange = {min: 1, max: 100};
+                ageRange = {min: 0, max: 100};
                 break;
             default:
                 ageRange = {min: 18, max: 65};
@@ -614,15 +614,34 @@
     };
 
     Chance.prototype.birthday = function (options) {
-        options = initOptions(options, {
-            year: (new Date().getFullYear() - this.age(options))
-        });
+        var age = this.age(options);
+        var currentYear = new Date().getFullYear();
+
+        if (options && options.type) {
+            var min = new Date();
+            var max = new Date();
+            min.setFullYear(currentYear - age - 1);
+            max.setFullYear(currentYear - age);
+
+            options = initOptions(options, {
+                min: min,
+                max: max
+            });
+        } else {
+            options = initOptions(options, {
+                year: currentYear - age
+            });
+        }
 
         return this.date(options);
     };
 
     // CPF; ID to identify taxpayers in Brazil
-    Chance.prototype.cpf = function () {
+    Chance.prototype.cpf = function (options) {
+        options = initOptions(options, {
+            formatted: true
+        });
+
         var n = this.n(this.natural, 9, { max: 9 });
         var d1 = n[8]*2+n[7]*3+n[6]*4+n[5]*5+n[4]*6+n[3]*7+n[2]*8+n[1]*9+n[0]*10;
         d1 = 11 - (d1 % 11);
@@ -634,11 +653,16 @@
         if (d2>=10) {
             d2 = 0;
         }
-        return ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
+        var cpf = ''+n[0]+n[1]+n[2]+'.'+n[3]+n[4]+n[5]+'.'+n[6]+n[7]+n[8]+'-'+d1+d2;
+        return options.formatted ? cpf : cpf.replace(/\D/g,'');
     };
 
     // CNPJ: ID to identify companies in Brazil
-    Chance.prototype.cnpj = function () {
+    Chance.prototype.cnpj = function (options) {
+        options = initOptions(options, {
+            formatted: true
+        });
+
         var n = this.n(this.natural, 12, { max: 12 });
         var d1 = n[11]*2+n[10]*3+n[9]*4+n[8]*5+n[7]*6+n[6]*7+n[5]*8+n[4]*9+n[3]*2+n[2]*3+n[1]*4+n[0]*5;
         d1 = 11 - (d1 % 11);
@@ -650,7 +674,8 @@
         if (d2<2) {
             d2 = 0;
         }
-        return ''+n[0]+n[1]+'.'+n[2]+n[3]+n[4]+'.'+n[5]+n[6]+n[7]+'/'+n[8]+n[9]+n[10]+n[11]+'-'+d1+d2;
+        var cnpj = ''+n[0]+n[1]+'.'+n[2]+n[3]+n[4]+'.'+n[5]+n[6]+n[7]+'/'+n[8]+n[9]+n[10]+n[11]+'-'+d1+d2;
+        return options.formatted ? cnpj : cnpj.replace(/\D/g,'');
     };
 
     Chance.prototype.first = function (options) {
@@ -658,15 +683,16 @@
         return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);
     };
 
-    Chance.prototype.gender = function () {
-        return this.pick(['Male', 'Female']);
+    Chance.prototype.gender = function (options) {
+        options = initOptions(options, {extraGenders: []});
+        return this.pick(['Male', 'Female'].concat(options.extraGenders));
     };
 
     Chance.prototype.last = function (options) {
         options = initOptions(options, {nationality: 'en'});
         return this.pick(this.get("lastNames")[options.nationality.toLowerCase()]);
     };
-    
+
     Chance.prototype.israelId=function(){
         var x=this.string({pool: '0123456789',length:8});
         var y=0;
@@ -814,6 +840,17 @@
             this.pick(this.name_prefixes(options.gender)).name :
             this.pick(this.name_prefixes(options.gender)).abbreviation;
     };
+    //Hungarian ID number
+    Chance.prototype.HIDN= function(){
+     //Hungarian ID nuber structure: XXXXXXYY (X=number,Y=Capital Latin letter)
+      var idn_pool="0123456789";
+      var idn_chrs="ABCDEFGHIJKLMNOPQRSTUVWXYXZ";
+      var idn="";
+        idn+=this.string({pool:idn_pool,length:6});
+        idn+=this.string({pool:idn_chrs,length:2});
+        return idn;
+    };
+
 
     Chance.prototype.ssn = function (options) {
         options = initOptions(options, {ssnFour: false, dashes: true});
@@ -997,11 +1034,11 @@
      * -> 0x
      * -> named color
      *
-     * #Examples: 
+     * #Examples:
      * ===============================================
      * * Geerate random hex color
      * chance.color() => '#79c157' / 'rgb(110,52,164)' / '0x67ae0b' / '#e2e2e2' / '#29CFA7'
-     * 
+     *
      * * Generate Hex based color value
      * chance.color({format: 'hex'})    => '#d67118'
      *
@@ -1009,14 +1046,14 @@
      * chance.color({format: 'rgb'})    => 'rgb(110,52,164)'
      *
      * * Generate Ox based color value
-     * chance.color({format: '0x'})     => '0x67ae0b' 
+     * chance.color({format: '0x'})     => '0x67ae0b'
      *
      * * Generate graiscale based value
      * chance.color({grayscale: true})  => '#e2e2e2'
      *
      * * Return valide color name
      * chance.color({format: 'name'})   => 'red'
-     * 
+     *
      * * Make color uppercase
      * chance.color({casing: 'upper'})  => '#29CFA7'
      *
@@ -1031,7 +1068,7 @@
 
         function rgb(hasAlpha) {
 
-            var rgbValue    = (hasAlpha)    ? 'rgba' : 'rgb'; 
+            var rgbValue    = (hasAlpha)    ? 'rgba' : 'rgb';
             var alphaChanal = (hasAlpha)    ? (',' + this.floating({min:0, max:1})) : "";
             var colorValue  = (isGrayscale) ? (gray(this.natural({max: 255}), ',')) : (this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}));
 
@@ -1041,7 +1078,7 @@
         function hex(start, end, withHash) {
 
             var simbol = (withHash) ? "#" : "";
-            var expression  = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end})); 
+            var expression  = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end}));
             return simbol + expression;
         }
 
@@ -1059,16 +1096,16 @@
         }
         else if (options.format === 'shorthex') {
             colorValue = hex.call(this, 1, 3, true);
-        } 
+        }
         else if (options.format === 'rgb') {
             colorValue = rgb.call(this, false);
-        } 
+        }
         else if (options.format === 'rgba') {
             colorValue = rgb.call(this, true);
-        } 
+        }
         else if (options.format === '0x') {
             colorValue = '0x' + hex.call(this, 2, 6);
-        } 
+        }
         else if(options.format === 'name') {
             return this.pick(this.get("colorNames"));
         }
@@ -1161,6 +1198,10 @@
         var domain = options.domain_prefix ? options.domain_prefix + "." + options.domain : options.domain;
 
         return options.protocol + "://" + domain + "/" + options.path + extension;
+    };
+
+    Chance.prototype.port = function() {
+        return this.integer({min: 0, max: 65535});
     };
 
     // -- End Web --
@@ -1284,14 +1325,14 @@
                         { area: '023 ' + this.character({ pool: '89' }), sections: [3,4] },
                         { area: '024 7', sections: [3,4] },
                         { area: '028 ' + this.pick(['25','28','37','71','82','90','92','95']), sections: [2,4] },
-                        { area: '012' + this.pick(['04','08','54','76','97','98']) + ' ', sections: [5] },
-                        { area: '013' + this.pick(['63','64','84','86']) + ' ', sections: [5] },
-                        { area: '014' + this.pick(['04','20','60','61','80','88']) + ' ', sections: [5] },
-                        { area: '015' + this.pick(['24','27','62','66']) + ' ', sections: [5] },
-                        { area: '016' + this.pick(['06','29','35','47','59','95']) + ' ', sections: [5] },
-                        { area: '017' + this.pick(['26','44','50','68']) + ' ', sections: [5] },
-                        { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [5] },
-                        { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [5] }
+                        { area: '012' + this.pick(['04','08','54','76','97','98']) + ' ', sections: [6] },
+                        { area: '013' + this.pick(['63','64','84','86']) + ' ', sections: [6] },
+                        { area: '014' + this.pick(['04','20','60','61','80','88']) + ' ', sections: [6] },
+                        { area: '015' + this.pick(['24','27','62','66']) + ' ', sections: [6] },
+                        { area: '016' + this.pick(['06','29','35','47','59','95']) + ' ', sections: [6] },
+                        { area: '017' + this.pick(['26','44','50','68']) + ' ', sections: [6] },
+                        { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [6] },
+                        { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [6] }
                     ]);
                     phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
                 } else {
@@ -1322,6 +1363,15 @@
         var ldu = this.natural({max: 9}) + this.character({alpha: true, casing: "upper"}) + this.natural({max: 9});
 
         return fsa + " " + ldu;
+    };
+
+    Chance.prototype.counties = function (options) {
+        options = initOptions(options, { country: 'uk' });
+        return this.get("counties")[options.country.toLowerCase()];
+    };
+
+    Chance.prototype.county = function (options) {
+        return this.pick(this.counties(options)).name;
     };
 
     Chance.prototype.provinces = function (options) {
@@ -1366,6 +1416,10 @@
                 break;
             case 'it':
                 states = this.get("country_regions")[options.country.toLowerCase()];
+                break;
+            case 'uk':
+                states = this.get("counties")[options.country.toLowerCase()];
+                break;
         }
 
         return states;
@@ -1440,7 +1494,7 @@
             // 100,000,000 days measured relative to midnight at the beginning of 01 January, 1970 UTC. http://es5.github.io/#x15.9.1.1
             var max = typeof options.max !== "undefined" ? options.max.getTime() : 8640000000000000;
 
-            date = new Date(this.natural({min: min, max: max}));
+            date = new Date(this.integer({min: min, max: max}));
         } else {
             var m = this.month({raw: true});
             var daysInMonth = m.days;
@@ -1456,7 +1510,7 @@
                 // for some reason.
                 month: m.numeric - 1,
                 day: this.natural({min: 1, max: daysInMonth}),
-                hour: this.hour(),
+                hour: this.hour({twentyfour: true}),
                 minute: this.minute(),
                 second: this.second(),
                 millisecond: this.millisecond(),
@@ -1616,6 +1670,16 @@
         return this.pick(this.currency_types());
     };
 
+    //return all timezones availabel
+    Chance.prototype.timezones = function () {
+        return this.get("timezones");
+    };
+
+    //return random timezone
+    Chance.prototype.timezone = function () {
+        return this.pick(this.timezones());
+    };
+
     //Return random correct currency exchange pair (e.g. EUR/USD) or array of currency code
     Chance.prototype.currency_pair = function (returnAsString) {
         var currencies = this.unique(this.currency, 2, {
@@ -1756,7 +1820,7 @@
                     if (temp.length > 3) {
                         if (isLast) {
                             temp = temp.substr(0,3);
-                        } else {                        
+                        } else {
                             temp = temp[0] + temp.substr(2,2);
                         }
                     }
@@ -1774,7 +1838,7 @@
             date_generator = function(birthday, gender, that) {
                 var lettermonths = ['A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T'];
 
-                return  birthday.getFullYear().toString().substr(2) + 
+                return  birthday.getFullYear().toString().substr(2) +
                         lettermonths[birthday.getMonth()] +
                         that.pad(birthday.getDate() + ((gender.toLowerCase() === "female") ? 40 : 0), 2);
             },
@@ -1967,71 +2031,71 @@
      * =====================================================
      * Generate random file name with extention
      *
-     * The argument provide extention type 
-     * -> raster 
+     * The argument provide extention type
+     * -> raster
      * -> vector
      * -> 3d
      * -> document
      *
-     * If noting is provided the function return random file name with random 
+     * If noting is provided the function return random file name with random
      * extention type of any kind
      *
-     * The user can validate the file name length range 
+     * The user can validate the file name length range
      * If noting provided the generated file name is radom
      *
      * #Extention Pool :
-     * * Currently the supported extentions are 
+     * * Currently the supported extentions are
      *  -> some of the most popular raster image extentions
      *  -> some of the most popular vector image extentions
      *  -> some of the most popular 3d image extentions
      *  -> some of the most popular document extentions
-     * 
+     *
      * #Examples :
      * =====================================================
      *
      * Return random file name with random extention. The file extention
      * is provided by a predifined collection of extentions. More abouth the extention
      * pool can be fond in #Extention Pool section
-     * 
-     * chance.file()                        
+     *
+     * chance.file()
      * => dsfsdhjf.xml
      *
-     * In order to generate a file name with sspecific length, specify the 
+     * In order to generate a file name with sspecific length, specify the
      * length property and integer value. The extention is going to be random
-     *  
-     * chance.file({length : 10})           
+     *
+     * chance.file({length : 10})
      * => asrtineqos.pdf
      *
      * In order to geerate file with extention form some of the predifined groups
      * of the extention pool just specify the extenton pool category in fileType property
-     *  
-     * chance.file({fileType : 'raster'})   
+     *
+     * chance.file({fileType : 'raster'})
      * => dshgssds.psd
      *
      * You can provide specific extention for your files
-     * chance.file({extention : 'html'})    
+     * chance.file({extention : 'html'})
      * => djfsd.html
      *
      * Or you could pass custom collection of extentons bt array or by object
-     * chance.file({extentions : [...]})    
+     * chance.file({extentions : [...]})
      * => dhgsdsd.psd
-     *  
+     *
      * chance.file({extentions : { key : [...], key : [...]}})
      * => djsfksdjsd.xml
-     * 
-     * @param  [collection] options 
+     *
+     * @param  [collection] options
      * @return [string]
-     * 
+     *
      */
     Chance.prototype.file = function(options) {
-        
+
         var fileOptions = options || {};
         var poolCollectionKey = "fileExtension";
         var typeRange   = Object.keys(this.get("fileExtension"));//['raster', 'vector', '3d', 'document'];
         var fileName;
         var fileExtention;
 
-        // Generate random file name 
+        // Generate random file name
         fileName = this.word({length : fileOptions.length});
 
         // Generate file by specific extention provided by the user
@@ -2050,7 +2114,7 @@
                 return (fileName + '.' + fileExtention);
             }
             else if(fileOptions.extentions.constructor === Object) {
-                
+
                 var extentionObjectCollection = fileOptions.extentions;
                 var keys = Object.keys(extentionObjectCollection);
 
@@ -2059,7 +2123,7 @@
             }
 
             throw new Error("Expect collection of type Array or Object to be passed as an argument ");
-        } 
+        }
 
         // Generate file extention based on specific file type
         if(fileOptions.fileType) {
@@ -2077,7 +2141,7 @@
         // Generate random file name if no extenton options are passed
         fileExtention = this.pickone(this.get(poolCollectionKey)[this.pickone(typeRange)]);
         return (fileName + '.' + fileExtention);
-    };     
+    };
 
     var data = {
 
@@ -2100,9 +2164,103 @@
             "it": ["Acciai", "Aglietti", "Agostini", "Agresti", "Ahmed", "Aiazzi", "Albanese", "Alberti", "Alessi", "Alfani", "Alinari", "Alterini", "Amato", "Ammannati", "Ancillotti", "Andrei", "Andreini", "Andreoni", "Angeli", "Anichini", "Antonelli", "Antonini", "Arena", "Ariani", "Arnetoli", "Arrighi", "Baccani", "Baccetti", "Bacci", "Bacherini", "Badii", "Baggiani", "Baglioni", "Bagni", "Bagnoli", "Baldassini", "Baldi", "Baldini", "Ballerini", "Balli", "Ballini", "Balloni", "Bambi", "Banchi", "Bandinelli", "Bandini", "Bani", "Barbetti", "Barbieri", "Barchielli", "Bardazzi", "Bardelli", "Bardi", "Barducci", "Bargellini", "Bargiacchi", "Barni", "Baroncelli", "Baroncini", "Barone", "Baroni", "Baronti", "Bartalesi", "Bartoletti", "Bartoli", "Bartolini", "Bartoloni", "Bartolozzi", "Basagni", "Basile", "Bassi", "Batacchi", "Battaglia", "Battaglini", "Bausi", "Becagli", "Becattini", "Becchi", "Becucci", "Bellandi", "Bellesi", "Belli", "Bellini", "Bellucci", "Bencini", "Benedetti", "Benelli", "Beni", "Benini", "Bensi", "Benucci", "Benvenuti", "Berlincioni", "Bernacchioni", "Bernardi", "Bernardini", "Berni", "Bernini", "Bertelli", "Berti", "Bertini", "Bessi", "Betti", "Bettini", "Biagi", "Biagini", "Biagioni", "Biagiotti", "Biancalani", "Bianchi", "Bianchini", "Bianco", "Biffoli", "Bigazzi", "Bigi", "Biliotti", "Billi", "Binazzi", "Bindi", "Bini", "Biondi", "Bizzarri", "Bocci", "Bogani", "Bolognesi", "Bonaiuti", "Bonanni", "Bonciani", "Boncinelli", "Bondi", "Bonechi", "Bongini", "Boni", "Bonini", "Borchi", "Boretti", "Borghi", "Borghini", "Borgioli", "Borri", "Borselli", "Boschi", "Bottai", "Bracci", "Braccini", "Brandi", "Braschi", "Bravi", "Brazzini", "Breschi", "Brilli", "Brizzi", "Brogelli", "Brogi", "Brogioni", "Brunelli", "Brunetti", "Bruni", "Bruno", "Brunori", "Bruschi", "Bucci", "Bucciarelli", "Buccioni", "Bucelli", "Bulli", "Burberi", "Burchi", "Burgassi", "Burroni", "Bussotti", "Buti", "Caciolli", "Caiani", "Calabrese", "Calamai", "Calamandrei", "Caldini", "Calo'", "Calonaci", "Calosi", "Calvelli", "Cambi", "Camiciottoli", "Cammelli", "Cammilli", "Campolmi", "Cantini", "Capanni", "Capecchi", "Caponi", "Cappelletti", "Cappelli", "Cappellini", "Cappugi", "Capretti", "Caputo", "Carbone", "Carboni", "Cardini", "Carlesi", "Carletti", "Carli", "Caroti", "Carotti", "Carrai", "Carraresi", "Carta", "Caruso", "Casalini", "Casati", "Caselli", "Casini", "Castagnoli", "Castellani", "Castelli", "Castellucci", "Catalano", "Catarzi", "Catelani", "Cavaciocchi", "Cavallaro", "Cavallini", "Cavicchi", "Cavini", "Ceccarelli", "Ceccatelli", "Ceccherelli", "Ceccherini", "Cecchi", "Cecchini", "Cecconi", "Cei", "Cellai", "Celli", "Cellini", "Cencetti", "Ceni", "Cenni", "Cerbai", "Cesari", "Ceseri", "Checcacci", "Checchi", "Checcucci", "Cheli", "Chellini", "Chen", "Cheng", "Cherici", "Cherubini", "Chiaramonti", "Chiarantini", "Chiarelli", "Chiari", "Chiarini", "Chiarugi", "Chiavacci", "Chiesi", "Chimenti", "Chini", "Chirici", "Chiti", "Ciabatti", "Ciampi", "Cianchi", "Cianfanelli", "Cianferoni", "Ciani", "Ciapetti", "Ciappi", "Ciardi", "Ciatti", "Cicali", "Ciccone", "Cinelli", "Cini", "Ciobanu", "Ciolli", "Cioni", "Cipriani", "Cirillo", "Cirri", "Ciucchi", "Ciuffi", "Ciulli", "Ciullini", "Clemente", "Cocchi", "Cognome", "Coli", "Collini", "Colombo", "Colzi", "Comparini", "Conforti", "Consigli", "Conte", "Conti", "Contini", "Coppini", "Coppola", "Corsi", "Corsini", "Corti", "Cortini", "Cosi", "Costa", "Costantini", "Costantino", "Cozzi", "Cresci", "Crescioli", "Cresti", "Crini", "Curradi", "D'Agostino", "D'Alessandro", "D'Amico", "D'Angelo", "Daddi", "Dainelli", "Dallai", "Danti", "Davitti", "De Angelis", "De Luca", "De Marco", "De Rosa", "De Santis", "De Simone", "De Vita", "Degl'Innocenti", "Degli Innocenti", "Dei", "Del Lungo", "Del Re", "Di Marco", "Di Stefano", "Dini", "Diop", "Dobre", "Dolfi", "Donati", "Dondoli", "Dong", "Donnini", "Ducci", "Dumitru", "Ermini", "Esposito", "Evangelisti", "Fabbri", "Fabbrini", "Fabbrizzi", "Fabbroni", "Fabbrucci", "Fabiani", "Facchini", "Faggi", "Fagioli", "Failli", "Faini", "Falciani", "Falcini", "Falcone", "Fallani", "Falorni", "Falsini", "Falugiani", "Fancelli", "Fanelli", "Fanetti", "Fanfani", "Fani", "Fantappie'", "Fantechi", "Fanti", "Fantini", "Fantoni", "Farina", "Fattori", "Favilli", "Fedi", "Fei", "Ferrante", "Ferrara", "Ferrari", "Ferraro", "Ferretti", "Ferri", "Ferrini", "Ferroni", "Fiaschi", "Fibbi", "Fiesoli", "Filippi", "Filippini", "Fini", "Fioravanti", "Fiore", "Fiorentini", "Fiorini", "Fissi", "Focardi", "Foggi", "Fontana", "Fontanelli", "Fontani", "Forconi", "Formigli", "Forte", "Forti", "Fortini", "Fossati", "Fossi", "Francalanci", "Franceschi", "Franceschini", "Franchi", "Franchini", "Franci", "Francini", "Francioni", "Franco", "Frassineti", "Frati", "Fratini", "Frilli", "Frizzi", "Frosali", "Frosini", "Frullini", "Fusco", "Fusi", "Gabbrielli", "Gabellini", "Gagliardi", "Galanti", "Galardi", "Galeotti", "Galletti", "Galli", "Gallo", "Gallori", "Gambacciani", "Gargani", "Garofalo", "Garuglieri", "Gashi", "Gasperini", "Gatti", "Gelli", "Gensini", "Gentile", "Gentili", "Geri", "Gerini", "Gheri", "Ghini", "Giachetti", "Giachi", "Giacomelli", "Gianassi", "Giani", "Giannelli", "Giannetti", "Gianni", "Giannini", "Giannoni", "Giannotti", "Giannozzi", "Gigli", "Giordano", "Giorgetti", "Giorgi", "Giovacchini", "Giovannelli", "Giovannetti", "Giovannini", "Giovannoni", "Giuliani", "Giunti", "Giuntini", "Giusti", "Gonnelli", "Goretti", "Gori", "Gradi", "Gramigni", "Grassi", "Grasso", "Graziani", "Grazzini", "Greco", "Grifoni", "Grillo", "Grimaldi", "Grossi", "Gualtieri", "Guarducci", "Guarino", "Guarnieri", "Guasti", "Guerra", "Guerri", "Guerrini", "Guidi", "Guidotti", "He", "Hoxha", "Hu", "Huang", "Iandelli", "Ignesti", "Innocenti", "Jin", "La Rosa", "Lai", "Landi", "Landini", "Lanini", "Lapi", "Lapini", "Lari", "Lascialfari", "Lastrucci", "Latini", "Lazzeri", "Lazzerini", "Lelli", "Lenzi", "Leonardi", "Leoncini", "Leone", "Leoni", "Lepri", "Li", "Liao", "Lin", "Linari", "Lippi", "Lisi", "Livi", "Lombardi", "Lombardini", "Lombardo", "Longo", "Lopez", "Lorenzi", "Lorenzini", "Lorini", "Lotti", "Lu", "Lucchesi", "Lucherini", "Lunghi", "Lupi", "Madiai", "Maestrini", "Maffei", "Maggi", "Maggini", "Magherini", "Magini", "Magnani", "Magnelli", "Magni", "Magnolfi", "Magrini", "Malavolti", "Malevolti", "Manca", "Mancini", "Manetti", "Manfredi", "Mangani", "Mannelli", "Manni", "Mannini", "Mannucci", "Manuelli", "Manzini", "Marcelli", "Marchese", "Marchetti", "Marchi", "Marchiani", "Marchionni", "Marconi", "Marcucci", "Margheri", "Mari", "Mariani", "Marilli", "Marinai", "Marinari", "Marinelli", "Marini", "Marino", "Mariotti", "Marsili", "Martelli", "Martinelli", "Martini", "Martino", "Marzi", "Masi", "Masini", "Masoni", "Massai", "Materassi", "Mattei", "Matteini", "Matteucci", "Matteuzzi", "Mattioli", "Mattolini", "Matucci", "Mauro", "Mazzanti", "Mazzei", "Mazzetti", "Mazzi", "Mazzini", "Mazzocchi", "Mazzoli", "Mazzoni", "Mazzuoli", "Meacci", "Mecocci", "Meini", "Melani", "Mele", "Meli", "Mengoni", "Menichetti", "Meoni", "Merlini", "Messeri", "Messina", "Meucci", "Miccinesi", "Miceli", "Micheli", "Michelini", "Michelozzi", "Migliori", "Migliorini", "Milani", "Miniati", "Misuri", "Monaco", "Montagnani", "Montagni", "Montanari", "Montelatici", "Monti", "Montigiani", "Montini", "Morandi", "Morandini", "Morelli", "Moretti", "Morganti", "Mori", "Morini", "Moroni", "Morozzi", "Mugnai", "Mugnaini", "Mustafa", "Naldi", "Naldini", "Nannelli", "Nanni", "Nannini", "Nannucci", "Nardi", "Nardini", "Nardoni", "Natali", "Ndiaye", "Nencetti", "Nencini", "Nencioni", "Neri", "Nesi", "Nesti", "Niccolai", "Niccoli", "Niccolini", "Nigi", "Nistri", "Nocentini", "Noferini", "Novelli", "Nucci", "Nuti", "Nutini", "Oliva", "Olivieri", "Olmi", "Orlandi", "Orlandini", "Orlando", "Orsini", "Ortolani", "Ottanelli", "Pacciani", "Pace", "Paci", "Pacini", "Pagani", "Pagano", "Paggetti", "Pagliai", "Pagni", "Pagnini", "Paladini", "Palagi", "Palchetti", "Palloni", "Palmieri", "Palumbo", "Pampaloni", "Pancani", "Pandolfi", "Pandolfini", "Panerai", "Panichi", "Paoletti", "Paoli", "Paolini", "Papi", "Papini", "Papucci", "Parenti", "Parigi", "Parisi", "Parri", "Parrini", "Pasquini", "Passeri", "Pecchioli", "Pecorini", "Pellegrini", "Pepi", "Perini", "Perrone", "Peruzzi", "Pesci", "Pestelli", "Petri", "Petrini", "Petrucci", "Pettini", "Pezzati", "Pezzatini", "Piani", "Piazza", "Piazzesi", "Piazzini", "Piccardi", "Picchi", "Piccini", "Piccioli", "Pieraccini", "Pieraccioni", "Pieralli", "Pierattini", "Pieri", "Pierini", "Pieroni", "Pietrini", "Pini", "Pinna", "Pinto", "Pinzani", "Pinzauti", "Piras", "Pisani", "Pistolesi", "Poggesi", "Poggi", "Poggiali", "Poggiolini", "Poli", "Pollastri", "Porciani", "Pozzi", "Pratellesi", "Pratesi", "Prosperi", "Pruneti", "Pucci", "Puccini", "Puccioni", "Pugi", "Pugliese", "Puliti", "Querci", "Quercioli", "Raddi", "Radu", "Raffaelli", "Ragazzini", "Ranfagni", "Ranieri", "Rastrelli", "Raugei", "Raveggi", "Renai", "Renzi", "Rettori", "Ricci", "Ricciardi", "Ridi", "Ridolfi", "Rigacci", "Righi", "Righini", "Rinaldi", "Risaliti", "Ristori", "Rizzo", "Rocchi", "Rocchini", "Rogai", "Romagnoli", "Romanelli", "Romani", "Romano", "Romei", "Romeo", "Romiti", "Romoli", "Romolini", "Rontini", "Rosati", "Roselli", "Rosi", "Rossetti", "Rossi", "Rossini", "Rovai", "Ruggeri", "Ruggiero", "Russo", "Sabatini", "Saccardi", "Sacchetti", "Sacchi", "Sacco", "Salerno", "Salimbeni", "Salucci", "Salvadori", "Salvestrini", "Salvi", "Salvini", "Sanesi", "Sani", "Sanna", "Santi", "Santini", "Santoni", "Santoro", "Santucci", "Sardi", "Sarri", "Sarti", "Sassi", "Sbolci", "Scali", "Scarpelli", "Scarselli", "Scopetani", "Secci", "Selvi", "Senatori", "Senesi", "Serafini", "Sereni", "Serra", "Sestini", "Sguanci", "Sieni", "Signorini", "Silvestri", "Simoncini", "Simonetti", "Simoni", "Singh", "Sodi", "Soldi", "Somigli", "Sorbi", "Sorelli", "Sorrentino", "Sottili", "Spina", "Spinelli", "Staccioli", "Staderini", "Stefanelli", "Stefani", "Stefanini", "Stella", "Susini", "Tacchi", "Tacconi", "Taddei", "Tagliaferri", "Tamburini", "Tanganelli", "Tani", "Tanini", "Tapinassi", "Tarchi", "Tarchiani", "Targioni", "Tassi", "Tassini", "Tempesti", "Terzani", "Tesi", "Testa", "Testi", "Tilli", "Tinti", "Tirinnanzi", "Toccafondi", "Tofanari", "Tofani", "Tognaccini", "Tonelli", "Tonini", "Torelli", "Torrini", "Tosi", "Toti", "Tozzi", "Trambusti", "Trapani", "Tucci", "Turchi", "Ugolini", "Ulivi", "Valente", "Valenti", "Valentini", "Vangelisti", "Vanni", "Vannini", "Vannoni", "Vannozzi", "Vannucchi", "Vannucci", "Ventura", "Venturi", "Venturini", "Vestri", "Vettori", "Vichi", "Viciani", "Vieri", "Vigiani", "Vignoli", "Vignolini", "Vignozzi", "Villani", "Vinci", "Visani", "Vitale", "Vitali", "Viti", "Viviani", "Vivoli", "Volpe", "Volpi", "Wang", "Wu", "Xu", "Yang", "Ye", "Zagli", "Zani", "Zanieri", "Zanobini", "Zecchi", "Zetti", "Zhang", "Zheng", "Zhou", "Zhu", "Zingoni", "Zini", "Zoppi"]
         },
 
-        // Data taken from https://github.com/umpirsky/country-list/blob/master/country/cldr/en_US/country.json
-        countries: [{"name":"Afghanistan","abbreviation":"AF"},{"name":"Albania","abbreviation":"AL"},{"name":"Algeria","abbreviation":"DZ"},{"name":"American Samoa","abbreviation":"AS"},{"name":"Andorra","abbreviation":"AD"},{"name":"Angola","abbreviation":"AO"},{"name":"Anguilla","abbreviation":"AI"},{"name":"Antarctica","abbreviation":"AQ"},{"name":"Antigua and Barbuda","abbreviation":"AG"},{"name":"Argentina","abbreviation":"AR"},{"name":"Armenia","abbreviation":"AM"},{"name":"Aruba","abbreviation":"AW"},{"name":"Australia","abbreviation":"AU"},{"name":"Austria","abbreviation":"AT"},{"name":"Azerbaijan","abbreviation":"AZ"},{"name":"Bahamas","abbreviation":"BS"},{"name":"Bahrain","abbreviation":"BH"},{"name":"Bangladesh","abbreviation":"BD"},{"name":"Barbados","abbreviation":"BB"},{"name":"Belarus","abbreviation":"BY"},{"name":"Belgium","abbreviation":"BE"},{"name":"Belize","abbreviation":"BZ"},{"name":"Benin","abbreviation":"BJ"},{"name":"Bermuda","abbreviation":"BM"},{"name":"Bhutan","abbreviation":"BT"},{"name":"Bolivia","abbreviation":"BO"},{"name":"Bosnia and Herzegovina","abbreviation":"BA"},{"name":"Botswana","abbreviation":"BW"},{"name":"Bouvet Island","abbreviation":"BV"},{"name":"Brazil","abbreviation":"BR"},{"name":"British Antarctic Territory","abbreviation":"BQ"},{"name":"British Indian Ocean Territory","abbreviation":"IO"},{"name":"British Virgin Islands","abbreviation":"VG"},{"name":"Brunei","abbreviation":"BN"},{"name":"Bulgaria","abbreviation":"BG"},{"name":"Burkina Faso","abbreviation":"BF"},{"name":"Burundi","abbreviation":"BI"},{"name":"Cambodia","abbreviation":"KH"},{"name":"Cameroon","abbreviation":"CM"},{"name":"Canada","abbreviation":"CA"},{"name":"Canton and Enderbury Islands","abbreviation":"CT"},{"name":"Cape Verde","abbreviation":"CV"},{"name":"Cayman Islands","abbreviation":"KY"},{"name":"Central African Republic","abbreviation":"CF"},{"name":"Chad","abbreviation":"TD"},{"name":"Chile","abbreviation":"CL"},{"name":"China","abbreviation":"CN"},{"name":"Christmas Island","abbreviation":"CX"},{"name":"Cocos [Keeling] Islands","abbreviation":"CC"},{"name":"Colombia","abbreviation":"CO"},{"name":"Comoros","abbreviation":"KM"},{"name":"Congo - Brazzaville","abbreviation":"CG"},{"name":"Congo - Kinshasa","abbreviation":"CD"},{"name":"Cook Islands","abbreviation":"CK"},{"name":"Costa Rica","abbreviation":"CR"},{"name":"Croatia","abbreviation":"HR"},{"name":"Cuba","abbreviation":"CU"},{"name":"Cyprus","abbreviation":"CY"},{"name":"Czech Republic","abbreviation":"CZ"},{"name":"Côte d’Ivoire","abbreviation":"CI"},{"name":"Denmark","abbreviation":"DK"},{"name":"Djibouti","abbreviation":"DJ"},{"name":"Dominica","abbreviation":"DM"},{"name":"Dominican Republic","abbreviation":"DO"},{"name":"Dronning Maud Land","abbreviation":"NQ"},{"name":"East Germany","abbreviation":"DD"},{"name":"Ecuador","abbreviation":"EC"},{"name":"Egypt","abbreviation":"EG"},{"name":"El Salvador","abbreviation":"SV"},{"name":"Equatorial Guinea","abbreviation":"GQ"},{"name":"Eritrea","abbreviation":"ER"},{"name":"Estonia","abbreviation":"EE"},{"name":"Ethiopia","abbreviation":"ET"},{"name":"Falkland Islands","abbreviation":"FK"},{"name":"Faroe Islands","abbreviation":"FO"},{"name":"Fiji","abbreviation":"FJ"},{"name":"Finland","abbreviation":"FI"},{"name":"France","abbreviation":"FR"},{"name":"French Guiana","abbreviation":"GF"},{"name":"French Polynesia","abbreviation":"PF"},{"name":"French Southern Territories","abbreviation":"TF"},{"name":"French Southern and Antarctic Territories","abbreviation":"FQ"},{"name":"Gabon","abbreviation":"GA"},{"name":"Gambia","abbreviation":"GM"},{"name":"Georgia","abbreviation":"GE"},{"name":"Germany","abbreviation":"DE"},{"name":"Ghana","abbreviation":"GH"},{"name":"Gibraltar","abbreviation":"GI"},{"name":"Greece","abbreviation":"GR"},{"name":"Greenland","abbreviation":"GL"},{"name":"Grenada","abbreviation":"GD"},{"name":"Guadeloupe","abbreviation":"GP"},{"name":"Guam","abbreviation":"GU"},{"name":"Guatemala","abbreviation":"GT"},{"name":"Guernsey","abbreviation":"GG"},{"name":"Guinea","abbreviation":"GN"},{"name":"Guinea-Bissau","abbreviation":"GW"},{"name":"Guyana","abbreviation":"GY"},{"name":"Haiti","abbreviation":"HT"},{"name":"Heard Island and McDonald Islands","abbreviation":"HM"},{"name":"Honduras","abbreviation":"HN"},{"name":"Hong Kong SAR China","abbreviation":"HK"},{"name":"Hungary","abbreviation":"HU"},{"name":"Iceland","abbreviation":"IS"},{"name":"India","abbreviation":"IN"},{"name":"Indonesia","abbreviation":"ID"},{"name":"Iran","abbreviation":"IR"},{"name":"Iraq","abbreviation":"IQ"},{"name":"Ireland","abbreviation":"IE"},{"name":"Isle of Man","abbreviation":"IM"},{"name":"Israel","abbreviation":"IL"},{"name":"Italy","abbreviation":"IT"},{"name":"Jamaica","abbreviation":"JM"},{"name":"Japan","abbreviation":"JP"},{"name":"Jersey","abbreviation":"JE"},{"name":"Johnston Island","abbreviation":"JT"},{"name":"Jordan","abbreviation":"JO"},{"name":"Kazakhstan","abbreviation":"KZ"},{"name":"Kenya","abbreviation":"KE"},{"name":"Kiribati","abbreviation":"KI"},{"name":"Kuwait","abbreviation":"KW"},{"name":"Kyrgyzstan","abbreviation":"KG"},{"name":"Laos","abbreviation":"LA"},{"name":"Latvia","abbreviation":"LV"},{"name":"Lebanon","abbreviation":"LB"},{"name":"Lesotho","abbreviation":"LS"},{"name":"Liberia","abbreviation":"LR"},{"name":"Libya","abbreviation":"LY"},{"name":"Liechtenstein","abbreviation":"LI"},{"name":"Lithuania","abbreviation":"LT"},{"name":"Luxembourg","abbreviation":"LU"},{"name":"Macau SAR China","abbreviation":"MO"},{"name":"Macedonia","abbreviation":"MK"},{"name":"Madagascar","abbreviation":"MG"},{"name":"Malawi","abbreviation":"MW"},{"name":"Malaysia","abbreviation":"MY"},{"name":"Maldives","abbreviation":"MV"},{"name":"Mali","abbreviation":"ML"},{"name":"Malta","abbreviation":"MT"},{"name":"Marshall Islands","abbreviation":"MH"},{"name":"Martinique","abbreviation":"MQ"},{"name":"Mauritania","abbreviation":"MR"},{"name":"Mauritius","abbreviation":"MU"},{"name":"Mayotte","abbreviation":"YT"},{"name":"Metropolitan France","abbreviation":"FX"},{"name":"Mexico","abbreviation":"MX"},{"name":"Micronesia","abbreviation":"FM"},{"name":"Midway Islands","abbreviation":"MI"},{"name":"Moldova","abbreviation":"MD"},{"name":"Monaco","abbreviation":"MC"},{"name":"Mongolia","abbreviation":"MN"},{"name":"Montenegro","abbreviation":"ME"},{"name":"Montserrat","abbreviation":"MS"},{"name":"Morocco","abbreviation":"MA"},{"name":"Mozambique","abbreviation":"MZ"},{"name":"Myanmar [Burma]","abbreviation":"MM"},{"name":"Namibia","abbreviation":"NA"},{"name":"Nauru","abbreviation":"NR"},{"name":"Nepal","abbreviation":"NP"},{"name":"Netherlands","abbreviation":"NL"},{"name":"Netherlands Antilles","abbreviation":"AN"},{"name":"Neutral Zone","abbreviation":"NT"},{"name":"New Caledonia","abbreviation":"NC"},{"name":"New Zealand","abbreviation":"NZ"},{"name":"Nicaragua","abbreviation":"NI"},{"name":"Niger","abbreviation":"NE"},{"name":"Nigeria","abbreviation":"NG"},{"name":"Niue","abbreviation":"NU"},{"name":"Norfolk Island","abbreviation":"NF"},{"name":"North Korea","abbreviation":"KP"},{"name":"North Vietnam","abbreviation":"VD"},{"name":"Northern Mariana Islands","abbreviation":"MP"},{"name":"Norway","abbreviation":"NO"},{"name":"Oman","abbreviation":"OM"},{"name":"Pacific Islands Trust Territory","abbreviation":"PC"},{"name":"Pakistan","abbreviation":"PK"},{"name":"Palau","abbreviation":"PW"},{"name":"Palestinian Territories","abbreviation":"PS"},{"name":"Panama","abbreviation":"PA"},{"name":"Panama Canal Zone","abbreviation":"PZ"},{"name":"Papua New Guinea","abbreviation":"PG"},{"name":"Paraguay","abbreviation":"PY"},{"name":"People's Democratic Republic of Yemen","abbreviation":"YD"},{"name":"Peru","abbreviation":"PE"},{"name":"Philippines","abbreviation":"PH"},{"name":"Pitcairn Islands","abbreviation":"PN"},{"name":"Poland","abbreviation":"PL"},{"name":"Portugal","abbreviation":"PT"},{"name":"Puerto Rico","abbreviation":"PR"},{"name":"Qatar","abbreviation":"QA"},{"name":"Romania","abbreviation":"RO"},{"name":"Russia","abbreviation":"RU"},{"name":"Rwanda","abbreviation":"RW"},{"name":"Réunion","abbreviation":"RE"},{"name":"Saint Barthélemy","abbreviation":"BL"},{"name":"Saint Helena","abbreviation":"SH"},{"name":"Saint Kitts and Nevis","abbreviation":"KN"},{"name":"Saint Lucia","abbreviation":"LC"},{"name":"Saint Martin","abbreviation":"MF"},{"name":"Saint Pierre and Miquelon","abbreviation":"PM"},{"name":"Saint Vincent and the Grenadines","abbreviation":"VC"},{"name":"Samoa","abbreviation":"WS"},{"name":"San Marino","abbreviation":"SM"},{"name":"Saudi Arabia","abbreviation":"SA"},{"name":"Senegal","abbreviation":"SN"},{"name":"Serbia","abbreviation":"RS"},{"name":"Serbia and Montenegro","abbreviation":"CS"},{"name":"Seychelles","abbreviation":"SC"},{"name":"Sierra Leone","abbreviation":"SL"},{"name":"Singapore","abbreviation":"SG"},{"name":"Slovakia","abbreviation":"SK"},{"name":"Slovenia","abbreviation":"SI"},{"name":"Solomon Islands","abbreviation":"SB"},{"name":"Somalia","abbreviation":"SO"},{"name":"South Africa","abbreviation":"ZA"},{"name":"South Georgia and the South Sandwich Islands","abbreviation":"GS"},{"name":"South Korea","abbreviation":"KR"},{"name":"Spain","abbreviation":"ES"},{"name":"Sri Lanka","abbreviation":"LK"},{"name":"Sudan","abbreviation":"SD"},{"name":"Suriname","abbreviation":"SR"},{"name":"Svalbard and Jan Mayen","abbreviation":"SJ"},{"name":"Swaziland","abbreviation":"SZ"},{"name":"Sweden","abbreviation":"SE"},{"name":"Switzerland","abbreviation":"CH"},{"name":"Syria","abbreviation":"SY"},{"name":"São Tomé and Príncipe","abbreviation":"ST"},{"name":"Taiwan","abbreviation":"TW"},{"name":"Tajikistan","abbreviation":"TJ"},{"name":"Tanzania","abbreviation":"TZ"},{"name":"Thailand","abbreviation":"TH"},{"name":"Timor-Leste","abbreviation":"TL"},{"name":"Togo","abbreviation":"TG"},{"name":"Tokelau","abbreviation":"TK"},{"name":"Tonga","abbreviation":"TO"},{"name":"Trinidad and Tobago","abbreviation":"TT"},{"name":"Tunisia","abbreviation":"TN"},{"name":"Turkey","abbreviation":"TR"},{"name":"Turkmenistan","abbreviation":"TM"},{"name":"Turks and Caicos Islands","abbreviation":"TC"},{"name":"Tuvalu","abbreviation":"TV"},{"name":"U.S. Minor Outlying Islands","abbreviation":"UM"},{"name":"U.S. Miscellaneous Pacific Islands","abbreviation":"PU"},{"name":"U.S. Virgin Islands","abbreviation":"VI"},{"name":"Uganda","abbreviation":"UG"},{"name":"Ukraine","abbreviation":"UA"},{"name":"Union of Soviet Socialist Republics","abbreviation":"SU"},{"name":"United Arab Emirates","abbreviation":"AE"},{"name":"United Kingdom","abbreviation":"GB"},{"name":"United States","abbreviation":"US"},{"name":"Unknown or Invalid Region","abbreviation":"ZZ"},{"name":"Uruguay","abbreviation":"UY"},{"name":"Uzbekistan","abbreviation":"UZ"},{"name":"Vanuatu","abbreviation":"VU"},{"name":"Vatican City","abbreviation":"VA"},{"name":"Venezuela","abbreviation":"VE"},{"name":"Vietnam","abbreviation":"VN"},{"name":"Wake Island","abbreviation":"WK"},{"name":"Wallis and Futuna","abbreviation":"WF"},{"name":"Western Sahara","abbreviation":"EH"},{"name":"Yemen","abbreviation":"YE"},{"name":"Zambia","abbreviation":"ZM"},{"name":"Zimbabwe","abbreviation":"ZW"},{"name":"Åland Islands","abbreviation":"AX"}],
+        // Data taken from https://github.com/umpirsky/country-list/blob/master/data/en_US/country.json
+        countries: [{"name":"Afghanistan","abbreviation":"AF"},{"name":"Åland Islands","abbreviation":"AX"},{"name":"Albania","abbreviation":"AL"},{"name":"Algeria","abbreviation":"DZ"},{"name":"American Samoa","abbreviation":"AS"},{"name":"Andorra","abbreviation":"AD"},{"name":"Angola","abbreviation":"AO"},{"name":"Anguilla","abbreviation":"AI"},{"name":"Antarctica","abbreviation":"AQ"},{"name":"Antigua & Barbuda","abbreviation":"AG"},{"name":"Argentina","abbreviation":"AR"},{"name":"Armenia","abbreviation":"AM"},{"name":"Aruba","abbreviation":"AW"},{"name":"Ascension Island","abbreviation":"AC"},{"name":"Australia","abbreviation":"AU"},{"name":"Austria","abbreviation":"AT"},{"name":"Azerbaijan","abbreviation":"AZ"},{"name":"Bahamas","abbreviation":"BS"},{"name":"Bahrain","abbreviation":"BH"},{"name":"Bangladesh","abbreviation":"BD"},{"name":"Barbados","abbreviation":"BB"},{"name":"Belarus","abbreviation":"BY"},{"name":"Belgium","abbreviation":"BE"},{"name":"Belize","abbreviation":"BZ"},{"name":"Benin","abbreviation":"BJ"},{"name":"Bermuda","abbreviation":"BM"},{"name":"Bhutan","abbreviation":"BT"},{"name":"Bolivia","abbreviation":"BO"},{"name":"Bosnia & Herzegovina","abbreviation":"BA"},{"name":"Botswana","abbreviation":"BW"},{"name":"Brazil","abbreviation":"BR"},{"name":"British Indian Ocean Territory","abbreviation":"IO"},{"name":"British Virgin Islands","abbreviation":"VG"},{"name":"Brunei","abbreviation":"BN"},{"name":"Bulgaria","abbreviation":"BG"},{"name":"Burkina Faso","abbreviation":"BF"},{"name":"Burundi","abbreviation":"BI"},{"name":"Cambodia","abbreviation":"KH"},{"name":"Cameroon","abbreviation":"CM"},{"name":"Canada","abbreviation":"CA"},{"name":"Canary Islands","abbreviation":"IC"},{"name":"Cape Verde","abbreviation":"CV"},{"name":"Caribbean Netherlands","abbreviation":"BQ"},{"name":"Cayman Islands","abbreviation":"KY"},{"name":"Central African Republic","abbreviation":"CF"},{"name":"Ceuta & Melilla","abbreviation":"EA"},{"name":"Chad","abbreviation":"TD"},{"name":"Chile","abbreviation":"CL"},{"name":"China","abbreviation":"CN"},{"name":"Christmas Island","abbreviation":"CX"},{"name":"Cocos (Keeling) Islands","abbreviation":"CC"},{"name":"Colombia","abbreviation":"CO"},{"name":"Comoros","abbreviation":"KM"},{"name":"Congo - Brazzaville","abbreviation":"CG"},{"name":"Congo - Kinshasa","abbreviation":"CD"},{"name":"Cook Islands","abbreviation":"CK"},{"name":"Costa Rica","abbreviation":"CR"},{"name":"Côte d'Ivoire","abbreviation":"CI"},{"name":"Croatia","abbreviation":"HR"},{"name":"Cuba","abbreviation":"CU"},{"name":"Curaçao","abbreviation":"CW"},{"name":"Cyprus","abbreviation":"CY"},{"name":"Czech Republic","abbreviation":"CZ"},{"name":"Denmark","abbreviation":"DK"},{"name":"Diego Garcia","abbreviation":"DG"},{"name":"Djibouti","abbreviation":"DJ"},{"name":"Dominica","abbreviation":"DM"},{"name":"Dominican Republic","abbreviation":"DO"},{"name":"Ecuador","abbreviation":"EC"},{"name":"Egypt","abbreviation":"EG"},{"name":"El Salvador","abbreviation":"SV"},{"name":"Equatorial Guinea","abbreviation":"GQ"},{"name":"Eritrea","abbreviation":"ER"},{"name":"Estonia","abbreviation":"EE"},{"name":"Ethiopia","abbreviation":"ET"},{"name":"Falkland Islands","abbreviation":"FK"},{"name":"Faroe Islands","abbreviation":"FO"},{"name":"Fiji","abbreviation":"FJ"},{"name":"Finland","abbreviation":"FI"},{"name":"France","abbreviation":"FR"},{"name":"French Guiana","abbreviation":"GF"},{"name":"French Polynesia","abbreviation":"PF"},{"name":"French Southern Territories","abbreviation":"TF"},{"name":"Gabon","abbreviation":"GA"},{"name":"Gambia","abbreviation":"GM"},{"name":"Georgia","abbreviation":"GE"},{"name":"Germany","abbreviation":"DE"},{"name":"Ghana","abbreviation":"GH"},{"name":"Gibraltar","abbreviation":"GI"},{"name":"Greece","abbreviation":"GR"},{"name":"Greenland","abbreviation":"GL"},{"name":"Grenada","abbreviation":"GD"},{"name":"Guadeloupe","abbreviation":"GP"},{"name":"Guam","abbreviation":"GU"},{"name":"Guatemala","abbreviation":"GT"},{"name":"Guernsey","abbreviation":"GG"},{"name":"Guinea","abbreviation":"GN"},{"name":"Guinea-Bissau","abbreviation":"GW"},{"name":"Guyana","abbreviation":"GY"},{"name":"Haiti","abbreviation":"HT"},{"name":"Honduras","abbreviation":"HN"},{"name":"Hong Kong SAR China","abbreviation":"HK"},{"name":"Hungary","abbreviation":"HU"},{"name":"Iceland","abbreviation":"IS"},{"name":"India","abbreviation":"IN"},{"name":"Indonesia","abbreviation":"ID"},{"name":"Iran","abbreviation":"IR"},{"name":"Iraq","abbreviation":"IQ"},{"name":"Ireland","abbreviation":"IE"},{"name":"Isle of Man","abbreviation":"IM"},{"name":"Israel","abbreviation":"IL"},{"name":"Italy","abbreviation":"IT"},{"name":"Jamaica","abbreviation":"JM"},{"name":"Japan","abbreviation":"JP"},{"name":"Jersey","abbreviation":"JE"},{"name":"Jordan","abbreviation":"JO"},{"name":"Kazakhstan","abbreviation":"KZ"},{"name":"Kenya","abbreviation":"KE"},{"name":"Kiribati","abbreviation":"KI"},{"name":"Kosovo","abbreviation":"XK"},{"name":"Kuwait","abbreviation":"KW"},{"name":"Kyrgyzstan","abbreviation":"KG"},{"name":"Laos","abbreviation":"LA"},{"name":"Latvia","abbreviation":"LV"},{"name":"Lebanon","abbreviation":"LB"},{"name":"Lesotho","abbreviation":"LS"},{"name":"Liberia","abbreviation":"LR"},{"name":"Libya","abbreviation":"LY"},{"name":"Liechtenstein","abbreviation":"LI"},{"name":"Lithuania","abbreviation":"LT"},{"name":"Luxembourg","abbreviation":"LU"},{"name":"Macau SAR China","abbreviation":"MO"},{"name":"Macedonia","abbreviation":"MK"},{"name":"Madagascar","abbreviation":"MG"},{"name":"Malawi","abbreviation":"MW"},{"name":"Malaysia","abbreviation":"MY"},{"name":"Maldives","abbreviation":"MV"},{"name":"Mali","abbreviation":"ML"},{"name":"Malta","abbreviation":"MT"},{"name":"Marshall Islands","abbreviation":"MH"},{"name":"Martinique","abbreviation":"MQ"},{"name":"Mauritania","abbreviation":"MR"},{"name":"Mauritius","abbreviation":"MU"},{"name":"Mayotte","abbreviation":"YT"},{"name":"Mexico","abbreviation":"MX"},{"name":"Micronesia","abbreviation":"FM"},{"name":"Moldova","abbreviation":"MD"},{"name":"Monaco","abbreviation":"MC"},{"name":"Mongolia","abbreviation":"MN"},{"name":"Montenegro","abbreviation":"ME"},{"name":"Montserrat","abbreviation":"MS"},{"name":"Morocco","abbreviation":"MA"},{"name":"Mozambique","abbreviation":"MZ"},{"name":"Myanmar (Burma)","abbreviation":"MM"},{"name":"Namibia","abbreviation":"NA"},{"name":"Nauru","abbreviation":"NR"},{"name":"Nepal","abbreviation":"NP"},{"name":"Netherlands","abbreviation":"NL"},{"name":"New Caledonia","abbreviation":"NC"},{"name":"New Zealand","abbreviation":"NZ"},{"name":"Nicaragua","abbreviation":"NI"},{"name":"Niger","abbreviation":"NE"},{"name":"Nigeria","abbreviation":"NG"},{"name":"Niue","abbreviation":"NU"},{"name":"Norfolk Island","abbreviation":"NF"},{"name":"North Korea","abbreviation":"KP"},{"name":"Northern Mariana Islands","abbreviation":"MP"},{"name":"Norway","abbreviation":"NO"},{"name":"Oman","abbreviation":"OM"},{"name":"Pakistan","abbreviation":"PK"},{"name":"Palau","abbreviation":"PW"},{"name":"Palestinian Territories","abbreviation":"PS"},{"name":"Panama","abbreviation":"PA"},{"name":"Papua New Guinea","abbreviation":"PG"},{"name":"Paraguay","abbreviation":"PY"},{"name":"Peru","abbreviation":"PE"},{"name":"Philippines","abbreviation":"PH"},{"name":"Pitcairn Islands","abbreviation":"PN"},{"name":"Poland","abbreviation":"PL"},{"name":"Portugal","abbreviation":"PT"},{"name":"Puerto Rico","abbreviation":"PR"},{"name":"Qatar","abbreviation":"QA"},{"name":"Réunion","abbreviation":"RE"},{"name":"Romania","abbreviation":"RO"},{"name":"Russia","abbreviation":"RU"},{"name":"Rwanda","abbreviation":"RW"},{"name":"Samoa","abbreviation":"WS"},{"name":"San Marino","abbreviation":"SM"},{"name":"São Tomé and Príncipe","abbreviation":"ST"},{"name":"Saudi Arabia","abbreviation":"SA"},{"name":"Senegal","abbreviation":"SN"},{"name":"Serbia","abbreviation":"RS"},{"name":"Seychelles","abbreviation":"SC"},{"name":"Sierra Leone","abbreviation":"SL"},{"name":"Singapore","abbreviation":"SG"},{"name":"Sint Maarten","abbreviation":"SX"},{"name":"Slovakia","abbreviation":"SK"},{"name":"Slovenia","abbreviation":"SI"},{"name":"Solomon Islands","abbreviation":"SB"},{"name":"Somalia","abbreviation":"SO"},{"name":"South Africa","abbreviation":"ZA"},{"name":"South Georgia & South Sandwich Islands","abbreviation":"GS"},{"name":"South Korea","abbreviation":"KR"},{"name":"South Sudan","abbreviation":"SS"},{"name":"Spain","abbreviation":"ES"},{"name":"Sri Lanka","abbreviation":"LK"},{"name":"St. Barthélemy","abbreviation":"BL"},{"name":"St. Helena","abbreviation":"SH"},{"name":"St. Kitts & Nevis","abbreviation":"KN"},{"name":"St. Lucia","abbreviation":"LC"},{"name":"St. Martin","abbreviation":"MF"},{"name":"St. Pierre & Miquelon","abbreviation":"PM"},{"name":"St. Vincent & Grenadines","abbreviation":"VC"},{"name":"Sudan","abbreviation":"SD"},{"name":"Suriname","abbreviation":"SR"},{"name":"Svalbard & Jan Mayen","abbreviation":"SJ"},{"name":"Swaziland","abbreviation":"SZ"},{"name":"Sweden","abbreviation":"SE"},{"name":"Switzerland","abbreviation":"CH"},{"name":"Syria","abbreviation":"SY"},{"name":"Taiwan","abbreviation":"TW"},{"name":"Tajikistan","abbreviation":"TJ"},{"name":"Tanzania","abbreviation":"TZ"},{"name":"Thailand","abbreviation":"TH"},{"name":"Timor-Leste","abbreviation":"TL"},{"name":"Togo","abbreviation":"TG"},{"name":"Tokelau","abbreviation":"TK"},{"name":"Tonga","abbreviation":"TO"},{"name":"Trinidad & Tobago","abbreviation":"TT"},{"name":"Tristan da Cunha","abbreviation":"TA"},{"name":"Tunisia","abbreviation":"TN"},{"name":"Turkey","abbreviation":"TR"},{"name":"Turkmenistan","abbreviation":"TM"},{"name":"Turks & Caicos Islands","abbreviation":"TC"},{"name":"Tuvalu","abbreviation":"TV"},{"name":"U.S. Outlying Islands","abbreviation":"UM"},{"name":"U.S. Virgin Islands","abbreviation":"VI"},{"name":"Uganda","abbreviation":"UG"},{"name":"Ukraine","abbreviation":"UA"},{"name":"United Arab Emirates","abbreviation":"AE"},{"name":"United Kingdom","abbreviation":"GB"},{"name":"United States","abbreviation":"US"},{"name":"Uruguay","abbreviation":"UY"},{"name":"Uzbekistan","abbreviation":"UZ"},{"name":"Vanuatu","abbreviation":"VU"},{"name":"Vatican City","abbreviation":"VA"},{"name":"Venezuela","abbreviation":"VE"},{"name":"Vietnam","abbreviation":"VN"},{"name":"Wallis & Futuna","abbreviation":"WF"},{"name":"Western Sahara","abbreviation":"EH"},{"name":"Yemen","abbreviation":"YE"},{"name":"Zambia","abbreviation":"ZM"},{"name":"Zimbabwe","abbreviation":"ZW"}],
 
+		counties: {
+            // Data taken from http://www.downloadexcelfiles.com/gb_en/download-excel-file-list-counties-uk
+            "uk": [
+                {name: 'Bath and North East Somerset'},
+                {name: 'Bedford'},
+                {name: 'Blackburn with Darwen'},
+                {name: 'Blackpool'},
+                {name: 'Bournemouth'},
+                {name: 'Bracknell Forest'},
+                {name: 'Brighton & Hove'},
+                {name: 'Bristol'},
+                {name: 'Buckinghamshire'},
+                {name: 'Cambridgeshire'},
+                {name: 'Central Bedfordshire'},
+                {name: 'Cheshire East'},
+                {name: 'Cheshire West and Chester'},
+                {name: 'Cornwall'},
+                {name: 'County Durham'},
+                {name: 'Cumbria'},
+                {name: 'Darlington'},
+                {name: 'Derby'},
+                {name: 'Derbyshire'},
+                {name: 'Devon'},
+                {name: 'Dorset'},
+                {name: 'East Riding of Yorkshire'},
+                {name: 'East Sussex'},
+                {name: 'Essex'},
+                {name: 'Gloucestershire'},
+                {name: 'Greater London'},
+                {name: 'Greater Manchester'},
+                {name: 'Halton'},
+                {name: 'Hampshire'},
+                {name: 'Hartlepool'},
+                {name: 'Herefordshire'},
+                {name: 'Hertfordshire'},
+                {name: 'Hull'},
+                {name: 'Isle of Wight'},
+                {name: 'Isles of Scilly'},
+                {name: 'Kent'},
+                {name: 'Lancashire'},
+                {name: 'Leicester'},
+                {name: 'Leicestershire'},
+                {name: 'Lincolnshire'},
+                {name: 'Luton'},
+                {name: 'Medway'},
+                {name: 'Merseyside'},
+                {name: 'Middlesbrough'},
+                {name: 'Milton Keynes'},
+                {name: 'Norfolk'},
+                {name: 'North East Lincolnshire'},
+                {name: 'North Lincolnshire'},
+                {name: 'North Somerset'},
+                {name: 'North Yorkshire'},
+                {name: 'Northamptonshire'},
+                {name: 'Northumberland'},
+                {name: 'Nottingham'},
+                {name: 'Nottinghamshire'},
+                {name: 'Oxfordshire'},
+                {name: 'Peterborough'},
+                {name: 'Plymouth'},
+                {name: 'Poole'},
+                {name: 'Portsmouth'},
+                {name: 'Reading'},
+                {name: 'Redcar and Cleveland'},
+                {name: 'Rutland'},
+                {name: 'Shropshire'},
+                {name: 'Slough'},
+                {name: 'Somerset'},
+                {name: 'South Gloucestershire'},
+                {name: 'South Yorkshire'},
+                {name: 'Southampton'},
+                {name: 'Southend-on-Sea'},
+                {name: 'Staffordshire'},
+                {name: 'Stockton-on-Tees'},
+                {name: 'Stoke-on-Trent'},
+                {name: 'Suffolk'},
+                {name: 'Surrey'},
+                {name: 'Swindon'},
+                {name: 'Telford and Wrekin'},
+                {name: 'Thurrock'},
+                {name: 'Torbay'},
+                {name: 'Tyne and Wear'},
+                {name: 'Warrington'},
+                {name: 'Warwickshire'},
+                {name: 'West Berkshire'},
+                {name: 'West Midlands'},
+                {name: 'West Sussex'},
+                {name: 'West Yorkshire'},
+                {name: 'Wiltshire'},
+                {name: 'Windsor and Maidenhead'},
+                {name: 'Wokingham'},
+                {name: 'Worcestershire'},
+                {name: 'York'}]
+				},
         provinces: {
             "ca": [
                 {name: 'Alberta', abbreviation: 'AB'},
@@ -2233,7 +2391,7 @@
                 { name: "Verona", abbreviation: "VR", code: 23 },
                 { name: "Vibo-Valentia", abbreviation: "VV", code: 102 },
                 { name: "Vicenza", abbreviation: "VI", code: 24 },
-                { name: "Viterbo", abbreviation: "VT", code: 56 }   
+                { name: "Viterbo", abbreviation: "VT", code: 56 }
             ]
         },
 
@@ -2383,7 +2541,7 @@
            {name: 'Polish'},
            {name: 'Portuguese'},
            {name: 'Qatari'},
-           {name: 'Romani'},          
+           {name: 'Romani'},
            {name: 'Russian'},
            {name: 'Rwandan'},
            {name: 'Saint Lucian'},
@@ -2842,7 +3000,7 @@
             {'code' : 'ZMW', 'name' : 'Zambia Kwacha'},
             {'code' : 'ZWD', 'name' : 'Zimbabwe Dollar'}
         ],
-        
+
         // return the names of all valide colors
         colorNames : [  "AliceBlue", "Black", "Navy", "DarkBlue", "MediumBlue", "Blue", "DarkGreen", "Green", "Teal", "DarkCyan", "DeepSkyBlue", "DarkTurquoise", "MediumSpringGreen", "Lime", "SpringGreen",
             "Aqua", "Cyan", "MidnightBlue", "DodgerBlue", "LightSeaGreen", "ForestGreen", "SeaGreen", "DarkSlateGray", "LimeGreen", "MediumSeaGreen", "Turquoise", "RoyalBlue", "SteelBlue", "DarkSlateBlue", "MediumTurquoise",
@@ -2853,14 +3011,1359 @@
             "Crimson", "Gainsboro", "Plum", "BurlyWood", "LightCyan", "Lavender", "DarkSalmon", "Violet", "PaleGoldenRod", "LightCoral", "Khaki", "AliceBlue", "HoneyDew", "Azure", "SandyBrown", "Wheat", "Beige", "WhiteSmoke",
             "MintCream", "GhostWhite", "Salmon", "AntiqueWhite", "Linen", "LightGoldenRodYellow", "OldLace", "Red", "Fuchsia", "Magenta", "DeepPink", "OrangeRed", "Tomato", "HotPink", "Coral", "DarkOrange", "LightSalmon", "Orange",
             "LightPink", "Pink", "Gold", "PeachPuff", "NavajoWhite", "Moccasin", "Bisque", "MistyRose", "BlanchedAlmond", "PapayaWhip", "LavenderBlush", "SeaShell", "Cornsilk", "LemonChiffon", "FloralWhite", "Snow", "Yellow", "LightYellow"
-        ],        
+        ],
 
         fileExtension : {
             "raster"    : ["bmp", "gif", "gpl", "ico", "jpeg", "psd", "png", "psp", "raw", "tiff"],
             "vector"    : ["3dv", "amf", "awg", "ai", "cgm", "cdr", "cmx", "dxf", "e2d", "egt", "eps", "fs", "odg", "svg", "xar"],
             "3d"        : ["3dmf", "3dm", "3mf", "3ds", "an8", "aoi", "blend", "cal3d", "cob", "ctm", "iob", "jas", "max", "mb", "mdx", "obj", "x", "x3d"],
             "document"  : ["doc", "docx", "dot", "html", "xml", "odt", "odm", "ott", "csv", "rtf", "tex", "xhtml", "xps"]
-        }
+        },
+
+        // Data taken from https://github.com/dmfilipenko/timezones.json/blob/master/timezones.json
+        timezones: [
+                  {
+                    "name": "Dateline Standard Time",
+                    "abbr": "DST",
+                    "offset": -12,
+                    "isdst": false,
+                    "text": "(UTC-12:00) International Date Line West",
+                    "utc": [
+                      "Etc/GMT+12"
+                    ]
+                  },
+                  {
+                    "name": "UTC-11",
+                    "abbr": "U",
+                    "offset": -11,
+                    "isdst": false,
+                    "text": "(UTC-11:00) Coordinated Universal Time-11",
+                    "utc": [
+                      "Etc/GMT+11",
+                      "Pacific/Midway",
+                      "Pacific/Niue",
+                      "Pacific/Pago_Pago"
+                    ]
+                  },
+                  {
+                    "name": "Hawaiian Standard Time",
+                    "abbr": "HST",
+                    "offset": -10,
+                    "isdst": false,
+                    "text": "(UTC-10:00) Hawaii",
+                    "utc": [
+                      "Etc/GMT+10",
+                      "Pacific/Honolulu",
+                      "Pacific/Johnston",
+                      "Pacific/Rarotonga",
+                      "Pacific/Tahiti"
+                    ]
+                  },
+                  {
+                    "name": "Alaskan Standard Time",
+                    "abbr": "AKDT",
+                    "offset": -8,
+                    "isdst": true,
+                    "text": "(UTC-09:00) Alaska",
+                    "utc": [
+                      "America/Anchorage",
+                      "America/Juneau",
+                      "America/Nome",
+                      "America/Sitka",
+                      "America/Yakutat"
+                    ]
+                  },
+                  {
+                    "name": "Pacific Standard Time (Mexico)",
+                    "abbr": "PDT",
+                    "offset": -7,
+                    "isdst": true,
+                    "text": "(UTC-08:00) Baja California",
+                    "utc": [
+                      "America/Santa_Isabel"
+                    ]
+                  },
+                  {
+                    "name": "Pacific Standard Time",
+                    "abbr": "PDT",
+                    "offset": -7,
+                    "isdst": true,
+                    "text": "(UTC-08:00) Pacific Time (US & Canada)",
+                    "utc": [
+                      "America/Dawson",
+                      "America/Los_Angeles",
+                      "America/Tijuana",
+                      "America/Vancouver",
+                      "America/Whitehorse",
+                      "PST8PDT"
+                    ]
+                  },
+                  {
+                    "name": "US Mountain Standard Time",
+                    "abbr": "UMST",
+                    "offset": -7,
+                    "isdst": false,
+                    "text": "(UTC-07:00) Arizona",
+                    "utc": [
+                      "America/Creston",
+                      "America/Dawson_Creek",
+                      "America/Hermosillo",
+                      "America/Phoenix",
+                      "Etc/GMT+7"
+                    ]
+                  },
+                  {
+                    "name": "Mountain Standard Time (Mexico)",
+                    "abbr": "MDT",
+                    "offset": -6,
+                    "isdst": true,
+                    "text": "(UTC-07:00) Chihuahua, La Paz, Mazatlan",
+                    "utc": [
+                      "America/Chihuahua",
+                      "America/Mazatlan"
+                    ]
+                  },
+                  {
+                    "name": "Mountain Standard Time",
+                    "abbr": "MDT",
+                    "offset": -6,
+                    "isdst": true,
+                    "text": "(UTC-07:00) Mountain Time (US & Canada)",
+                    "utc": [
+                      "America/Boise",
+                      "America/Cambridge_Bay",
+                      "America/Denver",
+                      "America/Edmonton",
+                      "America/Inuvik",
+                      "America/Ojinaga",
+                      "America/Yellowknife",
+                      "MST7MDT"
+                    ]
+                  },
+                  {
+                    "name": "Central America Standard Time",
+                    "abbr": "CAST",
+                    "offset": -6,
+                    "isdst": false,
+                    "text": "(UTC-06:00) Central America",
+                    "utc": [
+                      "America/Belize",
+                      "America/Costa_Rica",
+                      "America/El_Salvador",
+                      "America/Guatemala",
+                      "America/Managua",
+                      "America/Tegucigalpa",
+                      "Etc/GMT+6",
+                      "Pacific/Galapagos"
+                    ]
+                  },
+                  {
+                    "name": "Central Standard Time",
+                    "abbr": "CDT",
+                    "offset": -5,
+                    "isdst": true,
+                    "text": "(UTC-06:00) Central Time (US & Canada)",
+                    "utc": [
+                      "America/Chicago",
+                      "America/Indiana/Knox",
+                      "America/Indiana/Tell_City",
+                      "America/Matamoros",
+                      "America/Menominee",
+                      "America/North_Dakota/Beulah",
+                      "America/North_Dakota/Center",
+                      "America/North_Dakota/New_Salem",
+                      "America/Rainy_River",
+                      "America/Rankin_Inlet",
+                      "America/Resolute",
+                      "America/Winnipeg",
+                      "CST6CDT"
+                    ]
+                  },
+                  {
+                    "name": "Central Standard Time (Mexico)",
+                    "abbr": "CDT",
+                    "offset": -5,
+                    "isdst": true,
+                    "text": "(UTC-06:00) Guadalajara, Mexico City, Monterrey",
+                    "utc": [
+                      "America/Bahia_Banderas",
+                      "America/Cancun",
+                      "America/Merida",
+                      "America/Mexico_City",
+                      "America/Monterrey"
+                    ]
+                  },
+                  {
+                    "name": "Canada Central Standard Time",
+                    "abbr": "CCST",
+                    "offset": -6,
+                    "isdst": false,
+                    "text": "(UTC-06:00) Saskatchewan",
+                    "utc": [
+                      "America/Regina",
+                      "America/Swift_Current"
+                    ]
+                  },
+                  {
+                    "name": "SA Pacific Standard Time",
+                    "abbr": "SPST",
+                    "offset": -5,
+                    "isdst": false,
+                    "text": "(UTC-05:00) Bogota, Lima, Quito",
+                    "utc": [
+                      "America/Bogota",
+                      "America/Cayman",
+                      "America/Coral_Harbour",
+                      "America/Eirunepe",
+                      "America/Guayaquil",
+                      "America/Jamaica",
+                      "America/Lima",
+                      "America/Panama",
+                      "America/Rio_Branco",
+                      "Etc/GMT+5"
+                    ]
+                  },
+                  {
+                    "name": "Eastern Standard Time",
+                    "abbr": "EDT",
+                    "offset": -4,
+                    "isdst": true,
+                    "text": "(UTC-05:00) Eastern Time (US & Canada)",
+                    "utc": [
+                      "America/Detroit",
+                      "America/Havana",
+                      "America/Indiana/Petersburg",
+                      "America/Indiana/Vincennes",
+                      "America/Indiana/Winamac",
+                      "America/Iqaluit",
+                      "America/Kentucky/Monticello",
+                      "America/Louisville",
+                      "America/Montreal",
+                      "America/Nassau",
+                      "America/New_York",
+                      "America/Nipigon",
+                      "America/Pangnirtung",
+                      "America/Port-au-Prince",
+                      "America/Thunder_Bay",
+                      "America/Toronto",
+                      "EST5EDT"
+                    ]
+                  },
+                  {
+                    "name": "US Eastern Standard Time",
+                    "abbr": "UEDT",
+                    "offset": -4,
+                    "isdst": true,
+                    "text": "(UTC-05:00) Indiana (East)",
+                    "utc": [
+                      "America/Indiana/Marengo",
+                      "America/Indiana/Vevay",
+                      "America/Indianapolis"
+                    ]
+                  },
+                  {
+                    "name": "Venezuela Standard Time",
+                    "abbr": "VST",
+                    "offset": -4.5,
+                    "isdst": false,
+                    "text": "(UTC-04:30) Caracas",
+                    "utc": [
+                      "America/Caracas"
+                    ]
+                  },
+                  {
+                    "name": "Paraguay Standard Time",
+                    "abbr": "PST",
+                    "offset": -4,
+                    "isdst": false,
+                    "text": "(UTC-04:00) Asuncion",
+                    "utc": [
+                      "America/Asuncion"
+                    ]
+                  },
+                  {
+                    "name": "Atlantic Standard Time",
+                    "abbr": "ADT",
+                    "offset": -3,
+                    "isdst": true,
+                    "text": "(UTC-04:00) Atlantic Time (Canada)",
+                    "utc": [
+                      "America/Glace_Bay",
+                      "America/Goose_Bay",
+                      "America/Halifax",
+                      "America/Moncton",
+                      "America/Thule",
+                      "Atlantic/Bermuda"
+                    ]
+                  },
+                  {
+                    "name": "Central Brazilian Standard Time",
+                    "abbr": "CBST",
+                    "offset": -4,
+                    "isdst": false,
+                    "text": "(UTC-04:00) Cuiaba",
+                    "utc": [
+                      "America/Campo_Grande",
+                      "America/Cuiaba"
+                    ]
+                  },
+                  {
+                    "name": "SA Western Standard Time",
+                    "abbr": "SWST",
+                    "offset": -4,
+                    "isdst": false,
+                    "text": "(UTC-04:00) Georgetown, La Paz, Manaus, San Juan",
+                    "utc": [
+                      "America/Anguilla",
+                      "America/Antigua",
+                      "America/Aruba",
+                      "America/Barbados",
+                      "America/Blanc-Sablon",
+                      "America/Boa_Vista",
+                      "America/Curacao",
+                      "America/Dominica",
+                      "America/Grand_Turk",
+                      "America/Grenada",
+                      "America/Guadeloupe",
+                      "America/Guyana",
+                      "America/Kralendijk",
+                      "America/La_Paz",
+                      "America/Lower_Princes",
+                      "America/Manaus",
+                      "America/Marigot",
+                      "America/Martinique",
+                      "America/Montserrat",
+                      "America/Port_of_Spain",
+                      "America/Porto_Velho",
+                      "America/Puerto_Rico",
+                      "America/Santo_Domingo",
+                      "America/St_Barthelemy",
+                      "America/St_Kitts",
+                      "America/St_Lucia",
+                      "America/St_Thomas",
+                      "America/St_Vincent",
+                      "America/Tortola",
+                      "Etc/GMT+4"
+                    ]
+                  },
+                  {
+                    "name": "Pacific SA Standard Time",
+                    "abbr": "PSST",
+                    "offset": -4,
+                    "isdst": false,
+                    "text": "(UTC-04:00) Santiago",
+                    "utc": [
+                      "America/Santiago",
+                      "Antarctica/Palmer"
+                    ]
+                  },
+                  {
+                    "name": "Newfoundland Standard Time",
+                    "abbr": "NDT",
+                    "offset": -2.5,
+                    "isdst": true,
+                    "text": "(UTC-03:30) Newfoundland",
+                    "utc": [
+                      "America/St_Johns"
+                    ]
+                  },
+                  {
+                    "name": "E. South America Standard Time",
+                    "abbr": "ESAST",
+                    "offset": -3,
+                    "isdst": false,
+                    "text": "(UTC-03:00) Brasilia",
+                    "utc": [
+                      "America/Sao_Paulo"
+                    ]
+                  },
+                  {
+                    "name": "Argentina Standard Time",
+                    "abbr": "AST",
+                    "offset": -3,
+                    "isdst": false,
+                    "text": "(UTC-03:00) Buenos Aires",
+                    "utc": [
+                      "America/Argentina/La_Rioja",
+                      "America/Argentina/Rio_Gallegos",
+                      "America/Argentina/Salta",
+                      "America/Argentina/San_Juan",
+                      "America/Argentina/San_Luis",
+                      "America/Argentina/Tucuman",
+                      "America/Argentina/Ushuaia",
+                      "America/Buenos_Aires",
+                      "America/Catamarca",
+                      "America/Cordoba",
+                      "America/Jujuy",
+                      "America/Mendoza"
+                    ]
+                  },
+                  {
+                    "name": "SA Eastern Standard Time",
+                    "abbr": "SEST",
+                    "offset": -3,
+                    "isdst": false,
+                    "text": "(UTC-03:00) Cayenne, Fortaleza",
+                    "utc": [
+                      "America/Araguaina",
+                      "America/Belem",
+                      "America/Cayenne",
+                      "America/Fortaleza",
+                      "America/Maceio",
+                      "America/Paramaribo",
+                      "America/Recife",
+                      "America/Santarem",
+                      "Antarctica/Rothera",
+                      "Atlantic/Stanley",
+                      "Etc/GMT+3"
+                    ]
+                  },
+                  {
+                    "name": "Greenland Standard Time",
+                    "abbr": "GDT",
+                    "offset": -2,
+                    "isdst": true,
+                    "text": "(UTC-03:00) Greenland",
+                    "utc": [
+                      "America/Godthab"
+                    ]
+                  },
+                  {
+                    "name": "Montevideo Standard Time",
+                    "abbr": "MST",
+                    "offset": -3,
+                    "isdst": false,
+                    "text": "(UTC-03:00) Montevideo",
+                    "utc": [
+                      "America/Montevideo"
+                    ]
+                  },
+                  {
+                    "name": "Bahia Standard Time",
+                    "abbr": "BST",
+                    "offset": -3,
+                    "isdst": false,
+                    "text": "(UTC-03:00) Salvador",
+                    "utc": [
+                      "America/Bahia"
+                    ]
+                  },
+                  {
+                    "name": "UTC-02",
+                    "abbr": "U",
+                    "offset": -2,
+                    "isdst": false,
+                    "text": "(UTC-02:00) Coordinated Universal Time-02",
+                    "utc": [
+                      "America/Noronha",
+                      "Atlantic/South_Georgia",
+                      "Etc/GMT+2"
+                    ]
+                  },
+                  {
+                    "name": "Mid-Atlantic Standard Time",
+                    "abbr": "MDT",
+                    "offset": -1,
+                    "isdst": true,
+                    "text": "(UTC-02:00) Mid-Atlantic - Old"
+                  },
+                  {
+                    "name": "Azores Standard Time",
+                    "abbr": "ADT",
+                    "offset": 0,
+                    "isdst": true,
+                    "text": "(UTC-01:00) Azores",
+                    "utc": [
+                      "America/Scoresbysund",
+                      "Atlantic/Azores"
+                    ]
+                  },
+                  {
+                    "name": "Cape Verde Standard Time",
+                    "abbr": "CVST",
+                    "offset": -1,
+                    "isdst": false,
+                    "text": "(UTC-01:00) Cape Verde Is.",
+                    "utc": [
+                      "Atlantic/Cape_Verde",
+                      "Etc/GMT+1"
+                    ]
+                  },
+                  {
+                    "name": "Morocco Standard Time",
+                    "abbr": "MDT",
+                    "offset": 1,
+                    "isdst": true,
+                    "text": "(UTC) Casablanca",
+                    "utc": [
+                      "Africa/Casablanca",
+                      "Africa/El_Aaiun"
+                    ]
+                  },
+                  {
+                    "name": "UTC",
+                    "abbr": "CUT",
+                    "offset": 0,
+                    "isdst": false,
+                    "text": "(UTC) Coordinated Universal Time",
+                    "utc": [
+                      "America/Danmarkshavn",
+                      "Etc/GMT"
+                    ]
+                  },
+                  {
+                    "name": "GMT Standard Time",
+                    "abbr": "GDT",
+                    "offset": 1,
+                    "isdst": true,
+                    "text": "(UTC) Dublin, Edinburgh, Lisbon, London",
+                    "utc": [
+                      "Atlantic/Canary",
+                      "Atlantic/Faeroe",
+                      "Atlantic/Madeira",
+                      "Europe/Dublin",
+                      "Europe/Guernsey",
+                      "Europe/Isle_of_Man",
+                      "Europe/Jersey",
+                      "Europe/Lisbon",
+                      "Europe/London"
+                    ]
+                  },
+                  {
+                    "name": "Greenwich Standard Time",
+                    "abbr": "GST",
+                    "offset": 0,
+                    "isdst": false,
+                    "text": "(UTC) Monrovia, Reykjavik",
+                    "utc": [
+                      "Africa/Abidjan",
+                      "Africa/Accra",
+                      "Africa/Bamako",
+                      "Africa/Banjul",
+                      "Africa/Bissau",
+                      "Africa/Conakry",
+                      "Africa/Dakar",
+                      "Africa/Freetown",
+                      "Africa/Lome",
+                      "Africa/Monrovia",
+                      "Africa/Nouakchott",
+                      "Africa/Ouagadougou",
+                      "Africa/Sao_Tome",
+                      "Atlantic/Reykjavik",
+                      "Atlantic/St_Helena"
+                    ]
+                  },
+                  {
+                    "name": "W. Europe Standard Time",
+                    "abbr": "WEDT",
+                    "offset": 2,
+                    "isdst": true,
+                    "text": "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna",
+                    "utc": [
+                      "Arctic/Longyearbyen",
+                      "Europe/Amsterdam",
+                      "Europe/Andorra",
+                      "Europe/Berlin",
+                      "Europe/Busingen",
+                      "Europe/Gibraltar",
+                      "Europe/Luxembourg",
+                      "Europe/Malta",
+                      "Europe/Monaco",
+                      "Europe/Oslo",
+                      "Europe/Rome",
+                      "Europe/San_Marino",
+                      "Europe/Stockholm",
+                      "Europe/Vaduz",
+                      "Europe/Vatican",
+                      "Europe/Vienna",
+                      "Europe/Zurich"
+                    ]
+                  },
+                  {
+                    "name": "Central Europe Standard Time",
+                    "abbr": "CEDT",
+                    "offset": 2,
+                    "isdst": true,
+                    "text": "(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague",
+                    "utc": [
+                      "Europe/Belgrade",
+                      "Europe/Bratislava",
+                      "Europe/Budapest",
+                      "Europe/Ljubljana",
+                      "Europe/Podgorica",
+                      "Europe/Prague",
+                      "Europe/Tirane"
+                    ]
+                  },
+                  {
+                    "name": "Romance Standard Time",
+                    "abbr": "RDT",
+                    "offset": 2,
+                    "isdst": true,
+                    "text": "(UTC+01:00) Brussels, Copenhagen, Madrid, Paris",
+                    "utc": [
+                      "Africa/Ceuta",
+                      "Europe/Brussels",
+                      "Europe/Copenhagen",
+                      "Europe/Madrid",
+                      "Europe/Paris"
+                    ]
+                  },
+                  {
+                    "name": "Central European Standard Time",
+                    "abbr": "CEDT",
+                    "offset": 2,
+                    "isdst": true,
+                    "text": "(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb",
+                    "utc": [
+                      "Europe/Sarajevo",
+                      "Europe/Skopje",
+                      "Europe/Warsaw",
+                      "Europe/Zagreb"
+                    ]
+                  },
+                  {
+                    "name": "W. Central Africa Standard Time",
+                    "abbr": "WCAST",
+                    "offset": 1,
+                    "isdst": false,
+                    "text": "(UTC+01:00) West Central Africa",
+                    "utc": [
+                      "Africa/Algiers",
+                      "Africa/Bangui",
+                      "Africa/Brazzaville",
+                      "Africa/Douala",
+                      "Africa/Kinshasa",
+                      "Africa/Lagos",
+                      "Africa/Libreville",
+                      "Africa/Luanda",
+                      "Africa/Malabo",
+                      "Africa/Ndjamena",
+                      "Africa/Niamey",
+                      "Africa/Porto-Novo",
+                      "Africa/Tunis",
+                      "Etc/GMT-1"
+                    ]
+                  },
+                  {
+                    "name": "Namibia Standard Time",
+                    "abbr": "NST",
+                    "offset": 1,
+                    "isdst": false,
+                    "text": "(UTC+01:00) Windhoek",
+                    "utc": [
+                      "Africa/Windhoek"
+                    ]
+                  },
+                  {
+                    "name": "GTB Standard Time",
+                    "abbr": "GDT",
+                    "offset": 3,
+                    "isdst": true,
+                    "text": "(UTC+02:00) Athens, Bucharest",
+                    "utc": [
+                      "Asia/Nicosia",
+                      "Europe/Athens",
+                      "Europe/Bucharest",
+                      "Europe/Chisinau"
+                    ]
+                  },
+                  {
+                    "name": "Middle East Standard Time",
+                    "abbr": "MEDT",
+                    "offset": 3,
+                    "isdst": true,
+                    "text": "(UTC+02:00) Beirut",
+                    "utc": [
+                      "Asia/Beirut"
+                    ]
+                  },
+                  {
+                    "name": "Egypt Standard Time",
+                    "abbr": "EST",
+                    "offset": 2,
+                    "isdst": false,
+                    "text": "(UTC+02:00) Cairo",
+                    "utc": [
+                      "Africa/Cairo"
+                    ]
+                  },
+                  {
+                    "name": "Syria Standard Time",
+                    "abbr": "SDT",
+                    "offset": 3,
+                    "isdst": true,
+                    "text": "(UTC+02:00) Damascus",
+                    "utc": [
+                      "Asia/Damascus"
+                    ]
+                  },
+                  {
+                    "name": "E. Europe Standard Time",
+                    "abbr": "EEDT",
+                    "offset": 3,
+                    "isdst": true,
+                    "text": "(UTC+02:00) E. Europe"
+                  },
+                  {
+                    "name": "South Africa Standard Time",
+                    "abbr": "SAST",
+                    "offset": 2,
+                    "isdst": false,
+                    "text": "(UTC+02:00) Harare, Pretoria",
+                    "utc": [
+                      "Africa/Blantyre",
+                      "Africa/Bujumbura",
+                      "Africa/Gaborone",
+                      "Africa/Harare",
+                      "Africa/Johannesburg",
+                      "Africa/Kigali",
+                      "Africa/Lubumbashi",
+                      "Africa/Lusaka",
+                      "Africa/Maputo",
+                      "Africa/Maseru",
+                      "Africa/Mbabane",
+                      "Etc/GMT-2"
+                    ]
+                  },
+                  {
+                    "name": "FLE Standard Time",
+                    "abbr": "FDT",
+                    "offset": 3,
+                    "isdst": true,
+                    "text": "(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius",
+                    "utc": [
+                      "Europe/Helsinki",
+                      "Europe/Kiev",
+                      "Europe/Mariehamn",
+                      "Europe/Riga",
+                      "Europe/Sofia",
+                      "Europe/Tallinn",
+                      "Europe/Uzhgorod",
+                      "Europe/Vilnius",
+                      "Europe/Zaporozhye"
+                    ]
+                  },
+                  {
+                    "name": "Turkey Standard Time",
+                    "abbr": "TDT",
+                    "offset": 3,
+                    "isdst": true,
+                    "text": "(UTC+02:00) Istanbul",
+                    "utc": [
+                      "Europe/Istanbul"
+                    ]
+                  },
+                  {
+                    "name": "Israel Standard Time",
+                    "abbr": "JDT",
+                    "offset": 3,
+                    "isdst": true,
+                    "text": "(UTC+02:00) Jerusalem",
+                    "utc": [
+                      "Asia/Jerusalem"
+                    ]
+                  },
+                  {
+                    "name": "Libya Standard Time",
+                    "abbr": "LST",
+                    "offset": 2,
+                    "isdst": false,
+                    "text": "(UTC+02:00) Tripoli",
+                    "utc": [
+                      "Africa/Tripoli"
+                    ]
+                  },
+                  {
+                    "name": "Jordan Standard Time",
+                    "abbr": "JST",
+                    "offset": 3,
+                    "isdst": false,
+                    "text": "(UTC+03:00) Amman",
+                    "utc": [
+                      "Asia/Amman"
+                    ]
+                  },
+                  {
+                    "name": "Arabic Standard Time",
+                    "abbr": "AST",
+                    "offset": 3,
+                    "isdst": false,
+                    "text": "(UTC+03:00) Baghdad",
+                    "utc": [
+                      "Asia/Baghdad"
+                    ]
+                  },
+                  {
+                    "name": "Kaliningrad Standard Time",
+                    "abbr": "KST",
+                    "offset": 3,
+                    "isdst": false,
+                    "text": "(UTC+03:00) Kaliningrad, Minsk",
+                    "utc": [
+                      "Europe/Kaliningrad",
+                      "Europe/Minsk"
+                    ]
+                  },
+                  {
+                    "name": "Arab Standard Time",
+                    "abbr": "AST",
+                    "offset": 3,
+                    "isdst": false,
+                    "text": "(UTC+03:00) Kuwait, Riyadh",
+                    "utc": [
+                      "Asia/Aden",
+                      "Asia/Bahrain",
+                      "Asia/Kuwait",
+                      "Asia/Qatar",
+                      "Asia/Riyadh"
+                    ]
+                  },
+                  {
+                    "name": "E. Africa Standard Time",
+                    "abbr": "EAST",
+                    "offset": 3,
+                    "isdst": false,
+                    "text": "(UTC+03:00) Nairobi",
+                    "utc": [
+                      "Africa/Addis_Ababa",
+                      "Africa/Asmera",
+                      "Africa/Dar_es_Salaam",
+                      "Africa/Djibouti",
+                      "Africa/Juba",
+                      "Africa/Kampala",
+                      "Africa/Khartoum",
+                      "Africa/Mogadishu",
+                      "Africa/Nairobi",
+                      "Antarctica/Syowa",
+                      "Etc/GMT-3",
+                      "Indian/Antananarivo",
+                      "Indian/Comoro",
+                      "Indian/Mayotte"
+                    ]
+                  },
+                  {
+                    "name": "Iran Standard Time",
+                    "abbr": "IDT",
+                    "offset": 4.5,
+                    "isdst": true,
+                    "text": "(UTC+03:30) Tehran",
+                    "utc": [
+                      "Asia/Tehran"
+                    ]
+                  },
+                  {
+                    "name": "Arabian Standard Time",
+                    "abbr": "AST",
+                    "offset": 4,
+                    "isdst": false,
+                    "text": "(UTC+04:00) Abu Dhabi, Muscat",
+                    "utc": [
+                      "Asia/Dubai",
+                      "Asia/Muscat",
+                      "Etc/GMT-4"
+                    ]
+                  },
+                  {
+                    "name": "Azerbaijan Standard Time",
+                    "abbr": "ADT",
+                    "offset": 5,
+                    "isdst": true,
+                    "text": "(UTC+04:00) Baku",
+                    "utc": [
+                      "Asia/Baku"
+                    ]
+                  },
+                  {
+                    "name": "Russian Standard Time",
+                    "abbr": "RST",
+                    "offset": 4,
+                    "isdst": false,
+                    "text": "(UTC+04:00) Moscow, St. Petersburg, Volgograd",
+                    "utc": [
+                      "Europe/Moscow",
+                      "Europe/Samara",
+                      "Europe/Simferopol",
+                      "Europe/Volgograd"
+                    ]
+                  },
+                  {
+                    "name": "Mauritius Standard Time",
+                    "abbr": "MST",
+                    "offset": 4,
+                    "isdst": false,
+                    "text": "(UTC+04:00) Port Louis",
+                    "utc": [
+                      "Indian/Mahe",
+                      "Indian/Mauritius",
+                      "Indian/Reunion"
+                    ]
+                  },
+                  {
+                    "name": "Georgian Standard Time",
+                    "abbr": "GST",
+                    "offset": 4,
+                    "isdst": false,
+                    "text": "(UTC+04:00) Tbilisi",
+                    "utc": [
+                      "Asia/Tbilisi"
+                    ]
+                  },
+                  {
+                    "name": "Caucasus Standard Time",
+                    "abbr": "CST",
+                    "offset": 4,
+                    "isdst": false,
+                    "text": "(UTC+04:00) Yerevan",
+                    "utc": [
+                      "Asia/Yerevan"
+                    ]
+                  },
+                  {
+                    "name": "Afghanistan Standard Time",
+                    "abbr": "AST",
+                    "offset": 4.5,
+                    "isdst": false,
+                    "text": "(UTC+04:30) Kabul",
+                    "utc": [
+                      "Asia/Kabul"
+                    ]
+                  },
+                  {
+                    "name": "West Asia Standard Time",
+                    "abbr": "WAST",
+                    "offset": 5,
+                    "isdst": false,
+                    "text": "(UTC+05:00) Ashgabat, Tashkent",
+                    "utc": [
+                      "Antarctica/Mawson",
+                      "Asia/Aqtau",
+                      "Asia/Aqtobe",
+                      "Asia/Ashgabat",
+                      "Asia/Dushanbe",
+                      "Asia/Oral",
+                      "Asia/Samarkand",
+                      "Asia/Tashkent",
+                      "Etc/GMT-5",
+                      "Indian/Kerguelen",
+                      "Indian/Maldives"
+                    ]
+                  },
+                  {
+                    "name": "Pakistan Standard Time",
+                    "abbr": "PST",
+                    "offset": 5,
+                    "isdst": false,
+                    "text": "(UTC+05:00) Islamabad, Karachi",
+                    "utc": [
+                      "Asia/Karachi"
+                    ]
+                  },
+                  {
+                    "name": "India Standard Time",
+                    "abbr": "IST",
+                    "offset": 5.5,
+                    "isdst": false,
+                    "text": "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi",
+                    "utc": [
+                      "Asia/Calcutta"
+                    ]
+                  },
+                  {
+                    "name": "Sri Lanka Standard Time",
+                    "abbr": "SLST",
+                    "offset": 5.5,
+                    "isdst": false,
+                    "text": "(UTC+05:30) Sri Jayawardenepura",
+                    "utc": [
+                      "Asia/Colombo"
+                    ]
+                  },
+                  {
+                    "name": "Nepal Standard Time",
+                    "abbr": "NST",
+                    "offset": 5.75,
+                    "isdst": false,
+                    "text": "(UTC+05:45) Kathmandu",
+                    "utc": [
+                      "Asia/Katmandu"
+                    ]
+                  },
+                  {
+                    "name": "Central Asia Standard Time",
+                    "abbr": "CAST",
+                    "offset": 6,
+                    "isdst": false,
+                    "text": "(UTC+06:00) Astana",
+                    "utc": [
+                      "Antarctica/Vostok",
+                      "Asia/Almaty",
+                      "Asia/Bishkek",
+                      "Asia/Qyzylorda",
+                      "Asia/Urumqi",
+                      "Etc/GMT-6",
+                      "Indian/Chagos"
+                    ]
+                  },
+                  {
+                    "name": "Bangladesh Standard Time",
+                    "abbr": "BST",
+                    "offset": 6,
+                    "isdst": false,
+                    "text": "(UTC+06:00) Dhaka",
+                    "utc": [
+                      "Asia/Dhaka",
+                      "Asia/Thimphu"
+                    ]
+                  },
+                  {
+                    "name": "Ekaterinburg Standard Time",
+                    "abbr": "EST",
+                    "offset": 6,
+                    "isdst": false,
+                    "text": "(UTC+06:00) Ekaterinburg",
+                    "utc": [
+                      "Asia/Yekaterinburg"
+                    ]
+                  },
+                  {
+                    "name": "Myanmar Standard Time",
+                    "abbr": "MST",
+                    "offset": 6.5,
+                    "isdst": false,
+                    "text": "(UTC+06:30) Yangon (Rangoon)",
+                    "utc": [
+                      "Asia/Rangoon",
+                      "Indian/Cocos"
+                    ]
+                  },
+                  {
+                    "name": "SE Asia Standard Time",
+                    "abbr": "SAST",
+                    "offset": 7,
+                    "isdst": false,
+                    "text": "(UTC+07:00) Bangkok, Hanoi, Jakarta",
+                    "utc": [
+                      "Antarctica/Davis",
+                      "Asia/Bangkok",
+                      "Asia/Hovd",
+                      "Asia/Jakarta",
+                      "Asia/Phnom_Penh",
+                      "Asia/Pontianak",
+                      "Asia/Saigon",
+                      "Asia/Vientiane",
+                      "Etc/GMT-7",
+                      "Indian/Christmas"
+                    ]
+                  },
+                  {
+                    "name": "N. Central Asia Standard Time",
+                    "abbr": "NCAST",
+                    "offset": 7,
+                    "isdst": false,
+                    "text": "(UTC+07:00) Novosibirsk",
+                    "utc": [
+                      "Asia/Novokuznetsk",
+                      "Asia/Novosibirsk",
+                      "Asia/Omsk"
+                    ]
+                  },
+                  {
+                    "name": "China Standard Time",
+                    "abbr": "CST",
+                    "offset": 8,
+                    "isdst": false,
+                    "text": "(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi",
+                    "utc": [
+                      "Asia/Hong_Kong",
+                      "Asia/Macau",
+                      "Asia/Shanghai"
+                    ]
+                  },
+                  {
+                    "name": "North Asia Standard Time",
+                    "abbr": "NAST",
+                    "offset": 8,
+                    "isdst": false,
+                    "text": "(UTC+08:00) Krasnoyarsk",
+                    "utc": [
+                      "Asia/Krasnoyarsk"
+                    ]
+                  },
+                  {
+                    "name": "Singapore Standard Time",
+                    "abbr": "MPST",
+                    "offset": 8,
+                    "isdst": false,
+                    "text": "(UTC+08:00) Kuala Lumpur, Singapore",
+                    "utc": [
+                      "Asia/Brunei",
+                      "Asia/Kuala_Lumpur",
+                      "Asia/Kuching",
+                      "Asia/Makassar",
+                      "Asia/Manila",
+                      "Asia/Singapore",
+                      "Etc/GMT-8"
+                    ]
+                  },
+                  {
+                    "name": "W. Australia Standard Time",
+                    "abbr": "WAST",
+                    "offset": 8,
+                    "isdst": false,
+                    "text": "(UTC+08:00) Perth",
+                    "utc": [
+                      "Antarctica/Casey",
+                      "Australia/Perth"
+                    ]
+                  },
+                  {
+                    "name": "Taipei Standard Time",
+                    "abbr": "TST",
+                    "offset": 8,
+                    "isdst": false,
+                    "text": "(UTC+08:00) Taipei",
+                    "utc": [
+                      "Asia/Taipei"
+                    ]
+                  },
+                  {
+                    "name": "Ulaanbaatar Standard Time",
+                    "abbr": "UST",
+                    "offset": 8,
+                    "isdst": false,
+                    "text": "(UTC+08:00) Ulaanbaatar",
+                    "utc": [
+                      "Asia/Choibalsan",
+                      "Asia/Ulaanbaatar"
+                    ]
+                  },
+                  {
+                    "name": "North Asia East Standard Time",
+                    "abbr": "NAEST",
+                    "offset": 9,
+                    "isdst": false,
+                    "text": "(UTC+09:00) Irkutsk",
+                    "utc": [
+                      "Asia/Irkutsk"
+                    ]
+                  },
+                  {
+                    "name": "Tokyo Standard Time",
+                    "abbr": "TST",
+                    "offset": 9,
+                    "isdst": false,
+                    "text": "(UTC+09:00) Osaka, Sapporo, Tokyo",
+                    "utc": [
+                      "Asia/Dili",
+                      "Asia/Jayapura",
+                      "Asia/Tokyo",
+                      "Etc/GMT-9",
+                      "Pacific/Palau"
+                    ]
+                  },
+                  {
+                    "name": "Korea Standard Time",
+                    "abbr": "KST",
+                    "offset": 9,
+                    "isdst": false,
+                    "text": "(UTC+09:00) Seoul",
+                    "utc": [
+                      "Asia/Pyongyang",
+                      "Asia/Seoul"
+                    ]
+                  },
+                  {
+                    "name": "Cen. Australia Standard Time",
+                    "abbr": "CAST",
+                    "offset": 9.5,
+                    "isdst": false,
+                    "text": "(UTC+09:30) Adelaide",
+                    "utc": [
+                      "Australia/Adelaide",
+                      "Australia/Broken_Hill"
+                    ]
+                  },
+                  {
+                    "name": "AUS Central Standard Time",
+                    "abbr": "ACST",
+                    "offset": 9.5,
+                    "isdst": false,
+                    "text": "(UTC+09:30) Darwin",
+                    "utc": [
+                      "Australia/Darwin"
+                    ]
+                  },
+                  {
+                    "name": "E. Australia Standard Time",
+                    "abbr": "EAST",
+                    "offset": 10,
+                    "isdst": false,
+                    "text": "(UTC+10:00) Brisbane",
+                    "utc": [
+                      "Australia/Brisbane",
+                      "Australia/Lindeman"
+                    ]
+                  },
+                  {
+                    "name": "AUS Eastern Standard Time",
+                    "abbr": "AEST",
+                    "offset": 10,
+                    "isdst": false,
+                    "text": "(UTC+10:00) Canberra, Melbourne, Sydney",
+                    "utc": [
+                      "Australia/Melbourne",
+                      "Australia/Sydney"
+                    ]
+                  },
+                  {
+                    "name": "West Pacific Standard Time",
+                    "abbr": "WPST",
+                    "offset": 10,
+                    "isdst": false,
+                    "text": "(UTC+10:00) Guam, Port Moresby",
+                    "utc": [
+                      "Antarctica/DumontDUrville",
+                      "Etc/GMT-10",
+                      "Pacific/Guam",
+                      "Pacific/Port_Moresby",
+                      "Pacific/Saipan",
+                      "Pacific/Truk"
+                    ]
+                  },
+                  {
+                    "name": "Tasmania Standard Time",
+                    "abbr": "TST",
+                    "offset": 10,
+                    "isdst": false,
+                    "text": "(UTC+10:00) Hobart",
+                    "utc": [
+                      "Australia/Currie",
+                      "Australia/Hobart"
+                    ]
+                  },
+                  {
+                    "name": "Yakutsk Standard Time",
+                    "abbr": "YST",
+                    "offset": 10,
+                    "isdst": false,
+                    "text": "(UTC+10:00) Yakutsk",
+                    "utc": [
+                      "Asia/Chita",
+                      "Asia/Khandyga",
+                      "Asia/Yakutsk"
+                    ]
+                  },
+                  {
+                    "name": "Central Pacific Standard Time",
+                    "abbr": "CPST",
+                    "offset": 11,
+                    "isdst": false,
+                    "text": "(UTC+11:00) Solomon Is., New Caledonia",
+                    "utc": [
+                      "Antarctica/Macquarie",
+                      "Etc/GMT-11",
+                      "Pacific/Efate",
+                      "Pacific/Guadalcanal",
+                      "Pacific/Kosrae",
+                      "Pacific/Noumea",
+                      "Pacific/Ponape"
+                    ]
+                  },
+                  {
+                    "name": "Vladivostok Standard Time",
+                    "abbr": "VST",
+                    "offset": 11,
+                    "isdst": false,
+                    "text": "(UTC+11:00) Vladivostok",
+                    "utc": [
+                      "Asia/Sakhalin",
+                      "Asia/Ust-Nera",
+                      "Asia/Vladivostok"
+                    ]
+                  },
+                  {
+                    "name": "New Zealand Standard Time",
+                    "abbr": "NZST",
+                    "offset": 12,
+                    "isdst": false,
+                    "text": "(UTC+12:00) Auckland, Wellington",
+                    "utc": [
+                      "Antarctica/McMurdo",
+                      "Pacific/Auckland"
+                    ]
+                  },
+                  {
+                    "name": "UTC+12",
+                    "abbr": "U",
+                    "offset": 12,
+                    "isdst": false,
+                    "text": "(UTC+12:00) Coordinated Universal Time+12",
+                    "utc": [
+                      "Etc/GMT-12",
+                      "Pacific/Funafuti",
+                      "Pacific/Kwajalein",
+                      "Pacific/Majuro",
+                      "Pacific/Nauru",
+                      "Pacific/Tarawa",
+                      "Pacific/Wake",
+                      "Pacific/Wallis"
+                    ]
+                  },
+                  {
+                    "name": "Fiji Standard Time",
+                    "abbr": "FST",
+                    "offset": 12,
+                    "isdst": false,
+                    "text": "(UTC+12:00) Fiji",
+                    "utc": [
+                      "Pacific/Fiji"
+                    ]
+                  },
+                  {
+                    "name": "Magadan Standard Time",
+                    "abbr": "MST",
+                    "offset": 12,
+                    "isdst": false,
+                    "text": "(UTC+12:00) Magadan",
+                    "utc": [
+                      "Asia/Anadyr",
+                      "Asia/Kamchatka",
+                      "Asia/Magadan",
+                      "Asia/Srednekolymsk"
+                    ]
+                  },
+                  {
+                    "name": "Kamchatka Standard Time",
+                    "abbr": "KDT",
+                    "offset": 13,
+                    "isdst": true,
+                    "text": "(UTC+12:00) Petropavlovsk-Kamchatsky - Old"
+                  },
+                  {
+                    "name": "Tonga Standard Time",
+                    "abbr": "TST",
+                    "offset": 13,
+                    "isdst": false,
+                    "text": "(UTC+13:00) Nuku'alofa",
+                    "utc": [
+                      "Etc/GMT-13",
+                      "Pacific/Enderbury",
+                      "Pacific/Fakaofo",
+                      "Pacific/Tongatapu"
+                    ]
+                  },
+                  {
+                    "name": "Samoa Standard Time",
+                    "abbr": "SST",
+                    "offset": 13,
+                    "isdst": false,
+                    "text": "(UTC+13:00) Samoa",
+                    "utc": [
+                      "Pacific/Apia"
+                    ]
+                  }
+                ]
     };
 
     var o_hasOwnProperty = Object.prototype.hasOwnProperty;
