@@ -104,11 +104,11 @@ github_url: https://github.com/chancejs/chancejs
       – <i>55KB, 17KB when gzipped</i>
     </li>
   </ul>
-  
+
   <p>
     Or <b><a href="{{ page.github_url }}">grab the latest version on Github</a></b>.
   </p>
-  
+
   <ul class=downloads>
     <li>
       <iframe src="http://ghbtns.com/github-btn.html?user=chancejs&repo=chancejs&type=watch&count=true"
@@ -245,7 +245,7 @@ github_url: https://github.com/chancejs/chancejs
 
 <script>
   var reflowTimeout;
-  
+
   function injectScript(src) {
     var s = document.createElement('script')
     s.src = src; s.async = true
@@ -273,7 +273,7 @@ github_url: https://github.com/chancejs/chancejs
 
   if ($.os.ios || /\bMac.+\bSafari\b/.test(navigator.userAgent))
     $(document.body).addClass('emoji-enabled')
-    
+
   // don't follow links when the sidebar is tap-enabled
   $('#sidebar').on('click', 'a', function(e){
     return !$('body').hasClass('navigating')
@@ -286,15 +286,15 @@ github_url: https://github.com/chancejs/chancejs
     setTimeout(function(){
       // fixes sidebar becoming unscrollable in Safari 6
       reflowFixedPositions()
-    }, 10)    
+    }, 10)
     return false
   })
-  
+
   $(window).on('scroll', function(){
     if(reflowTimeout) clearTimeout(reflowTimeout)
     reflowTimeout = setTimeout(reflowFixedPositions, 200)
   })
-  
+
   function closeMenu(){
     if ($('body').hasClass('navigating')) {
       $('body').removeClass('navigating')
@@ -303,7 +303,7 @@ github_url: https://github.com/chancejs/chancejs
       }, 350)
     }
   }
-  
+
   // show/hide menu on mobile
   $('#menu_icon').on('tap', function(){
     if ($('body').hasClass('navigating')) {
