@@ -1773,6 +1773,17 @@
         }
     };
 
+    Chance.prototype.iban = function () {
+        var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var alphanum = alpha + '0123456789';
+        var iban = 
+            this.string({length: 2, pool: alpha}) + 
+            this.pad(this.integer({min: 0, max: 100}), 2) + 
+            this.string({ length: 4, pool: alphanum }) + 
+            this.pad(this.integer(), this.natural({min: 6, max: 26}));
+        return iban;
+    };
+
     // -- End Finance
 
     // -- Regional
