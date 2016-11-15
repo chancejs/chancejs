@@ -1773,6 +1773,10 @@
         }
     };
 
+    /**
+     * Generate a string matching IBAN pattern (https://en.wikipedia.org/wiki/International_Bank_Account_Number). 
+     * No country-specific formats support (yet)
+     */
     Chance.prototype.iban = function () {
         var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         var alphanum = alpha + '0123456789';
