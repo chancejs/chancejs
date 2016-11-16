@@ -144,7 +144,7 @@ describe("Basics", function () {
             expect(function () { chance.natural({min: -23}); }).to.throw(RangeError);
         });
 
-        it("is always positive", function () {
+        it("is always positive or zero", function () {
             var positive_count = 0;
             _(1000).times(function () {
                 natural = chance.natural();
