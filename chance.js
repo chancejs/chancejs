@@ -433,6 +433,10 @@
         var val;
         for (var weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
             val = weights[weightIndex];
+            if (isNaN(val)) {
+                throw new RangeError("all weights must be numbers");
+            }
+
             if (val > 0) {
                 sum += val;
             }

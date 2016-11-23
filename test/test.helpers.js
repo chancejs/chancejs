@@ -176,6 +176,12 @@ describe("Helpers", function () {
             }).to.throw(RangeError, /length of array and weights must match/);
         });
 
+        it("throws an Error if weights contain NaN", function() {
+            expect(function () {
+                chance.weighted(['a', 'b', 'c', 'd'], [1, NaN, 1, 1]);
+            }).to.throw(RangeError, /all weights must be numbers/);
+        });
+
         it("returns with results properly weighted", function() {
             // Use Math.random as the random function rather than our Mersenne twister just to
             //   speed things up here because this test takes awhile to gather enough data to
