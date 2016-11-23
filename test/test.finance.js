@@ -214,3 +214,15 @@ describe("Credit Card", function () {
         });        
     });
 });
+
+describe("IBAN", function () {
+    var iban, chance = new Chance();
+
+    it("returns an iban", function () {
+        _(1000).times(function () {
+            iban = chance.iban();
+            expect(iban).to.be.a('string');
+            expect(iban).to.match(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{1,26}$/);
+        });
+    });
+});
