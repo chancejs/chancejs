@@ -143,8 +143,8 @@ describe("Address", function () {
             expect(chance.states({country: 'it'})).to.have.length(20);
         });
 
-        it("states({country: 'uk') returns 90 UK Conties", function () {
-            expect(chance.states({country: 'uk'})).to.have.length(90);
+        it("states({country: 'uk') returns 129 UK Conties", function () {
+            expect(chance.states({country: 'uk'})).to.have.length(129);
         });
     });
 
