@@ -1108,7 +1108,9 @@
 
         function hex(start, end, withHash) {
             var symbol = (withHash) ? "#" : "";
-			var hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2);
+			var hexstring = "";
+			if (end === 3) { hexstring = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end})); }
+			else { hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2); }
             var expression = (isGrayscale ? gray(pad(this.hex({min: min_rgb, max: max_rgb}), 2)) : hexstring);
             return symbol + expression;
         }
