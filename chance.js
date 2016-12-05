@@ -1109,10 +1109,24 @@
         function hex(start, end, withHash) {
             var symbol = (withHash) ? "#" : "";
 			var hexstring = "";
-			if (end === 3) { hexstring = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end})); }
-			else { hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2); }
-            var expression = (isGrayscale ? gray(pad(this.hex({min: min_rgb, max: max_rgb}), 2)) : hexstring);
-            return symbol + expression;
+			
+			if (isGrayscale) {
+				hexstring = gray(pad(this.hex({min: min_rgb, max: max_rgb}), 2));
+				if (options.format === "shorthex") {
+					hexstring = gray(this.hex({min: 0, max: 15}));
+					console.log("hex: " + hexstring);
+				}
+			}
+			else {
+				if (min_red !== undefined || max_red !== undefined || min_green !== undefined || max_green !== undefined || min_blue !== undefined || max_blue !== undefined) {
+					hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2);
+				}
+				else {
+					hexstring = pad(this.hex({min: min_rgb, max: max_rgb}), 2) + pad(this.hex({min: min_rgb, max: max_rgb}), 2) + pad(this.hex({min: min_rgb, max: max_rgb}), 2);
+				}
+			}
+			
+            return symbol + hexstring;
         }
 
         options = initOptions(options, {
@@ -1121,12 +1135,12 @@
             casing: 'lower', 
 			min: 0, 
 			max: 255, 
-			min_red: 0,
-			max_red: 255, 
-			min_green: 0,
-			max_green: 255, 
-			min_blue: 0, 
-			max_blue: 255, 
+			min_red: undefined,
+			max_red: undefined, 
+			min_green: undefined,
+			max_green: undefined, 
+			min_blue: undefined, 
+			max_blue: undefined, 
 			min_alpha: 0,
 			max_alpha: 1
         });
