@@ -1110,7 +1110,6 @@
             var symbol = (withHash) ? "#" : "";
 			var hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2);
             var expression = (isGrayscale ? gray(pad(this.hex({min: min, max: max}), 2)) : hexstring);
-			//console.log(symbol + expression);
             return symbol + expression;
         }
 
@@ -1149,10 +1148,9 @@
 		if (options.max_blue === undefined) { max_blue = max; }
 		if (options.min_alpha === undefined) { min_alpha = 0; }
 		if (options.max_alpha === undefined) { max_alpha = 1; }
-		if (isGrayscale && min == 0 && max == 255 && min_red != undefined && max_red != undefined) {			
+		if (isGrayscale && min === 0 && max === 255 && min_red !== undefined && max_red !== undefined) {			
 			min = ((min_red + min_green + min_blue) / 3);
 			max = ((max_red + max_green + max_blue) / 3);
-			console.log("no min found so average rgb " + min + " " + max);
 		}
         var colorValue;
 
