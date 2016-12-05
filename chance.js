@@ -270,7 +270,7 @@
         options = initOptions(options, {min: 0, max: MAX_INT, casing: 'lower'});
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
 		var integer = chance.natural({min: options.min, max: options.max});
-		if (options.casing == 'upper') {
+		if (options.casing === 'upper') {
 			return integer.toString(16).toUpperCase();
 		}
 		return integer.toString(16);
