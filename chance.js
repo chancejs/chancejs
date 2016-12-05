@@ -1102,14 +1102,14 @@
         function rgb(hasAlpha) {
             var rgbValue     = (hasAlpha)    ? 'rgba' : 'rgb';
             var alphaChannel = (hasAlpha)    ? (',' + this.floating({min:min_alpha, max:max_alpha})) : "";
-            var colorValue   = (isGrayscale) ? (gray(this.natural({min: min, max: max}), ',')) : (this.natural({min: min_green, max: max_green}) + ',' + this.natural({min: min_blue, max: max_blue}) + ',' + this.natural({max: 255}));
+            var colorValue   = (isGrayscale) ? (gray(this.natural({min: min_rgb, max: max_rgb}), ',')) : (this.natural({min: min_green, max: max_green}) + ',' + this.natural({min: min_blue, max: max_blue}) + ',' + this.natural({max: 255}));
             return rgbValue + '(' + colorValue + alphaChannel + ')';
         }
 
         function hex(start, end, withHash) {
             var symbol = (withHash) ? "#" : "";
 			var hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2);
-            var expression = (isGrayscale ? gray(pad(this.hex({min: min, max: max}), 2)) : hexstring);
+            var expression = (isGrayscale ? gray(pad(this.hex({min: min_rgb, max: max_rgb}), 2)) : hexstring);
             return symbol + expression;
         }
 
@@ -1119,19 +1119,19 @@
             casing: 'lower', 
 			min: 0, 
 			max: 255, 
-			min_red: min,
-			max_red: max, 
-			min_green: min,
-			max_green: max, 
-			min_blue: min, 
-			max_blue: max, 
+			min_red: 0,
+			max_red: 255, 
+			min_green: 0,
+			max_green: 255, 
+			min_blue: 0, 
+			max_blue: 255, 
 			min_alpha: 0,
 			max_alpha: 1
         });
 
         var isGrayscale = options.grayscale;
-		var min = options.min;
-		var max = options.max;		
+		var min_rgb = options.min;
+		var max_rgb = options.max;		
 		var min_red = options.min_red;
 		var max_red = options.max_red;
 		var min_green = options.min_green;
@@ -1140,17 +1140,17 @@
 		var max_blue = options.max_blue;
 		var min_alpha = options.min_alpha;
 		var max_alpha = options.max_alpha;
-		if (options.min_red === undefined) { min_red = min; }
-		if (options.max_red === undefined) { max_red = max; }
-		if (options.min_green === undefined) { min_green = min; }
-		if (options.max_green === undefined) { max_green = max; }
-		if (options.min_blue === undefined) { min_blue = min; }
-		if (options.max_blue === undefined) { max_blue = max; }
+		if (options.min_red === undefined) { min_red = min_rgb; }
+		if (options.max_red === undefined) { max_red = max_rgb; }
+		if (options.min_green === undefined) { min_green = min_rgb; }
+		if (options.max_green === undefined) { max_green = max_rgb; }
+		if (options.min_blue === undefined) { min_blue = min_rgb; }
+		if (options.max_blue === undefined) { max_blue = max_rgb; }
 		if (options.min_alpha === undefined) { min_alpha = 0; }
 		if (options.max_alpha === undefined) { max_alpha = 1; }
-		if (isGrayscale && min === 0 && max === 255 && min_red !== undefined && max_red !== undefined) {			
-			min = ((min_red + min_green + min_blue) / 3);
-			max = ((max_red + max_green + max_blue) / 3);
+		if (isGrayscale && min_rgb === 0 && max_rgb === 255 && min_red !== undefined && max_red !== undefined) {			
+			min_rgb = ((min_red + min_green + min_blue) / 3);
+			max_rgb = ((max_red + max_green + max_blue) / 3);
 		}
         var colorValue;
 
