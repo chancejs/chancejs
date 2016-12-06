@@ -254,6 +254,27 @@
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
         return this.integer(options);
     };
+	
+	/**
+     *  Return a random hex number as string
+     *
+     *  NOTE the max and min are INCLUDED in the range. So:
+     *  chance.hex({min: '9', max: 'B'});
+     *  would return either '9', 'A' or 'B'.
+     *
+     *  @param {Object} [options={}] can specify a min and/or max and/or casing
+     *  @returns {String} a single random string hex number
+     *  @throws {RangeError} min cannot be greater than max
+     */
+    Chance.prototype.hex = function (options) {
+        options = initOptions(options, {min: 0, max: MAX_INT, casing: 'lower'});
+        testRange(options.min < 0, "Chance: Min cannot be less than zero.");
+		var integer = chance.natural({min: options.min, max: options.max});
+		if (options.casing === 'upper') {
+			return integer.toString(16).toUpperCase();
+		}
+		return integer.toString(16);
+    };
 
     /**
      *  Return a random string
@@ -1060,43 +1081,100 @@
      *
      * * Make color uppercase
      * chance.color({casing: 'upper'})  => '#29CFA7'
+	 
+	 * * Min Max values for RGBA
+	 * var light_red = chance.color({format: 'hex', min_red: 200, max_red: 255, max_green: 0, max_blue: 0, min_alpha: .2, max_alpha: .3});
      *
      * @param  [object] options
      * @return [string] color value
      */
     Chance.prototype.color = function (options) {
-
+		function pad(n, width, z) {
+			z = z || '0';
+			n = n + '';
+			return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+		}
+		
         function gray(value, delimiter) {
             return [value, value, value].join(delimiter || '');
         }
 
         function rgb(hasAlpha) {
-
-            var rgbValue    = (hasAlpha)    ? 'rgba' : 'rgb';
-            var alphaChanal = (hasAlpha)    ? (',' + this.floating({min:0, max:1})) : "";
-            var colorValue  = (isGrayscale) ? (gray(this.natural({max: 255}), ',')) : (this.natural({max: 255}) + ',' + this.natural({max: 255}) + ',' + this.natural({max: 255}));
-
-            return rgbValue + '(' + colorValue + alphaChanal + ')';
+            var rgbValue     = (hasAlpha)    ? 'rgba' : 'rgb';
+            var alphaChannel = (hasAlpha)    ? (',' + this.floating({min:min_alpha, max:max_alpha})) : "";
+            var colorValue   = (isGrayscale) ? (gray(this.natural({min: min_rgb, max: max_rgb}), ',')) : (this.natural({min: min_green, max: max_green}) + ',' + this.natural({min: min_blue, max: max_blue}) + ',' + this.natural({max: 255}));
+            return rgbValue + '(' + colorValue + alphaChannel + ')';
         }
 
         function hex(start, end, withHash) {
-
-            var simbol = (withHash) ? "#" : "";
-            var expression  = (isGrayscale ? gray(this.hash({length: start})) : this.hash({length: end}));
-            return simbol + expression;
+            var symbol = (withHash) ? "#" : "";
+			var hexstring = "";
+			
+			if (isGrayscale) {
+				hexstring = gray(pad(this.hex({min: min_rgb, max: max_rgb}), 2));
+				if (options.format === "shorthex") {
+					hexstring = gray(this.hex({min: 0, max: 15}));
+					console.log("hex: " + hexstring);
+				}
+			}
+			else {
+				if (options.format === "shorthex") {
+					hexstring = pad(this.hex({min: Math.floor(min_red / 16), max: Math.floor(max_red / 16)}), 1) + pad(this.hex({min: Math.floor(min_green / 16), max: Math.floor(max_green / 16)}), 1) + pad(this.hex({min: Math.floor(min_blue / 16), max: Math.floor(max_blue / 16)}), 1);
+				}
+				else if (min_red !== undefined || max_red !== undefined || min_green !== undefined || max_green !== undefined || min_blue !== undefined || max_blue !== undefined) {
+					hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2);
+				}
+				else {
+					hexstring = pad(this.hex({min: min_rgb, max: max_rgb}), 2) + pad(this.hex({min: min_rgb, max: max_rgb}), 2) + pad(this.hex({min: min_rgb, max: max_rgb}), 2);
+				}
+			}
+			
+            return symbol + hexstring;
         }
 
         options = initOptions(options, {
             format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x', 'name']),
             grayscale: false,
-            casing: 'lower'
+            casing: 'lower', 
+			min: 0, 
+			max: 255, 
+			min_red: undefined,
+			max_red: undefined, 
+			min_green: undefined,
+			max_green: undefined, 
+			min_blue: undefined, 
+			max_blue: undefined, 
+			min_alpha: 0,
+			max_alpha: 1
         });
 
         var isGrayscale = options.grayscale;
+		var min_rgb = options.min;
+		var max_rgb = options.max;		
+		var min_red = options.min_red;
+		var max_red = options.max_red;
+		var min_green = options.min_green;
+		var max_green = options.max_green;
+		var min_blue = options.min_blue;
+		var max_blue = options.max_blue;
+		var min_alpha = options.min_alpha;
+		var max_alpha = options.max_alpha;
+		if (options.min_red === undefined) { min_red = min_rgb; }
+		if (options.max_red === undefined) { max_red = max_rgb; }
+		if (options.min_green === undefined) { min_green = min_rgb; }
+		if (options.max_green === undefined) { max_green = max_rgb; }
+		if (options.min_blue === undefined) { min_blue = min_rgb; }
+		if (options.max_blue === undefined) { max_blue = max_rgb; }
+		if (options.min_alpha === undefined) { min_alpha = 0; }
+		if (options.max_alpha === undefined) { max_alpha = 1; }
+		if (isGrayscale && min_rgb === 0 && max_rgb === 255 && min_red !== undefined && max_red !== undefined) {			
+			min_rgb = ((min_red + min_green + min_blue) / 3);
+			max_rgb = ((max_red + max_green + max_blue) / 3);
+		}
         var colorValue;
 
         if (options.format === 'hex') {
-            colorValue =  hex.call(this, 2, 6, true);
+            colorValue = hex.call(this, 2, 6, true);
         }
         else if (options.format === 'shorthex') {
             colorValue = hex.call(this, 1, 3, true);
