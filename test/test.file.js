@@ -8,19 +8,19 @@ describe("File", function () {
     var file,
         chance = new Chance();
 
-    var fileExtension = {
+    var fileExtensions = {
         "raster"    : ["bmp", "gif", "gpl", "ico", "jpeg", "psd", "png", "psp", "raw", "tiff"],
         "vector"    : ["3dv", "amf", "awg", "ai", "cgm", "cdr", "cmx", "dxf", "e2d", "egt", "eps", "fs", "odg", "svg", "xar"],
         "3d"        : ["3dmf", "3dm", "3mf", "3ds", "an8", "aoi", "blend", "cal3d", "cob", "ctm", "iob", "jas", "max", "mb", "mdx", "obj", "x", "x3d"],
         "document"  : ["doc", "docx", "dot", "html", "xml", "odt", "odm", "ott", "csv", "rtf", "tex", "xhtml", "xps"]
     };
 
-    var arrayExtentionCollection = ["bmp", "3dv", "3dmf", "doc"];
+    var arrayExtensionCollection = ["bmp", "3dv", "3dmf", "doc"];
 
-    var objectExtentionCollection = {
-        "one"   : ["extention_one_1", "extention_one_2", "extention_one_3"],
-        "two"   : ["extention_two_1", "extention_two_2", "extention_two_3" ],
-        "three" : ["extention_three_1", "extention_three_2", "extention_three_3"]
+    var objectExtensionCollection = {
+        "one"   : ["extension_one_1", "extension_one_2", "extension_one_3"],
+        "two"   : ["extension_two_1", "extension_two_2", "extension_two_3" ],
+        "three" : ["extension_three_1", "extension_three_2", "extension_three_3"]
     };
 
 
@@ -59,29 +59,29 @@ describe("File", function () {
 
             _(1000).times(function() {
 
-                var extentionTypeCollection = ['raster', 'vector', '3d', ''];
-                var firstExtentionType = extentionTypeCollection[0];
+                var extensionTypeCollection = ['raster', 'vector', '3d', ''];
+                var firstExtensionType = extensionTypeCollection[0];
 
-                file = chance.file({fileType : firstExtentionType});
+                file = chance.file({fileType : firstExtensionType});
                 expect(file).to.be.a('string');
-                var fileExtention = file.split('.')[1];
+                var fileExtension = file.split('.')[1];
 
-                expect(fileExtension[firstExtentionType]).to.contain(fileExtention);
+                expect(fileExtensions[firstExtensionType]).to.contain(fileExtension);
             });
         });
 
         it("returns filename with specific extension", function () {
             _(1000).times(function () {
 
-                var specificExtention = 'doc';
-                var failTestExtention = 'xml';
+                var specificExtension = 'doc';
+                var failTestExtension = 'xml';
 
-                file = chance.file({extention : specificExtention});
-                var fileExtention = file.split('.')[1];
+                file = chance.file({extension : specificExtension});
+                var fileExtension = file.split('.')[1];
 
-                expect(fileExtention).to.be.a('string');
-                expect(fileExtention).to.equal(specificExtention);
-                expect(fileExtention).to.not.equal(failTestExtention);
+                expect(fileExtension).to.be.a('string');
+                expect(fileExtension).to.equal(specificExtension);
+                expect(fileExtension).to.not.equal(failTestExtension);
             });
         });
 
@@ -100,15 +100,15 @@ describe("File", function () {
             });
         });
 
-        it("returns filename with random extention provided by external array collection", function() {
+        it("returns filename with random extension provided by external array collection", function() {
             
             _(1000).times(function() {
                 
-                var arrayExtentionCollection = ["bmp", "3dv", "3dmf", "doc"];
-                file = chance.file({ extentions : arrayExtentionCollection});
-                var fileExtention = file.split('.')[1];
+                var arrayExtensionCollection = ["bmp", "3dv", "3dmf", "doc"];
+                file = chance.file({ extensions : arrayExtensionCollection});
+                var fileExtension = file.split('.')[1];
 
-                expect(arrayExtentionCollection).to.include(fileExtention);
+                expect(arrayExtensionCollection).to.include(fileExtension);
             });
         });
 
@@ -117,54 +117,54 @@ describe("File", function () {
             
             _(1000).times(function() {
 
-                file = chance.file({ extentions : objectExtentionCollection});
-                var fileExtention = file.split('.')[1];
+                file = chance.file({ extensions : objectExtensionCollection});
+                var fileExtension = file.split('.')[1];
 
-                var extentionCount = 0;
-                for(var index in objectExtentionCollection) {
+                var extensionCount = 0;
+                for(var index in objectExtensionCollection) {
                     
-                    var collection = objectExtentionCollection[index];
+                    var collection = objectExtensionCollection[index];
                     var length     = collection.length;
                     var i = 0;
 
                     for(i; i < length; i++) {
-                        if(collection[i] === fileExtention) {
-                            extentionCount++;    
+                        if(collection[i] === fileExtension) {
+                            extensionCount++;
                         }
                     }
                 }
 
-                expect(fileExtention).to.be.a('string');
-                expect(extentionCount).to.be.equal(1);
+                expect(fileExtension).to.be.a('string');
+                expect(extensionCount).to.be.equal(1);
             });
         });
 
-        it("returns error if user provides wrong argument type to extentions property", function() {
+        it("returns error if user provides wrong argument type to extensions property", function() {
             
             _(1000).times(function() {
                 
                 expect(function() {
-                    chance({ extentions : 10});    
+                    chance({ extensions : 10});
                 }).to.throw(Error);
             });  
         });
 
-        it("doesnot returns error if user provides correct array argument type to extentions property", function() {
+        it("doesnot returns error if user provides correct array argument type to extensions property", function() {
             
             _(1000).times(function() {
                 
                 expect(function() {
-                    chance.file({ extentions : arrayExtentionCollection});
+                    chance.file({ extensions : arrayExtensionCollection});
                 }).to.not.throw(Error);
             });  
         });        
 
-        it("doesnot returns error if user provides correct object argument type to extentions property", function() {
+        it("doesnot returns error if user provides correct object argument type to extensions property", function() {
             
             _(1000).times(function() {
                 
                 expect(function() {
-                    chance.file({ extentions : objectExtentionCollection});
+                    chance.file({ extensions : objectExtensionCollection});
                 }).to.not.throw(Error);
             });  
         });                
