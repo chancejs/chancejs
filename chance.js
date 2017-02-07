@@ -2151,58 +2151,58 @@
     /**
      * #Description:
      * =====================================================
-     * Generate random file name with extention
+     * Generate random file name with extension
      *
-     * The argument provide extention type
+     * The argument provide extension type
      * -> raster
      * -> vector
      * -> 3d
      * -> document
      *
-     * If noting is provided the function return random file name with random
-     * extention type of any kind
+     * If nothing is provided the function return random file name with random
+     * extension type of any kind
      *
      * The user can validate the file name length range
-     * If noting provided the generated file name is radom
+     * If nothing provided the generated file name is random
      *
-     * #Extention Pool :
-     * * Currently the supported extentions are
-     *  -> some of the most popular raster image extentions
-     *  -> some of the most popular vector image extentions
-     *  -> some of the most popular 3d image extentions
-     *  -> some of the most popular document extentions
+     * #Extension Pool :
+     * * Currently the supported extensions are
+     *  -> some of the most popular raster image extensions
+     *  -> some of the most popular vector image extensions
+     *  -> some of the most popular 3d image extensions
+     *  -> some of the most popular document extensions
      *
      * #Examples :
      * =====================================================
      *
-     * Return random file name with random extention. The file extention
-     * is provided by a predifined collection of extentions. More abouth the extention
-     * pool can be fond in #Extention Pool section
+     * Return random file name with random extension. The file extension
+     * is provided by a predefined collection of extensions. More about the extension
+     * pool can be found in #Extension Pool section
      *
      * chance.file()
      * => dsfsdhjf.xml
      *
-     * In order to generate a file name with sspecific length, specify the
-     * length property and integer value. The extention is going to be random
+     * In order to generate a file name with specific length, specify the
+     * length property and integer value. The extension is going to be random
      *
      * chance.file({length : 10})
      * => asrtineqos.pdf
      *
-     * In order to geerate file with extention form some of the predifined groups
-     * of the extention pool just specify the extenton pool category in fileType property
+     * In order to generate file with extension from some of the predefined groups
+     * of the extension pool just specify the extension pool category in fileType property
      *
      * chance.file({fileType : 'raster'})
      * => dshgssds.psd
      *
-     * You can provide specific extention for your files
-     * chance.file({extention : 'html'})
+     * You can provide specific extension for your files
+     * chance.file({extension : 'html'})
      * => djfsd.html
      *
-     * Or you could pass custom collection of extentons bt array or by object
-     * chance.file({extentions : [...]})
+     * Or you could pass custom collection of extensions by array or by object
+     * chance.file({extensions : [...]})
      * => dhgsdsd.psd
      *
-     * chance.file({extentions : { key : [...], key : [...]}})
+     * chance.file({extensions : { key : [...], key : [...]}})
      * => djsfksdjsd.xml
      *
      * @param  [collection] options
@@ -2215,54 +2215,54 @@
         var poolCollectionKey = "fileExtension";
         var typeRange   = Object.keys(this.get("fileExtension"));//['raster', 'vector', '3d', 'document'];
         var fileName;
-        var fileExtention;
+        var fileExtension;
 
         // Generate random file name
         fileName = this.word({length : fileOptions.length});
 
-        // Generate file by specific extention provided by the user
-        if(fileOptions.extention) {
+        // Generate file by specific extension provided by the user
+        if(fileOptions.extension) {
 
-            fileExtention = fileOptions.extention;
-            return (fileName + '.' + fileExtention);
+            fileExtension = fileOptions.extension;
+            return (fileName + '.' + fileExtension);
         }
 
-        // Generate file by specific axtention collection
-        if(fileOptions.extentions) {
+        // Generate file by specific extension collection
+        if(fileOptions.extensions) {
 
-            if(Array.isArray(fileOptions.extentions)) {
+            if(Array.isArray(fileOptions.extensions)) {
 
-                fileExtention = this.pickone(fileOptions.extentions);
-                return (fileName + '.' + fileExtention);
+                fileExtension = this.pickone(fileOptions.extensions);
+                return (fileName + '.' + fileExtension);
             }
-            else if(fileOptions.extentions.constructor === Object) {
+            else if(fileOptions.extensions.constructor === Object) {
 
-                var extentionObjectCollection = fileOptions.extentions;
-                var keys = Object.keys(extentionObjectCollection);
+                var extensionObjectCollection = fileOptions.extensions;
+                var keys = Object.keys(extensionObjectCollection);
 
-                fileExtention = this.pickone(extentionObjectCollection[this.pickone(keys)]);
-                return (fileName + '.' + fileExtention);
+                fileExtension = this.pickone(extensionObjectCollection[this.pickone(keys)]);
+                return (fileName + '.' + fileExtension);
             }
 
             throw new Error("Expect collection of type Array or Object to be passed as an argument ");
         }
 
-        // Generate file extention based on specific file type
+        // Generate file extension based on specific file type
         if(fileOptions.fileType) {
 
             var fileType = fileOptions.fileType;
             if(typeRange.indexOf(fileType) !== -1) {
 
-                fileExtention = this.pickone(this.get(poolCollectionKey)[fileType]);
-                return (fileName + '.' + fileExtention);
+                fileExtension = this.pickone(this.get(poolCollectionKey)[fileType]);
+                return (fileName + '.' + fileExtension);
             }
 
             throw new Error("Expect file type value to be 'raster', 'vector', '3d' or 'document' ");
         }
 
-        // Generate random file name if no extenton options are passed
-        fileExtention = this.pickone(this.get(poolCollectionKey)[this.pickone(typeRange)]);
-        return (fileName + '.' + fileExtention);
+        // Generate random file name if no extension options are passed
+        fileExtension = this.pickone(this.get(poolCollectionKey)[this.pickone(typeRange)]);
+        return (fileName + '.' + fileExtension);
     };
 
     var data = {
