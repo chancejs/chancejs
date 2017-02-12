@@ -19,6 +19,7 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.2",
     "dirty-chai": "^1.2.2",
+    "docpress": "^0.7.0",
     "gulp": "^3.9.1",
     "gulp-ava": "^0.17.1",
     "gulp-eslint": "^3.0.1",
@@ -61,5 +62,8 @@
       "test"
     ]
   },
-  "dependencies": {}
+  "docpress": {
+    "scripts": ["chance.js", "analytics.js", "https://platform.twitter.com/widgets.js"],
+    "github": "chancejs/chancejs"
+  }
 }
