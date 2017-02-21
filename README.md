@@ -37,25 +37,6 @@ then in the HTML of your app:
 </script>
 ```
 
-### Component
-
-It can also be used with [Component](http://component.io)
-
-```
-component install chancejs/chancejs
-```
-
-then in the HTML of your app:
-
-```html
-<!-- Load Chance -->
-<script type="text/javascript" src="components/chancejs-chancejs/chance.js"></script>
-<script>
-    // Use Chance immediately!
-    alert(chance.string());
-</script>
-```
-
 ### npm
 
 ```shell
