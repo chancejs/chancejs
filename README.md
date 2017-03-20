@@ -103,6 +103,7 @@ require(['Chance'], function(Chance) {
 * [Dream.js](https://github.com/adleroliveira/dreamjs) - Lightweight json data generator
 * [Fake JSON Schema](https://github.com/pateketrueke/json-schema-faker/) - Use chance generators to populate JSON Schema samples.
 * [Mocker Data Generator](https://github.com/danibram/mocker-data-generator/) - Minimal JSON data generator.
+* [swagger-mock-api](https://github.com/dzdrazil/swagger-mock-api/) - Generate API mocks from a Swagger spec file enriched with Chance types and constraints
 
 *Know a library that uses Chance that isn't here? Update the README and submit a PR!*
 
