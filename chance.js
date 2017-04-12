@@ -709,7 +709,13 @@
     };
 
     Chance.prototype.profession = function () {
-        return this.pick(this.get("professions"));
+        options = initOptions(options)
+        if(options.rank){
+          rank = this.pick(['Apprentice ', 'Junior ', 'Senior ', 'Lead '])
+          return rank + this.pick(this.get("professions"));
+        } else{
+            return this.pick(this.get("professions"));
+        }
     };
 
     Chance.prototype.gender = function (options) {
