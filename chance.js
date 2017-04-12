@@ -719,7 +719,7 @@
     
     Chance.prototype.company = function (){
         return this.pick(this.get("company"));
-    } 
+    }; 
 
     Chance.prototype.gender = function (options) {
         options = initOptions(options, {extraGenders: []});
