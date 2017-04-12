@@ -317,6 +317,37 @@ describe("Person", function () {
             });
         });
     });
+    
+    describe('profession()', function() {
+        var profession;
+        it("returns a profession", function(){
+          _(1000).times(function(){
+            profession = chance.profession();
+            expect(profession).to.be.a('string');
+            expect(profession).to.have.length.above(0);
+          });
+        });
+        
+        it("returns a ranked profession", function(){
+          _(1000).times(function(){
+            profession = chance.profession({rank: true});
+            expect(profession).to.be.a('string');
+            expect(profession.split(" ")).to.have.length.above(1);
+            expect(profession.split(" ")[0]).to.be.match(/(Apprentice|Junior|Senior|Lead)/);
+          });
+        });
+    });
+    
+    describe('company()', function() {
+        var company;
+        it("returns a company", function(){
+          _(1000).times(function(){
+            company = chance.company();
+            expect(company).to.be.a('string');
+            expect(company).to.have.length.above(0);
+          });
+        });
+    });
 
     describe("cpf()", function () {
         var cpf;
