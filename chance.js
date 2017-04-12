@@ -708,10 +708,10 @@
         return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);
     };
 
-    Chance.prototype.profession = function () {
-        options = initOptions(options)
+    Chance.prototype.profession = function (options) {
+        options = initOptions(options);
         if(options.rank){
-            rank = this.pick(['Apprentice ', 'Junior ', 'Senior ', 'Lead '])
+            rank = this.pick(['Apprentice ', 'Junior ', 'Senior ', 'Lead ']);
             return rank + this.pick(this.get("profession"));
         } else{
             return this.pick(this.get("profession"));

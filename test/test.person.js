@@ -332,7 +332,7 @@ describe("Person", function () {
             profession = chance.profession({rank: true});
             expect(profession).to.be.a('string');
             expect(profession.split(" ")).to.have.length.above(1);
-            expect(profession.split(" ")[0]).to.be.match(/(Apprentice|Junior|Senior|Lead)/
+            expect(profession.split(" ")[0]).to.be.match(/(Apprentice|Junior|Senior|Lead)/);
           });
         });
     });
