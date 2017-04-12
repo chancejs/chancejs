@@ -711,14 +711,13 @@
     Chance.prototype.profession = function (options) {
         options = initOptions(options);
         if(options.rank){
-            rank = this.pick(['Apprentice ', 'Junior ', 'Senior ', 'Lead ']);
-            return rank + this.pick(this.get("profession"));
+            return this.pick(['Apprentice ', 'Junior ', 'Senior ', 'Lead ']) + this.pick(this.get("profession"));
         } else{
             return this.pick(this.get("profession"));
         }
     };
     
-    Chance.prototype.company = function () {
+    Chance.prototype.company = function (){
         return this.pick(this.get("company"));
     } 
 

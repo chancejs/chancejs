@@ -319,6 +319,7 @@ describe("Person", function () {
     });
     
     describe('profession()', function() {
+        var profession;
         it("returns a profession", function(){
           _(1000).times(function(){
             profession = chance.profession();
@@ -338,6 +339,7 @@ describe("Person", function () {
     });
     
     describe('company()', function() {
+        var company;
         it("returns a company", function(){
           _(1000).times(function(){
             company = chance.company();
