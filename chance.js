@@ -508,8 +508,12 @@
     Chance.prototype.paragraph = function (options) {
         options = initOptions(options);
 
-        var sentences = options.sentences || this.natural({min: 3, max: 7}),
-            sentence_array = this.n(this.sentence, sentences);
+        var sentences = options.sentences || this.natural({min: 3, max: 7});
+        if (options.pool){
+            var sentence_array = this.n(this.sentence({pool: options.pool}), sentences);
+        } else {
+          var sentence_array = this.n(this.sentence, sentences);
+        }
 
         return sentence_array.join(' ');
     };
@@ -520,9 +524,15 @@
         options = initOptions(options);
 
         var words = options.words || this.natural({min: 12, max: 18}),
-            punctuation = options.punctuation,
-            text, word_array = this.n(this.word, words);
-
+            punctuation = options.punctuation;
+        var text; 
+        
+        if (options.pool){
+          var word_array = this.n(this.word({pool: options.pool}), words);
+        } else {
+          var word_array = this.n(this.word, words);
+        }
+        
         text = word_array.join(' ');
 
         // Capitalize first letter of sentence
@@ -601,6 +611,17 @@
 
         if (options.capitalize) {
             text = this.capitalize(text);
+        }
+        
+        if (options.pool){
+            var pool = options.pool.split(",")
+            var target = this.pick(pool)
+            testRange(target.length <= 0, "Chance: Items in the pool cannot be empty.");
+            if (target.length == 1){
+              text = this.n(target, this.natural({min: 1, max: 10}));
+            } else {
+              text = target;
+            }
         }
 
         return text;
