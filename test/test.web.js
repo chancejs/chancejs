@@ -475,7 +475,7 @@ describe("Web", function () {
         it('should create a valid two character locale with only language', function () {
             var locale = chance.locale();
             expect(locale).to.be.a('string');
-            expect(locale).to.have.length.equal(2);
+            expect(locale.length).to.equal(2);
         });
         
         it('should create a locale with a region code', function () {
