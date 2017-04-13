@@ -183,9 +183,20 @@ describe("Basics", function () {
                 expect(natural).to.equal(0);
             });
         });
+        
+        it("respects numerals", function () {
+            _(1000).times(function () {
+                natural = chance.natural({numerals: 2});
+                expect(natural).to.be.within(10, 99);
+            });
+        });
 
         it("throws an error if min > max", function () {
             expect(function () { chance.natural({min: 1000, max: 500}); }).to.throw(RangeError);
+        });
+        
+        it("throws an error if numerals is less than 1", function () {
+            expect(function () { chance.natural({numerals: 0}); }).to.throw(RangeError);
         });
     });
 

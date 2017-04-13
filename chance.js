@@ -245,12 +245,17 @@
      *  chance.natural({min: 1, max: 3});
      *  would return either 1, 2, or 3.
      *
-     *  @param {Object} [options={}] can specify a min and/or max
+     *  @param {Object} [options={}] can specify a min and/or maxm or a numerals count.
      *  @returns {Number} a single random integer number
      *  @throws {RangeError} min cannot be greater than max
      */
     Chance.prototype.natural = function (options) {
         options = initOptions(options, {min: 0, max: MAX_INT});
+        if (options.numerals){
+          testRange(options.numerals < 1, "Chance: Numerals cannot be less than one.");
+          options.min = Math.pow(10, options.numerals - 1);
+          options.max = Math.pow(10, options.numerals) - 1;
+        }
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
         return this.integer(options);
     };
