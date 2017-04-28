@@ -40,6 +40,16 @@ describe("Text", function () {
                 expect(word).to.have.length(5);
             });
         });
+        
+        it("allows pooled items", function() {
+          _(100).times(function () {
+              word = chance.word({length: 5, pool: 'A,B,C'});
+              expect(word).to.be.a('string');
+              expect(word).to.have.length(5);
+              //Should leave anything that isn't an instance of "A" or "B" or "C"..
+              expect(word.replace(/A/g,'').replace(/B/g,'').replace(/C/g,'')).to.have.length(0);
+          });
+        });
 
         it("throws an exception if both syllables and length specified", function () {
             _(1000).times(function () {
@@ -68,6 +78,16 @@ describe("Text", function () {
                 expect(sentence.split(' ')).to.have.length(5);
             });
         });
+        
+        it("allows pooled items", function() {
+          _(100).times(function () {
+              sentence = chance.sentence({words: 5, pool: 'A,B,C'});
+              expect(sentence).to.be.a('string');
+              expect(sentence.split(' ')).to.have.length(5);
+              //Should leave anything that isn't an instance of "A" or "B" or "C" or spaces or dots.
+              expect(paragraph.replace(/A/g,'').replace(/B/g,'').replace(/C/g,'').replace(/\./g,'').replace(/ /g,'')).to.have.length(0);
+          });
+        });
     });
 
     describe("Paragraph", function () {
@@ -91,6 +111,19 @@ describe("Text", function () {
                 // of detecting sentences -- by splitting on '.'
                 expect(paragraph.split('.')).to.have.length(6);
             });
+        });
+        
+        it("allows pooled items", function() {
+          _(100).times(function () {
+              paragraph = chance.paragraph({sentences: 5, pool: 'A,B,C'});
+              expect(paragraph).to.be.a('string');
+              // Have to account for the fact that the period at the end will add
+              // to the count of sentences. This is the fault of our hackish way
+              // of detecting sentences -- by splitting on '.'
+              expect(paragraph.split('.')).to.have.length(6);
+              //Should leave anything that isn't an instance of "A" or "B" or "C" or spaces or dots.
+              expect(paragraph.replace(/A/g,'').replace(/B/g,'').replace(/C/g,'').replace(/\./g,'').replace(/ /g,'')).to.have.length(0);
+          });
         });
     });
 });
