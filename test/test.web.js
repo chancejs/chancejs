@@ -470,5 +470,19 @@ describe("Web", function () {
             expect(port).to.be.at.most(65535);
         });
     });
+    
+    describe('locale()', function () {
+        it('should create a valid two character locale with only language', function () {
+            var locale = chance.locale();
+            expect(locale).to.be.a('string');
+            expect(locale.length).to.equal(2);
+        });
+        
+        it('should create a locale with a region code', function () {
+            var locale = chance.locale({region: true});
+            expect(locale).to.be.a('string');
+            expect(locale.split("-")).to.have.length.at.least(2);
+        });
+    });
 
 });
