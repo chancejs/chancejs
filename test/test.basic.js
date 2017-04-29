@@ -10,19 +10,6 @@ const timeout = (seconds) => {
     })
 }
 
-test('get() works as expected', t => {
-    let data = chance.get('lastNames')
-    t.true(typeof data === 'object')
-})
-
-test('set() works as expected', t => {
-    let cData = { lastNames: ['customName', 'testLast'] }
-    chance.set(cData)
-    let data = chance.get('lastNames')
-    t.true(_.isArray(data))
-    t.is(data.length, 2)
-})
-
 test('bool() returns a random boolean', t => {
     let bool = chance.bool()
     t.is(typeof bool, 'boolean')
@@ -70,6 +57,195 @@ test('bool() throws an error if likelihood < 0 or > 100', t => {
     t.throws(fn1, RangeError)
     const fn2 = () => chance.bool({likelihood: 7933})
     t.throws(fn2, RangeError)
+})
+
+test('Chance() null works', async t => {
+    t.plan(1)
+
+    let chance1 = Chance(null)
+    // Wait 5 ms before creating chance2 else sometimes they happen on the same
+    // tick and end up with the same seed!
+    await timeout(5)
+    let chance2 = Chance(null)
+    t.not(chance1.random(), chance2.random())
+})
+
+test('Chance() does return differing results if differing seeds provided', t => {
+    let chance1 = new Chance(12345)
+    let chance2 = new Chance(54321)
+    t.not(chance1.random(), chance2.random())
+})
+
+test('Chance() does not return repeatable results if no seed provided', async t => {
+    t.plan(1000)
+    let chance1 = new Chance()
+    await timeout(5)
+    let chance2 = new Chance()
+    _.times(1000, () => {
+        t.not(chance1.random(), chance2.random())
+    })
+})
+
+test('Chance() returns repeatable results if seed provided on the Chance object', t => {
+    let seed = new Date().getTime()
+    let chance1 = new Chance(seed)
+    let chance2 = new Chance(seed)
+
+    _.times(1000, () => {
+        t.is(chance1.random(), chance2.random())
+    })
+})
+
+test('Chance() returns repeatable results if a string is provided as a seed', t => {
+    let seed = "foo"
+    let chance1 = new Chance(seed)
+    let chance2 = new Chance(seed)
+
+    _.times(1000, () => {
+        t.is(chance1.random(), chance2.random())
+    })
+})
+
+test('Chance() returns different results if two different strings are provided', t => {
+    let chance1 = new Chance("foo")
+    let chance2 = new Chance("baz")
+
+    _.times(1000, () => {
+        t.not(chance1.random(), chance2.random())
+    })
+})
+
+test('Chance() returns different results if two different strings are provided redux', t => {
+    // Credit to @dan-tilley for noticing this flaw in the old seed
+    let chance1 = new Chance("abe")
+    let chance2 = new Chance("acc")
+
+    _.times(1000, () => {
+        t.not(chance1.random(), chance2.random())
+    })
+})
+
+test('Chance() returns different results if multiple arguments are provided', t => {
+    let seed = new Date().getTime()
+    let chance1 = new Chance(seed, "foo")
+    let chance2 = new Chance(seed, "bar")
+
+    _.times(1000, () => {
+        t.not(chance1.random(), chance2.random())
+    })
+})
+
+test('Chance() will take an arbitrary function for the seed and use it', t => {
+    let chance = new Chance(() => 123)
+
+    _.times(1000, () => {
+        t.is(chance.random(), 123)
+    })
+})
+
+test('character() returns a character', t => {
+    let char = chance.character()
+    t.is(typeof char, 'string')
+    t.is(char.length, 1)
+})
+
+test('character() pulls only from pool, when specified', t => {
+    _.times(1000, () => {
+        let char = chance.character({ pool: 'abcde' })
+        t.is(char.match(/[abcde]/).index, 0)
+    })
+})
+
+test('character() allows only alpha', t => {
+    _.times(1000, () => {
+        let char = chance.character({ alpha: true })
+        t.is(char.match(/[a-zA-Z]/).index, 0)
+    })
+})
+
+test('character() throws when specifying both alpha and symbols', t => {
+    const fn = () => chance.character({alpha: true, symbols: true})
+    t.throws(fn, 'Chance: Cannot specify both alpha and symbols.')
+})
+
+test('character() obeys upper case', t => {
+    _.times(1000, () => {
+        let char = chance.character({ alpha: true, casing: 'upper' })
+        t.is(char.match(/[A-Z]/).index, 0)
+    })
+})
+
+test('natural() respects numerals', t => {
+    _.times(1000, () => {
+        let natural = chance.natural({ numerals: 2 })
+        t.true(natural <= 99)
+        t.true(natural >= 10)
+    })
+})
+
+test('natural() throws an error if min > max', t => {
+    const fn = () => chance.natural({ min: 1000, max: 500 })
+    t.throws(fn, 'Chance: Min cannot be greater than Max.')
+})
+
+test('character() obeys lower case', t => {
+    _.times(1000, () => {
+        let char = chance.character({ alpha: true, casing: 'lower' })
+        t.is(char.match(/[a-z]/).index, 0)
+    })
+})
+
+test('natural() throws an error if numerals is less than 1', t => {
+    const fn = () => chance.natural({ numerals: 0 })
+    t.throws(fn, 'Chance: Numerals cannot be less than one.')
+});
+
+test('floating() returns a random floating', t => {
+    t.is(typeof chance.floating(), 'number')
+})
+
+test('floating() can take both a max and min and obey them both', t => {
+    _.times(1000, () => {
+        let floating = chance.floating({ min: 90, max: 100 })
+        t.true(floating > 89)
+        t.true(floating < 101)
+    })
+})
+
+test('floating() will not take fixed + min that would be out of range', t => {
+    const fn = () => chance.floating({ fixed: 13, min: -9007199254740992 })
+    t.throws(fn, "Chance: Min specified is out of range with fixed. Min should be, at least, -900.7199254740992")
+})
+
+test('floating() will not take fixed + max that would be out of range', t => {
+    const fn = () => chance.floating({ fixed: 13, max: 9007199254740992 })
+    t.throws(fn, "Chance: Max specified is out of range with fixed. Max should be, at most, 900.7199254740992")
+})
+
+test('floating() obeys the fixed parameter, when present', t => {
+    _.times(1000, () => {
+        let floating = chance.floating({ fixed: 4 })
+        let decimals = floating.toString().split('.')[1] ? floating.toString().split('.')[1] : ''
+        t.true(decimals.length < 5)
+    })
+})
+
+test('floating() can take fixed and obey it', t => {
+    _.times(1000, () => {
+        let floating = chance.floating({ fixed: 3 })
+        let parsed = parseFloat(floating.toFixed(3))
+        t.is(floating, parsed)
+    })
+})
+
+test('floating() will not take both fixed and precision', t => {
+    const fn = () => chance.floating({fixed: 2, precision: 8})
+    t.throws(fn, 'Chance: Cannot specify both fixed and precision.')
+})
+
+test('get() works as expected', t => {
+    let data = chance.get('lastNames')
+    t.true(typeof data === 'object')
 })
 
 test('integer() returns a random integer', t => {
@@ -171,104 +347,17 @@ test('natural() works with both bounds 0', t => {
     })
 })
 
-test('natural() respects numerals', t => {
-    _.times(1000, () => {
-        let natural = chance.natural({ numerals: 2 })
-        t.true(natural <= 99)
-        t.true(natural >= 10)
-    })
-})
-
 test('natural() throws an error if min > max', t => {
     const fn = () => chance.natural({ min: 1000, max: 500 })
     t.throws(fn, 'Chance: Min cannot be greater than Max.')
 })
 
-test('natural() throws an error if numerals is less than 1', t => {
-    const fn = () => chance.natural({ numerals: 0 })
-    t.throws(fn, 'Chance: Numerals cannot be less than one.')
-});
-
-test('floating() returns a random floating', t => {
-    t.is(typeof chance.floating(), 'number')
-})
-
-test('floating() can take both a max and min and obey them both', t => {
-    _.times(1000, () => {
-        let floating = chance.floating({ min: 90, max: 100 })
-        t.true(floating > 89)
-        t.true(floating < 101)
-    })
-})
-
-test('floating() will not take fixed + min that would be out of range', t => {
-    const fn = () => chance.floating({ fixed: 13, min: -9007199254740992 })
-    t.throws(fn, "Chance: Min specified is out of range with fixed. Min should be, at least, -900.7199254740992")
-})
-
-test('floating() will not take fixed + max that would be out of range', t => {
-    const fn = () => chance.floating({ fixed: 13, max: 9007199254740992 })
-    t.throws(fn, "Chance: Max specified is out of range with fixed. Max should be, at most, 900.7199254740992")
-})
-
-test('floating() obeys the fixed parameter, when present', t => {
-    _.times(1000, () => {
-        let floating = chance.floating({ fixed: 4 })
-        let decimals = floating.toString().split('.')[1] ? floating.toString().split('.')[1] : ''
-        t.true(decimals.length < 5)
-    })
-})
-
-test('floating() can take fixed and obey it', t => {
-    _.times(1000, () => {
-        let floating = chance.floating({ fixed: 3 })
-        let parsed = parseFloat(floating.toFixed(3))
-        t.is(floating, parsed)
-    })
-})
-
-test('floating() will not take both fixed and precision', t => {
-    const fn = () => chance.floating({fixed: 2, precision: 8})
-    t.throws(fn, 'Chance: Cannot specify both fixed and precision.')
-})
-
-test('character() returns a character', t => {
-    let char = chance.character()
-    t.is(typeof char, 'string')
-    t.is(char.length, 1)
-})
-
-test('character() pulls only from pool, when specified', t => {
-    _.times(1000, () => {
-        let char = chance.character({ pool: 'abcde' })
-        t.is(char.match(/[abcde]/).index, 0)
-    })
-})
-
-test('character() allows only alpha', t => {
-    _.times(1000, () => {
-        let char = chance.character({ alpha: true })
-        t.is(char.match(/[a-zA-Z]/).index, 0)
-    })
-})
-
-test('character() throws when specifying both alpha and symbols', t => {
-    const fn = () => chance.character({alpha: true, symbols: true})
-    t.throws(fn, 'Chance: Cannot specify both alpha and symbols.')
-})
-
-test('character() obeys upper case', t => {
-    _.times(1000, () => {
-        let char = chance.character({ alpha: true, casing: 'upper' })
-        t.is(char.match(/[A-Z]/).index, 0)
-    })
-})
-
-test('character() obeys lower case', t => {
-    _.times(1000, () => {
-        let char = chance.character({ alpha: true, casing: 'lower' })
-        t.is(char.match(/[a-z]/).index, 0)
-    })
+test('set() works as expected', t => {
+    let cData = { lastNames: ['customName', 'testLast'] }
+    chance.set(cData)
+    let data = chance.get('lastNames')
+    t.true(_.isArray(data))
+    t.is(data.length, 2)
 })
 
 test('string() returns a string', t => {
@@ -312,90 +401,6 @@ test('string() obeys symbol', t => {
     _.times(1000, () => {
         let str = chance.string({ symbols: true })
         t.is(str.match(/[\!\@\#\$\%\^\&\*\(\)\[\]]+/).index, 0)
-    })
-})
-
-test('Chance() null works', async t => {
-    t.plan(1)
-
-    let chance1 = Chance(null)
-    // Wait 5 ms before creating chance2 else sometimes they happen on the same
-    // tick and end up with the same seed!
-    await timeout(5)
-    let chance2 = Chance(null)
-    t.not(chance1.random(), chance2.random())
-})
-
-test('Chance() does return differing results if differing seeds provided', t => {
-    let chance1 = new Chance(12345)
-    let chance2 = new Chance(54321)
-    t.not(chance1.random(), chance2.random())
-})
-
-test('Chance() does not return repeatable results if no seed provided', async t => {
-    t.plan(1000)
-    let chance1 = new Chance()
-    await timeout(5)
-    let chance2 = new Chance()
-    _.times(1000, () => {
-        t.not(chance1.random(), chance2.random())
-    })
-})
-
-test('Chance() returns repeatable results if seed provided on the Chance object', t => {
-    let seed = new Date().getTime()
-    let chance1 = new Chance(seed)
-    let chance2 = new Chance(seed)
-
-    _.times(1000, () => {
-        t.is(chance1.random(), chance2.random())
-    })
-})
-
-test('Chance() returns repeatable results if a string is provided as a seed', t => {
-    let seed = "foo"
-    let chance1 = new Chance(seed)
-    let chance2 = new Chance(seed)
-
-    _.times(1000, () => {
-        t.is(chance1.random(), chance2.random())
-    })
-})
-
-test('Chance() returns different results if two different strings are provided', t => {
-    let chance1 = new Chance("foo")
-    let chance2 = new Chance("baz")
-
-    _.times(1000, () => {
-        t.not(chance1.random(), chance2.random())
-    })
-})
-
-test('Chance() returns different results if two different strings are provided redux', t => {
-    // Credit to @dan-tilley for noticing this flaw in the old seed
-    let chance1 = new Chance("abe")
-    let chance2 = new Chance("acc")
-
-    _.times(1000, () => {
-        t.not(chance1.random(), chance2.random())
-    })
-})
-
-test('Chance() returns different results if multiple arguments are provided', t => {
-    let seed = new Date().getTime()
-    let chance1 = new Chance(seed, "foo")
-    let chance2 = new Chance(seed, "bar")
-
-    _.times(1000, () => {
-        t.not(chance1.random(), chance2.random())
-    })
-})
-
-test('Chance() will take an arbitrary function for the seed and use it', t => {
-    let chance = new Chance(() => 123)
-
-    _.times(1000, () => {
-        t.is(chance.random(), 123)
     })
 })
 
