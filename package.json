@@ -41,18 +41,32 @@
     "dice"
   ],
   "jam": {
-      "main": "chance.js"
+    "main": "chance.js"
   },
   "github": "https://github.com/chancejs/chancejs",
-  "maintainers": [{
-    "name": "Victor Quinn",
-    "email": "mail@victorquinn.com",
-    "web": "http://victorquinn.com"
-  }],
+  "maintainers": [
+    {
+      "name": "Victor Quinn",
+      "email": "mail@victorquinn.com",
+      "web": "http://victorquinn.com"
+    }
+  ],
   "spm": {
     "main": "chance.js",
     "ignore": [
       "test"
     ]
+  },
+  "dependencies": {
+    "ava": "^0.19.1",
+    "babel-eslint": "^7.2.3",
+    "chai": "^3.5.0",
+    "dirty-chai": "^1.2.2",
+    "gulp": "^3.9.1",
+    "gulp-ava": "^0.17.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-jshint": "^2.0.4",
+    "jshint-stylish": "^2.2.1",
+    "lodash": "^4.17.4"
   }
 }

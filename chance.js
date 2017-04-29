@@ -19,7 +19,7 @@
     // Constructor
     function Chance (seed) {
         if (!(this instanceof Chance)) {
-            return seed == null ? new Chance() : new Chance(seed);
+            return seed === null ? new Chance() : new Chance(seed);
         }
 
         // if user has provided a function, use that as the generator
@@ -66,7 +66,7 @@
 
     // Random helper functions
     function initOptions(options, defaults) {
-        options || (options = {});
+        options = options || {};
 
         if (defaults) {
             for (var i in defaults) {
@@ -251,7 +251,7 @@
      */
     Chance.prototype.natural = function (options) {
         options = initOptions(options, {min: 0, max: MAX_INT});
-        if (options.numerals){
+        if (typeof options.numerals === 'number'){
           testRange(options.numerals < 1, "Chance: Numerals cannot be less than one.");
           options.min = Math.pow(10, options.numerals - 1);
           options.max = Math.pow(10, options.numerals) - 1;
@@ -6692,6 +6692,14 @@
         testRange(
             options.pool.constructor !== Array,
             "Chance: The pool option must be a valid array."
+        );
+        testRange(
+            typeof options.mean !== 'number',
+            "Chance: Mean (mean) must be a number"
+        );
+        testRange(
+            typeof options.dev !== 'number',
+            "Chance: Standard deviation (dev) must be a number"
         );
 
         // If a pool has been passed, then we are returning an item from that pool,
