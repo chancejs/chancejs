@@ -42,9 +42,9 @@ describe("Regional", function () {
                 expect(chance.luhn_check(11203700015)).to.be.true;
                 expect(chance.luhn_check('10384030010')).to.be.true;
                 expect(chance.luhn_check(11401610016)).to.be.true;
-                expect(chance.luhn_check(09105080015)).to.be.true;
+                expect(chance.luhn_check(9105080015)).to.be.true;
                 expect(chance.luhn_check(11203700011)).to.be.false;
-                expect(chance.luhn_check(09105080010)).to.be.false;
+                expect(chance.luhn_check(9105080010)).to.be.false;
             });
         });
 
