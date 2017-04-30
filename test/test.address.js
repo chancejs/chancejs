@@ -174,8 +174,8 @@ test('latitude() looks right', t => {
 test('latitude() is in the right range', t => {
     _.times(1000, () => {
         let latitude = chance.latitude()
-        t.true(latitude > -90)
-        t.true(latitude < 90)
+        t.true(latitude >= -90)
+        t.true(latitude <= 90)
     })
 })
 
@@ -183,8 +183,8 @@ test('latitude() will accept a min and obey it', t => {
     _.times(1000, () => {
         let min = chance.floating({ min: -90, max: 90 })
         let latitude = chance.latitude({ min: min })
-        t.true(latitude > min)
-        t.true(latitude < 90)
+        t.true(latitude >= min)
+        t.true(latitude <= 90)
     })
 })
 
@@ -192,8 +192,8 @@ test('latitude() will accept a max and obey it', t => {
     _.times(1000, () => {
         let max = chance.floating({ min: -90, max: 90 })
         let latitude = chance.latitude({ max: max })
-        t.true(latitude > -90)
-        t.true(latitude < max)
+        t.true(latitude >= -90)
+        t.true(latitude <= max)
     })
 })
 
@@ -205,8 +205,8 @@ test('longitude() looks right', t => {
 test('longitude() is in the right range', t => {
     _.times(1000, () => {
         let longitude = chance.longitude()
-        t.true(longitude > -180)
-        t.true(longitude < 180)
+        t.true(longitude >= -180)
+        t.true(longitude <= 180)
     })
 })
 
@@ -214,8 +214,8 @@ test('longitude() will accept a min and obey it', t => {
     _.times(1000, () => {
         let min = chance.floating({ min: -180, max: 180 })
         let longitude = chance.longitude({ min: min })
-        t.true(longitude > min)
-        t.true(longitude < 180)
+        t.true(longitude >= min)
+        t.true(longitude <= 180)
     })
 })
 
@@ -223,8 +223,8 @@ test('longitude() will accept a max and obey it', t => {
     _.times(1000, () => {
         let max = chance.floating({ min: -180, max: 180 })
         let longitude = chance.longitude({ max: max })
-        t.true(longitude > -180)
-        t.true(longitude < max)
+        t.true(longitude >= -180)
+        t.true(longitude <= max)
     })
 })
 
