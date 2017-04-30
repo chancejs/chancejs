@@ -152,14 +152,14 @@ test('character() returns a character', t => {
 test('character() pulls only from pool, when specified', t => {
     _.times(1000, () => {
         let char = chance.character({ pool: 'abcde' })
-        t.is(char.match(/[abcde]/).index, 0)
+        t.true(/[abcde]/.test(char))
     })
 })
 
 test('character() allows only alpha', t => {
     _.times(1000, () => {
         let char = chance.character({ alpha: true })
-        t.is(char.match(/[a-zA-Z]/).index, 0)
+        t.true(/[a-zA-Z]/.test(char))
     })
 })
 
@@ -171,14 +171,14 @@ test('character() throws when specifying both alpha and symbols', t => {
 test('character() obeys upper case', t => {
     _.times(1000, () => {
         let char = chance.character({ alpha: true, casing: 'upper' })
-        t.is(char.match(/[A-Z]/).index, 0)
+        t.true(/[A-Z]/.test(char))
     })
 })
 
 test('character() obeys lower case', t => {
     _.times(1000, () => {
         let char = chance.character({ alpha: true, casing: 'lower' })
-        t.is(char.match(/[a-z]/).index, 0)
+        t.true(/[a-z]/.test(char))
     })
 })
 
@@ -361,27 +361,27 @@ test('string() throws error if length < 0', t => {
 test('string() returns only letters with alpha', t => {
     _.times(1000, () => {
         let str = chance.string({ alpha: true })
-        t.is(str.match(/[a-zA-Z]+/).index, 0)
+        t.true(/[a-zA-Z]+/.test(str))
     })
 })
 
 test('string() obeys upper case', t => {
     _.times(1000, () => {
         let str = chance.string({ alpha: true, casing: 'upper' })
-        t.is(str.match(/[A-Z]+/).index, 0)
+        t.true(/[A-Z]+/.test(str))
     })
 })
 
 test('string() obeys lower case', t => {
     _.times(1000, () => {
         let str = chance.string({ alpha: true, casing: 'lower' })
-        t.is(str.match(/[a-z]+/).index, 0)
+        t.true(/[a-z]+/.test(str))
     })
 })
 
 test('string() obeys symbol', t => {
     _.times(1000, () => {
         let str = chance.string({ symbols: true })
-        t.is(str.match(/[\!\@\#\$\%\^\&\*\(\)\[\]]+/).index, 0)
+        t.true(/[\!\@\#\$\%\^\&\*\(\)\[\]]+/.test(str))
     })
 })

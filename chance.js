@@ -255,7 +255,7 @@
         return this.integer(options);
     };
 	
-	/**
+    /**
      *  Return a random hex number as string
      *
      *  NOTE the max and min are INCLUDED in the range. So:
@@ -1789,7 +1789,7 @@
                 }
             }
             if (type === null) {
-                throw new RangeError("Credit card type '" + options.name + "'' is not supported");
+                throw new RangeError("Chance: Credit card type '" + options.name + "' is not supported");
             }
         } else {
             type = this.pick(types);
@@ -1798,22 +1798,22 @@
         return options.raw ? type : type.name;
     };
 
-    //return all world currency by ISO 4217
+    // return all world currency by ISO 4217
     Chance.prototype.currency_types = function () {
         return this.get("currency_types");
     };
 
-    //return random world currency by ISO 4217
+    // return random world currency by ISO 4217
     Chance.prototype.currency = function () {
         return this.pick(this.currency_types());
     };
 
-    //return all timezones availabel
+    // return all timezones available
     Chance.prototype.timezones = function () {
         return this.get("timezones");
     };
 
-    //return random timezone
+    // return random timezone
     Chance.prototype.timezone = function () {
         return this.pick(this.timezones());
     };
@@ -2275,7 +2275,7 @@
                 return (fileName + '.' + fileExtension);
             }
 
-            throw new Error("Expect collection of type Array or Object to be passed as an argument ");
+            throw new Error("Chance: Extensions must be an Array or Object");
         }
 
         // Generate file extension based on specific file type
@@ -2288,7 +2288,7 @@
                 return (fileName + '.' + fileExtension);
             }
 
-            throw new Error("Expect file type value to be 'raster', 'vector', '3d' or 'document' ");
+            throw new RangeError("Chance: Expect file type value to be 'raster', 'vector', '3d' or 'document'");
         }
 
         // Generate random file name if no extension options are passed
