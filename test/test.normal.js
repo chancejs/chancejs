@@ -14,7 +14,7 @@ const pool = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 
 const chance = new Chance()
 
-test('normal() works as expected with no parameters and returns a number', t => {    
+test('normal() works as expected with no parameters and returns a number', t => {
     _.times(1000, () => {
         let norm = chance.normal()
         t.is(typeof norm, 'number')
