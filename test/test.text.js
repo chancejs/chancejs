@@ -1,96 +1,92 @@
-/// <reference path="../chance.js" />
-/// <reference path="../node_modules/underscore/underscore-min.js" />
+import test from 'ava'
+import Chance from '../chance.js'
+import _ from 'lodash'
 
-var expect = chai.expect;
+const chance = new Chance()
 
-describe("Text", function () {
-    var syllable, word, sentence, paragraph, chance = new Chance();
+// chance.sentence()
+test('sentence() returns a random sentence', t => {
+    _.times(1000, () => {
+        let sentence = chance.sentence()
+        t.true(_.isString(sentence))
+        let len = sentence.split(' ').length
+        t.true(len > 11)
+        t.true(len < 19)
+    })
+})
 
-    describe("Syllable", function () {
-        it("returns a random syllable", function () {
-            _(1000).times(function () {
-                syllable = chance.syllable();
-                expect(syllable).to.be.a('string');
-                expect(syllable).to.have.length.within(2, 3);
-            });
-        });
-    });
+test('sentence() will obey bounds', t => {
+    _.times(1000, () => {
+        let sentence = chance.sentence({ words: 5 })
+        t.true(_.isString(sentence))
+        t.is(sentence.split(' ').length, 5)
+        t.true(/[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+.?/m.test(sentence))
+    })
+})
 
-    describe("Word", function () {
-        it("returns a random word", function () {
-            _(1000).times(function () {
-                word = chance.word();
-                expect(word).to.be.a('string');
-                expect(word).to.have.length.within(2, 9);
-            });
-        });
+// chance.syllable()
+test('syllable() returns a random syllable', t => {
+    _.times(1000, () => {
+        let syllable = chance.syllable()
+        t.true(_.isString(syllable))
+        t.true(syllable.length > 1)
+        t.true(syllable.length < 4)
+    })
+})
 
-        it("can have a set number of syllables", function () {
-            _(1000).times(function () {
-                word = chance.word({syllables: 3});
-                expect(word).to.be.a('string');
-                expect(word).to.have.length.within(6, 9);
-            });
-        });
+// chance.word()
+test('word() returns a random word', t => {
+    _.times(1000, () => {
+        let word = chance.word()
+        t.true(_.isString(word))
+        t.true(word.length > 1)
+        t.true(word.length < 10)
+    })
+})
 
-        it("can have a set length", function () {
-            _(1000).times(function () {
-                word = chance.word({length: 5});
-                expect(word).to.be.a('string');
-                expect(word).to.have.length(5);
-            });
-        });
+test('word() can have a set number of syllables', t => {
+    _.times(1000, () => {
+        let word = chance.word({ syllables: 3 })
+        t.true(_.isString(word))
+        t.true(word.length > 5)
+        t.true(word.length < 10)
+    })
+})
 
-        it("throws an exception if both syllables and length specified", function () {
-            _(1000).times(function () {
-                // This is a bit ugly, but in essence Chai needs to receive
-                // a function here to work as it puts it in its own
-                // try/catch block. So we have to create an anonymous
-                // function to pass along for it to do that.
-                expect(function () { chance.word({syllables: 3, length: 20 }); }).to.throw(RangeError);
-            });
-        });
-    });
+test('word() can have a set length', t => {
+    _.times(1000, () => {
+        let word = chance.word({ length: 5 })
+        t.true(_.isString(word))
+        t.is(word.length, 5)
+    })
+})
 
-    describe("Sentence", function () {
-        it("returns a random sentence", function () {
-            _(1000).times(function () {
-                sentence = chance.sentence();
-                expect(sentence).to.be.a('string');
-                expect(sentence.split(' ')).to.have.length.within(12, 18);
-            });
-        });
+test('word() throws if both syllables and length specified', t => {
+    const fn = () => chance.word({ syllables: 3, length: 20 })
+    t.throws(fn, 'Chance: Cannot specify both syllables AND length.')
+})
 
-        it("will obey bounds", function () {
-            _(1000).times(function () {
-                sentence = chance.sentence({words: 5});
-                expect(sentence).to.be.a('string');
-                expect(sentence.split(' ')).to.have.length(5);
-            });
-        });
-    });
+// chance.paragraph()
+test('paragraph() returns a random paragraph', t => {
+    _.times(100, () => {
+        let paragraph = chance.paragraph()
+        t.true(_.isString(paragraph))
 
-    describe("Paragraph", function () {
-        it("returns a random paragraph", function () {
-            _(100).times(function () {
-                paragraph = chance.paragraph();
-                expect(paragraph).to.be.a('string');
-                // Have to account for the fact that the period at the end will add
-                // to the count of sentences. This is the fault of our hackish way
-                // of detecting sentences -- by splitting on '.'
-                expect(paragraph.split('.')).to.have.length.within(3, 8);
-            });
-        });
+        let len = paragraph.split('.').length
+        t.true(len > 2)
+        t.true(len < 9)
+    })
+})
 
-        it("will obey bounds", function () {
-            _(100).times(function () {
-                paragraph = chance.paragraph({sentences: 5});
-                expect(paragraph).to.be.a('string');
-                // Have to account for the fact that the period at the end will add
-                // to the count of sentences. This is the fault of our hackish way
-                // of detecting sentences -- by splitting on '.'
-                expect(paragraph.split('.')).to.have.length(6);
-            });
-        });
-    });
-});
+test('paragraph() will obey bounds', t => {
+    _.times(100, () => {
+        let paragraph = chance.paragraph({ sentences: 5 })
+        t.true(_.isString(paragraph))
+
+        // Have to account for the fact that the period at the end will add
+        // to the count of sentences. This is the fault of our hackish way
+        // of detecting sentences -- by splitting on '.'
+        let len = paragraph.split('.').length
+        t.is(len, 6)
+    })
+})
