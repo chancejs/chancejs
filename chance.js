@@ -7227,8 +7227,10 @@
     }
 
     // if there is a importsScrips object define chance for worker
+    // allows worker to use full Chance functionality with seed
     if (typeof importScripts !== 'undefined') {
         chance = new Chance();
+	self.Chance = Chance;
     }
 
     // If there is a window object, that at least has a document property,
