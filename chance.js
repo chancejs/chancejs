@@ -416,7 +416,7 @@
             throw new RangeError("Chance: Cannot pickset() from an empty array");
         }
         if (count < 0) {
-            throw new RangeError("Chance: count must be positive number");
+            throw new RangeError("Chance: Count must be a positive number");
         }
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
@@ -446,7 +446,7 @@
     // Returns a single item from an array with relative weighting of odds
     Chance.prototype.weighted = function (arr, weights, trim) {
         if (arr.length !== weights.length) {
-            throw new RangeError("Chance: length of array and weights must match");
+            throw new RangeError("Chance: Length of array and weights must match");
         }
 
         // scan weights array and sum valid entries
@@ -455,7 +455,7 @@
         for (var weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
             val = weights[weightIndex];
             if (isNaN(val)) {
-                throw new RangeError("all weights must be numbers");
+                throw new RangeError("Chance: All weights must be numbers");
             }
 
             if (val > 0) {
@@ -464,7 +464,7 @@
         }
 
         if (sum === 0) {
-            throw new RangeError("Chance: no valid entries in array weights");
+            throw new RangeError("Chance: No valid entries in array weights");
         }
 
         // select a value within range
@@ -1127,7 +1127,6 @@
 				hexstring = gray(pad(this.hex({min: min_rgb, max: max_rgb}), 2));
 				if (options.format === "shorthex") {
 					hexstring = gray(this.hex({min: 0, max: 15}));
-					console.log("hex: " + hexstring);
 				}
 			}
 			else {
@@ -2087,13 +2086,13 @@
     Chance.prototype.rpg = function (thrown, options) {
         options = initOptions(options);
         if (!thrown) {
-            throw new RangeError("A type of die roll must be included");
+            throw new RangeError("Chance: A type of die roll must be included");
         } else {
             var bits = thrown.toLowerCase().split("d"),
                 rolls = [];
 
             if (bits.length !== 2 || !parseInt(bits[0], 10) || !parseInt(bits[1], 10)) {
-                throw new Error("Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
+                throw new Error("Chance: Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
             }
             for (var i = bits[0]; i > 0; i--) {
                 rolls[i - 1] = this.natural({min: 1, max: bits[1]});
