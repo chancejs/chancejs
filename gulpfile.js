@@ -3,13 +3,16 @@ const eslint = require('gulp-eslint')
 const ava = require('gulp-ava')
 
 gulp.task('lint', () =>
-    gulp.src(['chance.js', 'gulpfile.js', 'test/**/*.js'])
+    gulp.src(['chance.js', 'gulpfile.js', 'test/**/*.js', '!test/helpers/**/*.js'])
         .pipe(eslint({
             parser: 'babel-eslint',
             rules: {
                 // quotes: ['error', 'single'],
+                'curly': 'error',
+                'eqeqeq': 'error',
+                'no-console': 'error',
+                'no-empty': 'error',
                 'no-trailing-spaces': 'error',
-                'no-console': 'error'
             }
         }))
         .pipe(eslint.format())
