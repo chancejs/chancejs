@@ -25,6 +25,10 @@ gulp.task('watch', () => {
     var watcher = gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])
 })
 
+gulp.task('watch-lint', () => {
+    var watcher = gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint'])
+})
+
 gulp.task('travis', ['lint', 'test'])
 
 gulp.task('default', ['watch', 'lint', 'test'])
