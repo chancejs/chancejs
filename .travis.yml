@@ -1,11 +1,6 @@
 language: node_js
 before_script:
-  - npm install -g bower
-  - npm install -g grunt-cli
-  - bower install
+  - npm install -g gulp-cli
 sudo: false
 node_js:
-  - "0.10"
-  - "0.12"
-  - "iojs"
-  - "4"
+  - "7"

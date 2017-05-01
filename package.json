@@ -28,7 +28,7 @@
     "underscore": "^1.8.3"
   },
   "scripts": {
-    "test": "grunt test-ci"
+    "test": "gulp travis"
   },
   "keywords": [
     "chance",

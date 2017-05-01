@@ -21,6 +21,10 @@ gulp.task('test', () =>
         .pipe(ava({ verbose: true }))
 )
 
-var watcher = gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])
+gulp.task('watch', () => {
+    var watcher = gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])
+})
 
-gulp.task('default', ['lint', 'test'])
+gulp.task('travis', ['lint', 'test'])
+
+gulp.task('default', ['watch', 'lint', 'test'])
