@@ -175,30 +175,12 @@ test('character() obeys upper case', t => {
     })
 })
 
-test('natural() respects numerals', t => {
-    _.times(1000, () => {
-        let natural = chance.natural({ numerals: 2 })
-        t.true(natural <= 99)
-        t.true(natural >= 10)
-    })
-})
-
-test('natural() throws an error if min > max', t => {
-    const fn = () => chance.natural({ min: 1000, max: 500 })
-    t.throws(fn, 'Chance: Min cannot be greater than Max.')
-})
-
 test('character() obeys lower case', t => {
     _.times(1000, () => {
         let char = chance.character({ alpha: true, casing: 'lower' })
         t.true(/[a-z]/.test(char))
     })
 })
-
-test('natural() throws an error if numerals is less than 1', t => {
-    const fn = () => chance.natural({ numerals: 0 })
-    t.throws(fn, 'Chance: Numerals cannot be less than one.')
-});
 
 test('floating() returns a random floating', t => {
     t.is(typeof chance.floating(), 'number')
@@ -347,9 +329,22 @@ test('natural() works with both bounds 0', t => {
     })
 })
 
+test('natural() respects numerals', t => {
+    _.times(1000, () => {
+        let natural = chance.natural({ numerals: 2 })
+        t.true(natural <= 99)
+        t.true(natural >= 10)
+    })
+})
+
 test('natural() throws an error if min > max', t => {
     const fn = () => chance.natural({ min: 1000, max: 500 })
     t.throws(fn, 'Chance: Min cannot be greater than Max.')
+})
+
+test('natural() throws an error if numerals is less than 1', t => {
+    const fn = () => chance.natural({ numerals: 0 })
+    t.throws(fn, 'Chance: Numerals cannot be less than one.')
 })
 
 test('set() works as expected', t => {
