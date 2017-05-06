@@ -104,6 +104,14 @@ test('avatar() can take and ignore an invalid fallback image', t => {
     })
 })
 
+test('avatar() can take just an email', t => {
+    _.times(1000, () => {
+        let avatar = chance.avatar('mail@victorquinn.com')
+        t.true(_.isString(avatar))
+        t.false(avatar.includes('&d='))
+    })
+})
+
 test('avatar() can take and respect a fallback image', t => {
     let fallbacks = [
         '404', // Return 404 if not found
@@ -361,6 +369,32 @@ test('klout() returns what looks like a legit Klout score', t => {
     })
 })
 
+// chance.locale()
+test('locale() should create a valid two character locale with only language', t => {
+    let locale = chance.locale()
+    t.true(_.isString(locale))
+    t.is(locale.length, 2)
+})
+
+test('locale() should create a locale with a region code', t => {
+    let locale = chance.locale({ region: true })
+    t.true(_.isString(locale))
+    t.true(locale.split('-').length >= 2)
+})
+
+// chance.locales()
+test('locales() should return a list of locales', t => {
+    let locales = chance.locales()
+    t.true(_.isArray(locales))
+    t.true(locales.length > 100)
+})
+
+test('locales() should return a list of locales', t => {
+    let locales = chance.locales({ region: true })
+    t.true(_.isArray(locales))
+    t.true(locales.length > 100)
+})
+
 // chance.md5()
 test('md5() should create a hex-encoded MD5 hash of a random ASCII value when passed nothing', t => {
     t.is(chance.md5().length, '2063c1608d6e0baf80249c42e2be5804'.length)
@@ -400,6 +434,41 @@ test('md5() should create a raw HMAC-MD5 hash of an ASCII value', t => {
 
 test('md5() should create a raw HMAC-MD5 hash of a UTF-8 value', t => {
     t.is(chance.md5({ str: '日本', key: '日本', raw: true }), '\xc7\x8b\x8csW\x92i\x81\xcc\x04t\x0b\xd3\xe9\xd0\x15')
+})
+
+// chance.port()
+test('port() should create a number in the valid port range (0 - 65535)', t => {
+    _.times(1000, () => {
+        let port = chance.port()
+        t.true(_.isNumber(port))
+        t.true(port >= 0)
+        t.true(port <= 65535)
+    })
+})
+
+// chance.semver()
+test('semver() works as expected', t => {
+    _.times(1000, () => {
+        let semver = chance.semver()
+        t.true(_.isString(semver))
+        t.true(/[0-9]+\.[0-9]+\.[0-9]+/.test(semver))
+    })
+})
+
+test('semver() accepts a range', t => {
+    _.times(1000, () => {
+        let semver = chance.semver({ range: 'banana' })
+        t.true(_.isString(semver))
+        t.true(/^banana[0-9]+\.[0-9]+\.[0-9]+/.test(semver))
+    })
+})
+
+test('semver() accepts a prerelease flag', t => {
+    _.times(1000, () => {
+        let semver = chance.semver({ range: 'banana' })
+        t.true(_.isString(semver))
+        t.true(/[0-9]+\.[0-9]+\.[0-9]+-?[dev|beta|alpha]?/.test(semver))
+    })
 })
 
 // chance.tld()
@@ -468,26 +537,4 @@ test('url() can take and respect extensions', t => {
         t.true(url.split('://').length > 1)
         t.not(url.indexOf('.html'), -1)
     })
-})
-
-// chance.port()
-test('port() should create a number in the valid port range (0 - 65535)', t => {
-    _.times(1000, () => {
-        let port = chance.port()
-        t.true(_.isNumber(port))
-        t.true(port >= 0)
-        t.true(port <= 65535)
-    })
-})
-
-test('locale() should create a valid two character locale with only language', t => {
-    let locale = chance.locale()
-    t.true(_.isString(locale))
-    t.is(locale.length, 2)
-})
-
-test('locale() should create a locale with a region code', t => {
-    let locale = chance.locale({ region: true })
-    t.true(_.isString(locale))
-    t.true(locale.split('-').length >= 2)
 })

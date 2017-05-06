@@ -230,6 +230,18 @@ test('get() works as expected', t => {
     t.true(typeof data === 'object')
 })
 
+test('hex() works as expected', t => {
+    _.times(1000, () => {
+        t.true(/[0-9a-f]/.test(chance.hex()))
+    })
+})
+
+test('hex() can take Upper and obey it', t => {
+    _.times(1000, () => {
+        t.true(/[0-9A-F]/.test(chance.hex({ casing: 'upper' })))
+    })
+})
+
 test('integer() returns a random integer', t => {
     t.is(typeof chance.integer(), 'number')
 })

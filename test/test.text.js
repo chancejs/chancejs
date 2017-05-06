@@ -34,6 +34,16 @@ test('syllable() returns a random syllable', t => {
     })
 })
 
+test('syllable() obeys the capitalize option', t => {
+    _.times(1000, () => {
+        let syllable = chance.syllable({ capitalize: true })
+        t.true(_.isString(syllable))
+        t.true(syllable.length > 1)
+        t.true(syllable.length < 4)
+        t.true(/[A-Z]+/.test(syllable))
+    })
+})
+
 // chance.word()
 test('word() returns a random word', t => {
     _.times(1000, () => {

@@ -282,6 +282,14 @@ test('weighted() works with just 2 items', t => {
     t.true(ratio < 120)
 })
 
+test('weighted() works with trim', t => {
+    _.times(1000, () => {
+        let picked = chance.weighted(['a', 'b', 'c', 'd'], [1, 1, 1, 1], true)
+        t.true(_.isString(picked))
+        t.is(picked.length, 1)
+    })
+})
+
 test('weighted() throws error if called with an array of weights different from options', t => {
     const fn = () => chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3])
     t.throws(fn, 'Chance: Length of array and weights must match')
@@ -290,6 +298,11 @@ test('weighted() throws error if called with an array of weights different from 
 test('weighted() does not throw error if called with good weights', t => {
     const fn = () => chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3, 4])
     t.notThrows(fn)
+})
+
+test('weighted() throws error if weights invalid', t => {
+    const fn = () => chance.weighted(['a', 'b', 'c', 'd'], [0, 0, 0, 0])
+    t.throws(fn, 'Chance: No valid entries in array weights')
 })
 
 test('weighted() throws error if called with an array of weights different from options 2', t => {
