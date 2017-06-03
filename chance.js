@@ -19,6 +19,7 @@
     // Constructor
     function Chance (seed) {
         if (!(this instanceof Chance)) {
+            if (!seed) { seed = null; } // handle other non-truthy seeds, as described in issue #322
             return seed === null ? new Chance() : new Chance(seed);
         }
 
