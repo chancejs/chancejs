@@ -110,7 +110,7 @@ require(['Chance'], function(Chance) {
 
 ## Author
 ### Victor Quinn
-[http://victorquinn.com](http://victorquinn.com)
+[https://www.victorquinn.com](https://www.victorquinn.com)
 
 Please feel free to reach out to me if you have any questions or suggestions.
 
