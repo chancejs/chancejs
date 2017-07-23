@@ -737,12 +737,9 @@
       if (options.nationality === "*") {
         var allLastNames = []
         var lastNames = this.get("lastNames")
-        // console.log("lastNames", lastNames);
         Object.keys(lastNames).forEach(function(key, i){
-          // allLastNames.push(lastNames[key])
           allLastNames = allLastNames.concat(lastNames[key])
         })
-        // console.log("----> allLastNames", allLastNames)
         return this.pick(allLastNames)
       }
       else {
