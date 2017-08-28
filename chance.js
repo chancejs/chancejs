@@ -282,6 +282,16 @@
 		return integer.toString(16);
     };
 
+    Chance.prototype.letter = function(options) {
+        options = initOptions(options, {casing: 'lower'});
+        var pool = "abcdefghijklmnopqrstuvwxyz";
+        var letter = this.character({pool: pool});
+        if (options.casing === 'upper') {
+            letter = letter.toUpperCase();
+        }
+        return letter;
+    }
+
     /**
      *  Return a random string
      *

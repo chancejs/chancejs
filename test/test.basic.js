@@ -296,6 +296,24 @@ test('integer() throws an error when min > max', t => {
     t.throws(fn, 'Chance: Min cannot be greater than Max.')
 })
 
+test('letter() returns a letter', t => {
+    _.times(1000, () => {
+        let letter = chance.letter()
+        t.is(typeof letter, 'string')
+        t.is(letter.length, 1)
+        t.true(letter.match(/[a-z]/) !== null)
+    })
+})
+
+test('letter() can take upper case', t => {
+    _.times(1000, () => {
+        let letter = chance.letter({ casing: 'upper' })
+        t.is(typeof letter, 'string')
+        t.is(letter.length, 1)
+        t.true(letter.match(/[A-Z]/) !== null)
+    })
+})
+
 test('natural() returns a random natural', t => {
     t.is(typeof chance.natural(), 'number')
 })
