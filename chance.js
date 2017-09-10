@@ -1234,8 +1234,25 @@
         return this.word({length: options.length}) + '@' + (options.domain || this.domain());
     };
 
+    /**
+     * #Description:
+     * ===============================================
+     * Generate a random Facebook id, aka fbid.
+     *
+     * NOTE: At the moment (Sep 2017), Facebook ids are
+     * "numeric strings" of length 16.
+     * However, Facebook Graph API documentation states that
+     * "it is extremely likely to change over time".
+     * @see https://developers.facebook.com/docs/graph-api/overview/
+     *
+     * #Examples:
+     * ===============================================
+     * chance.fbid() => '1000035231661304'
+     *
+     * @return [string] facebook id
+     */
     Chance.prototype.fbid = function () {
-        return parseInt('10000' + this.natural({max: 100000000000}), 10);
+        return '10000' + this.string({pool: "1234567890", length: 11});
     };
 
     Chance.prototype.google_analytics = function () {
