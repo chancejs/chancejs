@@ -316,7 +316,9 @@ test('email() has a leng specified, should generate string before domain with eq
 // chance.fbid()
 test('fbid() returns what looks like a Facebook id', t => {
     _.times(1000, () => {
-        t.true(_.isNumber(chance.fbid()))
+        let fbid = chance.fbid()
+        t.true(_.isString(fbid))
+        t.is(fbid.length, 16)
     })
 })
 
