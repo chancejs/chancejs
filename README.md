@@ -104,12 +104,13 @@ require(['Chance'], function(Chance) {
 * [Fake JSON Schema](https://github.com/pateketrueke/json-schema-faker/) - Use chance generators to populate JSON Schema samples.
 * [Mocker Data Generator](https://github.com/danibram/mocker-data-generator/) - Minimal JSON data generator.
 * [swagger-mock-api](https://github.com/dzdrazil/swagger-mock-api/) - Generate API mocks from a Swagger spec file enriched with Chance types and constraints
+* [fony](https://github.com/captainsafia/fony) - A simple command line tool for generating fake data from a template string
 
 *Know a library that uses Chance that isn't here? Update the README and submit a PR!*
 
 ## Author
 ### Victor Quinn
-[http://victorquinn.com](http://victorquinn.com)
+[https://www.victorquinn.com](https://www.victorquinn.com)
 
 Please feel free to reach out to me if you have any questions or suggestions.
 

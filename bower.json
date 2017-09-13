@@ -1,6 +1,6 @@
 {
   "name": "chance",
-  "version": "1.0.6",
+  "version": "1.0.11",
   "main": "chance.js",
   "ignore": [
     "node_modules"
@@ -14,7 +14,7 @@
   ],
   "author": {
     "name": "Victor Quinn",
-    "web": "http://victorquinn.com"
+    "web": "https://www.victorquinn.com"
   },
   "devDependencies": {
     "phone_number_js": "~1.0.0"

@@ -1,4 +1,4 @@
-//  Chance.js 1.0.6
+//  Chance.js 1.0.11
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -19,7 +19,8 @@
     // Constructor
     function Chance (seed) {
         if (!(this instanceof Chance)) {
-            return seed == null ? new Chance() : new Chance(seed);
+            if (!seed) { seed = null; } // handle other non-truthy seeds, as described in issue #322
+            return seed === null ? new Chance() : new Chance(seed);
         }
 
         // if user has provided a function, use that as the generator
@@ -62,11 +63,11 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.0.6";
+    Chance.prototype.VERSION = "1.0.11";
 
     // Random helper functions
     function initOptions(options, defaults) {
-        options || (options = {});
+        options = options || {};
 
         if (defaults) {
             for (var i in defaults) {
@@ -245,17 +246,21 @@
      *  chance.natural({min: 1, max: 3});
      *  would return either 1, 2, or 3.
      *
-     *  @param {Object} [options={}] can specify a min and/or max
+     *  @param {Object} [options={}] can specify a min and/or maxm or a numerals count.
      *  @returns {Number} a single random integer number
      *  @throws {RangeError} min cannot be greater than max
      */
     Chance.prototype.natural = function (options) {
         options = initOptions(options, {min: 0, max: MAX_INT});
+        if (typeof options.numerals === 'number'){
+          testRange(options.numerals < 1, "Chance: Numerals cannot be less than one.");
+          options.min = Math.pow(10, options.numerals - 1);
+          options.max = Math.pow(10, options.numerals) - 1;
+        }
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
         return this.integer(options);
     };
-
-	/**
+    /**
      *  Return a random hex number as string
      *
      *  NOTE the max and min are INCLUDED in the range. So:
@@ -275,6 +280,16 @@
 		}
 		return integer.toString(16);
     };
+
+    Chance.prototype.letter = function(options) {
+        options = initOptions(options, {casing: 'lower'});
+        var pool = "abcdefghijklmnopqrstuvwxyz";
+        var letter = this.character({pool: pool});
+        if (options.casing === 'upper') {
+            letter = letter.toUpperCase();
+        }
+        return letter;
+    }
 
     /**
      *  Return a random string
@@ -416,7 +431,7 @@
             throw new RangeError("Chance: Cannot pickset() from an empty array");
         }
         if (count < 0) {
-            throw new RangeError("Chance: count must be positive number");
+            throw new RangeError("Chance: Count must be a positive number");
         }
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
@@ -446,7 +461,7 @@
     // Returns a single item from an array with relative weighting of odds
     Chance.prototype.weighted = function (arr, weights, trim) {
         if (arr.length !== weights.length) {
-            throw new RangeError("Chance: length of array and weights must match");
+            throw new RangeError("Chance: Length of array and weights must match");
         }
 
         // scan weights array and sum valid entries
@@ -455,7 +470,7 @@
         for (var weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
             val = weights[weightIndex];
             if (isNaN(val)) {
-                throw new RangeError("all weights must be numbers");
+                throw new RangeError("Chance: All weights must be numbers");
             }
 
             if (val > 0) {
@@ -464,7 +479,7 @@
         }
 
         if (sum === 0) {
-            throw new RangeError("Chance: no valid entries in array weights");
+            throw new RangeError("Chance: No valid entries in array weights");
         }
 
         // select a value within range
@@ -708,8 +723,17 @@
         return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);
     };
 
-    Chance.prototype.profession = function () {
-        return this.pick(this.get("professions"));
+    Chance.prototype.profession = function (options) {
+        options = initOptions(options);
+        if(options.rank){
+            return this.pick(['Apprentice ', 'Junior ', 'Senior ', 'Lead ']) + this.pick(this.get("profession"));
+        } else{
+            return this.pick(this.get("profession"));
+        }
+    };
+
+    Chance.prototype.company = function (){
+        return this.pick(this.get("company"));
     };
 
     Chance.prototype.gender = function (options) {
@@ -1085,19 +1109,19 @@
      *
      * * Make color uppercase
      * chance.color({casing: 'upper'})  => '#29CFA7'
-
-	 * * Min Max values for RGBA
-	 * var light_red = chance.color({format: 'hex', min_red: 200, max_red: 255, max_green: 0, max_blue: 0, min_alpha: .2, max_alpha: .3});
+     *
+     * * Min Max values for RGBA
+     * var light_red = chance.color({format: 'hex', min_red: 200, max_red: 255, max_green: 0, max_blue: 0, min_alpha: .2, max_alpha: .3});
      *
      * @param  [object] options
      * @return [string] color value
      */
     Chance.prototype.color = function (options) {
-		function pad(n, width, z) {
-			z = z || '0';
-			n = n + '';
-			return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-		}
+        function pad(n, width, z) {
+          z = z || '0';
+          n = n + '';
+          return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+        }
 
         function gray(value, delimiter) {
             return [value, value, value].join(delimiter || '');
@@ -1112,26 +1136,25 @@
 
         function hex(start, end, withHash) {
             var symbol = (withHash) ? "#" : "";
-			var hexstring = "";
+            var hexstring = "";
 
-			if (isGrayscale) {
-				hexstring = gray(pad(this.hex({min: min_rgb, max: max_rgb}), 2));
-				if (options.format === "shorthex") {
-					hexstring = gray(this.hex({min: 0, max: 15}));
-					console.log("hex: " + hexstring);
-				}
-			}
-			else {
-				if (options.format === "shorthex") {
-					hexstring = pad(this.hex({min: Math.floor(min_red / 16), max: Math.floor(max_red / 16)}), 1) + pad(this.hex({min: Math.floor(min_green / 16), max: Math.floor(max_green / 16)}), 1) + pad(this.hex({min: Math.floor(min_blue / 16), max: Math.floor(max_blue / 16)}), 1);
-				}
-				else if (min_red !== undefined || max_red !== undefined || min_green !== undefined || max_green !== undefined || min_blue !== undefined || max_blue !== undefined) {
-					hexstring = pad(this.hex({min: min_red, max: max_red}), 2) + pad(this.hex({min: min_green, max: max_green}), 2) + pad(this.hex({min: min_blue, max: max_blue}), 2);
-				}
-				else {
-					hexstring = pad(this.hex({min: min_rgb, max: max_rgb}), 2) + pad(this.hex({min: min_rgb, max: max_rgb}), 2) + pad(this.hex({min: min_rgb, max: max_rgb}), 2);
-				}
-			}
+            if (isGrayscale) {
+                hexstring = gray(this.pad(this.hex({min: min_rgb, max: max_rgb}), 2));
+                if (options.format === "shorthex") {
+                    hexstring = gray(this.hex({min: 0, max: 15}));
+                }
+            }
+            else {
+                if (options.format === "shorthex") {
+                    hexstring = this.pad(this.hex({min: Math.floor(min_red / 16), max: Math.floor(max_red / 16)}), 1) + this.pad(this.hex({min: Math.floor(min_green / 16), max: Math.floor(max_green / 16)}), 1) + this.pad(this.hex({min: Math.floor(min_blue / 16), max: Math.floor(max_blue / 16)}), 1);
+                }
+                else if (min_red !== undefined || max_red !== undefined || min_green !== undefined || max_green !== undefined || min_blue !== undefined || max_blue !== undefined) {
+                    hexstring = this.pad(this.hex({min: min_red, max: max_red}), 2) + this.pad(this.hex({min: min_green, max: max_green}), 2) + this.pad(this.hex({min: min_blue, max: max_blue}), 2);
+                }
+                else {
+                    hexstring = this.pad(this.hex({min: min_rgb, max: max_rgb}), 2) + this.pad(this.hex({min: min_rgb, max: max_rgb}), 2) + this.pad(this.hex({min: min_rgb, max: max_rgb}), 2);
+                }
+            }
 
             return symbol + hexstring;
         }
@@ -1140,41 +1163,41 @@
             format: this.pick(['hex', 'shorthex', 'rgb', 'rgba', '0x', 'name']),
             grayscale: false,
             casing: 'lower',
-			min: 0,
-			max: 255,
-			min_red: undefined,
-			max_red: undefined,
-			min_green: undefined,
-			max_green: undefined,
-			min_blue: undefined,
-			max_blue: undefined,
-			min_alpha: 0,
-			max_alpha: 1
+            min: 0,
+            max: 255,
+            min_red: undefined,
+            max_red: undefined,
+            min_green: undefined,
+            max_green: undefined,
+            min_blue: undefined,
+            max_blue: undefined,
+            min_alpha: 0,
+            max_alpha: 1
         });
 
         var isGrayscale = options.grayscale;
-		var min_rgb = options.min;
-		var max_rgb = options.max;
-		var min_red = options.min_red;
-		var max_red = options.max_red;
-		var min_green = options.min_green;
-		var max_green = options.max_green;
-		var min_blue = options.min_blue;
-		var max_blue = options.max_blue;
-		var min_alpha = options.min_alpha;
-		var max_alpha = options.max_alpha;
-		if (options.min_red === undefined) { min_red = min_rgb; }
-		if (options.max_red === undefined) { max_red = max_rgb; }
-		if (options.min_green === undefined) { min_green = min_rgb; }
-		if (options.max_green === undefined) { max_green = max_rgb; }
-		if (options.min_blue === undefined) { min_blue = min_rgb; }
-		if (options.max_blue === undefined) { max_blue = max_rgb; }
-		if (options.min_alpha === undefined) { min_alpha = 0; }
-		if (options.max_alpha === undefined) { max_alpha = 1; }
-		if (isGrayscale && min_rgb === 0 && max_rgb === 255 && min_red !== undefined && max_red !== undefined) {
-			min_rgb = ((min_red + min_green + min_blue) / 3);
-			max_rgb = ((max_red + max_green + max_blue) / 3);
-		}
+        var min_rgb = options.min;
+        var max_rgb = options.max;
+        var min_red = options.min_red;
+        var max_red = options.max_red;
+        var min_green = options.min_green;
+        var max_green = options.max_green;
+        var min_blue = options.min_blue;
+        var max_blue = options.max_blue;
+        var min_alpha = options.min_alpha;
+        var max_alpha = options.max_alpha;
+        if (options.min_red === undefined) { min_red = min_rgb; }
+        if (options.max_red === undefined) { max_red = max_rgb; }
+        if (options.min_green === undefined) { min_green = min_rgb; }
+        if (options.max_green === undefined) { max_green = max_rgb; }
+        if (options.min_blue === undefined) { min_blue = min_rgb; }
+        if (options.max_blue === undefined) { max_blue = max_rgb; }
+        if (options.min_alpha === undefined) { min_alpha = 0; }
+        if (options.max_alpha === undefined) { max_alpha = 1; }
+        if (isGrayscale && min_rgb === 0 && max_rgb === 255 && min_red !== undefined && max_red !== undefined) {
+            min_rgb = ((min_red + min_green + min_blue) / 3);
+            max_rgb = ((max_red + max_green + max_blue) / 3);
+        }
         var colorValue;
 
         if (options.format === 'hex') {
@@ -1216,8 +1239,25 @@
         return this.word({length: options.length}) + '@' + (options.domain || this.domain());
     };
 
+    /**
+     * #Description:
+     * ===============================================
+     * Generate a random Facebook id, aka fbid.
+     *
+     * NOTE: At the moment (Sep 2017), Facebook ids are
+     * "numeric strings" of length 16.
+     * However, Facebook Graph API documentation states that
+     * "it is extremely likely to change over time".
+     * @see https://developers.facebook.com/docs/graph-api/overview/
+     *
+     * #Examples:
+     * ===============================================
+     * chance.fbid() => '1000035231661304'
+     *
+     * @return [string] facebook id
+     */
     Chance.prototype.fbid = function () {
-        return parseInt('10000' + this.natural({max: 100000000000}), 10);
+        return '10000' + this.string({pool: "1234567890", length: 11});
     };
 
     Chance.prototype.google_analytics = function () {
@@ -1288,6 +1328,24 @@
 
     Chance.prototype.port = function() {
         return this.integer({min: 0, max: 65535});
+    };
+
+    Chance.prototype.locale = function (options) {
+        options = initOptions(options);
+        if (options.region){
+          return this.pick(this.get("locale_regions"));
+        } else {
+          return this.pick(this.get("locale_languages"));
+        }
+    };
+
+    Chance.prototype.locales = function (options) {
+      options = initOptions(options);
+      if (options.region){
+        return this.get("locale_regions");
+      } else {
+        return this.get("locale_languages");
+      }
     };
 
     // -- End Web --
@@ -1786,7 +1844,7 @@
                 }
             }
             if (type === null) {
-                throw new RangeError("Credit card type '" + options.name + "'' is not supported");
+                throw new RangeError("Chance: Credit card type '" + options.name + "' is not supported");
             }
         } else {
             type = this.pick(types);
@@ -1795,22 +1853,22 @@
         return options.raw ? type : type.name;
     };
 
-    //return all world currency by ISO 4217
+    // return all world currency by ISO 4217
     Chance.prototype.currency_types = function () {
         return this.get("currency_types");
     };
 
-    //return random world currency by ISO 4217
+    // return random world currency by ISO 4217
     Chance.prototype.currency = function () {
         return this.pick(this.currency_types());
     };
 
-    //return all timezones availabel
+    // return all timezones available
     Chance.prototype.timezones = function () {
         return this.get("timezones");
     };
 
-    //return random timezone
+    // return random timezone
     Chance.prototype.timezone = function () {
         return this.pick(this.timezones());
     };
@@ -2084,13 +2142,13 @@
     Chance.prototype.rpg = function (thrown, options) {
         options = initOptions(options);
         if (!thrown) {
-            throw new RangeError("A type of die roll must be included");
+            throw new RangeError("Chance: A type of die roll must be included");
         } else {
             var bits = thrown.toLowerCase().split("d"),
                 rolls = [];
 
             if (bits.length !== 2 || !parseInt(bits[0], 10) || !parseInt(bits[1], 10)) {
-                throw new Error("Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
+                throw new Error("Chance: Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die");
             }
             for (var i = bits[0]; i > 0; i--) {
                 rolls[i - 1] = this.natural({min: 1, max: bits[1]});
@@ -2272,7 +2330,7 @@
                 return (fileName + '.' + fileExtension);
             }
 
-            throw new Error("Expect collection of type Array or Object to be passed as an argument ");
+            throw new Error("Chance: Extensions must be an Array or Object");
         }
 
         // Generate file extension based on specific file type
@@ -2285,7 +2343,7 @@
                 return (fileName + '.' + fileExtension);
             }
 
-            throw new Error("Expect file type value to be 'raster', 'vector', '3d' or 'document' ");
+            throw new RangeError("Chance: Expect file type value to be 'raster', 'vector', '3d' or 'document'");
         }
 
         // Generate random file name if no extension options are passed
@@ -2299,25 +2357,32 @@
             "male": {
                 "en": ["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Charles", "Thomas", "Christopher", "Daniel", "Matthew", "George", "Donald", "Anthony", "Paul", "Mark", "Edward", "Steven", "Kenneth", "Andrew", "Brian", "Joshua", "Kevin", "Ronald", "Timothy", "Jason", "Jeffrey", "Frank", "Gary", "Ryan", "Nicholas", "Eric", "Stephen", "Jacob", "Larry", "Jonathan", "Scott", "Raymond", "Justin", "Brandon", "Gregory", "Samuel", "Benjamin", "Patrick", "Jack", "Henry", "Walter", "Dennis", "Jerry", "Alexander", "Peter", "Tyler", "Douglas", "Harold", "Aaron", "Jose", "Adam", "Arthur", "Zachary", "Carl", "Nathan", "Albert", "Kyle", "Lawrence", "Joe", "Willie", "Gerald", "Roger", "Keith", "Jeremy", "Terry", "Harry", "Ralph", "Sean", "Jesse", "Roy", "Louis", "Billy", "Austin", "Bruce", "Eugene", "Christian", "Bryan", "Wayne", "Russell", "Howard", "Fred", "Ethan", "Jordan", "Philip", "Alan", "Juan", "Randy", "Vincent", "Bobby", "Dylan", "Johnny", "Phillip", "Victor", "Clarence", "Ernest", "Martin", "Craig", "Stanley", "Shawn", "Travis", "Bradley", "Leonard", "Earl", "Gabriel", "Jimmy", "Francis", "Todd", "Noah", "Danny", "Dale", "Cody", "Carlos", "Allen", "Frederick", "Logan", "Curtis", "Alex", "Joel", "Luis", "Norman", "Marvin", "Glenn", "Tony", "Nathaniel", "Rodney", "Melvin", "Alfred", "Steve", "Cameron", "Chad", "Edwin", "Caleb", "Evan", "Antonio", "Lee", "Herbert", "Jeffery", "Isaac", "Derek", "Ricky", "Marcus", "Theodore", "Elijah", "Luke", "Jesus", "Eddie", "Troy", "Mike", "Dustin", "Ray", "Adrian", "Bernard", "Leroy", "Angel", "Randall", "Wesley", "Ian", "Jared", "Mason", "Hunter", "Calvin", "Oscar", "Clifford", "Jay", "Shane", "Ronnie", "Barry", "Lucas", "Corey", "Manuel", "Leo", "Tommy", "Warren", "Jackson", "Isaiah", "Connor", "Don", "Dean", "Jon", "Julian", "Miguel", "Bill", "Lloyd", "Charlie", "Mitchell", "Leon", "Jerome", "Darrell", "Jeremiah", "Alvin", "Brett", "Seth", "Floyd", "Jim", "Blake", "Micheal", "Gordon", "Trevor", "Lewis", "Erik", "Edgar", "Vernon", "Devin", "Gavin", "Jayden", "Chris", "Clyde", "Tom", "Derrick", "Mario", "Brent", "Marc", "Herman", "Chase", "Dominic", "Ricardo", "Franklin", "Maurice", "Max", "Aiden", "Owen", "Lester", "Gilbert", "Elmer", "Gene", "Francisco", "Glen", "Cory", "Garrett", "Clayton", "Sam", "Jorge", "Chester", "Alejandro", "Jeff", "Harvey", "Milton", "Cole", "Ivan", "Andre", "Duane", "Landon"],
                 // Data taken from http://www.dati.gov.it/dataset/comune-di-firenze_0163
-                "it": ["Adolfo", "Alberto", "Aldo", "Alessandro", "Alessio", "Alfredo", "Alvaro", "Andrea", "Angelo", "Angiolo", "Antonino", "Antonio", "Attilio", "Benito", "Bernardo", "Bruno", "Carlo", "Cesare", "Christian", "Claudio", "Corrado", "Cosimo", "Cristian", "Cristiano", "Daniele", "Dario", "David", "Davide", "Diego", "Dino", "Domenico", "Duccio", "Edoardo", "Elia", "Elio", "Emanuele", "Emiliano", "Emilio", "Enrico", "Enzo", "Ettore", "Fabio", "Fabrizio", "Federico", "Ferdinando", "Fernando", "Filippo", "Francesco", "Franco", "Gabriele", "Giacomo", "Giampaolo", "Giampiero", "Giancarlo", "Gianfranco", "Gianluca", "Gianmarco", "Gianni", "Gino", "Giorgio", "Giovanni", "Giuliano", "Giulio", "Giuseppe", "Graziano", "Gregorio", "Guido", "Iacopo", "Jacopo", "Lapo", "Leonardo", "Lorenzo", "Luca", "Luciano", "Luigi", "Manuel", "Marcello", "Marco", "Marino", "Mario", "Massimiliano", "Massimo", "Matteo", "Mattia", "Maurizio", "Mauro", "Michele", "Mirko", "Mohamed", "Nello", "Neri", "Niccolò", "Nicola", "Osvaldo", "Otello", "Paolo", "Pier Luigi", "Piero", "Pietro", "Raffaele", "Remo", "Renato", "Renzo", "Riccardo", "Roberto", "Rolando", "Romano", "Salvatore", "Samuele", "Sandro", "Sergio", "Silvano", "Simone", "Stefano", "Thomas", "Tommaso", "Ubaldo", "Ugo", "Umberto", "Valerio", "Valter", "Vasco", "Vincenzo", "Vittorio"]
+                "it": ["Adolfo", "Alberto", "Aldo", "Alessandro", "Alessio", "Alfredo", "Alvaro", "Andrea", "Angelo", "Angiolo", "Antonino", "Antonio", "Attilio", "Benito", "Bernardo", "Bruno", "Carlo", "Cesare", "Christian", "Claudio", "Corrado", "Cosimo", "Cristian", "Cristiano", "Daniele", "Dario", "David", "Davide", "Diego", "Dino", "Domenico", "Duccio", "Edoardo", "Elia", "Elio", "Emanuele", "Emiliano", "Emilio", "Enrico", "Enzo", "Ettore", "Fabio", "Fabrizio", "Federico", "Ferdinando", "Fernando", "Filippo", "Francesco", "Franco", "Gabriele", "Giacomo", "Giampaolo", "Giampiero", "Giancarlo", "Gianfranco", "Gianluca", "Gianmarco", "Gianni", "Gino", "Giorgio", "Giovanni", "Giuliano", "Giulio", "Giuseppe", "Graziano", "Gregorio", "Guido", "Iacopo", "Jacopo", "Lapo", "Leonardo", "Lorenzo", "Luca", "Luciano", "Luigi", "Manuel", "Marcello", "Marco", "Marino", "Mario", "Massimiliano", "Massimo", "Matteo", "Mattia", "Maurizio", "Mauro", "Michele", "Mirko", "Mohamed", "Nello", "Neri", "Niccolò", "Nicola", "Osvaldo", "Otello", "Paolo", "Pier Luigi", "Piero", "Pietro", "Raffaele", "Remo", "Renato", "Renzo", "Riccardo", "Roberto", "Rolando", "Romano", "Salvatore", "Samuele", "Sandro", "Sergio", "Silvano", "Simone", "Stefano", "Thomas", "Tommaso", "Ubaldo", "Ugo", "Umberto", "Valerio", "Valter", "Vasco", "Vincenzo", "Vittorio"],
+                // Data taken from http://www.svbkindernamen.nl/int/nl/kindernamen/index.html
+                "nl": ["Aaron","Abel","Adam","Adriaan","Albert","Alexander","Ali","Arjen","Arno","Bart","Bas","Bastiaan","Benjamin","Bob", "Boris","Bram","Brent","Cas","Casper","Chris","Christiaan","Cornelis","Daan","Daley","Damian","Dani","Daniel","Daniël","David","Dean","Dirk","Dylan","Egbert","Elijah","Erik","Erwin","Evert","Ezra","Fabian","Fedde","Finn","Florian","Floris","Frank","Frans","Frederik","Freek","Geert","Gerard","Gerben","Gerrit","Gijs","Guus","Hans","Hendrik","Henk","Herman","Hidde","Hugo","Jaap","Jan Jaap","Jan-Willem","Jack","Jacob","Jan","Jason","Jasper","Jayden","Jelle","Jelte","Jens","Jeroen","Jesse","Jim","Job","Joep","Johannes","John","Jonathan","Joris","Joshua","Joël","Julian","Kees","Kevin","Koen","Lars","Laurens","Leendert","Lennard","Lodewijk","Luc","Luca","Lucas","Lukas","Luuk","Maarten","Marcus","Martijn","Martin","Matthijs","Maurits","Max","Mees","Melle","Mick","Mika","Milan","Mohamed","Mohammed","Morris","Muhammed","Nathan","Nick","Nico","Niek","Niels","Noah","Noud","Olivier","Oscar","Owen","Paul","Pepijn","Peter","Pieter","Pim","Quinten","Reinier","Rens","Robin","Ruben","Sam","Samuel","Sander","Sebastiaan","Sem","Sep","Sepp","Siem","Simon","Stan","Stef","Steven","Stijn","Sven","Teun","Thijmen","Thijs","Thomas","Tijn","Tim","Timo","Tobias","Tom","Victor","Vince","Willem","Wim","Wouter","Yusuf"]
             },
+
             "female": {
                 "en": ["Mary", "Emma", "Elizabeth", "Minnie", "Margaret", "Ida", "Alice", "Bertha", "Sarah", "Annie", "Clara", "Ella", "Florence", "Cora", "Martha", "Laura", "Nellie", "Grace", "Carrie", "Maude", "Mabel", "Bessie", "Jennie", "Gertrude", "Julia", "Hattie", "Edith", "Mattie", "Rose", "Catherine", "Lillian", "Ada", "Lillie", "Helen", "Jessie", "Louise", "Ethel", "Lula", "Myrtle", "Eva", "Frances", "Lena", "Lucy", "Edna", "Maggie", "Pearl", "Daisy", "Fannie", "Josephine", "Dora", "Rosa", "Katherine", "Agnes", "Marie", "Nora", "May", "Mamie", "Blanche", "Stella", "Ellen", "Nancy", "Effie", "Sallie", "Nettie", "Della", "Lizzie", "Flora", "Susie", "Maud", "Mae", "Etta", "Harriet", "Sadie", "Caroline", "Katie", "Lydia", "Elsie", "Kate", "Susan", "Mollie", "Alma", "Addie", "Georgia", "Eliza", "Lulu", "Nannie", "Lottie", "Amanda", "Belle", "Charlotte", "Rebecca", "Ruth", "Viola", "Olive", "Amelia", "Hannah", "Jane", "Virginia", "Emily", "Matilda", "Irene", "Kathryn", "Esther", "Willie", "Henrietta", "Ollie", "Amy", "Rachel", "Sara", "Estella", "Theresa", "Augusta", "Ora", "Pauline", "Josie", "Lola", "Sophia", "Leona", "Anne", "Mildred", "Ann", "Beulah", "Callie", "Lou", "Delia", "Eleanor", "Barbara", "Iva", "Louisa", "Maria", "Mayme", "Evelyn", "Estelle", "Nina", "Betty", "Marion", "Bettie", "Dorothy", "Luella", "Inez", "Lela", "Rosie", "Allie", "Millie", "Janie", "Cornelia", "Victoria", "Ruby", "Winifred", "Alta", "Celia", "Christine", "Beatrice", "Birdie", "Harriett", "Mable", "Myra", "Sophie", "Tillie", "Isabel", "Sylvia", "Carolyn", "Isabelle", "Leila", "Sally", "Ina", "Essie", "Bertie", "Nell", "Alberta", "Katharine", "Lora", "Rena", "Mina", "Rhoda", "Mathilda", "Abbie", "Eula", "Dollie", "Hettie", "Eunice", "Fanny", "Ola", "Lenora", "Adelaide", "Christina", "Lelia", "Nelle", "Sue", "Johanna", "Lilly", "Lucinda", "Minerva", "Lettie", "Roxie", "Cynthia", "Helena", "Hilda", "Hulda", "Bernice", "Genevieve", "Jean", "Cordelia", "Marian", "Francis", "Jeanette", "Adeline", "Gussie", "Leah", "Lois", "Lura", "Mittie", "Hallie", "Isabella", "Olga", "Phoebe", "Teresa", "Hester", "Lida", "Lina", "Winnie", "Claudia", "Marguerite", "Vera", "Cecelia", "Bess", "Emilie", "Rosetta", "Verna", "Myrtie", "Cecilia", "Elva", "Olivia", "Ophelia", "Georgie", "Elnora", "Violet", "Adele", "Lily", "Linnie", "Loretta", "Madge", "Polly", "Virgie", "Eugenia", "Lucile", "Lucille", "Mabelle", "Rosalie"],
                 // Data taken from http://www.dati.gov.it/dataset/comune-di-firenze_0162
-                "it": ["Ada", "Adriana", "Alessandra", "Alessia", "Alice", "Angela", "Anna", "Anna Maria", "Annalisa", "Annita", "Annunziata", "Antonella", "Arianna", "Asia", "Assunta", "Aurora", "Barbara", "Beatrice", "Benedetta", "Bianca", "Bruna", "Camilla", "Carla", "Carlotta", "Carmela", "Carolina", "Caterina", "Catia", "Cecilia", "Chiara", "Cinzia", "Clara", "Claudia", "Costanza", "Cristina", "Daniela", "Debora", "Diletta", "Dina", "Donatella", "Elena", "Eleonora", "Elisa", "Elisabetta", "Emanuela", "Emma", "Eva", "Federica", "Fernanda", "Fiorella", "Fiorenza", "Flora", "Franca", "Francesca", "Gabriella", "Gaia", "Gemma", "Giada", "Gianna", "Gina", "Ginevra", "Giorgia", "Giovanna", "Giulia", "Giuliana", "Giuseppa", "Giuseppina", "Grazia", "Graziella", "Greta", "Ida", "Ilaria", "Ines", "Iolanda", "Irene", "Irma", "Isabella", "Jessica", "Laura", "Leda", "Letizia", "Licia", "Lidia", "Liliana", "Lina", "Linda", "Lisa", "Livia", "Loretta", "Luana", "Lucia", "Luciana", "Lucrezia", "Luisa", "Manuela", "Mara", "Marcella", "Margherita", "Maria", "Maria Cristina", "Maria Grazia", "Maria Luisa", "Maria Pia", "Maria Teresa", "Marina", "Marisa", "Marta", "Martina", "Marzia", "Matilde", "Melissa", "Michela", "Milena", "Mirella", "Monica", "Natalina", "Nella", "Nicoletta", "Noemi", "Olga", "Paola", "Patrizia", "Piera", "Pierina", "Raffaella", "Rebecca", "Renata", "Rina", "Rita", "Roberta", "Rosa", "Rosanna", "Rossana", "Rossella", "Sabrina", "Sandra", "Sara", "Serena", "Silvana", "Silvia", "Simona", "Simonetta", "Sofia", "Sonia", "Stefania", "Susanna", "Teresa", "Tina", "Tiziana", "Tosca", "Valentina", "Valeria", "Vanda", "Vanessa", "Vanna", "Vera", "Veronica", "Vilma", "Viola", "Virginia", "Vittoria"]
+                "it": ["Ada", "Adriana", "Alessandra", "Alessia", "Alice", "Angela", "Anna", "Anna Maria", "Annalisa", "Annita", "Annunziata", "Antonella", "Arianna", "Asia", "Assunta", "Aurora", "Barbara", "Beatrice", "Benedetta", "Bianca", "Bruna", "Camilla", "Carla", "Carlotta", "Carmela", "Carolina", "Caterina", "Catia", "Cecilia", "Chiara", "Cinzia", "Clara", "Claudia", "Costanza", "Cristina", "Daniela", "Debora", "Diletta", "Dina", "Donatella", "Elena", "Eleonora", "Elisa", "Elisabetta", "Emanuela", "Emma", "Eva", "Federica", "Fernanda", "Fiorella", "Fiorenza", "Flora", "Franca", "Francesca", "Gabriella", "Gaia", "Gemma", "Giada", "Gianna", "Gina", "Ginevra", "Giorgia", "Giovanna", "Giulia", "Giuliana", "Giuseppa", "Giuseppina", "Grazia", "Graziella", "Greta", "Ida", "Ilaria", "Ines", "Iolanda", "Irene", "Irma", "Isabella", "Jessica", "Laura", "Lea", "Letizia", "Licia", "Lidia", "Liliana", "Lina", "Linda", "Lisa", "Livia", "Loretta", "Luana", "Lucia", "Luciana", "Lucrezia", "Luisa", "Manuela", "Mara", "Marcella", "Margherita", "Maria", "Maria Cristina", "Maria Grazia", "Maria Luisa", "Maria Pia", "Maria Teresa", "Marina", "Marisa", "Marta", "Martina", "Marzia", "Matilde", "Melissa", "Michela", "Milena", "Mirella", "Monica", "Natalina", "Nella", "Nicoletta", "Noemi", "Olga", "Paola", "Patrizia", "Piera", "Pierina", "Raffaella", "Rebecca", "Renata", "Rina", "Rita", "Roberta", "Rosa", "Rosanna", "Rossana", "Rossella", "Sabrina", "Sandra", "Sara", "Serena", "Silvana", "Silvia", "Simona", "Simonetta", "Sofia", "Sonia", "Stefania", "Susanna", "Teresa", "Tina", "Tiziana", "Tosca", "Valentina", "Valeria", "Vanda", "Vanessa", "Vanna", "Vera", "Veronica", "Vilma", "Viola", "Virginia", "Vittoria"],
+                // Data taken from http://www.svbkindernamen.nl/int/nl/kindernamen/index.html
+                "nl": ["Ada", "Arianne", "Afke", "Amanda", "Amber", "Amy", "Aniek", "Anita", "Anja", "Anna", "Anne", "Annelies", "Annemarie", "Annette", "Anouk", "Astrid", "Aukje", "Barbara", "Bianca", "Carla", "Carlijn", "Carolien", "Chantal", "Charlotte", "Claudia", "Daniëlle", "Debora", "Diane", "Dora", "Eline", "Elise", "Ella", "Ellen", "Emma", "Esmee", "Evelien", "Esther", "Erica", "Eva", "Femke", "Fleur", "Floor", "Froukje", "Gea", "Gerda", "Hanna", "Hanneke", "Heleen", "Hilde", "Ilona", "Ina", "Inge", "Ingrid", "Iris", "Isabel", "Isabelle", "Janneke", "Jasmijn", "Jeanine", "Jennifer", "Jessica", "Johanna", "Joke", "Julia", "Julie", "Karen", "Karin", "Katja", "Kim", "Lara", "Laura", "Lena", "Lianne", "Lieke", "Lilian", "Linda", "Lisa", "Lisanne", "Lotte", "Louise", "Maaike", "Manon", "Marga", "Maria", "Marissa", "Marit", "Marjolein", "Martine", "Marleen", "Melissa", "Merel", "Miranda", "Michelle", "Mirjam", "Mirthe", "Naomi", "Natalie", 'Nienke', "Nina", "Noortje", "Olivia", "Patricia", "Paula", "Paulien", "Ramona", "Ria", "Rianne", "Roos", "Rosanne", "Ruth", "Sabrina", "Sandra", "Sanne", "Sara", "Saskia", "Silvia", "Sofia", "Sophie", "Sonja", "Suzanne", "Tamara", "Tess", "Tessa", "Tineke", "Valerie", "Vanessa", "Veerle", "Vera", "Victoria", "Wendy", "Willeke", "Yvonne", "Zoë"]
             }
         },
 
         lastNames: {
             "en": ['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Robinson', 'Clark', 'Rodriguez', 'Lewis', 'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'Hernandez', 'King', 'Wright', 'Lopez', 'Hill', 'Scott', 'Green', 'Adams', 'Baker', 'Gonzalez', 'Nelson', 'Carter', 'Mitchell', 'Perez', 'Roberts', 'Turner', 'Phillips', 'Campbell', 'Parker', 'Evans', 'Edwards', 'Collins', 'Stewart', 'Sanchez', 'Morris', 'Rogers', 'Reed', 'Cook', 'Morgan', 'Bell', 'Murphy', 'Bailey', 'Rivera', 'Cooper', 'Richardson', 'Cox', 'Howard', 'Ward', 'Torres', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Kelly', 'Sanders', 'Price', 'Bennett', 'Wood', 'Barnes', 'Ross', 'Henderson', 'Coleman', 'Jenkins', 'Perry', 'Powell', 'Long', 'Patterson', 'Hughes', 'Flores', 'Washington', 'Butler', 'Simmons', 'Foster', 'Gonzales', 'Bryant', 'Alexander', 'Russell', 'Griffin', 'Diaz', 'Hayes', 'Myers', 'Ford', 'Hamilton', 'Graham', 'Sullivan', 'Wallace', 'Woods', 'Cole', 'West', 'Jordan', 'Owens', 'Reynolds', 'Fisher', 'Ellis', 'Harrison', 'Gibson', 'McDonald', 'Cruz', 'Marshall', 'Ortiz', 'Gomez', 'Murray', 'Freeman', 'Wells', 'Webb', 'Simpson', 'Stevens', 'Tucker', 'Porter', 'Hunter', 'Hicks', 'Crawford', 'Henry', 'Boyd', 'Mason', 'Morales', 'Kennedy', 'Warren', 'Dixon', 'Ramos', 'Reyes', 'Burns', 'Gordon', 'Shaw', 'Holmes', 'Rice', 'Robertson', 'Hunt', 'Black', 'Daniels', 'Palmer', 'Mills', 'Nichols', 'Grant', 'Knight', 'Ferguson', 'Rose', 'Stone', 'Hawkins', 'Dunn', 'Perkins', 'Hudson', 'Spencer', 'Gardner', 'Stephens', 'Payne', 'Pierce', 'Berry', 'Matthews', 'Arnold', 'Wagner', 'Willis', 'Ray', 'Watkins', 'Olson', 'Carroll', 'Duncan', 'Snyder', 'Hart', 'Cunningham', 'Bradley', 'Lane', 'Andrews', 'Ruiz', 'Harper', 'Fox', 'Riley', 'Armstrong', 'Carpenter', 'Weaver', 'Greene', 'Lawrence', 'Elliott', 'Chavez', 'Sims', 'Austin', 'Peters', 'Kelley', 'Franklin', 'Lawson', 'Fields', 'Gutierrez', 'Ryan', 'Schmidt', 'Carr', 'Vasquez', 'Castillo', 'Wheeler', 'Chapman', 'Oliver', 'Montgomery', 'Richards', 'Williamson', 'Johnston', 'Banks', 'Meyer', 'Bishop', 'McCoy', 'Howell', 'Alvarez', 'Morrison', 'Hansen', 'Fernandez', 'Garza', 'Harvey', 'Little', 'Burton', 'Stanley', 'Nguyen', 'George', 'Jacobs', 'Reid', 'Kim', 'Fuller', 'Lynch', 'Dean', 'Gilbert', 'Garrett', 'Romero', 'Welch', 'Larson', 'Frazier', 'Burke', 'Hanson', 'Day', 'Mendoza', 'Moreno', 'Bowman', 'Medina', 'Fowler', 'Brewer', 'Hoffman', 'Carlson', 'Silva', 'Pearson', 'Holland', 'Douglas', 'Fleming', 'Jensen', 'Vargas', 'Byrd', 'Davidson', 'Hopkins', 'May', 'Terry', 'Herrera', 'Wade', 'Soto', 'Walters', 'Curtis', 'Neal', 'Caldwell', 'Lowe', 'Jennings', 'Barnett', 'Graves', 'Jimenez', 'Horton', 'Shelton', 'Barrett', 'Obrien', 'Castro', 'Sutton', 'Gregory', 'McKinney', 'Lucas', 'Miles', 'Craig', 'Rodriquez', 'Chambers', 'Holt', 'Lambert', 'Fletcher', 'Watts', 'Bates', 'Hale', 'Rhodes', 'Pena', 'Beck', 'Newman', 'Haynes', 'McDaniel', 'Mendez', 'Bush', 'Vaughn', 'Parks', 'Dawson', 'Santiago', 'Norris', 'Hardy', 'Love', 'Steele', 'Curry', 'Powers', 'Schultz', 'Barker', 'Guzman', 'Page', 'Munoz', 'Ball', 'Keller', 'Chandler', 'Weber', 'Leonard', 'Walsh', 'Lyons', 'Ramsey', 'Wolfe', 'Schneider', 'Mullins', 'Benson', 'Sharp', 'Bowen', 'Daniel', 'Barber', 'Cummings', 'Hines', 'Baldwin', 'Griffith', 'Valdez', 'Hubbard', 'Salazar', 'Reeves', 'Warner', 'Stevenson', 'Burgess', 'Santos', 'Tate', 'Cross', 'Garner', 'Mann', 'Mack', 'Moss', 'Thornton', 'Dennis', 'McGee', 'Farmer', 'Delgado', 'Aguilar', 'Vega', 'Glover', 'Manning', 'Cohen', 'Harmon', 'Rodgers', 'Robbins', 'Newton', 'Todd', 'Blair', 'Higgins', 'Ingram', 'Reese', 'Cannon', 'Strickland', 'Townsend', 'Potter', 'Goodwin', 'Walton', 'Rowe', 'Hampton', 'Ortega', 'Patton', 'Swanson', 'Joseph', 'Francis', 'Goodman', 'Maldonado', 'Yates', 'Becker', 'Erickson', 'Hodges', 'Rios', 'Conner', 'Adkins', 'Webster', 'Norman', 'Malone', 'Hammond', 'Flowers', 'Cobb', 'Moody', 'Quinn', 'Blake', 'Maxwell', 'Pope', 'Floyd', 'Osborne', 'Paul', 'McCarthy', 'Guerrero', 'Lindsey', 'Estrada', 'Sandoval', 'Gibbs', 'Tyler', 'Gross', 'Fitzgerald', 'Stokes', 'Doyle', 'Sherman', 'Saunders', 'Wise', 'Colon', 'Gill', 'Alvarado', 'Greer', 'Padilla', 'Simon', 'Waters', 'Nunez', 'Ballard', 'Schwartz', 'McBride', 'Houston', 'Christensen', 'Klein', 'Pratt', 'Briggs', 'Parsons', 'McLaughlin', 'Zimmerman', 'French', 'Buchanan', 'Moran', 'Copeland', 'Roy', 'Pittman', 'Brady', 'McCormick', 'Holloway', 'Brock', 'Poole', 'Frank', 'Logan', 'Owen', 'Bass', 'Marsh', 'Drake', 'Wong', 'Jefferson', 'Park', 'Morton', 'Abbott', 'Sparks', 'Patrick', 'Norton', 'Huff', 'Clayton', 'Massey', 'Lloyd', 'Figueroa', 'Carson', 'Bowers', 'Roberson', 'Barton', 'Tran', 'Lamb', 'Harrington', 'Casey', 'Boone', 'Cortez', 'Clarke', 'Mathis', 'Singleton', 'Wilkins', 'Cain', 'Bryan', 'Underwood', 'Hogan', 'McKenzie', 'Collier', 'Luna', 'Phelps', 'McGuire', 'Allison', 'Bridges', 'Wilkerson', 'Nash', 'Summers', 'Atkins'],
                 // Data taken from http://www.dati.gov.it/dataset/comune-di-firenze_0164 (first 1000)
-            "it": ["Acciai", "Aglietti", "Agostini", "Agresti", "Ahmed", "Aiazzi", "Albanese", "Alberti", "Alessi", "Alfani", "Alinari", "Alterini", "Amato", "Ammannati", "Ancillotti", "Andrei", "Andreini", "Andreoni", "Angeli", "Anichini", "Antonelli", "Antonini", "Arena", "Ariani", "Arnetoli", "Arrighi", "Baccani", "Baccetti", "Bacci", "Bacherini", "Badii", "Baggiani", "Baglioni", "Bagni", "Bagnoli", "Baldassini", "Baldi", "Baldini", "Ballerini", "Balli", "Ballini", "Balloni", "Bambi", "Banchi", "Bandinelli", "Bandini", "Bani", "Barbetti", "Barbieri", "Barchielli", "Bardazzi", "Bardelli", "Bardi", "Barducci", "Bargellini", "Bargiacchi", "Barni", "Baroncelli", "Baroncini", "Barone", "Baroni", "Baronti", "Bartalesi", "Bartoletti", "Bartoli", "Bartolini", "Bartoloni", "Bartolozzi", "Basagni", "Basile", "Bassi", "Batacchi", "Battaglia", "Battaglini", "Bausi", "Becagli", "Becattini", "Becchi", "Becucci", "Bellandi", "Bellesi", "Belli", "Bellini", "Bellucci", "Bencini", "Benedetti", "Benelli", "Beni", "Benini", "Bensi", "Benucci", "Benvenuti", "Berlincioni", "Bernacchioni", "Bernardi", "Bernardini", "Berni", "Bernini", "Bertelli", "Berti", "Bertini", "Bessi", "Betti", "Bettini", "Biagi", "Biagini", "Biagioni", "Biagiotti", "Biancalani", "Bianchi", "Bianchini", "Bianco", "Biffoli", "Bigazzi", "Bigi", "Biliotti", "Billi", "Binazzi", "Bindi", "Bini", "Biondi", "Bizzarri", "Bocci", "Bogani", "Bolognesi", "Bonaiuti", "Bonanni", "Bonciani", "Boncinelli", "Bondi", "Bonechi", "Bongini", "Boni", "Bonini", "Borchi", "Boretti", "Borghi", "Borghini", "Borgioli", "Borri", "Borselli", "Boschi", "Bottai", "Bracci", "Braccini", "Brandi", "Braschi", "Bravi", "Brazzini", "Breschi", "Brilli", "Brizzi", "Brogelli", "Brogi", "Brogioni", "Brunelli", "Brunetti", "Bruni", "Bruno", "Brunori", "Bruschi", "Bucci", "Bucciarelli", "Buccioni", "Bucelli", "Bulli", "Burberi", "Burchi", "Burgassi", "Burroni", "Bussotti", "Buti", "Caciolli", "Caiani", "Calabrese", "Calamai", "Calamandrei", "Caldini", "Calo'", "Calonaci", "Calosi", "Calvelli", "Cambi", "Camiciottoli", "Cammelli", "Cammilli", "Campolmi", "Cantini", "Capanni", "Capecchi", "Caponi", "Cappelletti", "Cappelli", "Cappellini", "Cappugi", "Capretti", "Caputo", "Carbone", "Carboni", "Cardini", "Carlesi", "Carletti", "Carli", "Caroti", "Carotti", "Carrai", "Carraresi", "Carta", "Caruso", "Casalini", "Casati", "Caselli", "Casini", "Castagnoli", "Castellani", "Castelli", "Castellucci", "Catalano", "Catarzi", "Catelani", "Cavaciocchi", "Cavallaro", "Cavallini", "Cavicchi", "Cavini", "Ceccarelli", "Ceccatelli", "Ceccherelli", "Ceccherini", "Cecchi", "Cecchini", "Cecconi", "Cei", "Cellai", "Celli", "Cellini", "Cencetti", "Ceni", "Cenni", "Cerbai", "Cesari", "Ceseri", "Checcacci", "Checchi", "Checcucci", "Cheli", "Chellini", "Chen", "Cheng", "Cherici", "Cherubini", "Chiaramonti", "Chiarantini", "Chiarelli", "Chiari", "Chiarini", "Chiarugi", "Chiavacci", "Chiesi", "Chimenti", "Chini", "Chirici", "Chiti", "Ciabatti", "Ciampi", "Cianchi", "Cianfanelli", "Cianferoni", "Ciani", "Ciapetti", "Ciappi", "Ciardi", "Ciatti", "Cicali", "Ciccone", "Cinelli", "Cini", "Ciobanu", "Ciolli", "Cioni", "Cipriani", "Cirillo", "Cirri", "Ciucchi", "Ciuffi", "Ciulli", "Ciullini", "Clemente", "Cocchi", "Cognome", "Coli", "Collini", "Colombo", "Colzi", "Comparini", "Conforti", "Consigli", "Conte", "Conti", "Contini", "Coppini", "Coppola", "Corsi", "Corsini", "Corti", "Cortini", "Cosi", "Costa", "Costantini", "Costantino", "Cozzi", "Cresci", "Crescioli", "Cresti", "Crini", "Curradi", "D'Agostino", "D'Alessandro", "D'Amico", "D'Angelo", "Daddi", "Dainelli", "Dallai", "Danti", "Davitti", "De Angelis", "De Luca", "De Marco", "De Rosa", "De Santis", "De Simone", "De Vita", "Degl'Innocenti", "Degli Innocenti", "Dei", "Del Lungo", "Del Re", "Di Marco", "Di Stefano", "Dini", "Diop", "Dobre", "Dolfi", "Donati", "Dondoli", "Dong", "Donnini", "Ducci", "Dumitru", "Ermini", "Esposito", "Evangelisti", "Fabbri", "Fabbrini", "Fabbrizzi", "Fabbroni", "Fabbrucci", "Fabiani", "Facchini", "Faggi", "Fagioli", "Failli", "Faini", "Falciani", "Falcini", "Falcone", "Fallani", "Falorni", "Falsini", "Falugiani", "Fancelli", "Fanelli", "Fanetti", "Fanfani", "Fani", "Fantappie'", "Fantechi", "Fanti", "Fantini", "Fantoni", "Farina", "Fattori", "Favilli", "Fedi", "Fei", "Ferrante", "Ferrara", "Ferrari", "Ferraro", "Ferretti", "Ferri", "Ferrini", "Ferroni", "Fiaschi", "Fibbi", "Fiesoli", "Filippi", "Filippini", "Fini", "Fioravanti", "Fiore", "Fiorentini", "Fiorini", "Fissi", "Focardi", "Foggi", "Fontana", "Fontanelli", "Fontani", "Forconi", "Formigli", "Forte", "Forti", "Fortini", "Fossati", "Fossi", "Francalanci", "Franceschi", "Franceschini", "Franchi", "Franchini", "Franci", "Francini", "Francioni", "Franco", "Frassineti", "Frati", "Fratini", "Frilli", "Frizzi", "Frosali", "Frosini", "Frullini", "Fusco", "Fusi", "Gabbrielli", "Gabellini", "Gagliardi", "Galanti", "Galardi", "Galeotti", "Galletti", "Galli", "Gallo", "Gallori", "Gambacciani", "Gargani", "Garofalo", "Garuglieri", "Gashi", "Gasperini", "Gatti", "Gelli", "Gensini", "Gentile", "Gentili", "Geri", "Gerini", "Gheri", "Ghini", "Giachetti", "Giachi", "Giacomelli", "Gianassi", "Giani", "Giannelli", "Giannetti", "Gianni", "Giannini", "Giannoni", "Giannotti", "Giannozzi", "Gigli", "Giordano", "Giorgetti", "Giorgi", "Giovacchini", "Giovannelli", "Giovannetti", "Giovannini", "Giovannoni", "Giuliani", "Giunti", "Giuntini", "Giusti", "Gonnelli", "Goretti", "Gori", "Gradi", "Gramigni", "Grassi", "Grasso", "Graziani", "Grazzini", "Greco", "Grifoni", "Grillo", "Grimaldi", "Grossi", "Gualtieri", "Guarducci", "Guarino", "Guarnieri", "Guasti", "Guerra", "Guerri", "Guerrini", "Guidi", "Guidotti", "He", "Hoxha", "Hu", "Huang", "Iandelli", "Ignesti", "Innocenti", "Jin", "La Rosa", "Lai", "Landi", "Landini", "Lanini", "Lapi", "Lapini", "Lari", "Lascialfari", "Lastrucci", "Latini", "Lazzeri", "Lazzerini", "Lelli", "Lenzi", "Leonardi", "Leoncini", "Leone", "Leoni", "Lepri", "Li", "Liao", "Lin", "Linari", "Lippi", "Lisi", "Livi", "Lombardi", "Lombardini", "Lombardo", "Longo", "Lopez", "Lorenzi", "Lorenzini", "Lorini", "Lotti", "Lu", "Lucchesi", "Lucherini", "Lunghi", "Lupi", "Madiai", "Maestrini", "Maffei", "Maggi", "Maggini", "Magherini", "Magini", "Magnani", "Magnelli", "Magni", "Magnolfi", "Magrini", "Malavolti", "Malevolti", "Manca", "Mancini", "Manetti", "Manfredi", "Mangani", "Mannelli", "Manni", "Mannini", "Mannucci", "Manuelli", "Manzini", "Marcelli", "Marchese", "Marchetti", "Marchi", "Marchiani", "Marchionni", "Marconi", "Marcucci", "Margheri", "Mari", "Mariani", "Marilli", "Marinai", "Marinari", "Marinelli", "Marini", "Marino", "Mariotti", "Marsili", "Martelli", "Martinelli", "Martini", "Martino", "Marzi", "Masi", "Masini", "Masoni", "Massai", "Materassi", "Mattei", "Matteini", "Matteucci", "Matteuzzi", "Mattioli", "Mattolini", "Matucci", "Mauro", "Mazzanti", "Mazzei", "Mazzetti", "Mazzi", "Mazzini", "Mazzocchi", "Mazzoli", "Mazzoni", "Mazzuoli", "Meacci", "Mecocci", "Meini", "Melani", "Mele", "Meli", "Mengoni", "Menichetti", "Meoni", "Merlini", "Messeri", "Messina", "Meucci", "Miccinesi", "Miceli", "Micheli", "Michelini", "Michelozzi", "Migliori", "Migliorini", "Milani", "Miniati", "Misuri", "Monaco", "Montagnani", "Montagni", "Montanari", "Montelatici", "Monti", "Montigiani", "Montini", "Morandi", "Morandini", "Morelli", "Moretti", "Morganti", "Mori", "Morini", "Moroni", "Morozzi", "Mugnai", "Mugnaini", "Mustafa", "Naldi", "Naldini", "Nannelli", "Nanni", "Nannini", "Nannucci", "Nardi", "Nardini", "Nardoni", "Natali", "Ndiaye", "Nencetti", "Nencini", "Nencioni", "Neri", "Nesi", "Nesti", "Niccolai", "Niccoli", "Niccolini", "Nigi", "Nistri", "Nocentini", "Noferini", "Novelli", "Nucci", "Nuti", "Nutini", "Oliva", "Olivieri", "Olmi", "Orlandi", "Orlandini", "Orlando", "Orsini", "Ortolani", "Ottanelli", "Pacciani", "Pace", "Paci", "Pacini", "Pagani", "Pagano", "Paggetti", "Pagliai", "Pagni", "Pagnini", "Paladini", "Palagi", "Palchetti", "Palloni", "Palmieri", "Palumbo", "Pampaloni", "Pancani", "Pandolfi", "Pandolfini", "Panerai", "Panichi", "Paoletti", "Paoli", "Paolini", "Papi", "Papini", "Papucci", "Parenti", "Parigi", "Parisi", "Parri", "Parrini", "Pasquini", "Passeri", "Pecchioli", "Pecorini", "Pellegrini", "Pepi", "Perini", "Perrone", "Peruzzi", "Pesci", "Pestelli", "Petri", "Petrini", "Petrucci", "Pettini", "Pezzati", "Pezzatini", "Piani", "Piazza", "Piazzesi", "Piazzini", "Piccardi", "Picchi", "Piccini", "Piccioli", "Pieraccini", "Pieraccioni", "Pieralli", "Pierattini", "Pieri", "Pierini", "Pieroni", "Pietrini", "Pini", "Pinna", "Pinto", "Pinzani", "Pinzauti", "Piras", "Pisani", "Pistolesi", "Poggesi", "Poggi", "Poggiali", "Poggiolini", "Poli", "Pollastri", "Porciani", "Pozzi", "Pratellesi", "Pratesi", "Prosperi", "Pruneti", "Pucci", "Puccini", "Puccioni", "Pugi", "Pugliese", "Puliti", "Querci", "Quercioli", "Raddi", "Radu", "Raffaelli", "Ragazzini", "Ranfagni", "Ranieri", "Rastrelli", "Raugei", "Raveggi", "Renai", "Renzi", "Rettori", "Ricci", "Ricciardi", "Ridi", "Ridolfi", "Rigacci", "Righi", "Righini", "Rinaldi", "Risaliti", "Ristori", "Rizzo", "Rocchi", "Rocchini", "Rogai", "Romagnoli", "Romanelli", "Romani", "Romano", "Romei", "Romeo", "Romiti", "Romoli", "Romolini", "Rontini", "Rosati", "Roselli", "Rosi", "Rossetti", "Rossi", "Rossini", "Rovai", "Ruggeri", "Ruggiero", "Russo", "Sabatini", "Saccardi", "Sacchetti", "Sacchi", "Sacco", "Salerno", "Salimbeni", "Salucci", "Salvadori", "Salvestrini", "Salvi", "Salvini", "Sanesi", "Sani", "Sanna", "Santi", "Santini", "Santoni", "Santoro", "Santucci", "Sardi", "Sarri", "Sarti", "Sassi", "Sbolci", "Scali", "Scarpelli", "Scarselli", "Scopetani", "Secci", "Selvi", "Senatori", "Senesi", "Serafini", "Sereni", "Serra", "Sestini", "Sguanci", "Sieni", "Signorini", "Silvestri", "Simoncini", "Simonetti", "Simoni", "Singh", "Sodi", "Soldi", "Somigli", "Sorbi", "Sorelli", "Sorrentino", "Sottili", "Spina", "Spinelli", "Staccioli", "Staderini", "Stefanelli", "Stefani", "Stefanini", "Stella", "Susini", "Tacchi", "Tacconi", "Taddei", "Tagliaferri", "Tamburini", "Tanganelli", "Tani", "Tanini", "Tapinassi", "Tarchi", "Tarchiani", "Targioni", "Tassi", "Tassini", "Tempesti", "Terzani", "Tesi", "Testa", "Testi", "Tilli", "Tinti", "Tirinnanzi", "Toccafondi", "Tofanari", "Tofani", "Tognaccini", "Tonelli", "Tonini", "Torelli", "Torrini", "Tosi", "Toti", "Tozzi", "Trambusti", "Trapani", "Tucci", "Turchi", "Ugolini", "Ulivi", "Valente", "Valenti", "Valentini", "Vangelisti", "Vanni", "Vannini", "Vannoni", "Vannozzi", "Vannucchi", "Vannucci", "Ventura", "Venturi", "Venturini", "Vestri", "Vettori", "Vichi", "Viciani", "Vieri", "Vigiani", "Vignoli", "Vignolini", "Vignozzi", "Villani", "Vinci", "Visani", "Vitale", "Vitali", "Viti", "Viviani", "Vivoli", "Volpe", "Volpi", "Wang", "Wu", "Xu", "Yang", "Ye", "Zagli", "Zani", "Zanieri", "Zanobini", "Zecchi", "Zetti", "Zhang", "Zheng", "Zhou", "Zhu", "Zingoni", "Zini", "Zoppi"]
+            "it": ["Acciai", "Aglietti", "Agostini", "Agresti", "Ahmed", "Aiazzi", "Albanese", "Alberti", "Alessi", "Alfani", "Alinari", "Alterini", "Amato", "Ammannati", "Ancillotti", "Andrei", "Andreini", "Andreoni", "Angeli", "Anichini", "Antonelli", "Antonini", "Arena", "Ariani", "Arnetoli", "Arrighi", "Baccani", "Baccetti", "Bacci", "Bacherini", "Badii", "Baggiani", "Baglioni", "Bagni", "Bagnoli", "Baldassini", "Baldi", "Baldini", "Ballerini", "Balli", "Ballini", "Balloni", "Bambi", "Banchi", "Bandinelli", "Bandini", "Bani", "Barbetti", "Barbieri", "Barchielli", "Bardazzi", "Bardelli", "Bardi", "Barducci", "Bargellini", "Bargiacchi", "Barni", "Baroncelli", "Baroncini", "Barone", "Baroni", "Baronti", "Bartalesi", "Bartoletti", "Bartoli", "Bartolini", "Bartoloni", "Bartolozzi", "Basagni", "Basile", "Bassi", "Batacchi", "Battaglia", "Battaglini", "Bausi", "Becagli", "Becattini", "Becchi", "Becucci", "Bellandi", "Bellesi", "Belli", "Bellini", "Bellucci", "Bencini", "Benedetti", "Benelli", "Beni", "Benini", "Bensi", "Benucci", "Benvenuti", "Berlincioni", "Bernacchioni", "Bernardi", "Bernardini", "Berni", "Bernini", "Bertelli", "Berti", "Bertini", "Bessi", "Betti", "Bettini", "Biagi", "Biagini", "Biagioni", "Biagiotti", "Biancalani", "Bianchi", "Bianchini", "Bianco", "Biffoli", "Bigazzi", "Bigi", "Biliotti", "Billi", "Binazzi", "Bindi", "Bini", "Biondi", "Bizzarri", "Bocci", "Bogani", "Bolognesi", "Bonaiuti", "Bonanni", "Bonciani", "Boncinelli", "Bondi", "Bonechi", "Bongini", "Boni", "Bonini", "Borchi", "Boretti", "Borghi", "Borghini", "Borgioli", "Borri", "Borselli", "Boschi", "Bottai", "Bracci", "Braccini", "Brandi", "Braschi", "Bravi", "Brazzini", "Breschi", "Brilli", "Brizzi", "Brogelli", "Brogi", "Brogioni", "Brunelli", "Brunetti", "Bruni", "Bruno", "Brunori", "Bruschi", "Bucci", "Bucciarelli", "Buccioni", "Bucelli", "Bulli", "Burberi", "Burchi", "Burgassi", "Burroni", "Bussotti", "Buti", "Caciolli", "Caiani", "Calabrese", "Calamai", "Calamandrei", "Caldini", "Calo'", "Calonaci", "Calosi", "Calvelli", "Cambi", "Camiciottoli", "Cammelli", "Cammilli", "Campolmi", "Cantini", "Capanni", "Capecchi", "Caponi", "Cappelletti", "Cappelli", "Cappellini", "Cappugi", "Capretti", "Caputo", "Carbone", "Carboni", "Cardini", "Carlesi", "Carletti", "Carli", "Caroti", "Carotti", "Carrai", "Carraresi", "Carta", "Caruso", "Casalini", "Casati", "Caselli", "Casini", "Castagnoli", "Castellani", "Castelli", "Castellucci", "Catalano", "Catarzi", "Catelani", "Cavaciocchi", "Cavallaro", "Cavallini", "Cavicchi", "Cavini", "Ceccarelli", "Ceccatelli", "Ceccherelli", "Ceccherini", "Cecchi", "Cecchini", "Cecconi", "Cei", "Cellai", "Celli", "Cellini", "Cencetti", "Ceni", "Cenni", "Cerbai", "Cesari", "Ceseri", "Checcacci", "Checchi", "Checcucci", "Cheli", "Chellini", "Chen", "Cheng", "Cherici", "Cherubini", "Chiaramonti", "Chiarantini", "Chiarelli", "Chiari", "Chiarini", "Chiarugi", "Chiavacci", "Chiesi", "Chimenti", "Chini", "Chirici", "Chiti", "Ciabatti", "Ciampi", "Cianchi", "Cianfanelli", "Cianferoni", "Ciani", "Ciapetti", "Ciappi", "Ciardi", "Ciatti", "Cicali", "Ciccone", "Cinelli", "Cini", "Ciobanu", "Ciolli", "Cioni", "Cipriani", "Cirillo", "Cirri", "Ciucchi", "Ciuffi", "Ciulli", "Ciullini", "Clemente", "Cocchi", "Cognome", "Coli", "Collini", "Colombo", "Colzi", "Comparini", "Conforti", "Consigli", "Conte", "Conti", "Contini", "Coppini", "Coppola", "Corsi", "Corsini", "Corti", "Cortini", "Cosi", "Costa", "Costantini", "Costantino", "Cozzi", "Cresci", "Crescioli", "Cresti", "Crini", "Curradi", "D'Agostino", "D'Alessandro", "D'Amico", "D'Angelo", "Daddi", "Dainelli", "Dallai", "Danti", "Davitti", "De Angelis", "De Luca", "De Marco", "De Rosa", "De Santis", "De Simone", "De Vita", "Degl'Innocenti", "Degli Innocenti", "Dei", "Del Lungo", "Del Re", "Di Marco", "Di Stefano", "Dini", "Diop", "Dobre", "Dolfi", "Donati", "Dondoli", "Dong", "Donnini", "Ducci", "Dumitru", "Ermini", "Esposito", "Evangelisti", "Fabbri", "Fabbrini", "Fabbrizzi", "Fabbroni", "Fabbrucci", "Fabiani", "Facchini", "Faggi", "Fagioli", "Failli", "Faini", "Falciani", "Falcini", "Falcone", "Fallani", "Falorni", "Falsini", "Falugiani", "Fancelli", "Fanelli", "Fanetti", "Fanfani", "Fani", "Fantappie'", "Fantechi", "Fanti", "Fantini", "Fantoni", "Farina", "Fattori", "Favilli", "Fedi", "Fei", "Ferrante", "Ferrara", "Ferrari", "Ferraro", "Ferretti", "Ferri", "Ferrini", "Ferroni", "Fiaschi", "Fibbi", "Fiesoli", "Filippi", "Filippini", "Fini", "Fioravanti", "Fiore", "Fiorentini", "Fiorini", "Fissi", "Focardi", "Foggi", "Fontana", "Fontanelli", "Fontani", "Forconi", "Formigli", "Forte", "Forti", "Fortini", "Fossati", "Fossi", "Francalanci", "Franceschi", "Franceschini", "Franchi", "Franchini", "Franci", "Francini", "Francioni", "Franco", "Frassineti", "Frati", "Fratini", "Frilli", "Frizzi", "Frosali", "Frosini", "Frullini", "Fusco", "Fusi", "Gabbrielli", "Gabellini", "Gagliardi", "Galanti", "Galardi", "Galeotti", "Galletti", "Galli", "Gallo", "Gallori", "Gambacciani", "Gargani", "Garofalo", "Garuglieri", "Gashi", "Gasperini", "Gatti", "Gelli", "Gensini", "Gentile", "Gentili", "Geri", "Gerini", "Gheri", "Ghini", "Giachetti", "Giachi", "Giacomelli", "Gianassi", "Giani", "Giannelli", "Giannetti", "Gianni", "Giannini", "Giannoni", "Giannotti", "Giannozzi", "Gigli", "Giordano", "Giorgetti", "Giorgi", "Giovacchini", "Giovannelli", "Giovannetti", "Giovannini", "Giovannoni", "Giuliani", "Giunti", "Giuntini", "Giusti", "Gonnelli", "Goretti", "Gori", "Gradi", "Gramigni", "Grassi", "Grasso", "Graziani", "Grazzini", "Greco", "Grifoni", "Grillo", "Grimaldi", "Grossi", "Gualtieri", "Guarducci", "Guarino", "Guarnieri", "Guasti", "Guerra", "Guerri", "Guerrini", "Guidi", "Guidotti", "He", "Hoxha", "Hu", "Huang", "Iandelli", "Ignesti", "Innocenti", "Jin", "La Rosa", "Lai", "Landi", "Landini", "Lanini", "Lapi", "Lapini", "Lari", "Lascialfari", "Lastrucci", "Latini", "Lazzeri", "Lazzerini", "Lelli", "Lenzi", "Leonardi", "Leoncini", "Leone", "Leoni", "Lepri", "Li", "Liao", "Lin", "Linari", "Lippi", "Lisi", "Livi", "Lombardi", "Lombardini", "Lombardo", "Longo", "Lopez", "Lorenzi", "Lorenzini", "Lorini", "Lotti", "Lu", "Lucchesi", "Lucherini", "Lunghi", "Lupi", "Madiai", "Maestrini", "Maffei", "Maggi", "Maggini", "Magherini", "Magini", "Magnani", "Magnelli", "Magni", "Magnolfi", "Magrini", "Malavolti", "Malevolti", "Manca", "Mancini", "Manetti", "Manfredi", "Mangani", "Mannelli", "Manni", "Mannini", "Mannucci", "Manuelli", "Manzini", "Marcelli", "Marchese", "Marchetti", "Marchi", "Marchiani", "Marchionni", "Marconi", "Marcucci", "Margheri", "Mari", "Mariani", "Marilli", "Marinai", "Marinari", "Marinelli", "Marini", "Marino", "Mariotti", "Marsili", "Martelli", "Martinelli", "Martini", "Martino", "Marzi", "Masi", "Masini", "Masoni", "Massai", "Materassi", "Mattei", "Matteini", "Matteucci", "Matteuzzi", "Mattioli", "Mattolini", "Matucci", "Mauro", "Mazzanti", "Mazzei", "Mazzetti", "Mazzi", "Mazzini", "Mazzocchi", "Mazzoli", "Mazzoni", "Mazzuoli", "Meacci", "Mecocci", "Meini", "Melani", "Mele", "Meli", "Mengoni", "Menichetti", "Meoni", "Merlini", "Messeri", "Messina", "Meucci", "Miccinesi", "Miceli", "Micheli", "Michelini", "Michelozzi", "Migliori", "Migliorini", "Milani", "Miniati", "Misuri", "Monaco", "Montagnani", "Montagni", "Montanari", "Montelatici", "Monti", "Montigiani", "Montini", "Morandi", "Morandini", "Morelli", "Moretti", "Morganti", "Mori", "Morini", "Moroni", "Morozzi", "Mugnai", "Mugnaini", "Mustafa", "Naldi", "Naldini", "Nannelli", "Nanni", "Nannini", "Nannucci", "Nardi", "Nardini", "Nardoni", "Natali", "Ndiaye", "Nencetti", "Nencini", "Nencioni", "Neri", "Nesi", "Nesti", "Niccolai", "Niccoli", "Niccolini", "Nigi", "Nistri", "Nocentini", "Noferini", "Novelli", "Nucci", "Nuti", "Nutini", "Oliva", "Olivieri", "Olmi", "Orlandi", "Orlandini", "Orlando", "Orsini", "Ortolani", "Ottanelli", "Pacciani", "Pace", "Paci", "Pacini", "Pagani", "Pagano", "Paggetti", "Pagliai", "Pagni", "Pagnini", "Paladini", "Palagi", "Palchetti", "Palloni", "Palmieri", "Palumbo", "Pampaloni", "Pancani", "Pandolfi", "Pandolfini", "Panerai", "Panichi", "Paoletti", "Paoli", "Paolini", "Papi", "Papini", "Papucci", "Parenti", "Parigi", "Parisi", "Parri", "Parrini", "Pasquini", "Passeri", "Pecchioli", "Pecorini", "Pellegrini", "Pepi", "Perini", "Perrone", "Peruzzi", "Pesci", "Pestelli", "Petri", "Petrini", "Petrucci", "Pettini", "Pezzati", "Pezzatini", "Piani", "Piazza", "Piazzesi", "Piazzini", "Piccardi", "Picchi", "Piccini", "Piccioli", "Pieraccini", "Pieraccioni", "Pieralli", "Pierattini", "Pieri", "Pierini", "Pieroni", "Pietrini", "Pini", "Pinna", "Pinto", "Pinzani", "Pinzauti", "Piras", "Pisani", "Pistolesi", "Poggesi", "Poggi", "Poggiali", "Poggiolini", "Poli", "Pollastri", "Porciani", "Pozzi", "Pratellesi", "Pratesi", "Prosperi", "Pruneti", "Pucci", "Puccini", "Puccioni", "Pugi", "Pugliese", "Puliti", "Querci", "Quercioli", "Raddi", "Radu", "Raffaelli", "Ragazzini", "Ranfagni", "Ranieri", "Rastrelli", "Raugei", "Raveggi", "Renai", "Renzi", "Rettori", "Ricci", "Ricciardi", "Ridi", "Ridolfi", "Rigacci", "Righi", "Righini", "Rinaldi", "Risaliti", "Ristori", "Rizzo", "Rocchi", "Rocchini", "Rogai", "Romagnoli", "Romanelli", "Romani", "Romano", "Romei", "Romeo", "Romiti", "Romoli", "Romolini", "Rontini", "Rosati", "Roselli", "Rosi", "Rossetti", "Rossi", "Rossini", "Rovai", "Ruggeri", "Ruggiero", "Russo", "Sabatini", "Saccardi", "Sacchetti", "Sacchi", "Sacco", "Salerno", "Salimbeni", "Salucci", "Salvadori", "Salvestrini", "Salvi", "Salvini", "Sanesi", "Sani", "Sanna", "Santi", "Santini", "Santoni", "Santoro", "Santucci", "Sardi", "Sarri", "Sarti", "Sassi", "Sbolci", "Scali", "Scarpelli", "Scarselli", "Scopetani", "Secci", "Selvi", "Senatori", "Senesi", "Serafini", "Sereni", "Serra", "Sestini", "Sguanci", "Sieni", "Signorini", "Silvestri", "Simoncini", "Simonetti", "Simoni", "Singh", "Sodi", "Soldi", "Somigli", "Sorbi", "Sorelli", "Sorrentino", "Sottili", "Spina", "Spinelli", "Staccioli", "Staderini", "Stefanelli", "Stefani", "Stefanini", "Stella", "Susini", "Tacchi", "Tacconi", "Taddei", "Tagliaferri", "Tamburini", "Tanganelli", "Tani", "Tanini", "Tapinassi", "Tarchi", "Tarchiani", "Targioni", "Tassi", "Tassini", "Tempesti", "Terzani", "Tesi", "Testa", "Testi", "Tilli", "Tinti", "Tirinnanzi", "Toccafondi", "Tofanari", "Tofani", "Tognaccini", "Tonelli", "Tonini", "Torelli", "Torrini", "Tosi", "Toti", "Tozzi", "Trambusti", "Trapani", "Tucci", "Turchi", "Ugolini", "Ulivi", "Valente", "Valenti", "Valentini", "Vangelisti", "Vanni", "Vannini", "Vannoni", "Vannozzi", "Vannucchi", "Vannucci", "Ventura", "Venturi", "Venturini", "Vestri", "Vettori", "Vichi", "Viciani", "Vieri", "Vigiani", "Vignoli", "Vignolini", "Vignozzi", "Villani", "Vinci", "Visani", "Vitale", "Vitali", "Viti", "Viviani", "Vivoli", "Volpe", "Volpi", "Wang", "Wu", "Xu", "Yang", "Ye", "Zagli", "Zani", "Zanieri", "Zanobini", "Zecchi", "Zetti", "Zhang", "Zheng", "Zhou", "Zhu", "Zingoni", "Zini", "Zoppi"],
+            // http://www.voornamelijk.nl/meest-voorkomende-achternamen-in-nederland-en-amsterdam/
+            "nl":["Albers", "Alblas", "Appelman", "Baars", "Baas", "Bakker", "Blank", "Bleeker", "Blok", "Blom", "Boer", "Boers", "Boldewijn", "Boon", "Boot", "Bos", "Bosch", "Bosma", "Bosman", "Bouma", "Bouman", "Bouwman", "Brands", "Brouwer", "Burger", "Buijs", "Buitenhuis", "Ceder", "Cohen", "Dekker", "Dekkers", "Dijkman", "Dijkstra", "Driessen", "Drost", "Engel", "Evers", "Faber", "Franke", "Gerritsen", "Goedhart", "Goossens", "Groen", "Groenenberg", "Groot", "Haan", "Hart", "Heemskerk", "Hendriks", "Hermans", "Hoekstra", "Hofman", "Hopman", "Huisman", "Jacobs", "Jansen", "Janssen", "Jonker", "Jaspers", "Keijzer", "Klaassen", "Klein", "Koek", "Koenders", "Kok", "Kool", "Koopman", "Koopmans", "Koning", "Koster", "Kramer", "Kroon", "Kuijpers", "Kuiper", "Kuipers", "Kurt", "Koster", "Kwakman", "Los", "Lubbers", "Maas", "Markus", "Martens", "Meijer", "Mol", "Molenaar", "Mulder", "Nieuwenhuis", "Peeters", "Peters", "Pengel", "Pieters", "Pool", "Post", "Postma", "Prins", "Pronk", "Reijnders", "Rietveld", "Roest", "Roos", "Sanders", "Schaap", "Scheffer", "Schenk", "Schilder", "Schipper", "Schmidt", "Scholten", "Schouten", "Schut", "Schutte", "Schuurman", "Simons", "Smeets", "Smit", "Smits", "Snel", "Swinkels", "Tas", "Terpstra", "Timmermans", "Tol", "Tromp", "Troost", "Valk", "Veenstra", "Veldkamp", "Verbeek", "Verheul", "Verhoeven", "Vermeer", "Vermeulen", "Verweij", "Vink", "Visser", "Voorn", "Vos", "Wagenaar", "Wiersema", "Willems", "Willemsen", "Witteveen", "Wolff", "Wolters", "Zijlstra", "Zwart", "de Beer", "de Boer", "de Bruijn", "de Bruin", "de Graaf", "de Groot", "de Haan", "de Haas", "de Jager", "de Jong", "de Jonge", "de Koning", "de Lange", "de Leeuw", "de Ridder", "de Rooij", "de Ruiter", "de Vos", "de Vries", "de Waal", "de Wit", "de Zwart", "van Beek", "van Boven", "van Dam", "van Dijk", "van Dongen", "van Doorn", "van Egmond", "van Eijk", "van Es", "van Gelder", "van Gelderen", "van Houten", "van Hulst", "van Kempen", "van Kesteren", "van Leeuwen", "van Loon", "van Mill", "van Noord", "van Ommen", "van Ommeren", "van Oosten", "van Oostveen", "van Rijn", "van Schaik", "van Veen", "van Vliet", "van Wijk", "van Wijngaarden", "van den Poel", "van de Pol", "van den Ploeg", "van de Ven", "van den Berg", "van den Bosch", "van den Brink", "van den Broek", "van den Heuvel", "van der Heijden", "van der Horst", "van der Hulst", "van der Kroon", "van der Laan", "van der Linden", "van der Meer", "van der Meij", "van der Meulen", "van der Molen", "van der Sluis", "van der Spek", "van der Veen", "van der Velde", "van der Velden", "van der Vliet", "van der Wal"]
         },
 
         // Data taken from https://github.com/umpirsky/country-list/blob/master/data/en_US/country.json
         countries: [{"name":"Afghanistan","abbreviation":"AF"},{"name":"Åland Islands","abbreviation":"AX"},{"name":"Albania","abbreviation":"AL"},{"name":"Algeria","abbreviation":"DZ"},{"name":"American Samoa","abbreviation":"AS"},{"name":"Andorra","abbreviation":"AD"},{"name":"Angola","abbreviation":"AO"},{"name":"Anguilla","abbreviation":"AI"},{"name":"Antarctica","abbreviation":"AQ"},{"name":"Antigua & Barbuda","abbreviation":"AG"},{"name":"Argentina","abbreviation":"AR"},{"name":"Armenia","abbreviation":"AM"},{"name":"Aruba","abbreviation":"AW"},{"name":"Ascension Island","abbreviation":"AC"},{"name":"Australia","abbreviation":"AU"},{"name":"Austria","abbreviation":"AT"},{"name":"Azerbaijan","abbreviation":"AZ"},{"name":"Bahamas","abbreviation":"BS"},{"name":"Bahrain","abbreviation":"BH"},{"name":"Bangladesh","abbreviation":"BD"},{"name":"Barbados","abbreviation":"BB"},{"name":"Belarus","abbreviation":"BY"},{"name":"Belgium","abbreviation":"BE"},{"name":"Belize","abbreviation":"BZ"},{"name":"Benin","abbreviation":"BJ"},{"name":"Bermuda","abbreviation":"BM"},{"name":"Bhutan","abbreviation":"BT"},{"name":"Bolivia","abbreviation":"BO"},{"name":"Bosnia & Herzegovina","abbreviation":"BA"},{"name":"Botswana","abbreviation":"BW"},{"name":"Brazil","abbreviation":"BR"},{"name":"British Indian Ocean Territory","abbreviation":"IO"},{"name":"British Virgin Islands","abbreviation":"VG"},{"name":"Brunei","abbreviation":"BN"},{"name":"Bulgaria","abbreviation":"BG"},{"name":"Burkina Faso","abbreviation":"BF"},{"name":"Burundi","abbreviation":"BI"},{"name":"Cambodia","abbreviation":"KH"},{"name":"Cameroon","abbreviation":"CM"},{"name":"Canada","abbreviation":"CA"},{"name":"Canary Islands","abbreviation":"IC"},{"name":"Cape Verde","abbreviation":"CV"},{"name":"Caribbean Netherlands","abbreviation":"BQ"},{"name":"Cayman Islands","abbreviation":"KY"},{"name":"Central African Republic","abbreviation":"CF"},{"name":"Ceuta & Melilla","abbreviation":"EA"},{"name":"Chad","abbreviation":"TD"},{"name":"Chile","abbreviation":"CL"},{"name":"China","abbreviation":"CN"},{"name":"Christmas Island","abbreviation":"CX"},{"name":"Cocos (Keeling) Islands","abbreviation":"CC"},{"name":"Colombia","abbreviation":"CO"},{"name":"Comoros","abbreviation":"KM"},{"name":"Congo - Brazzaville","abbreviation":"CG"},{"name":"Congo - Kinshasa","abbreviation":"CD"},{"name":"Cook Islands","abbreviation":"CK"},{"name":"Costa Rica","abbreviation":"CR"},{"name":"Côte d'Ivoire","abbreviation":"CI"},{"name":"Croatia","abbreviation":"HR"},{"name":"Cuba","abbreviation":"CU"},{"name":"Curaçao","abbreviation":"CW"},{"name":"Cyprus","abbreviation":"CY"},{"name":"Czech Republic","abbreviation":"CZ"},{"name":"Denmark","abbreviation":"DK"},{"name":"Diego Garcia","abbreviation":"DG"},{"name":"Djibouti","abbreviation":"DJ"},{"name":"Dominica","abbreviation":"DM"},{"name":"Dominican Republic","abbreviation":"DO"},{"name":"Ecuador","abbreviation":"EC"},{"name":"Egypt","abbreviation":"EG"},{"name":"El Salvador","abbreviation":"SV"},{"name":"Equatorial Guinea","abbreviation":"GQ"},{"name":"Eritrea","abbreviation":"ER"},{"name":"Estonia","abbreviation":"EE"},{"name":"Ethiopia","abbreviation":"ET"},{"name":"Falkland Islands","abbreviation":"FK"},{"name":"Faroe Islands","abbreviation":"FO"},{"name":"Fiji","abbreviation":"FJ"},{"name":"Finland","abbreviation":"FI"},{"name":"France","abbreviation":"FR"},{"name":"French Guiana","abbreviation":"GF"},{"name":"French Polynesia","abbreviation":"PF"},{"name":"French Southern Territories","abbreviation":"TF"},{"name":"Gabon","abbreviation":"GA"},{"name":"Gambia","abbreviation":"GM"},{"name":"Georgia","abbreviation":"GE"},{"name":"Germany","abbreviation":"DE"},{"name":"Ghana","abbreviation":"GH"},{"name":"Gibraltar","abbreviation":"GI"},{"name":"Greece","abbreviation":"GR"},{"name":"Greenland","abbreviation":"GL"},{"name":"Grenada","abbreviation":"GD"},{"name":"Guadeloupe","abbreviation":"GP"},{"name":"Guam","abbreviation":"GU"},{"name":"Guatemala","abbreviation":"GT"},{"name":"Guernsey","abbreviation":"GG"},{"name":"Guinea","abbreviation":"GN"},{"name":"Guinea-Bissau","abbreviation":"GW"},{"name":"Guyana","abbreviation":"GY"},{"name":"Haiti","abbreviation":"HT"},{"name":"Honduras","abbreviation":"HN"},{"name":"Hong Kong SAR China","abbreviation":"HK"},{"name":"Hungary","abbreviation":"HU"},{"name":"Iceland","abbreviation":"IS"},{"name":"India","abbreviation":"IN"},{"name":"Indonesia","abbreviation":"ID"},{"name":"Iran","abbreviation":"IR"},{"name":"Iraq","abbreviation":"IQ"},{"name":"Ireland","abbreviation":"IE"},{"name":"Isle of Man","abbreviation":"IM"},{"name":"Israel","abbreviation":"IL"},{"name":"Italy","abbreviation":"IT"},{"name":"Jamaica","abbreviation":"JM"},{"name":"Japan","abbreviation":"JP"},{"name":"Jersey","abbreviation":"JE"},{"name":"Jordan","abbreviation":"JO"},{"name":"Kazakhstan","abbreviation":"KZ"},{"name":"Kenya","abbreviation":"KE"},{"name":"Kiribati","abbreviation":"KI"},{"name":"Kosovo","abbreviation":"XK"},{"name":"Kuwait","abbreviation":"KW"},{"name":"Kyrgyzstan","abbreviation":"KG"},{"name":"Laos","abbreviation":"LA"},{"name":"Latvia","abbreviation":"LV"},{"name":"Lebanon","abbreviation":"LB"},{"name":"Lesotho","abbreviation":"LS"},{"name":"Liberia","abbreviation":"LR"},{"name":"Libya","abbreviation":"LY"},{"name":"Liechtenstein","abbreviation":"LI"},{"name":"Lithuania","abbreviation":"LT"},{"name":"Luxembourg","abbreviation":"LU"},{"name":"Macau SAR China","abbreviation":"MO"},{"name":"Macedonia","abbreviation":"MK"},{"name":"Madagascar","abbreviation":"MG"},{"name":"Malawi","abbreviation":"MW"},{"name":"Malaysia","abbreviation":"MY"},{"name":"Maldives","abbreviation":"MV"},{"name":"Mali","abbreviation":"ML"},{"name":"Malta","abbreviation":"MT"},{"name":"Marshall Islands","abbreviation":"MH"},{"name":"Martinique","abbreviation":"MQ"},{"name":"Mauritania","abbreviation":"MR"},{"name":"Mauritius","abbreviation":"MU"},{"name":"Mayotte","abbreviation":"YT"},{"name":"Mexico","abbreviation":"MX"},{"name":"Micronesia","abbreviation":"FM"},{"name":"Moldova","abbreviation":"MD"},{"name":"Monaco","abbreviation":"MC"},{"name":"Mongolia","abbreviation":"MN"},{"name":"Montenegro","abbreviation":"ME"},{"name":"Montserrat","abbreviation":"MS"},{"name":"Morocco","abbreviation":"MA"},{"name":"Mozambique","abbreviation":"MZ"},{"name":"Myanmar (Burma)","abbreviation":"MM"},{"name":"Namibia","abbreviation":"NA"},{"name":"Nauru","abbreviation":"NR"},{"name":"Nepal","abbreviation":"NP"},{"name":"Netherlands","abbreviation":"NL"},{"name":"New Caledonia","abbreviation":"NC"},{"name":"New Zealand","abbreviation":"NZ"},{"name":"Nicaragua","abbreviation":"NI"},{"name":"Niger","abbreviation":"NE"},{"name":"Nigeria","abbreviation":"NG"},{"name":"Niue","abbreviation":"NU"},{"name":"Norfolk Island","abbreviation":"NF"},{"name":"North Korea","abbreviation":"KP"},{"name":"Northern Mariana Islands","abbreviation":"MP"},{"name":"Norway","abbreviation":"NO"},{"name":"Oman","abbreviation":"OM"},{"name":"Pakistan","abbreviation":"PK"},{"name":"Palau","abbreviation":"PW"},{"name":"Palestinian Territories","abbreviation":"PS"},{"name":"Panama","abbreviation":"PA"},{"name":"Papua New Guinea","abbreviation":"PG"},{"name":"Paraguay","abbreviation":"PY"},{"name":"Peru","abbreviation":"PE"},{"name":"Philippines","abbreviation":"PH"},{"name":"Pitcairn Islands","abbreviation":"PN"},{"name":"Poland","abbreviation":"PL"},{"name":"Portugal","abbreviation":"PT"},{"name":"Puerto Rico","abbreviation":"PR"},{"name":"Qatar","abbreviation":"QA"},{"name":"Réunion","abbreviation":"RE"},{"name":"Romania","abbreviation":"RO"},{"name":"Russia","abbreviation":"RU"},{"name":"Rwanda","abbreviation":"RW"},{"name":"Samoa","abbreviation":"WS"},{"name":"San Marino","abbreviation":"SM"},{"name":"São Tomé and Príncipe","abbreviation":"ST"},{"name":"Saudi Arabia","abbreviation":"SA"},{"name":"Senegal","abbreviation":"SN"},{"name":"Serbia","abbreviation":"RS"},{"name":"Seychelles","abbreviation":"SC"},{"name":"Sierra Leone","abbreviation":"SL"},{"name":"Singapore","abbreviation":"SG"},{"name":"Sint Maarten","abbreviation":"SX"},{"name":"Slovakia","abbreviation":"SK"},{"name":"Slovenia","abbreviation":"SI"},{"name":"Solomon Islands","abbreviation":"SB"},{"name":"Somalia","abbreviation":"SO"},{"name":"South Africa","abbreviation":"ZA"},{"name":"South Georgia & South Sandwich Islands","abbreviation":"GS"},{"name":"South Korea","abbreviation":"KR"},{"name":"South Sudan","abbreviation":"SS"},{"name":"Spain","abbreviation":"ES"},{"name":"Sri Lanka","abbreviation":"LK"},{"name":"St. Barthélemy","abbreviation":"BL"},{"name":"St. Helena","abbreviation":"SH"},{"name":"St. Kitts & Nevis","abbreviation":"KN"},{"name":"St. Lucia","abbreviation":"LC"},{"name":"St. Martin","abbreviation":"MF"},{"name":"St. Pierre & Miquelon","abbreviation":"PM"},{"name":"St. Vincent & Grenadines","abbreviation":"VC"},{"name":"Sudan","abbreviation":"SD"},{"name":"Suriname","abbreviation":"SR"},{"name":"Svalbard & Jan Mayen","abbreviation":"SJ"},{"name":"Swaziland","abbreviation":"SZ"},{"name":"Sweden","abbreviation":"SE"},{"name":"Switzerland","abbreviation":"CH"},{"name":"Syria","abbreviation":"SY"},{"name":"Taiwan","abbreviation":"TW"},{"name":"Tajikistan","abbreviation":"TJ"},{"name":"Tanzania","abbreviation":"TZ"},{"name":"Thailand","abbreviation":"TH"},{"name":"Timor-Leste","abbreviation":"TL"},{"name":"Togo","abbreviation":"TG"},{"name":"Tokelau","abbreviation":"TK"},{"name":"Tonga","abbreviation":"TO"},{"name":"Trinidad & Tobago","abbreviation":"TT"},{"name":"Tristan da Cunha","abbreviation":"TA"},{"name":"Tunisia","abbreviation":"TN"},{"name":"Turkey","abbreviation":"TR"},{"name":"Turkmenistan","abbreviation":"TM"},{"name":"Turks & Caicos Islands","abbreviation":"TC"},{"name":"Tuvalu","abbreviation":"TV"},{"name":"U.S. Outlying Islands","abbreviation":"UM"},{"name":"U.S. Virgin Islands","abbreviation":"VI"},{"name":"Uganda","abbreviation":"UG"},{"name":"Ukraine","abbreviation":"UA"},{"name":"United Arab Emirates","abbreviation":"AE"},{"name":"United Kingdom","abbreviation":"GB"},{"name":"United States","abbreviation":"US"},{"name":"Uruguay","abbreviation":"UY"},{"name":"Uzbekistan","abbreviation":"UZ"},{"name":"Vanuatu","abbreviation":"VU"},{"name":"Vatican City","abbreviation":"VA"},{"name":"Venezuela","abbreviation":"VE"},{"name":"Vietnam","abbreviation":"VN"},{"name":"Wallis & Futuna","abbreviation":"WF"},{"name":"Western Sahara","abbreviation":"EH"},{"name":"Yemen","abbreviation":"YE"},{"name":"Zambia","abbreviation":"ZM"},{"name":"Zimbabwe","abbreviation":"ZW"}],
 
-		counties: {
+                counties: {
             // Data taken from http://www.downloadexcelfiles.com/gb_en/download-excel-file-list-counties-uk
             "uk": [
                 {name: 'Bath and North East Somerset'},
@@ -2449,7 +2514,7 @@
                 {name: 'Worcestershire'},
                 {name: 'Wrexham'},
                 {name: 'York'}]
-				},
+                                },
         provinces: {
             "ca": [
                 {name: 'Alberta', abbreviation: 'AB'},
@@ -2779,6 +2844,698 @@
            {name: 'Yemenit'},
            {name: 'Zambia'},
            {name: 'Zimbabwe'},
+        ],
+          // http://www.loc.gov/standards/iso639-2/php/code_list.php (ISO-639-1 codes)
+        locale_languages: [
+          "aa",
+          "ab",
+          "ae",
+          "af",
+          "ak",
+          "am",
+          "an",
+          "ar",
+          "as",
+          "av",
+          "ay",
+          "az",
+          "ba",
+          "be",
+          "bg",
+          "bh",
+          "bi",
+          "bm",
+          "bn",
+          "bo",
+          "br",
+          "bs",
+          "ca",
+          "ce",
+          "ch",
+          "co",
+          "cr",
+          "cs",
+          "cu",
+          "cv",
+          "cy",
+          "da",
+          "de",
+          "dv",
+          "dz",
+          "ee",
+          "el",
+          "en",
+          "eo",
+          "es",
+          "et",
+          "eu",
+          "fa",
+          "ff",
+          "fi",
+          "fj",
+          "fo",
+          "fr",
+          "fy",
+          "ga",
+          "gd",
+          "gl",
+          "gn",
+          "gu",
+          "gv",
+          "ha",
+          "he",
+          "hi",
+          "ho",
+          "hr",
+          "ht",
+          "hu",
+          "hy",
+          "hz",
+          "ia",
+          "id",
+          "ie",
+          "ig",
+          "ii",
+          "ik",
+          "io",
+          "is",
+          "it",
+          "iu",
+          "ja",
+          "jv",
+          "ka",
+          "kg",
+          "ki",
+          "kj",
+          "kk",
+          "kl",
+          "km",
+          "kn",
+          "ko",
+          "kr",
+          "ks",
+          "ku",
+          "kv",
+          "kw",
+          "ky",
+          "la",
+          "lb",
+          "lg",
+          "li",
+          "ln",
+          "lo",
+          "lt",
+          "lu",
+          "lv",
+          "mg",
+          "mh",
+          "mi",
+          "mk",
+          "ml",
+          "mn",
+          "mr",
+          "ms",
+          "mt",
+          "my",
+          "na",
+          "nb",
+          "nd",
+          "ne",
+          "ng",
+          "nl",
+          "nn",
+          "no",
+          "nr",
+          "nv",
+          "ny",
+          "oc",
+          "oj",
+          "om",
+          "or",
+          "os",
+          "pa",
+          "pi",
+          "pl",
+          "ps",
+          "pt",
+          "qu",
+          "rm",
+          "rn",
+          "ro",
+          "ru",
+          "rw",
+          "sa",
+          "sc",
+          "sd",
+          "se",
+          "sg",
+          "si",
+          "sk",
+          "sl",
+          "sm",
+          "sn",
+          "so",
+          "sq",
+          "sr",
+          "ss",
+          "st",
+          "su",
+          "sv",
+          "sw",
+          "ta",
+          "te",
+          "tg",
+          "th",
+          "ti",
+          "tk",
+          "tl",
+          "tn",
+          "to",
+          "tr",
+          "ts",
+          "tt",
+          "tw",
+          "ty",
+          "ug",
+          "uk",
+          "ur",
+          "uz",
+          "ve",
+          "vi",
+          "vo",
+          "wa",
+          "wo",
+          "xh",
+          "yi",
+          "yo",
+          "za",
+          "zh",
+          "zu"
+        ],
+
+        // From http://data.okfn.org/data/core/language-codes#resource-language-codes-full (IETF language tags)
+        locale_regions: [
+          "agq-CM",
+          "asa-TZ",
+          "ast-ES",
+          "bas-CM",
+          "bem-ZM",
+          "bez-TZ",
+          "brx-IN",
+          "cgg-UG",
+          "chr-US",
+          "dav-KE",
+          "dje-NE",
+          "dsb-DE",
+          "dua-CM",
+          "dyo-SN",
+          "ebu-KE",
+          "ewo-CM",
+          "fil-PH",
+          "fur-IT",
+          "gsw-CH",
+          "gsw-FR",
+          "gsw-LI",
+          "guz-KE",
+          "haw-US",
+          "hsb-DE",
+          "jgo-CM",
+          "jmc-TZ",
+          "kab-DZ",
+          "kam-KE",
+          "kde-TZ",
+          "kea-CV",
+          "khq-ML",
+          "kkj-CM",
+          "kln-KE",
+          "kok-IN",
+          "ksb-TZ",
+          "ksf-CM",
+          "ksh-DE",
+          "lag-TZ",
+          "lkt-US",
+          "luo-KE",
+          "luy-KE",
+          "mas-KE",
+          "mas-TZ",
+          "mer-KE",
+          "mfe-MU",
+          "mgh-MZ",
+          "mgo-CM",
+          "mua-CM",
+          "naq-NA",
+          "nmg-CM",
+          "nnh-CM",
+          "nus-SD",
+          "nyn-UG",
+          "rof-TZ",
+          "rwk-TZ",
+          "sah-RU",
+          "saq-KE",
+          "sbp-TZ",
+          "seh-MZ",
+          "ses-ML",
+          "shi-Latn",
+          "shi-Latn-MA",
+          "shi-Tfng",
+          "shi-Tfng-MA",
+          "smn-FI",
+          "teo-KE",
+          "teo-UG",
+          "twq-NE",
+          "tzm-Latn",
+          "tzm-Latn-MA",
+          "vai-Latn",
+          "vai-Latn-LR",
+          "vai-Vaii",
+          "vai-Vaii-LR",
+          "vun-TZ",
+          "wae-CH",
+          "xog-UG",
+          "yav-CM",
+          "zgh-MA",
+          "af-NA",
+          "af-ZA",
+          "ak-GH",
+          "am-ET",
+          "ar-001",
+          "ar-AE",
+          "ar-BH",
+          "ar-DJ",
+          "ar-DZ",
+          "ar-EG",
+          "ar-EH",
+          "ar-ER",
+          "ar-IL",
+          "ar-IQ",
+          "ar-JO",
+          "ar-KM",
+          "ar-KW",
+          "ar-LB",
+          "ar-LY",
+          "ar-MA",
+          "ar-MR",
+          "ar-OM",
+          "ar-PS",
+          "ar-QA",
+          "ar-SA",
+          "ar-SD",
+          "ar-SO",
+          "ar-SS",
+          "ar-SY",
+          "ar-TD",
+          "ar-TN",
+          "ar-YE",
+          "as-IN",
+          "az-Cyrl",
+          "az-Cyrl-AZ",
+          "az-Latn",
+          "az-Latn-AZ",
+          "be-BY",
+          "bg-BG",
+          "bm-Latn",
+          "bm-Latn-ML",
+          "bn-BD",
+          "bn-IN",
+          "bo-CN",
+          "bo-IN",
+          "br-FR",
+          "bs-Cyrl",
+          "bs-Cyrl-BA",
+          "bs-Latn",
+          "bs-Latn-BA",
+          "ca-AD",
+          "ca-ES",
+          "ca-ES-VALENCIA",
+          "ca-FR",
+          "ca-IT",
+          "cs-CZ",
+          "cy-GB",
+          "da-DK",
+          "da-GL",
+          "de-AT",
+          "de-BE",
+          "de-CH",
+          "de-DE",
+          "de-LI",
+          "de-LU",
+          "dz-BT",
+          "ee-GH",
+          "ee-TG",
+          "el-CY",
+          "el-GR",
+          "en-001",
+          "en-150",
+          "en-AG",
+          "en-AI",
+          "en-AS",
+          "en-AU",
+          "en-BB",
+          "en-BE",
+          "en-BM",
+          "en-BS",
+          "en-BW",
+          "en-BZ",
+          "en-CA",
+          "en-CC",
+          "en-CK",
+          "en-CM",
+          "en-CX",
+          "en-DG",
+          "en-DM",
+          "en-ER",
+          "en-FJ",
+          "en-FK",
+          "en-FM",
+          "en-GB",
+          "en-GD",
+          "en-GG",
+          "en-GH",
+          "en-GI",
+          "en-GM",
+          "en-GU",
+          "en-GY",
+          "en-HK",
+          "en-IE",
+          "en-IM",
+          "en-IN",
+          "en-IO",
+          "en-JE",
+          "en-JM",
+          "en-KE",
+          "en-KI",
+          "en-KN",
+          "en-KY",
+          "en-LC",
+          "en-LR",
+          "en-LS",
+          "en-MG",
+          "en-MH",
+          "en-MO",
+          "en-MP",
+          "en-MS",
+          "en-MT",
+          "en-MU",
+          "en-MW",
+          "en-MY",
+          "en-NA",
+          "en-NF",
+          "en-NG",
+          "en-NR",
+          "en-NU",
+          "en-NZ",
+          "en-PG",
+          "en-PH",
+          "en-PK",
+          "en-PN",
+          "en-PR",
+          "en-PW",
+          "en-RW",
+          "en-SB",
+          "en-SC",
+          "en-SD",
+          "en-SG",
+          "en-SH",
+          "en-SL",
+          "en-SS",
+          "en-SX",
+          "en-SZ",
+          "en-TC",
+          "en-TK",
+          "en-TO",
+          "en-TT",
+          "en-TV",
+          "en-TZ",
+          "en-UG",
+          "en-UM",
+          "en-US",
+          "en-US-POSIX",
+          "en-VC",
+          "en-VG",
+          "en-VI",
+          "en-VU",
+          "en-WS",
+          "en-ZA",
+          "en-ZM",
+          "en-ZW",
+          "eo-001",
+          "es-419",
+          "es-AR",
+          "es-BO",
+          "es-CL",
+          "es-CO",
+          "es-CR",
+          "es-CU",
+          "es-DO",
+          "es-EA",
+          "es-EC",
+          "es-ES",
+          "es-GQ",
+          "es-GT",
+          "es-HN",
+          "es-IC",
+          "es-MX",
+          "es-NI",
+          "es-PA",
+          "es-PE",
+          "es-PH",
+          "es-PR",
+          "es-PY",
+          "es-SV",
+          "es-US",
+          "es-UY",
+          "es-VE",
+          "et-EE",
+          "eu-ES",
+          "fa-AF",
+          "fa-IR",
+          "ff-CM",
+          "ff-GN",
+          "ff-MR",
+          "ff-SN",
+          "fi-FI",
+          "fo-FO",
+          "fr-BE",
+          "fr-BF",
+          "fr-BI",
+          "fr-BJ",
+          "fr-BL",
+          "fr-CA",
+          "fr-CD",
+          "fr-CF",
+          "fr-CG",
+          "fr-CH",
+          "fr-CI",
+          "fr-CM",
+          "fr-DJ",
+          "fr-DZ",
+          "fr-FR",
+          "fr-GA",
+          "fr-GF",
+          "fr-GN",
+          "fr-GP",
+          "fr-GQ",
+          "fr-HT",
+          "fr-KM",
+          "fr-LU",
+          "fr-MA",
+          "fr-MC",
+          "fr-MF",
+          "fr-MG",
+          "fr-ML",
+          "fr-MQ",
+          "fr-MR",
+          "fr-MU",
+          "fr-NC",
+          "fr-NE",
+          "fr-PF",
+          "fr-PM",
+          "fr-RE",
+          "fr-RW",
+          "fr-SC",
+          "fr-SN",
+          "fr-SY",
+          "fr-TD",
+          "fr-TG",
+          "fr-TN",
+          "fr-VU",
+          "fr-WF",
+          "fr-YT",
+          "fy-NL",
+          "ga-IE",
+          "gd-GB",
+          "gl-ES",
+          "gu-IN",
+          "gv-IM",
+          "ha-Latn",
+          "ha-Latn-GH",
+          "ha-Latn-NE",
+          "ha-Latn-NG",
+          "he-IL",
+          "hi-IN",
+          "hr-BA",
+          "hr-HR",
+          "hu-HU",
+          "hy-AM",
+          "id-ID",
+          "ig-NG",
+          "ii-CN",
+          "is-IS",
+          "it-CH",
+          "it-IT",
+          "it-SM",
+          "ja-JP",
+          "ka-GE",
+          "ki-KE",
+          "kk-Cyrl",
+          "kk-Cyrl-KZ",
+          "kl-GL",
+          "km-KH",
+          "kn-IN",
+          "ko-KP",
+          "ko-KR",
+          "ks-Arab",
+          "ks-Arab-IN",
+          "kw-GB",
+          "ky-Cyrl",
+          "ky-Cyrl-KG",
+          "lb-LU",
+          "lg-UG",
+          "ln-AO",
+          "ln-CD",
+          "ln-CF",
+          "ln-CG",
+          "lo-LA",
+          "lt-LT",
+          "lu-CD",
+          "lv-LV",
+          "mg-MG",
+          "mk-MK",
+          "ml-IN",
+          "mn-Cyrl",
+          "mn-Cyrl-MN",
+          "mr-IN",
+          "ms-Latn",
+          "ms-Latn-BN",
+          "ms-Latn-MY",
+          "ms-Latn-SG",
+          "mt-MT",
+          "my-MM",
+          "nb-NO",
+          "nb-SJ",
+          "nd-ZW",
+          "ne-IN",
+          "ne-NP",
+          "nl-AW",
+          "nl-BE",
+          "nl-BQ",
+          "nl-CW",
+          "nl-NL",
+          "nl-SR",
+          "nl-SX",
+          "nn-NO",
+          "om-ET",
+          "om-KE",
+          "or-IN",
+          "os-GE",
+          "os-RU",
+          "pa-Arab",
+          "pa-Arab-PK",
+          "pa-Guru",
+          "pa-Guru-IN",
+          "pl-PL",
+          "ps-AF",
+          "pt-AO",
+          "pt-BR",
+          "pt-CV",
+          "pt-GW",
+          "pt-MO",
+          "pt-MZ",
+          "pt-PT",
+          "pt-ST",
+          "pt-TL",
+          "qu-BO",
+          "qu-EC",
+          "qu-PE",
+          "rm-CH",
+          "rn-BI",
+          "ro-MD",
+          "ro-RO",
+          "ru-BY",
+          "ru-KG",
+          "ru-KZ",
+          "ru-MD",
+          "ru-RU",
+          "ru-UA",
+          "rw-RW",
+          "se-FI",
+          "se-NO",
+          "se-SE",
+          "sg-CF",
+          "si-LK",
+          "sk-SK",
+          "sl-SI",
+          "sn-ZW",
+          "so-DJ",
+          "so-ET",
+          "so-KE",
+          "so-SO",
+          "sq-AL",
+          "sq-MK",
+          "sq-XK",
+          "sr-Cyrl",
+          "sr-Cyrl-BA",
+          "sr-Cyrl-ME",
+          "sr-Cyrl-RS",
+          "sr-Cyrl-XK",
+          "sr-Latn",
+          "sr-Latn-BA",
+          "sr-Latn-ME",
+          "sr-Latn-RS",
+          "sr-Latn-XK",
+          "sv-AX",
+          "sv-FI",
+          "sv-SE",
+          "sw-CD",
+          "sw-KE",
+          "sw-TZ",
+          "sw-UG",
+          "ta-IN",
+          "ta-LK",
+          "ta-MY",
+          "ta-SG",
+          "te-IN",
+          "th-TH",
+          "ti-ER",
+          "ti-ET",
+          "to-TO",
+          "tr-CY",
+          "tr-TR",
+          "ug-Arab",
+          "ug-Arab-CN",
+          "uk-UA",
+          "ur-IN",
+          "ur-PK",
+          "uz-Arab",
+          "uz-Arab-AF",
+          "uz-Cyrl",
+          "uz-Cyrl-UZ",
+          "uz-Latn",
+          "uz-Latn-UZ",
+          "vi-VN",
+          "yi-001",
+          "yo-BJ",
+          "yo-NG",
+          "zh-Hans",
+          "zh-Hans-CN",
+          "zh-Hans-HK",
+          "zh-Hans-MO",
+          "zh-Hans-SG",
+          "zh-Hant",
+          "zh-Hant-HK",
+          "zh-Hant-MO",
+          "zh-Hant-TW",
+          "zu-ZA"
         ],
 
         us_states_and_dc: [
@@ -3222,6 +3979,956 @@
             "MintCream", "GhostWhite", "Salmon", "AntiqueWhite", "Linen", "LightGoldenRodYellow", "OldLace", "Red", "Fuchsia", "Magenta", "DeepPink", "OrangeRed", "Tomato", "HotPink", "Coral", "DarkOrange", "LightSalmon", "Orange",
             "LightPink", "Pink", "Gold", "PeachPuff", "NavajoWhite", "Moccasin", "Bisque", "MistyRose", "BlanchedAlmond", "PapayaWhip", "LavenderBlush", "SeaShell", "Cornsilk", "LemonChiffon", "FloralWhite", "Snow", "Yellow", "LightYellow"
         ],
+
+        // Data taken from https://www.sec.gov/rules/other/4-460list.htm
+        company: [ "3Com Corp",
+        "3M Company",
+        "A.G. Edwards Inc.",
+        "Abbott Laboratories",
+        "Abercrombie & Fitch Co.",
+        "ABM Industries Incorporated",
+        "Ace Hardware Corporation",
+        "ACT Manufacturing Inc.",
+        "Acterna Corp.",
+        "Adams Resources & Energy, Inc.",
+        "ADC Telecommunications, Inc.",
+        "Adelphia Communications Corporation",
+        "Administaff, Inc.",
+        "Adobe Systems Incorporated",
+        "Adolph Coors Company",
+        "Advance Auto Parts, Inc.",
+        "Advanced Micro Devices, Inc.",
+        "AdvancePCS, Inc.",
+        "Advantica Restaurant Group, Inc.",
+        "The AES Corporation",
+        "Aetna Inc.",
+        "Affiliated Computer Services, Inc.",
+        "AFLAC Incorporated",
+        "AGCO Corporation",
+        "Agilent Technologies, Inc.",
+        "Agway Inc.",
+        "Apartment Investment and Management Company",
+        "Air Products and Chemicals, Inc.",
+        "Airborne, Inc.",
+        "Airgas, Inc.",
+        "AK Steel Holding Corporation",
+        "Alaska Air Group, Inc.",
+        "Alberto-Culver Company",
+        "Albertson's, Inc.",
+        "Alcoa Inc.",
+        "Alleghany Corporation",
+        "Allegheny Energy, Inc.",
+        "Allegheny Technologies Incorporated",
+        "Allergan, Inc.",
+        "ALLETE, Inc.",
+        "Alliant Energy Corporation",
+        "Allied Waste Industries, Inc.",
+        "Allmerica Financial Corporation",
+        "The Allstate Corporation",
+        "ALLTEL Corporation",
+        "The Alpine Group, Inc.",
+        "Amazon.com, Inc.",
+        "AMC Entertainment Inc.",
+        "American Power Conversion Corporation",
+        "Amerada Hess Corporation",
+        "AMERCO",
+        "Ameren Corporation",
+        "America West Holdings Corporation",
+        "American Axle & Manufacturing Holdings, Inc.",
+        "American Eagle Outfitters, Inc.",
+        "American Electric Power Company, Inc.",
+        "American Express Company",
+        "American Financial Group, Inc.",
+        "American Greetings Corporation",
+        "American International Group, Inc.",
+        "American Standard Companies Inc.",
+        "American Water Works Company, Inc.",
+        "AmerisourceBergen Corporation",
+        "Ames Department Stores, Inc.",
+        "Amgen Inc.",
+        "Amkor Technology, Inc.",
+        "AMR Corporation",
+        "AmSouth Bancorp.",
+        "Amtran, Inc.",
+        "Anadarko Petroleum Corporation",
+        "Analog Devices, Inc.",
+        "Anheuser-Busch Companies, Inc.",
+        "Anixter International Inc.",
+        "AnnTaylor Inc.",
+        "Anthem, Inc.",
+        "AOL Time Warner Inc.",
+        "Aon Corporation",
+        "Apache Corporation",
+        "Apple Computer, Inc.",
+        "Applera Corporation",
+        "Applied Industrial Technologies, Inc.",
+        "Applied Materials, Inc.",
+        "Aquila, Inc.",
+        "ARAMARK Corporation",
+        "Arch Coal, Inc.",
+        "Archer Daniels Midland Company",
+        "Arkansas Best Corporation",
+        "Armstrong Holdings, Inc.",
+        "Arrow Electronics, Inc.",
+        "ArvinMeritor, Inc.",
+        "Ashland Inc.",
+        "Astoria Financial Corporation",
+        "AT&T Corp.",
+        "Atmel Corporation",
+        "Atmos Energy Corporation",
+        "Audiovox Corporation",
+        "Autoliv, Inc.",
+        "Automatic Data Processing, Inc.",
+        "AutoNation, Inc.",
+        "AutoZone, Inc.",
+        "Avaya Inc.",
+        "Avery Dennison Corporation",
+        "Avista Corporation",
+        "Avnet, Inc.",
+        "Avon Products, Inc.",
+        "Baker Hughes Incorporated",
+        "Ball Corporation",
+        "Bank of America Corporation",
+        "The Bank of New York Company, Inc.",
+        "Bank One Corporation",
+        "Banknorth Group, Inc.",
+        "Banta Corporation",
+        "Barnes & Noble, Inc.",
+        "Bausch & Lomb Incorporated",
+        "Baxter International Inc.",
+        "BB&T Corporation",
+        "The Bear Stearns Companies Inc.",
+        "Beazer Homes USA, Inc.",
+        "Beckman Coulter, Inc.",
+        "Becton, Dickinson and Company",
+        "Bed Bath & Beyond Inc.",
+        "Belk, Inc.",
+        "Bell Microproducts Inc.",
+        "BellSouth Corporation",
+        "Belo Corp.",
+        "Bemis Company, Inc.",
+        "Benchmark Electronics, Inc.",
+        "Berkshire Hathaway Inc.",
+        "Best Buy Co., Inc.",
+        "Bethlehem Steel Corporation",
+        "Beverly Enterprises, Inc.",
+        "Big Lots, Inc.",
+        "BJ Services Company",
+        "BJ's Wholesale Club, Inc.",
+        "The Black & Decker Corporation",
+        "Black Hills Corporation",
+        "BMC Software, Inc.",
+        "The Boeing Company",
+        "Boise Cascade Corporation",
+        "Borders Group, Inc.",
+        "BorgWarner Inc.",
+        "Boston Scientific Corporation",
+        "Bowater Incorporated",
+        "Briggs & Stratton Corporation",
+        "Brightpoint, Inc.",
+        "Brinker International, Inc.",
+        "Bristol-Myers Squibb Company",
+        "Broadwing, Inc.",
+        "Brown Shoe Company, Inc.",
+        "Brown-Forman Corporation",
+        "Brunswick Corporation",
+        "Budget Group, Inc.",
+        "Burlington Coat Factory Warehouse Corporation",
+        "Burlington Industries, Inc.",
+        "Burlington Northern Santa Fe Corporation",
+        "Burlington Resources Inc.",
+        "C. H. Robinson Worldwide Inc.",
+        "Cablevision Systems Corp",
+        "Cabot Corp",
+        "Cadence Design Systems, Inc.",
+        "Calpine Corp.",
+        "Campbell Soup Co.",
+        "Capital One Financial Corp.",
+        "Cardinal Health Inc.",
+        "Caremark Rx Inc.",
+        "Carlisle Cos. Inc.",
+        "Carpenter Technology Corp.",
+        "Casey's General Stores Inc.",
+        "Caterpillar Inc.",
+        "CBRL Group Inc.",
+        "CDI Corp.",
+        "CDW Computer Centers Inc.",
+        "CellStar Corp.",
+        "Cendant Corp",
+        "Cenex Harvest States Cooperatives",
+        "Centex Corp.",
+        "CenturyTel Inc.",
+        "Ceridian Corp.",
+        "CH2M Hill Cos. Ltd.",
+        "Champion Enterprises Inc.",
+        "Charles Schwab Corp.",
+        "Charming Shoppes Inc.",
+        "Charter Communications Inc.",
+        "Charter One Financial Inc.",
+        "ChevronTexaco Corp.",
+        "Chiquita Brands International Inc.",
+        "Chubb Corp",
+        "Ciena Corp.",
+        "Cigna Corp",
+        "Cincinnati Financial Corp.",
+        "Cinergy Corp.",
+        "Cintas Corp.",
+        "Circuit City Stores Inc.",
+        "Cisco Systems Inc.",
+        "Citigroup, Inc",
+        "Citizens Communications Co.",
+        "CKE Restaurants Inc.",
+        "Clear Channel Communications Inc.",
+        "The Clorox Co.",
+        "CMGI Inc.",
+        "CMS Energy Corp.",
+        "CNF Inc.",
+        "Coca-Cola Co.",
+        "Coca-Cola Enterprises Inc.",
+        "Colgate-Palmolive Co.",
+        "Collins & Aikman Corp.",
+        "Comcast Corp.",
+        "Comdisco Inc.",
+        "Comerica Inc.",
+        "Comfort Systems USA Inc.",
+        "Commercial Metals Co.",
+        "Community Health Systems Inc.",
+        "Compass Bancshares Inc",
+        "Computer Associates International Inc.",
+        "Computer Sciences Corp.",
+        "Compuware Corp.",
+        "Comverse Technology Inc.",
+        "ConAgra Foods Inc.",
+        "Concord EFS Inc.",
+        "Conectiv, Inc",
+        "Conoco Inc",
+        "Conseco Inc.",
+        "Consolidated Freightways Corp.",
+        "Consolidated Edison Inc.",
+        "Constellation Brands Inc.",
+        "Constellation Emergy Group Inc.",
+        "Continental Airlines Inc.",
+        "Convergys Corp.",
+        "Cooper Cameron Corp.",
+        "Cooper Industries Ltd.",
+        "Cooper Tire & Rubber Co.",
+        "Corn Products International Inc.",
+        "Corning Inc.",
+        "Costco Wholesale Corp.",
+        "Countrywide Credit Industries Inc.",
+        "Coventry Health Care Inc.",
+        "Cox Communications Inc.",
+        "Crane Co.",
+        "Crompton Corp.",
+        "Crown Cork & Seal Co. Inc.",
+        "CSK Auto Corp.",
+        "CSX Corp.",
+        "Cummins Inc.",
+        "CVS Corp.",
+        "Cytec Industries Inc.",
+        "D&K Healthcare Resources, Inc.",
+        "D.R. Horton Inc.",
+        "Dana Corporation",
+        "Danaher Corporation",
+        "Darden Restaurants Inc.",
+        "DaVita Inc.",
+        "Dean Foods Company",
+        "Deere & Company",
+        "Del Monte Foods Co",
+        "Dell Computer Corporation",
+        "Delphi Corp.",
+        "Delta Air Lines Inc.",
+        "Deluxe Corporation",
+        "Devon Energy Corporation",
+        "Di Giorgio Corporation",
+        "Dial Corporation",
+        "Diebold Incorporated",
+        "Dillard's Inc.",
+        "DIMON Incorporated",
+        "Dole Food Company, Inc.",
+        "Dollar General Corporation",
+        "Dollar Tree Stores, Inc.",
+        "Dominion Resources, Inc.",
+        "Domino's Pizza LLC",
+        "Dover Corporation, Inc.",
+        "Dow Chemical Company",
+        "Dow Jones & Company, Inc.",
+        "DPL Inc.",
+        "DQE Inc.",
+        "Dreyer's Grand Ice Cream, Inc.",
+        "DST Systems, Inc.",
+        "DTE Energy Co.",
+        "E.I. Du Pont de Nemours and Company",
+        "Duke Energy Corp",
+        "Dun & Bradstreet Inc.",
+        "DURA Automotive Systems Inc.",
+        "DynCorp",
+        "Dynegy Inc.",
+        "E*Trade Group, Inc.",
+        "E.W. Scripps Company",
+        "Earthlink, Inc.",
+        "Eastman Chemical Company",
+        "Eastman Kodak Company",
+        "Eaton Corporation",
+        "Echostar Communications Corporation",
+        "Ecolab Inc.",
+        "Edison International",
+        "EGL Inc.",
+        "El Paso Corporation",
+        "Electronic Arts Inc.",
+        "Electronic Data Systems Corp.",
+        "Eli Lilly and Company",
+        "EMC Corporation",
+        "Emcor Group Inc.",
+        "Emerson Electric Co.",
+        "Encompass Services Corporation",
+        "Energizer Holdings Inc.",
+        "Energy East Corporation",
+        "Engelhard Corporation",
+        "Enron Corp.",
+        "Entergy Corporation",
+        "Enterprise Products Partners L.P.",
+        "EOG Resources, Inc.",
+        "Equifax Inc.",
+        "Equitable Resources Inc.",
+        "Equity Office Properties Trust",
+        "Equity Residential Properties Trust",
+        "Estee Lauder Companies Inc.",
+        "Exelon Corporation",
+        "Exide Technologies",
+        "Expeditors International of Washington Inc.",
+        "Express Scripts Inc.",
+        "ExxonMobil Corporation",
+        "Fairchild Semiconductor International Inc.",
+        "Family Dollar Stores Inc.",
+        "Farmland Industries Inc.",
+        "Federal Mogul Corp.",
+        "Federated Department Stores Inc.",
+        "Federal Express Corp.",
+        "Felcor Lodging Trust Inc.",
+        "Ferro Corp.",
+        "Fidelity National Financial Inc.",
+        "Fifth Third Bancorp",
+        "First American Financial Corp.",
+        "First Data Corp.",
+        "First National of Nebraska Inc.",
+        "First Tennessee National Corp.",
+        "FirstEnergy Corp.",
+        "Fiserv Inc.",
+        "Fisher Scientific International Inc.",
+        "FleetBoston Financial Co.",
+        "Fleetwood Enterprises Inc.",
+        "Fleming Companies Inc.",
+        "Flowers Foods Inc.",
+        "Flowserv Corp",
+        "Fluor Corp",
+        "FMC Corp",
+        "Foamex International Inc",
+        "Foot Locker Inc",
+        "Footstar Inc.",
+        "Ford Motor Co",
+        "Forest Laboratories Inc.",
+        "Fortune Brands Inc.",
+        "Foster Wheeler Ltd.",
+        "FPL Group Inc.",
+        "Franklin Resources Inc.",
+        "Freeport McMoran Copper & Gold Inc.",
+        "Frontier Oil Corp",
+        "Furniture Brands International Inc.",
+        "Gannett Co., Inc.",
+        "Gap Inc.",
+        "Gateway Inc.",
+        "GATX Corporation",
+        "Gemstar-TV Guide International Inc.",
+        "GenCorp Inc.",
+        "General Cable Corporation",
+        "General Dynamics Corporation",
+        "General Electric Company",
+        "General Mills Inc",
+        "General Motors Corporation",
+        "Genesis Health Ventures Inc.",
+        "Gentek Inc.",
+        "Gentiva Health Services Inc.",
+        "Genuine Parts Company",
+        "Genuity Inc.",
+        "Genzyme Corporation",
+        "Georgia Gulf Corporation",
+        "Georgia-Pacific Corporation",
+        "Gillette Company",
+        "Gold Kist Inc.",
+        "Golden State Bancorp Inc.",
+        "Golden West Financial Corporation",
+        "Goldman Sachs Group Inc.",
+        "Goodrich Corporation",
+        "The Goodyear Tire & Rubber Company",
+        "Granite Construction Incorporated",
+        "Graybar Electric Company Inc.",
+        "Great Lakes Chemical Corporation",
+        "Great Plains Energy Inc.",
+        "GreenPoint Financial Corp.",
+        "Greif Bros. Corporation",
+        "Grey Global Group Inc.",
+        "Group 1 Automotive Inc.",
+        "Guidant Corporation",
+        "H&R Block Inc.",
+        "H.B. Fuller Company",
+        "H.J. Heinz Company",
+        "Halliburton Co.",
+        "Harley-Davidson Inc.",
+        "Harman International Industries Inc.",
+        "Harrah's Entertainment Inc.",
+        "Harris Corp.",
+        "Harsco Corp.",
+        "Hartford Financial Services Group Inc.",
+        "Hasbro Inc.",
+        "Hawaiian Electric Industries Inc.",
+        "HCA Inc.",
+        "Health Management Associates Inc.",
+        "Health Net Inc.",
+        "Healthsouth Corp",
+        "Henry Schein Inc.",
+        "Hercules Inc.",
+        "Herman Miller Inc.",
+        "Hershey Foods Corp.",
+        "Hewlett-Packard Company",
+        "Hibernia Corp.",
+        "Hillenbrand Industries Inc.",
+        "Hilton Hotels Corp.",
+        "Hollywood Entertainment Corp.",
+        "Home Depot Inc.",
+        "Hon Industries Inc.",
+        "Honeywell International Inc.",
+        "Hormel Foods Corp.",
+        "Host Marriott Corp.",
+        "Household International Corp.",
+        "Hovnanian Enterprises Inc.",
+        "Hub Group Inc.",
+        "Hubbell Inc.",
+        "Hughes Supply Inc.",
+        "Humana Inc.",
+        "Huntington Bancshares Inc.",
+        "Idacorp Inc.",
+        "IDT Corporation",
+        "IKON Office Solutions Inc.",
+        "Illinois Tool Works Inc.",
+        "IMC Global Inc.",
+        "Imperial Sugar Company",
+        "IMS Health Inc.",
+        "Ingles Market Inc",
+        "Ingram Micro Inc.",
+        "Insight Enterprises Inc.",
+        "Integrated Electrical Services Inc.",
+        "Intel Corporation",
+        "International Paper Co.",
+        "Interpublic Group of Companies Inc.",
+        "Interstate Bakeries Corporation",
+        "International Business Machines Corp.",
+        "International Flavors & Fragrances Inc.",
+        "International Multifoods Corporation",
+        "Intuit Inc.",
+        "IT Group Inc.",
+        "ITT Industries Inc.",
+        "Ivax Corp.",
+        "J.B. Hunt Transport Services Inc.",
+        "J.C. Penny Co.",
+        "J.P. Morgan Chase & Co.",
+        "Jabil Circuit Inc.",
+        "Jack In The Box Inc.",
+        "Jacobs Engineering Group Inc.",
+        "JDS Uniphase Corp.",
+        "Jefferson-Pilot Co.",
+        "John Hancock Financial Services Inc.",
+        "Johnson & Johnson",
+        "Johnson Controls Inc.",
+        "Jones Apparel Group Inc.",
+        "KB Home",
+        "Kellogg Company",
+        "Kellwood Company",
+        "Kelly Services Inc.",
+        "Kemet Corp.",
+        "Kennametal Inc.",
+        "Kerr-McGee Corporation",
+        "KeyCorp",
+        "KeySpan Corp.",
+        "Kimball International Inc.",
+        "Kimberly-Clark Corporation",
+        "Kindred Healthcare Inc.",
+        "KLA-Tencor Corporation",
+        "K-Mart Corp.",
+        "Knight-Ridder Inc.",
+        "Kohl's Corp.",
+        "KPMG Consulting Inc.",
+        "Kroger Co.",
+        "L-3 Communications Holdings Inc.",
+        "Laboratory Corporation of America Holdings",
+        "Lam Research Corporation",
+        "LandAmerica Financial Group Inc.",
+        "Lands' End Inc.",
+        "Landstar System Inc.",
+        "La-Z-Boy Inc.",
+        "Lear Corporation",
+        "Legg Mason Inc.",
+        "Leggett & Platt Inc.",
+        "Lehman Brothers Holdings Inc.",
+        "Lennar Corporation",
+        "Lennox International Inc.",
+        "Level 3 Communications Inc.",
+        "Levi Strauss & Co.",
+        "Lexmark International Inc.",
+        "Limited Inc.",
+        "Lincoln National Corporation",
+        "Linens 'n Things Inc.",
+        "Lithia Motors Inc.",
+        "Liz Claiborne Inc.",
+        "Lockheed Martin Corporation",
+        "Loews Corporation",
+        "Longs Drug Stores Corporation",
+        "Louisiana-Pacific Corporation",
+        "Lowe's Companies Inc.",
+        "LSI Logic Corporation",
+        "The LTV Corporation",
+        "The Lubrizol Corporation",
+        "Lucent Technologies Inc.",
+        "Lyondell Chemical Company",
+        "M & T Bank Corporation",
+        "Magellan Health Services Inc.",
+        "Mail-Well Inc.",
+        "Mandalay Resort Group",
+        "Manor Care Inc.",
+        "Manpower Inc.",
+        "Marathon Oil Corporation",
+        "Mariner Health Care Inc.",
+        "Markel Corporation",
+        "Marriott International Inc.",
+        "Marsh & McLennan Companies Inc.",
+        "Marsh Supermarkets Inc.",
+        "Marshall & Ilsley Corporation",
+        "Martin Marietta Materials Inc.",
+        "Masco Corporation",
+        "Massey Energy Company",
+        "MasTec Inc.",
+        "Mattel Inc.",
+        "Maxim Integrated Products Inc.",
+        "Maxtor Corporation",
+        "Maxxam Inc.",
+        "The May Department Stores Company",
+        "Maytag Corporation",
+        "MBNA Corporation",
+        "McCormick & Company Incorporated",
+        "McDonald's Corporation",
+        "The McGraw-Hill Companies Inc.",
+        "McKesson Corporation",
+        "McLeodUSA Incorporated",
+        "M.D.C. Holdings Inc.",
+        "MDU Resources Group Inc.",
+        "MeadWestvaco Corporation",
+        "Medtronic Inc.",
+        "Mellon Financial Corporation",
+        "The Men's Wearhouse Inc.",
+        "Merck & Co., Inc.",
+        "Mercury General Corporation",
+        "Merrill Lynch & Co. Inc.",
+        "Metaldyne Corporation",
+        "Metals USA Inc.",
+        "MetLife Inc.",
+        "Metris Companies Inc",
+        "MGIC Investment Corporation",
+        "MGM Mirage",
+        "Michaels Stores Inc.",
+        "Micron Technology Inc.",
+        "Microsoft Corporation",
+        "Milacron Inc.",
+        "Millennium Chemicals Inc.",
+        "Mirant Corporation",
+        "Mohawk Industries Inc.",
+        "Molex Incorporated",
+        "The MONY Group Inc.",
+        "Morgan Stanley Dean Witter & Co.",
+        "Motorola Inc.",
+        "MPS Group Inc.",
+        "Murphy Oil Corporation",
+        "Nabors Industries Inc",
+        "Nacco Industries Inc",
+        "Nash Finch Company",
+        "National City Corp.",
+        "National Commerce Financial Corporation",
+        "National Fuel Gas Company",
+        "National Oilwell Inc",
+        "National Rural Utilities Cooperative Finance Corporation",
+        "National Semiconductor Corporation",
+        "National Service Industries Inc",
+        "Navistar International Corporation",
+        "NCR Corporation",
+        "The Neiman Marcus Group Inc.",
+        "New Jersey Resources Corporation",
+        "New York Times Company",
+        "Newell Rubbermaid Inc",
+        "Newmont Mining Corporation",
+        "Nextel Communications Inc",
+        "Nicor Inc",
+        "Nike Inc",
+        "NiSource Inc",
+        "Noble Energy Inc",
+        "Nordstrom Inc",
+        "Norfolk Southern Corporation",
+        "Nortek Inc",
+        "North Fork Bancorporation Inc",
+        "Northeast Utilities System",
+        "Northern Trust Corporation",
+        "Northrop Grumman Corporation",
+        "NorthWestern Corporation",
+        "Novellus Systems Inc",
+        "NSTAR",
+        "NTL Incorporated",
+        "Nucor Corp",
+        "Nvidia Corp",
+        "NVR Inc",
+        "Northwest Airlines Corp",
+        "Occidental Petroleum Corp",
+        "Ocean Energy Inc",
+        "Office Depot Inc.",
+        "OfficeMax Inc",
+        "OGE Energy Corp",
+        "Oglethorpe Power Corp.",
+        "Ohio Casualty Corp.",
+        "Old Republic International Corp.",
+        "Olin Corp.",
+        "OM Group Inc",
+        "Omnicare Inc",
+        "Omnicom Group",
+        "On Semiconductor Corp",
+        "ONEOK Inc",
+        "Oracle Corp",
+        "Oshkosh Truck Corp",
+        "Outback Steakhouse Inc.",
+        "Owens & Minor Inc.",
+        "Owens Corning",
+        "Owens-Illinois Inc",
+        "Oxford Health Plans Inc",
+        "Paccar Inc",
+        "PacifiCare Health Systems Inc",
+        "Packaging Corp. of America",
+        "Pactiv Corp",
+        "Pall Corp",
+        "Pantry Inc",
+        "Park Place Entertainment Corp",
+        "Parker Hannifin Corp.",
+        "Pathmark Stores Inc.",
+        "Paychex Inc",
+        "Payless Shoesource Inc",
+        "Penn Traffic Co.",
+        "Pennzoil-Quaker State Company",
+        "Pentair Inc",
+        "Peoples Energy Corp.",
+        "PeopleSoft Inc",
+        "Pep Boys Manny, Moe & Jack",
+        "Potomac Electric Power Co.",
+        "Pepsi Bottling Group Inc.",
+        "PepsiAmericas Inc.",
+        "PepsiCo Inc.",
+        "Performance Food Group Co.",
+        "Perini Corp",
+        "PerkinElmer Inc",
+        "Perot Systems Corp",
+        "Petco Animal Supplies Inc.",
+        "Peter Kiewit Sons', Inc.",
+        "PETsMART Inc",
+        "Pfizer Inc",
+        "Pacific Gas & Electric Corp.",
+        "Pharmacia Corp",
+        "Phar Mor Inc.",
+        "Phelps Dodge Corp.",
+        "Philip Morris Companies Inc.",
+        "Phillips Petroleum Co",
+        "Phillips Van Heusen Corp.",
+        "Phoenix Companies Inc",
+        "Pier 1 Imports Inc.",
+        "Pilgrim's Pride Corporation",
+        "Pinnacle West Capital Corp",
+        "Pioneer-Standard Electronics Inc.",
+        "Pitney Bowes Inc.",
+        "Pittston Brinks Group",
+        "Plains All American Pipeline LP",
+        "PNC Financial Services Group Inc.",
+        "PNM Resources Inc",
+        "Polaris Industries Inc.",
+        "Polo Ralph Lauren Corp",
+        "PolyOne Corp",
+        "Popular Inc",
+        "Potlatch Corp",
+        "PPG Industries Inc",
+        "PPL Corp",
+        "Praxair Inc",
+        "Precision Castparts Corp",
+        "Premcor Inc.",
+        "Pride International Inc",
+        "Primedia Inc",
+        "Principal Financial Group Inc.",
+        "Procter & Gamble Co.",
+        "Pro-Fac Cooperative Inc.",
+        "Progress Energy Inc",
+        "Progressive Corporation",
+        "Protective Life Corp",
+        "Provident Financial Group",
+        "Providian Financial Corp.",
+        "Prudential Financial Inc.",
+        "PSS World Medical Inc",
+        "Public Service Enterprise Group Inc.",
+        "Publix Super Markets Inc.",
+        "Puget Energy Inc.",
+        "Pulte Homes Inc",
+        "Qualcomm Inc",
+        "Quanta Services Inc.",
+        "Quantum Corp",
+        "Quest Diagnostics Inc.",
+        "Questar Corp",
+        "Quintiles Transnational",
+        "Qwest Communications Intl Inc",
+        "R.J. Reynolds Tobacco Company",
+        "R.R. Donnelley & Sons Company",
+        "Radio Shack Corporation",
+        "Raymond James Financial Inc.",
+        "Raytheon Company",
+        "Reader's Digest Association Inc.",
+        "Reebok International Ltd.",
+        "Regions Financial Corp.",
+        "Regis Corporation",
+        "Reliance Steel & Aluminum Co.",
+        "Reliant Energy Inc.",
+        "Rent A Center Inc",
+        "Republic Services Inc",
+        "Revlon Inc",
+        "RGS Energy Group Inc",
+        "Rite Aid Corp",
+        "Riverwood Holding Inc.",
+        "RoadwayCorp",
+        "Robert Half International Inc.",
+        "Rock-Tenn Co",
+        "Rockwell Automation Inc",
+        "Rockwell Collins Inc",
+        "Rohm & Haas Co.",
+        "Ross Stores Inc",
+        "RPM Inc.",
+        "Ruddick Corp",
+        "Ryder System Inc",
+        "Ryerson Tull Inc",
+        "Ryland Group Inc.",
+        "Sabre Holdings Corp",
+        "Safeco Corp",
+        "Safeguard Scientifics Inc.",
+        "Safeway Inc",
+        "Saks Inc",
+        "Sanmina-SCI Inc",
+        "Sara Lee Corp",
+        "SBC Communications Inc",
+        "Scana Corp.",
+        "Schering-Plough Corp",
+        "Scholastic Corp",
+        "SCI Systems Onc.",
+        "Science Applications Intl. Inc.",
+        "Scientific-Atlanta Inc",
+        "Scotts Company",
+        "Seaboard Corp",
+        "Sealed Air Corp",
+        "Sears Roebuck & Co",
+        "Sempra Energy",
+        "Sequa Corp",
+        "Service Corp. International",
+        "ServiceMaster Co",
+        "Shaw Group Inc",
+        "Sherwin-Williams Company",
+        "Shopko Stores Inc",
+        "Siebel Systems Inc",
+        "Sierra Health Services Inc",
+        "Sierra Pacific Resources",
+        "Silgan Holdings Inc.",
+        "Silicon Graphics Inc",
+        "Simon Property Group Inc",
+        "SLM Corporation",
+        "Smith International Inc",
+        "Smithfield Foods Inc",
+        "Smurfit-Stone Container Corp",
+        "Snap-On Inc",
+        "Solectron Corp",
+        "Solutia Inc",
+        "Sonic Automotive Inc.",
+        "Sonoco Products Co.",
+        "Southern Company",
+        "Southern Union Company",
+        "SouthTrust Corp.",
+        "Southwest Airlines Co",
+        "Southwest Gas Corp",
+        "Sovereign Bancorp Inc.",
+        "Spartan Stores Inc",
+        "Spherion Corp",
+        "Sports Authority Inc",
+        "Sprint Corp.",
+        "SPX Corp",
+        "St. Jude Medical Inc",
+        "St. Paul Cos.",
+        "Staff Leasing Inc.",
+        "StanCorp Financial Group Inc",
+        "Standard Pacific Corp.",
+        "Stanley Works",
+        "Staples Inc",
+        "Starbucks Corp",
+        "Starwood Hotels & Resorts Worldwide Inc",
+        "State Street Corp.",
+        "Stater Bros. Holdings Inc.",
+        "Steelcase Inc",
+        "Stein Mart Inc",
+        "Stewart & Stevenson Services Inc",
+        "Stewart Information Services Corp",
+        "Stilwell Financial Inc",
+        "Storage Technology Corporation",
+        "Stryker Corp",
+        "Sun Healthcare Group Inc.",
+        "Sun Microsystems Inc.",
+        "SunGard Data Systems Inc.",
+        "Sunoco Inc.",
+        "SunTrust Banks Inc",
+        "Supervalu Inc",
+        "Swift Transportation, Co., Inc",
+        "Symbol Technologies Inc",
+        "Synovus Financial Corp.",
+        "Sysco Corp",
+        "Systemax Inc.",
+        "Target Corp.",
+        "Tech Data Corporation",
+        "TECO Energy Inc",
+        "Tecumseh Products Company",
+        "Tektronix Inc",
+        "Teleflex Incorporated",
+        "Telephone & Data Systems Inc",
+        "Tellabs Inc.",
+        "Temple-Inland Inc",
+        "Tenet Healthcare Corporation",
+        "Tenneco Automotive Inc.",
+        "Teradyne Inc",
+        "Terex Corp",
+        "Tesoro Petroleum Corp.",
+        "Texas Industries Inc.",
+        "Texas Instruments Incorporated",
+        "Textron Inc",
+        "Thermo Electron Corporation",
+        "Thomas & Betts Corporation",
+        "Tiffany & Co",
+        "Timken Company",
+        "TJX Companies Inc",
+        "TMP Worldwide Inc",
+        "Toll Brothers Inc",
+        "Torchmark Corporation",
+        "Toro Company",
+        "Tower Automotive Inc.",
+        "Toys 'R' Us Inc",
+        "Trans World Entertainment Corp.",
+        "TransMontaigne Inc",
+        "Transocean Inc",
+        "TravelCenters of America Inc.",
+        "Triad Hospitals Inc",
+        "Tribune Company",
+        "Trigon Healthcare Inc.",
+        "Trinity Industries Inc",
+        "Trump Hotels & Casino Resorts Inc.",
+        "TruServ Corporation",
+        "TRW Inc",
+        "TXU Corp",
+        "Tyson Foods Inc",
+        "U.S. Bancorp",
+        "U.S. Industries Inc.",
+        "UAL Corporation",
+        "UGI Corporation",
+        "Unified Western Grocers Inc",
+        "Union Pacific Corporation",
+        "Union Planters Corp",
+        "Unisource Energy Corp",
+        "Unisys Corporation",
+        "United Auto Group Inc",
+        "United Defense Industries Inc.",
+        "United Parcel Service Inc",
+        "United Rentals Inc",
+        "United Stationers Inc",
+        "United Technologies Corporation",
+        "UnitedHealth Group Incorporated",
+        "Unitrin Inc",
+        "Universal Corporation",
+        "Universal Forest Products Inc",
+        "Universal Health Services Inc",
+        "Unocal Corporation",
+        "Unova Inc",
+        "UnumProvident Corporation",
+        "URS Corporation",
+        "US Airways Group Inc",
+        "US Oncology Inc",
+        "USA Interactive",
+        "USFreighways Corporation",
+        "USG Corporation",
+        "UST Inc",
+        "Valero Energy Corporation",
+        "Valspar Corporation",
+        "Value City Department Stores Inc",
+        "Varco International Inc",
+        "Vectren Corporation",
+        "Veritas Software Corporation",
+        "Verizon Communications Inc",
+        "VF Corporation",
+        "Viacom Inc",
+        "Viad Corp",
+        "Viasystems Group Inc",
+        "Vishay Intertechnology Inc",
+        "Visteon Corporation",
+        "Volt Information Sciences Inc",
+        "Vulcan Materials Company",
+        "W.R. Berkley Corporation",
+        "W.R. Grace & Co",
+        "W.W. Grainger Inc",
+        "Wachovia Corporation",
+        "Wakenhut Corporation",
+        "Walgreen Co",
+        "Wallace Computer Services Inc",
+        "Wal-Mart Stores Inc",
+        "Walt Disney Co",
+        "Walter Industries Inc",
+        "Washington Mutual Inc",
+        "Washington Post Co.",
+        "Waste Management Inc",
+        "Watsco Inc",
+        "Weatherford International Inc",
+        "Weis Markets Inc.",
+        "Wellpoint Health Networks Inc",
+        "Wells Fargo & Company",
+        "Wendy's International Inc",
+        "Werner Enterprises Inc",
+        "WESCO International Inc",
+        "Western Digital Inc",
+        "Western Gas Resources Inc",
+        "WestPoint Stevens Inc",
+        "Weyerhauser Company",
+        "WGL Holdings Inc",
+        "Whirlpool Corporation",
+        "Whole Foods Market Inc",
+        "Willamette Industries Inc.",
+        "Williams Companies Inc",
+        "Williams Sonoma Inc",
+        "Winn Dixie Stores Inc",
+        "Wisconsin Energy Corporation",
+        "Wm Wrigley Jr Company",
+        "World Fuel Services Corporation",
+        "WorldCom Inc",
+        "Worthington Industries Inc",
+        "WPS Resources Corporation",
+        "Wyeth",
+        "Wyndham International Inc",
+        "Xcel Energy Inc",
+        "Xerox Corp",
+        "Xilinx Inc",
+        "XO Communications Inc",
+        "Yellow Corporation",
+        "York International Corp",
+        "Yum Brands Inc.",
+        "Zale Corporation",
+        "Zions Bancorporation"
+      ],
 
         fileExtension : {
             "raster"    : ["bmp", "gif", "gpl", "ico", "jpeg", "psd", "png", "psp", "raw", "tiff"],
@@ -5043,6 +6750,14 @@
             options.pool.constructor !== Array,
             "Chance: The pool option must be a valid array."
         );
+        testRange(
+            typeof options.mean !== 'number',
+            "Chance: Mean (mean) must be a number"
+        );
+        testRange(
+            typeof options.dev !== 'number',
+            "Chance: Standard deviation (dev) must be a number"
+        );
 
         // If a pool has been passed, then we are returning an item from that pool,
         // using the normal distribution settings that were passed in
@@ -5581,8 +7296,10 @@
     }
 
     // if there is a importsScrips object define chance for worker
+    // allows worker to use full Chance functionality with seed
     if (typeof importScripts !== 'undefined') {
         chance = new Chance();
+        self.Chance = Chance;
     }
 
     // If there is a window object, that at least has a document property,
