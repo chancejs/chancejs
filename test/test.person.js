@@ -348,6 +348,36 @@ test('ssn() can return just the last 4', t => {
     })
 })
 
+// chance.aadhar()
+test('aadhar() returns a random aadhar number with whitespace as separator', t => {
+    _.times(1000, () => {
+        let aadhar = chance.aadhar()
+        t.true(_.isString(aadhar))
+        t.true(/^\d{4}\s\d{4}\s\d{4}$/m.test(aadhar))
+        t.is(aadhar.length, 14)
+    })
+})
+
+// chance.aadhar({separatedByWhiteSpace : false})
+test('aadhar() returns a random aadhar number with no separator', t => {
+    _.times(1000, () => {
+        let aadhar = chance.aadhar({separatedByWhiteSpace : false})
+        t.true(_.isString(aadhar))
+        t.true(/^\d{12}$/m.test(aadhar))
+        t.is(aadhar.length, 12)
+    })
+})
+
+// chance.aadhar({onlyLastFour : true})
+test('aadhar() can return just the last 4', t => {
+    _.times(1000, () => {
+        let aadhar = chance.aadhar({ onlyLastFour: true })
+        t.true(_.isString(aadhar))
+        t.true(/^\d{4}$/m.test(aadhar))
+        t.is(aadhar.length, 4)
+    })
+})
+
 // chance.suffix()
 test('suffix() returns a random suffix', t => {
     _.times(1000, () => {
