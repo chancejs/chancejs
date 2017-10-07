@@ -2096,9 +2096,23 @@
     // -- Music --
 
     Chance.prototype.note = function(options) {
-      options = initOptions(options, { key : 'flat'});
-      var notes = { flat: ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'], sharp: ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'] };
-      return this.pickone(notes[options.key]);
+      // choices for 'notes' option:
+      // flatKey - chromatic scale with flat notes (default)
+      // sharpKey - chromatic scale with sharp notes
+      // flats - just flat notes
+      // sharps - just sharp notes
+      // naturals - just natural notes
+      // all - naturals, sharps and flats
+      options = initOptions(options, { notes : 'flatKey'});
+      var scales = {
+        naturals: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+        flats: ['D♭', 'E♭', 'G♭', 'A♭', 'B♭'],
+        sharps: ['C♯', 'D♯', 'F♯', 'G♯', 'A♯']
+      };
+      scales.all = scales.naturals.concat(scales.flats.concat(scales.sharps))
+      scales.flatKey = scales.naturals.concat(scales.flats)
+      scales.sharpKey = scales.naturals.concat(scales.sharps)
+      return this.pickone(scales[options.notes]);
     }
 
     Chance.prototype.midi_note = function(options) {
