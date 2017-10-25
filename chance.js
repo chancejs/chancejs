@@ -1,4 +1,4 @@
-//  Chance.js 1.0.11
+//  Chance.js 1.0.12
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -63,7 +63,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.0.11";
+    Chance.prototype.VERSION = "1.0.12";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -1234,8 +1234,25 @@
         return this.word({length: options.length}) + '@' + (options.domain || this.domain());
     };
 
+    /**
+     * #Description:
+     * ===============================================
+     * Generate a random Facebook id, aka fbid.
+     *
+     * NOTE: At the moment (Sep 2017), Facebook ids are
+     * "numeric strings" of length 16.
+     * However, Facebook Graph API documentation states that
+     * "it is extremely likely to change over time".
+     * @see https://developers.facebook.com/docs/graph-api/overview/
+     *
+     * #Examples:
+     * ===============================================
+     * chance.fbid() => '1000035231661304'
+     *
+     * @return [string] facebook id
+     */
     Chance.prototype.fbid = function () {
-        return parseInt('10000' + this.natural({max: 100000000000}), 10);
+        return '10000' + this.string({pool: "1234567890", length: 11});
     };
 
     Chance.prototype.google_analytics = function () {
@@ -2076,7 +2093,71 @@
 
     // -- End Regional
 
+    // -- Music --
+
+    Chance.prototype.note = function(options) {
+      // choices for 'notes' option:
+      // flatKey - chromatic scale with flat notes (default)
+      // sharpKey - chromatic scale with sharp notes
+      // flats - just flat notes
+      // sharps - just sharp notes
+      // naturals - just natural notes
+      // all - naturals, sharps and flats
+      options = initOptions(options, { notes : 'flatKey'});
+      var scales = {
+        naturals: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+        flats: ['D♭', 'E♭', 'G♭', 'A♭', 'B♭'],
+        sharps: ['C♯', 'D♯', 'F♯', 'G♯', 'A♯']
+      };
+      scales.all = scales.naturals.concat(scales.flats.concat(scales.sharps))
+      scales.flatKey = scales.naturals.concat(scales.flats)
+      scales.sharpKey = scales.naturals.concat(scales.sharps)
+      return this.pickone(scales[options.notes]);
+    }
+
+    Chance.prototype.midi_note = function(options) {
+      var min = 0;
+      var max = 127;
+      options = initOptions(options, { min : min, max : max });
+      return this.integer({min: options.min, max: options.max});
+    }
+
+    Chance.prototype.chord_quality = function(options) {
+      options = initOptions(options, { jazz: true });
+      var chord_qualities = ['maj', 'min', 'aug', 'dim'];
+      if (options.jazz){
+        chord_qualities = [
+          'maj7',
+          'min7',
+          '7',
+          'sus',
+          'dim',
+          'ø'
+        ];
+      }
+      return this.pickone(chord_qualities);
+    }
+
+    Chance.prototype.chord = function (options) {
+      options = initOptions(options);
+      return this.note(options) + this.chord_quality(options);
+    }
+
+    Chance.prototype.tempo = function (options) {
+      var min = 40;
+      var max = 320;
+      options = initOptions(options, {min: min, max: max});
+      return this.integer({min: options.min, max: options.max});
+    }
+
+    // -- End Music
+
     // -- Miscellaneous --
+
+    // Coin - Flip, flip, flipadelphia
+    Chance.prototype.coin = function(options) {
+      return this.bool() ? "heads" : "tails";
+    }
 
     // Dice - For all the board game geeks out there, myself included ;)
     function diceFn (range) {
