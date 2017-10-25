@@ -1,6 +1,10 @@
 const gulp = require('gulp')
-const eslint = require('gulp-eslint')
 const ava = require('gulp-ava')
+const eslint = require('gulp-eslint')
+const rename = require('gulp-rename')
+const sourcemaps = require('gulp-sourcemaps')
+const uglify = require('gulp-uglify')
+const pump = require('pump')
 
 gulp.task('lint', () =>
     gulp.src(['**/*.js', '!node_modules/**', '!dist/**', '!test/helpers/**/*.js'])
@@ -35,6 +39,13 @@ gulp.task('watch', () => {
 
 gulp.task('watch-lint', () => {
     var watcher = gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint'])
+})
+
+gulp.task('build', function (cb) {
+    pump([ gulp.src('chance.js'), sourcemaps.init(),
+        rename('chance.min.js'), uglify(), sourcemaps.write('.'),
+        gulp.dest('dist'),
+    ], cb)
 })
 
 gulp.task('travis', ['lint', 'test'])
