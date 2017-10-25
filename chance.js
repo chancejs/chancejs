@@ -2154,6 +2154,11 @@
 
     // -- Miscellaneous --
 
+    // Coin - Flip, flip, flipadelphia
+    Chance.prototype.coin = function(options) {
+      return this.bool() ? "heads" : "tails";
+    }
+
     // Dice - For all the board game geeks out there, myself included ;)
     function diceFn (range) {
         return function () {
