@@ -140,6 +140,14 @@ test('birthday() can have an age range specified for a senior', t => {
     })
 })
 
+// chance.cnpj()
+test('cnpj() returns a random cnpj', t => {
+    _.times(1000, () => {
+        let hidn = chance.HIDN()
+        t.true(_.isString(hidn))
+    })
+})
+
 // chance.company()
 test('company() returns a random company', t => {
     _.times(1000, () => {
@@ -179,6 +187,16 @@ test('gender() can take extra genders', t => {
     _.times(1000, () => {
         let gender = chance.gender({ extraGenders: ['Unknown', 'Transgender'] })
         t.true(/(Male|Female|Unknown|Transgender)/.test(gender))
+    })
+})
+
+// chance.HIDN()
+test('HIDN() returns a random HIDN', t => {
+    _.times(1000, () => {
+        let hidn = chance.HIDN()
+        t.true(_.isString(hidn))
+        t.true(/^\d{6}[A-Z]{2}$/m.test(hidn))
+        t.is(hidn.length, 8)
     })
 })
 

@@ -120,6 +120,19 @@ test('country() returns a random (long) country name', t => {
     })
 })
 
+// chance.county()
+test('county() returns a random county name', t => {
+    _.times(1000, () => {
+        t.true(_.isString(chance.county()))
+    })
+})
+
+test('country() returns a random (long) country name', t => {
+    _.times(1000, () => {
+        t.true(chance.country({ full: true }).length > 2)
+    })
+})
+
 // chance.depth()
 test('depth() looks right', t => {
     t.is(typeof chance.depth(), 'number')
@@ -465,6 +478,10 @@ test('states() with country of "uk" returns 129 UK counties', t => {
 // chance.street()
 test('street() works', t => {
     _.times(100, () => t.is(typeof chance.street(), 'string'))
+})
+
+test('street() works with it country', t => {
+    _.times(100, () => t.is(typeof chance.street({ country: 'it' }), 'string'))
 })
 
 // chance.street_suffix()

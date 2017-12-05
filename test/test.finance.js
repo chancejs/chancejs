@@ -126,6 +126,14 @@ test('dollar() can take negative min and max', t => {
     })
 })
 
+// chance.euro()
+test('euro() returns a proper euro amount', t => {
+    let euro = chance.euro()
+    t.true(/[0-9]+,?\.?[0-9]+?€/.test(euro))
+    let euroFloat = parseFloat(euro.substring(euro.length, -1))
+    t.true(euroFloat < 10001)
+})
+
 // chance.exp()
 test('exp() looks correct', t => {
     _.times(1000, () => {
