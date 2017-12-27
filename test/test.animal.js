@@ -14,16 +14,16 @@ const timeout = (seconds) => {
 
 test('returns an animal', t => {
     _.times(1000, () => {
-        let animal = chance.animal({type:"dessert"})
+        let animal = chance.animal({type:"desert"})
         t.true(_.isString(animal))
         t.true(animal.length >= 2)
-        t.true(animal.length <= 20)
     })
 })
 
-test('throws an error if the type is not part of the animals object', t => {
+test('returns an animal even if type is not specified', t => {
     _.times(1000, () => {
-        const fn = () => chance.animal({type:"test"})
-        t.throws(fn, "Please pick from dessert, ocean, grassland, forest, zoo, pets, farm.")
+        let animal = chance.animal()
+        t.true(_.isString(animal))
+        t.true(animal.length >= 2)
     })
 })
