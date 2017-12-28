@@ -35,6 +35,6 @@ test('throws an error if the type is not part of the animals object', t => {
     const fn = () => chance.animal({
       type: "banana"
     })
-    t.throws(fn, "Please pick from dessert, ocean, grassland, forest, zoo, pets, farm.")
+    t.throws(fn, "Please pick from desert, ocean, grassland, forest, zoo, pets, farm.")
   })
 })

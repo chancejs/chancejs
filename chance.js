@@ -141,7 +141,7 @@
         //if user does not put in a valid animal type, user will get an error
         testRange(
            !this.get("animals")[options.type.toLowerCase()],
-           "Please pick from dessert, ocean, grassland, forest, zoo, pets, farm."
+           "Please pick from desert, ocean, grassland, forest, zoo, pets, farm."
          );
          //if user does put in valid animal type, will return a random animal of that type
           return this.pick(this.get("animals")[options.type.toLowerCase()]);
