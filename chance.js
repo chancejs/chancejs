@@ -136,9 +136,17 @@
     Chance.prototype.animal = function (options){
       //returns a random animal
       options = initOptions(options);
+
       if(typeof options.type !== 'undefined'){
+        //if user does not put in a valid animal type, user will get an error
+        testRange(
+           !this.get("animals")[options.type.toLowerCase()],
+           "Please pick from dessert, ocean, grassland, forest, zoo, pets, farm."
+         );
+         //if user does put in valid animal type, will return a random animal of that type
           return this.pick(this.get("animals")[options.type.toLowerCase()]);
       }
+       //if user does not put in any animal type, will return a random animal regardless
       animalTypeArray = ["desert","forest","ocean","zoo","farm","pet","grassland"];
       return this.pick(this.get("animals")[this.pick(animalTypeArray)]);
     };
