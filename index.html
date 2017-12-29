@@ -3,7 +3,7 @@ title: "Chance.js: Utility library to generate anything random for JavaScript"
 layout: default
 description: >
   Utility library to generate anything random for JavaScript
-version: 1.0.12
+version: 1.0.13
 github_url: https://github.com/chancejs/chancejs
 ---
 
@@ -36,6 +36,10 @@ github_url: https://github.com/chancejs/chancejs
 
   <a class=toc_title href="#person">Person</a>
   {% assign posts = site.categories.person %}
+  {% include methods_sidebar.html %}
+
+  <a class=toc_title href="#thing">Thing</a>
+  {% assign posts = site.categories.thing %}
   {% include methods_sidebar.html %}
 
   <a class=toc_title href="#mobile">Mobile</a>
@@ -138,6 +142,10 @@ github_url: https://github.com/chancejs/chancejs
 
     <h2 id="person">Person</h2>
     {% assign posts = site.categories.person %}
+    {% include methods_full.html %}
+
+    <h2 id="thing">Thing</h2>
+    {% assign posts = site.categories.thing %}
     {% include methods_full.html %}
 
     <h2 id="mobile">Mobile</h2>
