@@ -479,6 +479,35 @@
         return new_array;
     };
 
+    // shuffle each passed in array symmetrically
+    // returns a collection of arrays
+    Chance.prototype.symmetricShuffle = function () {
+        var old_arrays = [];
+        var new_arrays = [];
+        for(var k = 0;k < arguments.length; k++) {
+            old_arrays.push(arguments[k].slice(0));
+            new_arrays.push([]);
+        }
+
+        var j = 0,
+            length = Number(old_arrays[0].length);
+
+        for (var i = 0; i < length; i++) {
+            // Pick a random index from the array
+            j = this.natural({max: old_arrays[0].length - 1});
+            for(var m = 0; m < old_arrays.length; m++ ) {
+                // Add it to the new arrays
+                new_arrays[m][i] = old_arrays[m][j];
+                // Remove that element from the original array
+                old_arrays[m].splice(j, 1);
+            }
+        }
+
+        return new_arrays;
+    };
+
+
+
     // Returns a single item from an array with relative weighting of odds
     Chance.prototype.weighted = function (arr, weights, trim) {
         if (arr.length !== weights.length) {
