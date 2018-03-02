@@ -346,6 +346,43 @@ test('phone() with fr country on mobile, unformatted looks right', t => {
     })
 })
 
+it("phone({country: 'pt-BR'}) returns a string", function () {
+    expect(chance.phone({country: 'pt-BR'})).to.be.a('string');
+});
+
+it("phone({country: 'pt-BR', mobile: true}) returns a string", function () {
+    expect(chance.phone({country: 'pt-BR', mobile: true})).to.be.a('string');
+});
+
+it('phone({country: "pt-BR"}) looks right', function () {
+    _(1000).times(function () {
+        var areacode = /\((1[1-9]|2[12478]|3[1-578]|4[1-9]|5[13-5]|6[1-9]|7[13-579]|8[1-9]|9[1-9])\)/;
+        console.log(chance.phone({country: 'pt-BR'}));
+        expect(chance.phone({country: 'pt-BR'})).match(new RegExp(areacode.source + /\s[2-9]\d{3}-\d{4}/.source));
+    });
+});
+
+it('phone({country: "pt-BR", formatted: false}) looks right', function () {
+    _(1000).times(function () {
+        var areacode = /1[1-9]|2[12478]|3[1-578]|4[1-9]|5[13-5]|6[1-9]|7[13-579]|8[1-9]|9[1-9]/;
+        expect(chance.phone({country: 'pt-BR', formatted: false})).match(new RegExp(areacode.source + /[2-9]\d{3}\d{4}/.source));
+    });
+});
+
+it('phone({country: "pt-BR", mobile: true}) looks right', function () {
+    _(1000).times(function () {
+        var areacode = /\((1[1-9]|2[12478]|3[1-578]|4[1-9]|5[13-5]|6[1-9]|7[13-579]|8[1-9]|9[1-9])\)/;
+        expect(chance.phone({country: 'pt-BR', mobile: true})).match(new RegExp(areacode.source + /\s9[6-9]\d{3}-\d{4}/.source));
+    });
+});
+
+it('phone({country: "pt-BR", mobile: true, formatted: false}) looks right', function () {
+    _(1000).times(function () {
+        var areacode = /1[1-9]|2[12478]|3[1-578]|4[1-9]|5[13-5]|6[1-9]|7[13-579]|8[1-9]|9[1-9]/;
+        expect(chance.phone({country: 'pt-BR', mobile: true, formatted: false})).match(new RegExp(areacode.source + /9[6-9]\d{3}\d{4}/.source));
+    });
+});
+
 // chance.postal()
 test('postal() returns a valid basic postal code', t => {
     _.times(1000, () => {
@@ -516,7 +553,7 @@ test('street_suffixes() are longish', t => {
     suffixes.map((suffix) => {
         t.true(suffix.name.length > 2)
     })
-})
+}
 
 // chance.zip()
 test('zip() returns a valid basic zip code', t => {

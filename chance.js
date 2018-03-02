@@ -282,7 +282,6 @@
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
         return this.integer(options);
     };
-
     /**
      *  Return a random hex number as string
      *
@@ -1148,6 +1147,12 @@
      * @return [string] color value
      */
     Chance.prototype.color = function (options) {
+        function pad(n, width, z) {
+          z = z || '0';
+          n = n + '';
+          return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+        }
+
         function gray(value, delimiter) {
             return [value, value, value].join(delimiter || '');
         }
@@ -1468,6 +1473,30 @@
         }
         var phone;
         switch (options.country) {
+            case 'pt-BR':
+                var dddPick = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27",
+                "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48",
+                "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73",
+                "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93",
+                "94", "95", "96", "97", "98", "99"]);
+                function format(match, p1, p2, p3) {
+                    return '(' + p1 + ') ' + p2 + '-' + p3;
+                }
+                if (!options.mobile) {
+                    numPick = dddPick + this.natural({ min: 2, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString() +
+                        this.natural({ min: 0, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString() +
+                        this.natural({ min: 0, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString() +
+                        this.natural({ min: 0, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString();
+                    console.log(numPick);
+                    phone = options.formatted ? numPick.replace(/(\d{2})(\d{4})(\d{4})/, format) : numPick;
+                } else {
+                    numPick = dddPick + '9' + this.natural({ min: 6, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString() +
+                      this.natural({ min: 0, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString() +
+                      this.natural({ min: 0, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString() +
+                      this.natural({ min: 0, max: 9 }).toString() + this.natural({ min: 0, max: 9 }).toString();
+                    phone = options.formatted ?  numPick.replace(/(\d{2})(\d{5})(\d{4})/, format) : numPick;
+                }
+                break;
             case 'fr':
                 if (!options.mobile) {
                     numPick = this.pick([
