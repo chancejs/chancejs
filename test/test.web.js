@@ -542,7 +542,7 @@ test('url() can take and respect extensions', t => {
 })
 
 // chance.image()
-test('image() returns picsum url with default height and width', t => {
+test('image() returns image url with default width and height', t => {
     _.times(1000, () => {
         let image = chance.image()
         t.true(_.isString(image))
@@ -553,3 +553,41 @@ test('image() returns picsum url with default height and width', t => {
         t.true(image.split('/?random').length > 1)
     })
 })
+test('image() returns image url respects width and height', t => {
+    _.times(1000, () => {
+        let width = chance.natural();
+        let height = chance.natural();
+        let image = chance.image({
+            width,
+            height
+        })
+        t.true(_.isString(image))
+        t.true(image.split('.').length > 1)
+        t.true(image.split('://').length > 1)
+        t.true(image.split('picsum.photos').length > 1)
+        t.true(image.split('/' + width + '/' + height).length > 1)
+        t.true(image.split('/?random').length > 1)
+    })
+})
+// test('image() returns image url with default height and width', t => {
+//     _.times(1000, () => {
+//         let image = chance.image()
+//         t.true(_.isString(image))
+//         t.true(image.split('.').length > 1)
+//         t.true(image.split('://').length > 1)
+//         t.true(image.split('picsum.photos').length > 1)
+//         t.true(image.split('/500/500').length > 1)
+//         t.true(image.split('/?random').length > 1)
+//     })
+// })
+// test('image() returns image url with default height and width', t => {
+//     _.times(1000, () => {
+//         let image = chance.image()
+//         t.true(_.isString(image))
+//         t.true(image.split('.').length > 1)
+//         t.true(image.split('://').length > 1)
+//         t.true(image.split('picsum.photos').length > 1)
+//         t.true(image.split('/500/500').length > 1)
+//         t.true(image.split('/?random').length > 1)
+//     })
+// })
