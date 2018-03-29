@@ -1373,6 +1373,13 @@
       }
     };
 
+    Chance.prototype.image = function (options) {
+        var height = '500';
+        var width = '500';
+
+        return 'https://picsum.photos/' + width + '/' + height + '/?random'
+    }
+
     // -- End Web --
 
     // -- Location --

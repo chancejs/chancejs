@@ -540,3 +540,16 @@ test('url() can take and respect extensions', t => {
         t.not(url.indexOf('.html'), -1)
     })
 })
+
+// chance.image()
+test('image() returns picsum url with default height and width', t => {
+    _.times(1000, () => {
+        let image = chance.image()
+        t.true(_.isString(image))
+        t.true(image.split('.').length > 1)
+        t.true(image.split('://').length > 1)
+        t.true(image.split('picsum.photos').length > 1)
+        t.true(image.split('/500/500').length > 1)
+        t.true(image.split('/?random').length > 1)
+    })
+})
