@@ -1374,12 +1374,12 @@
     };
 
     Chance.prototype.image = function (options) {
-        options = initOptions(options, {
-            width: 500,
-            height: 500
-        })
+        options = initOptions(options, { width: 500, height: 500, greyscale: false, blurred: false });
 
-        return 'https://picsum.photos/' + options.width + '/' + options.height + '/?random'
+        var greyscale = options.greyscale ? 'g/' : '';
+        var query = options.blurred ? '/?blur' : '/?random';
+
+        return 'https://picsum.photos/' + greyscale + options.width + '/' + options.height + query;
     }
 
     // -- End Web --
