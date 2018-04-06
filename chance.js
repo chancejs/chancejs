@@ -1373,7 +1373,7 @@
       }
     };
 
-    Chance.prototype.image = function (options) {
+    Chance.prototype.loremPicsum = function (options) {
         options = initOptions(options, { width: 500, height: 500, greyscale: false, blurred: false });
 
         var greyscale = options.greyscale ? 'g/' : '';
