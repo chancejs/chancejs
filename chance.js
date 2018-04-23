@@ -330,6 +330,22 @@
         return text.join("");
     };
 
+    /**
+     *  Return a random buffer
+     *
+     *  @param {Object} [options={}] can specify a length
+     *  @returns {Buffer} a buffer of random length
+     *  @throws {RangeError} length cannot be less than zero
+     */
+    Chance.prototype.buffer = function (options) {
+        options = initOptions(options, { length: this.natural({min: 5, max: 20}) });
+        testRange(options.length < 0, "Chance: Length cannot be less than zero.");
+        const length = options.length;
+        const content = this.n(this.character, length, options);
+
+        return Buffer.from(content);
+    };
+
     // -- End Basics --
 
     // -- Helpers --
