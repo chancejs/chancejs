@@ -8,6 +8,13 @@
   * [seed](usage/seed.md)
   * [function](usage/function.md)
 * Basics
+  * [bool](basics/bool.md)
+  * [character](basics/character.md)
+  * [floating](basics/floating.md)
+  * [integer](basics/integer.md)
+  * [letter](basics/letter.md)
+  * [natural](basics/natural.md)
+  * [string](basics/string.md)
 * Finance
 * Location
 * Mobile

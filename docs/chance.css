@@ -50,3 +50,24 @@ ul.heading-list .hlink::before {
 .header-nav.-expanded .icon {
     color: #fff;
 }
+
+.pullquote {
+    display: block;
+    float: right;
+    padding: 0 0 0 10px;
+    margin: 0 0 10px 10px;
+    width: 15.0em;
+    font-size: 1.0em;
+    line-height: 1.4em;
+    color: #666;
+    border-left: 3px solid #ccc;
+}
+
+.markdown-body pre {
+    background-color: #fdf6e3;
+    border-radius: 12px;
+}
+
+.markdown-body pre code {
+    background-color: #fdf6e3;
+}
