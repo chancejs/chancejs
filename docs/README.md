@@ -1,7 +1,8 @@
 * [Chance](intro.md)
-* Getting Started
+* Usage
   * [bower](usage/bower.md)
   * [browser](usage/browser.md)
+  * [cli](usage/cli.md)
 * Basics
 * Finance
 * Location

@@ -64,6 +64,7 @@
   },
   "docpress": {
     "scripts": ["chance.js", "analytics.js", "https://platform.twitter.com/widgets.js"],
-    "github": "chancejs/chancejs"
+    "github": "chancejs/chancejs",
+    "css": ["docs/chance.css"]
   }
 }

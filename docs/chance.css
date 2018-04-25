@@ -1,0 +1,52 @@
+.markdown-body a {
+    color: #c0392b;
+}
+
+.menu {
+    background-color: #c0392b;
+}
+
+.-menu-visible .menu-toggle {
+    background-color: #c0392b;
+}
+
+.menu-toggle {
+    color: #fff;
+    background-color: #c0392b;
+}
+
+.toc-menu .link.-active, .toc-menu .hlink.-active {
+    box-shadow: inset -2px 0 #fff;
+}
+
+.toc-menu .-level-1.-parent > .title {
+    color: #fff;
+}
+
+.toc-menu .-level-1:first-child > .title {
+    color: #fff;
+}
+
+ul.heading-list .hlink, ul.heading-list .hlink:visited {
+    color: #fff;
+}
+
+.toc-menu .link, .toc-menu .link:visited {
+    color: #fff;
+}
+
+ul.heading-list .hlink::before {
+    background: #fff;
+}
+
+.footer-nav a {
+    color: #c0392b;
+}
+
+.footer-nav .label, .footer-nav .left .title {
+    color: #c0392b;
+}
+
+.header-nav.-expanded .icon {
+    color: #fff;
+}
