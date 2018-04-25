@@ -24,7 +24,7 @@ test('date() returns a random date', t => {
 
 test('date() accepts an american option', t => {
     _.times(1000, () => {
-        let date = chance.date({ american: true })
+        let date = chance.date({ american: chance.bool() })
         t.true(_.isDate(date))
         t.truthy(date.getTime())
     })
@@ -230,6 +230,16 @@ test('timestamp() returns a timestamp', t => {
         t.true(_.isNumber(timestamp))
         t.true(timestamp > 0)
         t.true(timestamp <= parseInt(new Date().getTime() / 1000, 10))
+    })
+})
+
+// chance.timezone()
+test('timezone() returns a timezone', t => {
+    _.times(1000, () => {
+        let timezone = chance.timezone()
+        t.true(_.isString(timezone.name))
+        t.true(timezone.abbr.length < 6)
+        t.true(_.isNumber(timezone.offset))
     })
 })
 

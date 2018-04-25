@@ -4,6 +4,13 @@ import _ from 'lodash'
 
 const chance = new Chance()
 
+// chance.coin()
+test('coin() returns a coin', t => {
+    _.times(1000, () => {
+        t.true(/(heads|tails)/.test(chance.coin()))
+    })
+})
+
 // chance.d4()
 test('d4() returns a properly bounded d4', t => {
     _.times(1000, () => {

@@ -140,6 +140,14 @@ test('birthday() can have an age range specified for a senior', t => {
     })
 })
 
+// chance.cnpj()
+test('cnpj() returns a random cnpj', t => {
+    _.times(1000, () => {
+        let hidn = chance.HIDN()
+        t.true(_.isString(hidn))
+    })
+})
+
 // chance.company()
 test('company() returns a random company', t => {
     _.times(1000, () => {
@@ -179,6 +187,16 @@ test('gender() can take extra genders', t => {
     _.times(1000, () => {
         let gender = chance.gender({ extraGenders: ['Unknown', 'Transgender'] })
         t.true(/(Male|Female|Unknown|Transgender)/.test(gender))
+    })
+})
+
+// chance.HIDN()
+test('HIDN() returns a random HIDN', t => {
+    _.times(1000, () => {
+        let hidn = chance.HIDN()
+        t.true(_.isString(hidn))
+        t.true(/^\d{6}[A-Z]{2}$/m.test(hidn))
+        t.is(hidn.length, 8)
     })
 })
 
@@ -345,6 +363,36 @@ test('ssn() can return just the last 4', t => {
         t.true(_.isString(ssn))
         t.true(/^\d{4}$/m.test(ssn))
         t.is(ssn.length, 4)
+    })
+})
+
+// chance.aadhar()
+test('aadhar() returns a random aadhar number with whitespace as separator', t => {
+    _.times(1000, () => {
+        let aadhar = chance.aadhar()
+        t.true(_.isString(aadhar))
+        t.true(/^\d{4}\s\d{4}\s\d{4}$/m.test(aadhar))
+        t.is(aadhar.length, 14)
+    })
+})
+
+// chance.aadhar({separatedByWhiteSpace : false})
+test('aadhar() returns a random aadhar number with no separator', t => {
+    _.times(1000, () => {
+        let aadhar = chance.aadhar({separatedByWhiteSpace : false})
+        t.true(_.isString(aadhar))
+        t.true(/^\d{12}$/m.test(aadhar))
+        t.is(aadhar.length, 12)
+    })
+})
+
+// chance.aadhar({onlyLastFour : true})
+test('aadhar() can return just the last 4', t => {
+    _.times(1000, () => {
+        let aadhar = chance.aadhar({ onlyLastFour: true })
+        t.true(_.isString(aadhar))
+        t.true(/^\d{4}$/m.test(aadhar))
+        t.is(aadhar.length, 4)
     })
 })
 

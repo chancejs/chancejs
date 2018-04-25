@@ -1,7 +1,7 @@
 {
   "name": "chance",
   "main": "./chance.js",
-  "version": "1.0.10",
+  "version": "1.0.13",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
@@ -23,9 +23,13 @@
     "gulp-ava": "^0.17.1",
     "gulp-eslint": "^3.0.1",
     "gulp-jshint": "^2.0.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
     "jshint-stylish": "^2.2.1",
     "lodash": "^4.17.4",
-    "nyc": "^10.3.2"
+    "nyc": "^10.3.2",
+    "pump": "^1.0.2"
   },
   "scripts": {
     "test": "gulp travis"
@@ -56,5 +60,6 @@
     "ignore": [
       "test"
     ]
-  }
+  },
+  "dependencies": {}
 }

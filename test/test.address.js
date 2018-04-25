@@ -120,6 +120,19 @@ test('country() returns a random (long) country name', t => {
     })
 })
 
+// chance.county()
+test('county() returns a random county name', t => {
+    _.times(1000, () => {
+        t.true(_.isString(chance.county()))
+    })
+})
+
+test('country() returns a random (long) country name', t => {
+    _.times(1000, () => {
+        t.true(chance.country({ full: true }).length > 2)
+    })
+})
+
 // chance.depth()
 test('depth() looks right', t => {
     t.is(typeof chance.depth(), 'number')
@@ -333,6 +346,46 @@ test('phone() with fr country on mobile, unformatted looks right', t => {
     })
 })
 
+test('phone() with br country option works', t => {
+    t.true(_.isString(chance.phone({ country: 'br' })))
+})
+
+test('phone() with br country and mobile option works', t => {
+    t.true(_.isString(chance.phone({ country: 'br', mobile: true })))
+})
+
+test('phone() with br country and formatted false option return a correct format', t => {
+    t.true(/([0-9]{2})([2-5]{1})([0-9]{3})([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: false,
+        formatted: false
+    })))
+})
+
+test('phone() with br country, formatted false and mobile option return a correct format', t => {
+    t.true(/([0-9]{2})\9([0-9]{4})([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: true,
+        formatted: false
+    })))
+})
+
+test('phone() with br country and formatted option apply the correct mask', t => {
+    t.true(/\(([0-9]{2})\) ([2-5]{1})([0-9]{3})\-([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: false,
+        formatted: true
+    })))
+})
+
+test('phone() with br country, formatted and mobile option apply the correct mask', t => {
+    t.true(/\(([0-9]{2})\) 9([0-9]{4})\-([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: true,
+        formatted: true
+    })))
+})
+
 // chance.postal()
 test('postal() returns a valid basic postal code', t => {
     _.times(1000, () => {
@@ -465,6 +518,10 @@ test('states() with country of "uk" returns 129 UK counties', t => {
 // chance.street()
 test('street() works', t => {
     _.times(100, () => t.is(typeof chance.street(), 'string'))
+})
+
+test('street() works with it country', t => {
+    _.times(100, () => t.is(typeof chance.street({ country: 'it' }), 'string'))
 })
 
 // chance.street_suffix()

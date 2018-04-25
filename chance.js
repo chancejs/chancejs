@@ -1,4 +1,4 @@
-//  Chance.js 1.0.10
+//  Chance.js 1.0.13
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -12,6 +12,15 @@
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
+
+    // Errors
+    function UnsupportedError(message) {
+        this.name = 'UnsupportedError';
+        this.message = message || 'This feature is not supported on this platform';
+    }
+
+    UnsupportedError.prototype = new Error();
+    UnsupportedError.prototype.constructor = UnsupportedError;
 
     // Cached array helpers
     var slice = Array.prototype.slice;
@@ -63,7 +72,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.0.10";
+    Chance.prototype.VERSION = "1.0.13";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -78,6 +87,10 @@
         }
 
         return options;
+    }
+
+    function range(size) {
+        return Array.apply(null, Array(size)).map(function (_, i) {return i;});
     }
 
     function testRange(test, errorMessage) {
@@ -131,6 +144,24 @@
         );
 
         return this.random() * 100 < options.likelihood;
+    };
+
+    Chance.prototype.animal = function (options){
+      //returns a random animal
+      options = initOptions(options);
+
+      if(typeof options.type !== 'undefined'){
+        //if user does not put in a valid animal type, user will get an error
+        testRange(
+           !this.get("animals")[options.type.toLowerCase()],
+           "Please pick from desert, ocean, grassland, forest, zoo, pets, farm."
+         );
+         //if user does put in valid animal type, will return a random animal of that type
+          return this.pick(this.get("animals")[options.type.toLowerCase()]);
+      }
+       //if user does not put in any animal type, will return a random animal regardless
+      animalTypeArray = ["desert","forest","ocean","zoo","farm","pet","grassland"];
+      return this.pick(this.get("animals")[this.pick(animalTypeArray)]);
     };
 
     /**
@@ -282,6 +313,16 @@
 		return integer.toString(16);
     };
 
+    Chance.prototype.letter = function(options) {
+        options = initOptions(options, {casing: 'lower'});
+        var pool = "abcdefghijklmnopqrstuvwxyz";
+        var letter = this.character({pool: pool});
+        if (options.casing === 'upper') {
+            letter = letter.toUpperCase();
+        }
+        return letter;
+    }
+
     /**
      *  Return a random string
      *
@@ -296,6 +337,25 @@
             text = this.n(this.character, length, options);
 
         return text.join("");
+    };
+
+    /**
+     *  Return a random buffer
+     *
+     *  @param {Object} [options={}] can specify a length
+     *  @returns {Buffer} a buffer of random length
+     *  @throws {RangeError} length cannot be less than zero
+     */
+    Chance.prototype.buffer = function (options) {
+        if (typeof Buffer === 'undefined') {
+            throw new UnsupportedError('Sorry, the buffer() function is not supported on your platform');
+        }
+        options = initOptions(options, { length: this.natural({min: 5, max: 20}) });
+        testRange(options.length < 0, "Chance: Length cannot be less than zero.");
+        const length = options.length;
+        const content = this.n(this.character, length, options);
+
+        return Buffer.from(content);
     };
 
     // -- End Basics --
@@ -427,23 +487,31 @@
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
         } else {
-            return this.shuffle(arr).slice(0, count);
+            return this.n(this.natural, count, {max: arr.length - 1}).map(function (i) {
+                return arr[i];
+            });
         }
     };
 
     Chance.prototype.shuffle = function (arr) {
-        var old_array = arr.slice(0),
-            new_array = [],
+        var new_array = [],
             j = 0,
-            length = Number(old_array.length);
+            length = Number(arr.length),
+            source_indexes = range(length),
+            last_source_index = length - 1,
+            selected_source_index;
 
         for (var i = 0; i < length; i++) {
             // Pick a random index from the array
-            j = this.natural({max: old_array.length - 1});
+            selected_source_index = this.natural({max: last_source_index});
+            j = source_indexes[selected_source_index];
+
             // Add it to the new array
-            new_array[i] = old_array[j];
-            // Remove that element from the original array
-            old_array.splice(j, 1);
+            new_array[i] = arr[j];
+
+            // Mark the source index as used
+            source_indexes[selected_source_index] = source_indexes[last_source_index];
+            last_source_index -= 1;
         }
 
         return new_array;
@@ -923,6 +991,23 @@
         return ssn;
     };
 
+    // Aadhar is similar to ssn, used in India to uniquely identify a person
+    Chance.prototype.aadhar = function (options) {
+        options = initOptions(options, {onlyLastFour: false, separatedByWhiteSpace: true});
+        var aadhar_pool = "1234567890",
+            aadhar,
+            whiteSpace = options.separatedByWhiteSpace ? ' ' : '';
+
+        if(!options.onlyLastFour) {
+            aadhar = this.string({pool: aadhar_pool, length: 4}) + whiteSpace +
+            this.string({pool: aadhar_pool, length: 4}) + whiteSpace +
+            this.string({pool: aadhar_pool, length: 4});
+        } else {
+            aadhar = this.string({pool: aadhar_pool, length: 4});
+        }
+        return aadhar;
+    };
+
     // Return the list of available name suffixes
     // @todo introduce internationalization
     Chance.prototype.name_suffixes = function () {
@@ -1235,8 +1320,25 @@
         return this.word({length: options.length}) + '@' + (options.domain || this.domain());
     };
 
+    /**
+     * #Description:
+     * ===============================================
+     * Generate a random Facebook id, aka fbid.
+     *
+     * NOTE: At the moment (Sep 2017), Facebook ids are
+     * "numeric strings" of length 16.
+     * However, Facebook Graph API documentation states that
+     * "it is extremely likely to change over time".
+     * @see https://developers.facebook.com/docs/graph-api/overview/
+     *
+     * #Examples:
+     * ===============================================
+     * chance.fbid() => '1000035231661304'
+     *
+     * @return [string] facebook id
+     */
     Chance.prototype.fbid = function () {
-        return parseInt('10000' + this.natural({max: 100000000000}), 10);
+        return '10000' + this.string({pool: "1234567890", length: 11});
     };
 
     Chance.prototype.google_analytics = function () {
@@ -1327,6 +1429,15 @@
       }
     };
 
+    Chance.prototype.loremPicsum = function (options) {
+        options = initOptions(options, { width: 500, height: 500, greyscale: false, blurred: false });
+
+        var greyscale = options.greyscale ? 'g/' : '';
+        var query = options.blurred ? '/?blur' : '/?random';
+
+        return 'https://picsum.photos/' + greyscale + options.width + '/' + options.height + query;
+    }
+
     // -- End Web --
 
     // -- Location --
@@ -1370,7 +1481,7 @@
     Chance.prototype.country = function (options) {
         options = initOptions(options);
         var country = this.pick(this.countries());
-        return options.full ? country.name : country.abbreviation;
+        return options.raw ? country : options.full ? country.name : country.abbreviation;
     };
 
     Chance.prototype.depth = function (options) {
@@ -1488,9 +1599,7 @@
                     ]);
                     phone = options.formatted || numPick;
                 }
-
                 break;
-
             case 'us':
                 var areacode = this.areacode(options).toString();
                 var exchange = this.natural({ min: 2, max: 9 }).toString() +
@@ -1498,6 +1607,20 @@
                     this.natural({ min: 0, max: 9 }).toString();
                 var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
                 phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
+                break;
+            case 'br':
+                const areaCode = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99"]);
+                let prefix;
+                if (options.mobile) {
+                    // Brasilian official reference (mobile): http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=330
+                    prefix = '9' + self.string({ pool: '0123456789', length: 4});
+                } else {
+                    // Brasilian official reference: http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=331
+                    prefix = this.natural({ min: 2000, max: 5999 }).toString();
+                }
+                const mcdu = self.string({ pool: '0123456789', length: 4});
+                phone = options.formatted ? '(' + areaCode + ') ' + prefix + '-' + mcdu : areaCode + prefix + mcdu;
+                break;
         }
         return phone;
     };
@@ -2077,7 +2200,71 @@
 
     // -- End Regional
 
+    // -- Music --
+
+    Chance.prototype.note = function(options) {
+      // choices for 'notes' option:
+      // flatKey - chromatic scale with flat notes (default)
+      // sharpKey - chromatic scale with sharp notes
+      // flats - just flat notes
+      // sharps - just sharp notes
+      // naturals - just natural notes
+      // all - naturals, sharps and flats
+      options = initOptions(options, { notes : 'flatKey'});
+      var scales = {
+        naturals: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+        flats: ['D♭', 'E♭', 'G♭', 'A♭', 'B♭'],
+        sharps: ['C♯', 'D♯', 'F♯', 'G♯', 'A♯']
+      };
+      scales.all = scales.naturals.concat(scales.flats.concat(scales.sharps))
+      scales.flatKey = scales.naturals.concat(scales.flats)
+      scales.sharpKey = scales.naturals.concat(scales.sharps)
+      return this.pickone(scales[options.notes]);
+    }
+
+    Chance.prototype.midi_note = function(options) {
+      var min = 0;
+      var max = 127;
+      options = initOptions(options, { min : min, max : max });
+      return this.integer({min: options.min, max: options.max});
+    }
+
+    Chance.prototype.chord_quality = function(options) {
+      options = initOptions(options, { jazz: true });
+      var chord_qualities = ['maj', 'min', 'aug', 'dim'];
+      if (options.jazz){
+        chord_qualities = [
+          'maj7',
+          'min7',
+          '7',
+          'sus',
+          'dim',
+          'ø'
+        ];
+      }
+      return this.pickone(chord_qualities);
+    }
+
+    Chance.prototype.chord = function (options) {
+      options = initOptions(options);
+      return this.note(options) + this.chord_quality(options);
+    }
+
+    Chance.prototype.tempo = function (options) {
+      var min = 40;
+      var max = 320;
+      options = initOptions(options, {min: min, max: max});
+      return this.integer({min: options.min, max: options.max});
+    }
+
+    // -- End Music
+
     // -- Miscellaneous --
+
+    // Coin - Flip, flip, flipadelphia
+    Chance.prototype.coin = function(options) {
+      return this.bool() ? "heads" : "tails";
+    }
 
     // Dice - For all the board game geeks out there, myself included ;)
     function diceFn (range) {
@@ -2314,7 +2501,9 @@
                 // Data taken from http://www.dati.gov.it/dataset/comune-di-firenze_0163
                 "it": ["Adolfo", "Alberto", "Aldo", "Alessandro", "Alessio", "Alfredo", "Alvaro", "Andrea", "Angelo", "Angiolo", "Antonino", "Antonio", "Attilio", "Benito", "Bernardo", "Bruno", "Carlo", "Cesare", "Christian", "Claudio", "Corrado", "Cosimo", "Cristian", "Cristiano", "Daniele", "Dario", "David", "Davide", "Diego", "Dino", "Domenico", "Duccio", "Edoardo", "Elia", "Elio", "Emanuele", "Emiliano", "Emilio", "Enrico", "Enzo", "Ettore", "Fabio", "Fabrizio", "Federico", "Ferdinando", "Fernando", "Filippo", "Francesco", "Franco", "Gabriele", "Giacomo", "Giampaolo", "Giampiero", "Giancarlo", "Gianfranco", "Gianluca", "Gianmarco", "Gianni", "Gino", "Giorgio", "Giovanni", "Giuliano", "Giulio", "Giuseppe", "Graziano", "Gregorio", "Guido", "Iacopo", "Jacopo", "Lapo", "Leonardo", "Lorenzo", "Luca", "Luciano", "Luigi", "Manuel", "Marcello", "Marco", "Marino", "Mario", "Massimiliano", "Massimo", "Matteo", "Mattia", "Maurizio", "Mauro", "Michele", "Mirko", "Mohamed", "Nello", "Neri", "Niccolò", "Nicola", "Osvaldo", "Otello", "Paolo", "Pier Luigi", "Piero", "Pietro", "Raffaele", "Remo", "Renato", "Renzo", "Riccardo", "Roberto", "Rolando", "Romano", "Salvatore", "Samuele", "Sandro", "Sergio", "Silvano", "Simone", "Stefano", "Thomas", "Tommaso", "Ubaldo", "Ugo", "Umberto", "Valerio", "Valter", "Vasco", "Vincenzo", "Vittorio"],
                 // Data taken from http://www.svbkindernamen.nl/int/nl/kindernamen/index.html
-                "nl": ["Aaron","Abel","Adam","Adriaan","Albert","Alexander","Ali","Arjen","Arno","Bart","Bas","Bastiaan","Benjamin","Bob", "Boris","Bram","Brent","Cas","Casper","Chris","Christiaan","Cornelis","Daan","Daley","Damian","Dani","Daniel","Daniël","David","Dean","Dirk","Dylan","Egbert","Elijah","Erik","Erwin","Evert","Ezra","Fabian","Fedde","Finn","Florian","Floris","Frank","Frans","Frederik","Freek","Geert","Gerard","Gerben","Gerrit","Gijs","Guus","Hans","Hendrik","Henk","Herman","Hidde","Hugo","Jaap","Jan Jaap","Jan-Willem","Jack","Jacob","Jan","Jason","Jasper","Jayden","Jelle","Jelte","Jens","Jeroen","Jesse","Jim","Job","Joep","Johannes","John","Jonathan","Joris","Joshua","Joël","Julian","Kees","Kevin","Koen","Lars","Laurens","Leendert","Lennard","Lodewijk","Luc","Luca","Lucas","Lukas","Luuk","Maarten","Marcus","Martijn","Martin","Matthijs","Maurits","Max","Mees","Melle","Mick","Mika","Milan","Mohamed","Mohammed","Morris","Muhammed","Nathan","Nick","Nico","Niek","Niels","Noah","Noud","Olivier","Oscar","Owen","Paul","Pepijn","Peter","Pieter","Pim","Quinten","Reinier","Rens","Robin","Ruben","Sam","Samuel","Sander","Sebastiaan","Sem","Sep","Sepp","Siem","Simon","Stan","Stef","Steven","Stijn","Sven","Teun","Thijmen","Thijs","Thomas","Tijn","Tim","Timo","Tobias","Tom","Victor","Vince","Willem","Wim","Wouter","Yusuf"]
+                "nl": ["Aaron","Abel","Adam","Adriaan","Albert","Alexander","Ali","Arjen","Arno","Bart","Bas","Bastiaan","Benjamin","Bob", "Boris","Bram","Brent","Cas","Casper","Chris","Christiaan","Cornelis","Daan","Daley","Damian","Dani","Daniel","Daniël","David","Dean","Dirk","Dylan","Egbert","Elijah","Erik","Erwin","Evert","Ezra","Fabian","Fedde","Finn","Florian","Floris","Frank","Frans","Frederik","Freek","Geert","Gerard","Gerben","Gerrit","Gijs","Guus","Hans","Hendrik","Henk","Herman","Hidde","Hugo","Jaap","Jan Jaap","Jan-Willem","Jack","Jacob","Jan","Jason","Jasper","Jayden","Jelle","Jelte","Jens","Jeroen","Jesse","Jim","Job","Joep","Johannes","John","Jonathan","Joris","Joshua","Joël","Julian","Kees","Kevin","Koen","Lars","Laurens","Leendert","Lennard","Lodewijk","Luc","Luca","Lucas","Lukas","Luuk","Maarten","Marcus","Martijn","Martin","Matthijs","Maurits","Max","Mees","Melle","Mick","Mika","Milan","Mohamed","Mohammed","Morris","Muhammed","Nathan","Nick","Nico","Niek","Niels","Noah","Noud","Olivier","Oscar","Owen","Paul","Pepijn","Peter","Pieter","Pim","Quinten","Reinier","Rens","Robin","Ruben","Sam","Samuel","Sander","Sebastiaan","Sem","Sep","Sepp","Siem","Simon","Stan","Stef","Steven","Stijn","Sven","Teun","Thijmen","Thijs","Thomas","Tijn","Tim","Timo","Tobias","Tom","Victor","Vince","Willem","Wim","Wouter","Yusuf"],
+                // Data taken from https://fr.wikipedia.org/wiki/Liste_de_pr%C3%A9noms_fran%C3%A7ais_et_de_la_francophonie
+                "fr": ["Aaron","Abdon","Abel","Abélard","Abelin","Abondance","Abraham","Absalon","Acace","Achaire","Achille","Adalard","Adalbald","Adalbéron","Adalbert","Adalric","Adam","Adegrin","Adel","Adelin","Andelin","Adelphe","Adam","Adéodat","Adhémar","Adjutor","Adolphe","Adonis","Adon","Adrien","Agapet","Agathange","Agathon","Agilbert","Agénor","Agnan","Aignan","Agrippin","Aimable","Aimé","Alain","Alban","Albin","Aubin","Albéric","Albert","Albertet","Alcibiade","Alcide","Alcée","Alcime","Aldonce","Aldric","Aldéric","Aleaume","Alexandre","Alexis","Alix","Alliaume","Aleaume","Almine","Almire","Aloïs","Alphée","Alphonse","Alpinien","Alverède","Amalric","Amaury","Amandin","Amant","Ambroise","Amédée","Amélien","Amiel","Amour","Anaël","Anastase","Anatole","Ancelin","Andéol","Andoche","André","Andoche","Ange","Angelin","Angilbe","Anglebert","Angoustan","Anicet","Anne","Annibal","Ansbert","Anselme","Anthelme","Antheaume","Anthime","Antide","Antoine","Antonius","Antonin","Apollinaire","Apollon","Aquilin","Arcade","Archambaud","Archambeau","Archange","Archibald","Arian","Ariel","Ariste","Aristide","Armand","Armel","Armin","Arnould","Arnaud","Arolde","Arsène","Arsinoé","Arthaud","Arthème","Arthur","Ascelin","Athanase","Aubry","Audebert","Audouin","Audran","Audric","Auguste","Augustin","Aurèle","Aurélien","Aurian","Auxence","Axel","Aymard","Aymeric","Aymon","Aymond","Balthazar","Baptiste","Barnabé","Barthélemy","Bartimée","Basile","Bastien","Baudouin","Bénigne","Benjamin","Benoît","Bérenger","Bérard","Bernard","Bertrand","Blaise","Bon","Boniface","Bouchard","Brice","Brieuc","Bruno","Brunon","Calixte","Calliste","Camélien","Camille","Camillien","Candide","Caribert","Carloman","Cassandre","Cassien","Cédric","Céleste","Célestin","Célien","Césaire","César","Charles","Charlemagne","Childebert","Chilpéric","Chrétien","Christian","Christodule","Christophe","Chrysostome","Clarence","Claude","Claudien","Cléandre","Clément","Clotaire","Côme","Constance","Constant","Constantin","Corentin","Cyprien","Cyriaque","Cyrille","Cyril","Damien","Daniel","David","Delphin","Denis","Désiré","Didier","Dieudonné","Dimitri","Dominique","Dorian","Dorothée","Edgard","Edmond","Édouard","Éleuthère","Élie","Élisée","Émeric","Émile","Émilien","Emmanuel","Enguerrand","Épiphane","Éric","Esprit","Ernest","Étienne","Eubert","Eudes","Eudoxe","Eugène","Eusèbe","Eustache","Évariste","Évrard","Fabien","Fabrice","Falba","Félicité","Félix","Ferdinand","Fiacre","Fidèle","Firmin","Flavien","Flodoard","Florent","Florentin","Florestan","Florian","Fortuné","Foulques","Francisque","François","Français","Franciscus","Francs","Frédéric","Fulbert","Fulcran","Fulgence","Gabin","Gabriel","Gaël","Garnier","Gaston","Gaspard","Gatien","Gaud","Gautier","Gédéon","Geoffroy","Georges","Géraud","Gérard","Gerbert","Germain","Gervais","Ghislain","Gilbert","Gilles","Girart","Gislebert","Gondebaud","Gonthier","Gontran","Gonzague","Grégoire","Guérin","Gui","Guillaume","Gustave","Guy","Guyot","Hardouin","Hector","Hédelin","Hélier","Henri","Herbert","Herluin","Hervé","Hilaire","Hildebert","Hincmar","Hippolyte","Honoré","Hubert","Hugues","Innocent","Isabeau","Isidore","Jacques","Japhet","Jason","Jean","Jeannel","Jeannot","Jérémie","Jérôme","Joachim","Joanny","Job","Jocelyn","Joël","Johan","Jonas","Jonathan","Joseph","Josse","Josselin","Jourdain","Jude","Judicaël","Jules","Julien","Juste","Justin","Lambert","Landry","Laurent","Lazare","Léandre","Léon","Léonard","Léopold","Leu","Loup","Leufroy","Libère","Liétald","Lionel","Loïc","Longin","Lorrain","Lorraine","Lothaire","Louis","Loup","Luc","Lucas","Lucien","Ludolphe","Ludovic","Macaire","Malo","Mamert","Manassé","Marc","Marceau","Marcel","Marcelin","Marius","Marseille","Martial","Martin","Mathurin","Matthias","Mathias","Matthieu","Maugis","Maurice","Mauricet","Maxence","Maxime","Maximilien","Mayeul","Médéric","Melchior","Mence","Merlin","Mérovée","Michaël","Michel","Moïse","Morgan","Nathan","Nathanaël","Narcisse","Néhémie","Nestor","Nestor","Nicéphore","Nicolas","Noé","Noël","Norbert","Normand","Normands","Octave","Odilon","Odon","Oger","Olivier","Oury","Pacôme","Palémon","Parfait","Pascal","Paterne","Patrice","Paul","Pépin","Perceval","Philémon","Philibert","Philippe","Philothée","Pie","Pierre","Pierrick","Prosper","Quentin","Raoul","Raphaël","Raymond","Régis","Réjean","Rémi","Renaud","René","Reybaud","Richard","Robert","Roch","Rodolphe","Rodrigue","Roger","Roland","Romain","Romuald","Roméo","Rome","Ronan","Roselin","Salomon","Samuel","Savin","Savinien","Scholastique","Sébastien","Séraphin","Serge","Séverin","Sidoine","Sigebert","Sigismond","Silvère","Simon","Siméon","Sixte","Stanislas","Stéphane","Stephan","Sylvain","Sylvestre","Tancrède","Tanguy","Taurin","Théodore","Théodose","Théophile","Théophraste","Thibault","Thibert","Thierry","Thomas","Timoléon","Timothée","Titien","Tonnin","Toussaint","Trajan","Tristan","Turold","Tim","Ulysse","Urbain","Valentin","Valère","Valéry","Venance","Venant","Venceslas","Vianney","Victor","Victorien","Victorin","Vigile","Vincent","Vital","Vitalien","Vivien","Waleran","Wandrille","Xavier","Xénophon","Yves","Zacharie","Zaché","Zéphirin"]
             },
 
             "female": {
@@ -2322,7 +2511,9 @@
                 // Data taken from http://www.dati.gov.it/dataset/comune-di-firenze_0162
                 "it": ["Ada", "Adriana", "Alessandra", "Alessia", "Alice", "Angela", "Anna", "Anna Maria", "Annalisa", "Annita", "Annunziata", "Antonella", "Arianna", "Asia", "Assunta", "Aurora", "Barbara", "Beatrice", "Benedetta", "Bianca", "Bruna", "Camilla", "Carla", "Carlotta", "Carmela", "Carolina", "Caterina", "Catia", "Cecilia", "Chiara", "Cinzia", "Clara", "Claudia", "Costanza", "Cristina", "Daniela", "Debora", "Diletta", "Dina", "Donatella", "Elena", "Eleonora", "Elisa", "Elisabetta", "Emanuela", "Emma", "Eva", "Federica", "Fernanda", "Fiorella", "Fiorenza", "Flora", "Franca", "Francesca", "Gabriella", "Gaia", "Gemma", "Giada", "Gianna", "Gina", "Ginevra", "Giorgia", "Giovanna", "Giulia", "Giuliana", "Giuseppa", "Giuseppina", "Grazia", "Graziella", "Greta", "Ida", "Ilaria", "Ines", "Iolanda", "Irene", "Irma", "Isabella", "Jessica", "Laura", "Lea", "Letizia", "Licia", "Lidia", "Liliana", "Lina", "Linda", "Lisa", "Livia", "Loretta", "Luana", "Lucia", "Luciana", "Lucrezia", "Luisa", "Manuela", "Mara", "Marcella", "Margherita", "Maria", "Maria Cristina", "Maria Grazia", "Maria Luisa", "Maria Pia", "Maria Teresa", "Marina", "Marisa", "Marta", "Martina", "Marzia", "Matilde", "Melissa", "Michela", "Milena", "Mirella", "Monica", "Natalina", "Nella", "Nicoletta", "Noemi", "Olga", "Paola", "Patrizia", "Piera", "Pierina", "Raffaella", "Rebecca", "Renata", "Rina", "Rita", "Roberta", "Rosa", "Rosanna", "Rossana", "Rossella", "Sabrina", "Sandra", "Sara", "Serena", "Silvana", "Silvia", "Simona", "Simonetta", "Sofia", "Sonia", "Stefania", "Susanna", "Teresa", "Tina", "Tiziana", "Tosca", "Valentina", "Valeria", "Vanda", "Vanessa", "Vanna", "Vera", "Veronica", "Vilma", "Viola", "Virginia", "Vittoria"],
                 // Data taken from http://www.svbkindernamen.nl/int/nl/kindernamen/index.html
-                "nl": ["Ada", "Arianne", "Afke", "Amanda", "Amber", "Amy", "Aniek", "Anita", "Anja", "Anna", "Anne", "Annelies", "Annemarie", "Annette", "Anouk", "Astrid", "Aukje", "Barbara", "Bianca", "Carla", "Carlijn", "Carolien", "Chantal", "Charlotte", "Claudia", "Daniëlle", "Debora", "Diane", "Dora", "Eline", "Elise", "Ella", "Ellen", "Emma", "Esmee", "Evelien", "Esther", "Erica", "Eva", "Femke", "Fleur", "Floor", "Froukje", "Gea", "Gerda", "Hanna", "Hanneke", "Heleen", "Hilde", "Ilona", "Ina", "Inge", "Ingrid", "Iris", "Isabel", "Isabelle", "Janneke", "Jasmijn", "Jeanine", "Jennifer", "Jessica", "Johanna", "Joke", "Julia", "Julie", "Karen", "Karin", "Katja", "Kim", "Lara", "Laura", "Lena", "Lianne", "Lieke", "Lilian", "Linda", "Lisa", "Lisanne", "Lotte", "Louise", "Maaike", "Manon", "Marga", "Maria", "Marissa", "Marit", "Marjolein", "Martine", "Marleen", "Melissa", "Merel", "Miranda", "Michelle", "Mirjam", "Mirthe", "Naomi", "Natalie", 'Nienke', "Nina", "Noortje", "Olivia", "Patricia", "Paula", "Paulien", "Ramona", "Ria", "Rianne", "Roos", "Rosanne", "Ruth", "Sabrina", "Sandra", "Sanne", "Sara", "Saskia", "Silvia", "Sofia", "Sophie", "Sonja", "Suzanne", "Tamara", "Tess", "Tessa", "Tineke", "Valerie", "Vanessa", "Veerle", "Vera", "Victoria", "Wendy", "Willeke", "Yvonne", "Zoë"]
+                "nl": ["Ada", "Arianne", "Afke", "Amanda", "Amber", "Amy", "Aniek", "Anita", "Anja", "Anna", "Anne", "Annelies", "Annemarie", "Annette", "Anouk", "Astrid", "Aukje", "Barbara", "Bianca", "Carla", "Carlijn", "Carolien", "Chantal", "Charlotte", "Claudia", "Daniëlle", "Debora", "Diane", "Dora", "Eline", "Elise", "Ella", "Ellen", "Emma", "Esmee", "Evelien", "Esther", "Erica", "Eva", "Femke", "Fleur", "Floor", "Froukje", "Gea", "Gerda", "Hanna", "Hanneke", "Heleen", "Hilde", "Ilona", "Ina", "Inge", "Ingrid", "Iris", "Isabel", "Isabelle", "Janneke", "Jasmijn", "Jeanine", "Jennifer", "Jessica", "Johanna", "Joke", "Julia", "Julie", "Karen", "Karin", "Katja", "Kim", "Lara", "Laura", "Lena", "Lianne", "Lieke", "Lilian", "Linda", "Lisa", "Lisanne", "Lotte", "Louise", "Maaike", "Manon", "Marga", "Maria", "Marissa", "Marit", "Marjolein", "Martine", "Marleen", "Melissa", "Merel", "Miranda", "Michelle", "Mirjam", "Mirthe", "Naomi", "Natalie", 'Nienke', "Nina", "Noortje", "Olivia", "Patricia", "Paula", "Paulien", "Ramona", "Ria", "Rianne", "Roos", "Rosanne", "Ruth", "Sabrina", "Sandra", "Sanne", "Sara", "Saskia", "Silvia", "Sofia", "Sophie", "Sonja", "Suzanne", "Tamara", "Tess", "Tessa", "Tineke", "Valerie", "Vanessa", "Veerle", "Vera", "Victoria", "Wendy", "Willeke", "Yvonne", "Zoë"],
+                // Data taken from https://fr.wikipedia.org/wiki/Liste_de_pr%C3%A9noms_fran%C3%A7ais_et_de_la_francophonie
+                "fr": ["Abdon","Abel","Abigaëlle","Abigaïl","Acacius","Acanthe","Adalbert","Adalsinde","Adegrine","Adélaïde","Adèle","Adélie","Adeline","Adeltrude","Adolphe","Adonis","Adrastée","Adrehilde","Adrienne","Agathe","Agilbert","Aglaé","Aignan","Agneflète","Agnès","Agrippine","Aimé","Alaine","Alaïs","Albane","Albérade","Alberte","Alcide","Alcine","Alcyone","Aldegonde","Aleth","Alexandrine","Alexine","Alice","Aliénor","Aliette","Aline","Alix","Alizé","Aloïse","Aloyse","Alphonsine","Althée","Amaliane","Amalthée","Amande","Amandine","Amant","Amarande","Amaranthe","Amaryllis","Ambre","Ambroisie","Amélie","Améthyste","Aminte","Anaël","Anaïs","Anastasie","Anatole","Ancelin","Andrée","Anémone","Angadrême","Angèle","Angeline","Angélique","Angilbert","Anicet","Annabelle","Anne","Annette","Annick","Annie","Annonciade","Ansbert","Anstrudie","Anthelme","Antigone","Antoinette","Antonine","Aphélie","Apolline","Apollonie","Aquiline","Arabelle","Arcadie","Archange","Argine","Ariane","Aricie","Ariel","Arielle","Arlette","Armance","Armande","Armandine","Armelle","Armide","Armelle","Armin","Arnaud","Arsène","Arsinoé","Artémis","Arthur","Ascelin","Ascension","Assomption","Astarté","Astérie","Astrée","Astrid","Athalie","Athanasie","Athina","Aube","Albert","Aude","Audrey","Augustine","Aure","Aurélie","Aurélien","Aurèle","Aurore","Auxence","Aveline","Abigaëlle","Avoye","Axelle","Aymard","Azalée","Adèle","Adeline","Barbe","Basilisse","Bathilde","Béatrice","Béatrix","Bénédicte","Bérengère","Bernadette","Berthe","Bertille","Beuve","Blanche","Blanc","Blandine","Brigitte","Brune","Brunehilde","Callista","Camille","Capucine","Carine","Caroline","Cassandre","Catherine","Cécile","Céleste","Célestine","Céline","Chantal","Charlène","Charline","Charlotte","Chloé","Christelle","Christiane","Christine","Claire","Clara","Claude","Claudine","Clarisse","Clémence","Clémentine","Cléo","Clio","Clotilde","Coline","Conception","Constance","Coralie","Coraline","Corentine","Corinne","Cyrielle","Daniel","Daniel","Daphné","Débora","Delphine","Denise","Diane","Dieudonné","Dominique","Doriane","Dorothée","Douce","Édith","Edmée","Éléonore","Éliane","Élia","Éliette","Élisabeth","Élise","Ella","Élodie","Éloïse","Elsa","Émeline","Émérance","Émérentienne","Émérencie","Émilie","Emma","Emmanuelle","Emmelie","Ernestine","Esther","Estelle","Eudoxie","Eugénie","Eulalie","Euphrasie","Eusébie","Évangéline","Eva","Ève","Évelyne","Fanny","Fantine","Faustine","Félicie","Fernande","Flavie","Fleur","Flore","Florence","Florie","Fortuné","France","Francia","Françoise","Francine","Gabrielle","Gaëlle","Garance","Geneviève","Georgette","Gerberge","Germaine","Gertrude","Gisèle","Guenièvre","Guilhemine","Guillemette","Gustave","Gwenael","Hélène","Héloïse","Henriette","Hermine","Hermione","Hippolyte","Honorine","Hortense","Huguette","Ines","Irène","Irina","Iris","Isabeau","Isabelle","Iseult","Isolde","Ismérie","Jacinthe","Jacqueline","Jade","Janine","Jeanne","Jocelyne","Joëlle","Joséphine","Judith","Julia","Julie","Jules","Juliette","Justine","Katy","Kathy","Katie","Laura","Laure","Laureline","Laurence","Laurene","Lauriane","Laurianne","Laurine","Léa","Léna","Léonie","Léon","Léontine","Lorraine","Lucie","Lucienne","Lucille","Ludivine","Lydie","Lydie","Megane","Madeleine","Magali","Maguelone","Mallaury","Manon","Marceline","Margot","Marguerite","Marianne","Marie","Myriam","Marie","Marine","Marion","Marlène","Marthe","Martine","Mathilde","Maud","Maureen","Mauricette","Maxime","Mélanie","Melissa","Mélissandre","Mélisande","Mélodie","Michel","Micheline","Mireille","Miriam","Moïse","Monique","Morgane","Muriel","Mylène","Nadège","Nadine","Nathalie","Nicole","Nicolette","Nine","Noël","Noémie","Océane","Odette","Odile","Olive","Olivia","Olympe","Ombline","Ombeline","Ophélie","Oriande","Oriane","Ozanne","Pascale","Pascaline","Paule","Paulette","Pauline","Priscille","Prisca","Prisque","Pécine","Pélagie","Pénélope","Perrine","Pétronille","Philippine","Philomène","Philothée","Primerose","Prudence","Pulchérie","Quentine","Quiéta","Quintia","Quintilla","Rachel","Raphaëlle","Raymonde","Rebecca","Régine","Réjeanne","René","Rita","Rita","Rolande","Romane","Rosalie","Rose","Roseline","Sabine","Salomé","Sandra","Sandrine","Sarah","Ségolène","Séverine","Sibylle","Simone","Sixt","Solange","Soline","Solène","Sophie","Stéphanie","Suzanne","Sylvain","Sylvie","Tatiana","Thaïs","Théodora","Thérèse","Tiphaine","Ursule","Valentine","Valérie","Véronique","Victoire","Victorine","Vinciane","Violette","Virginie","Viviane","Xavière","Yolande","Ysaline","Yvette","Yvonne","Zélie","Zita","Zoé"]
             }
         },
 
@@ -2339,7 +2530,9 @@
             // http://www.japantimes.co.jp/life/2009/10/11/lifestyle/japans-top-100-most-common-family-names/
             "jp": ["Sato","Suzuki","Takahashi","Tanaka","Watanabe","Ito","Yamamoto","Nakamura","Kobayashi","Kato","Yoshida","Yamada","Sasaki","Yamaguchi","Saito","Matsumoto","Inoue","Kimura","Hayashi","Shimizu","Yamazaki","Mori","Abe","Ikeda","Hashimoto","Yamashita","Ishikawa","Nakajima","Maeda","Fujita","Ogawa","Goto","Okada","Hasegawa","Murakami","Kondo","Ishii","Saito","Sakamoto","Endo","Aoki","Fujii","Nishimura","Fukuda","Ota","Miura","Fujiwara","Okamoto","Matsuda","Nakagawa","Nakano","Harada","Ono","Tamura","Takeuchi","Kaneko","Wada","Nakayama","Ishida","Ueda","Morita","Hara","Shibata","Sakai","Kudo","Yokoyama","Miyazaki","Miyamoto","Uchida","Takagi","Ando","Taniguchi","Ohno","Maruyama","Imai","Takada","Fujimoto","Takeda","Murata","Ueno","Sugiyama","Masuda","Sugawara","Hirano","Kojima","Otsuka","Chiba","Kubo","Matsui","Iwasaki","Sakurai","Kinoshita","Noguchi","Matsuo","Nomura","Kikuchi","Sano","Onishi","Sugimoto","Arai"],
             // http://www.lowchensaustralia.com/names/popular-spanish-names.htm
-            "es": ["Garcia","Fernandez","Lopez","Martinez","Gonzalez","Rodriguez","Sanchez","Perez","Martin","Gomez","Ruiz","Diaz","Hernandez","Alvarez","Jimenez","Moreno","Munoz","Alonso","Romero","Navarro","Gutierrez","Torres","Dominguez","Gil","Vazquez","Blanco","Serrano","Ramos","Castro","Suarez","Sanz","Rubio","Ortega","Molina","Delgado","Ortiz","Morales","Ramirez","Marin","Iglesias","Santos","Castillo","Garrido","Calvo","Pena","Cruz","Cano","Nunez","Prieto","Diez","Lozano","Vidal","Pascual","Ferrer","Medina","Vega","Leon","Herrero","Vicente","Mendez","Guerrero","Fuentes","Campos","Nieto","Cortes","Caballero","Ibanez","Lorenzo","Pastor","Gimenez","Saez","Soler","Marquez","Carrasco","Herrera","Montero","Arias","Crespo","Flores","Andres","Aguilar","Hidalgo","Cabrera","Mora","Duran","Velasco","Rey","Pardo","Roman","Vila","Bravo","Merino","Moya","Soto","Izquierdo","Reyes","Redondo","Marcos","Carmona","Menendez"]
+            "es": ["Garcia","Fernandez","Lopez","Martinez","Gonzalez","Rodriguez","Sanchez","Perez","Martin","Gomez","Ruiz","Diaz","Hernandez","Alvarez","Jimenez","Moreno","Munoz","Alonso","Romero","Navarro","Gutierrez","Torres","Dominguez","Gil","Vazquez","Blanco","Serrano","Ramos","Castro","Suarez","Sanz","Rubio","Ortega","Molina","Delgado","Ortiz","Morales","Ramirez","Marin","Iglesias","Santos","Castillo","Garrido","Calvo","Pena","Cruz","Cano","Nunez","Prieto","Diez","Lozano","Vidal","Pascual","Ferrer","Medina","Vega","Leon","Herrero","Vicente","Mendez","Guerrero","Fuentes","Campos","Nieto","Cortes","Caballero","Ibanez","Lorenzo","Pastor","Gimenez","Saez","Soler","Marquez","Carrasco","Herrera","Montero","Arias","Crespo","Flores","Andres","Aguilar","Hidalgo","Cabrera","Mora","Duran","Velasco","Rey","Pardo","Roman","Vila","Bravo","Merino","Moya","Soto","Izquierdo","Reyes","Redondo","Marcos","Carmona","Menendez"],
+            // Data taken from https://fr.wikipedia.org/wiki/Liste_des_noms_de_famille_les_plus_courants_en_France
+            "fr": ["Martin","Bernard","Thomas","Petit","Robert","Richard","Durand","Dubois","Moreau","Laurent","Simon","Michel","Lefèvre","Leroy","Roux","David","Bertrand","Morel","Fournier","Girard","Bonnet","Dupont","Lambert","Fontaine","Rousseau","Vincent","Müller","Lefèvre","Faure","André","Mercier","Blanc","Guérin","Boyer","Garnier","Chevalier","François","Legrand","Gauthier","Garcia","Perrin","Robin","Clément","Morin","Nicolas","Henry","Roussel","Matthieu","Gautier","Masson","Marchand","Duval","Denis","Dumont","Marie","Lemaire","Noël","Meyer","Dufour","Meunier","Brun","Blanchard","Giraud","Joly","Rivière","Lucas","Brunet","Gaillard","Barbier","Arnaud","Martínez","Gérard","Roche","Renard","Schmitt","Roy","Leroux","Colin","Vidal","Caron","Picard","Roger","Fabre","Aubert","Lemoine","Renaud","Dumas","Lacroix","Olivier","Philippe","Bourgeois","Pierre","Benoît","Rey","Leclerc","Payet","Rolland","Leclercq","Guillaume","Lecomte","López","Jean","Dupuy","Guillot","Hubert","Berger","Carpentier","Sánchez","Dupuis","Moulin","Louis","Deschamps","Huet","Vasseur","Perez","Boucher","Fleury","Royer","Klein","Jacquet","Adam","Paris","Poirier","Marty","Aubry","Guyot","Carré","Charles","Renault","Charpentier","Ménard","Maillard","Baron","Bertin","Bailly","Hervé","Schneider","Fernández","Le GallGall","Collet","Léger","Bouvier","Julien","Prévost","Millet","Perrot","Daniel","Le RouxRoux","Cousin","Germain","Breton","Besson","Langlois","Rémi","Le GoffGoff","Pelletier","Lévêque","Perrier","Leblanc","Barré","Lebrun","Marchal","Weber","Mallet","Hamon","Boulanger","Jacob","Monnier","Michaud","Rodríguez","Guichard","Gillet","Étienne","Grondin","Poulain","Tessier","Chevallier","Collin","Chauvin","Da SilvaSilva","Bouchet","Gay","Lemaître","Bénard","Maréchal","Humbert","Reynaud","Antoine","Hoarau","Perret","Barthélemy","Cordier","Pichon","Lejeune","Gilbert","Lamy","Delaunay","Pasquier","Carlier","LaporteLaporte"]
         },
 
         // Data taken from https://github.com/umpirsky/country-list/blob/master/data/en_US/country.json
@@ -6635,7 +6828,21 @@
             "Vendor Relations Director",
             "Viticulturist",
             "Warehouse Manager"
-        ]
+        ],
+        animals : {
+          //list of ocean animals comes from https://owlcation.com/stem/list-of-ocean-animals
+          "ocean" : ["Acantharea","Anemone","Angelfish King","Ahi Tuna","Albacore","American Oyster","Anchovy","Armored Snail","Arctic Char","Atlantic Bluefin Tuna","Atlantic Cod","Atlantic Goliath Grouper","Atlantic Trumpetfish","Atlantic Wolffish","Baleen Whale","Banded Butterflyfish","Banded Coral Shrimp","Banded Sea Krait","Barnacle","Barndoor Skate","Barracuda","Basking Shark","Bass","Beluga Whale","Bluebanded Goby","Bluehead Wrasse","Bluefish","Bluestreak Cleaner-Wrasse","Blue Marlin","Blue Shark","Blue Spiny Lobster","Blue Tang","Blue Whale","Broadclub Cuttlefish","Bull Shark","Chambered Nautilus","Chilean Basket Star","Chilean Jack Mackerel","Chinook Salmon","Christmas Tree Worm","Clam","Clown Anemonefish","Clown Triggerfish","Cod","Coelacanth","Cockscomb Cup Coral","Common Fangtooth","Conch","Cookiecutter Shark","Copepod","Coral","Corydoras","Cownose Ray","Crab","Crown-of-Thorns Starfish","Cushion Star","Cuttlefish","California Sea Otters","Dolphin","Dolphinfish","Dory","Devil Fish","Dugong","Dumbo Octopus","Dungeness Crab","Eccentric Sand Dollar","Edible Sea Cucumber","Eel","Elephant Seal","Elkhorn Coral","Emperor Shrimp","Estuarine Crocodile","Fathead Sculpin","Fiddler Crab","Fin Whale","Flameback","Flamingo Tongue Snail","Flashlight Fish","Flatback Turtle","Flatfish","Flying Fish","Flounder","Fluke","French Angelfish","Frilled Shark","Fugu (also called Pufferfish)","Gar","Geoduck","Giant Barrel Sponge","Giant Caribbean Sea Anemone","Giant Clam","Giant Isopod","Giant Kingfish","Giant Oarfish","Giant Pacific Octopus","Giant Pyrosome","Giant Sea Star","Giant Squid","Glowing Sucker Octopus","Giant Tube Worm","Goblin Shark","Goosefish","Great White Shark","Greenland Shark","Grey Atlantic Seal","Grouper","Grunion","Guineafowl Puffer","Haddock","Hake","Halibut","Hammerhead Shark","Hapuka","Harbor Porpoise","Harbor Seal","Hatchetfish","Hawaiian Monk Seal","Hawksbill Turtle","Hector's Dolphin","Hermit Crab","Herring","Hoki","Horn Shark","Horseshoe Crab","Humpback Anglerfish","Humpback Whale","Icefish","Imperator Angelfish","Irukandji Jellyfish","Isopod","Ivory Bush Coral","Japanese Spider Crab","Jellyfish","John Dory","Juan Fernandez Fur Seal","Killer Whale","Kiwa Hirsuta","Krill","Lagoon Triggerfish","Lamprey","Leafy Seadragon","Leopard Seal","Limpet","Ling","Lionfish","Lions Mane Jellyfish","Lobe Coral","Lobster","Loggerhead Turtle","Longnose Sawshark","Longsnout Seahorse","Lophelia Coral","Marrus Orthocanna","Manatee","Manta Ray","Marlin","Megamouth Shark","Mexican Lookdown","Mimic Octopus","Moon Jelly","Mollusk","Monkfish","Moray Eel","Mullet","Mussel","Megaladon","Napoleon Wrasse","Nassau Grouper","Narwhal","Nautilus","Needlefish","Northern Seahorse","North Atlantic Right Whale","Northern Red Snapper","Norway Lobster","Nudibranch","Nurse Shark","Oarfish","Ocean Sunfish","Oceanic Whitetip Shark","Octopus","Olive Sea Snake","Orange Roughy","Ostracod","Otter","Oyster","Pacific Angelshark","Pacific Blackdragon","Pacific Halibut","Pacific Sardine","Pacific Sea Nettle Jellyfish","Pacific White Sided Dolphin","Pantropical Spotted Dolphin","Patagonian Toothfish","Peacock Mantis Shrimp","Pelagic Thresher Shark","Penguin","Peruvian Anchoveta","Pilchard","Pink Salmon","Pinniped","Plankton","Porpoise","Polar Bear","Portuguese Man o' War","Pycnogonid Sea Spider","Quahog","Queen Angelfish","Queen Conch","Queen Parrotfish","Queensland Grouper","Ragfish","Ratfish","Rattail Fish","Ray","Red Drum","Red King Crab","Ringed Seal","Risso's Dolphin","Ross Seals","Sablefish","Salmon","Sand Dollar","Sandbar Shark","Sawfish","Sarcastic Fringehead","Scalloped Hammerhead Shark","Seahorse","Sea Cucumber","Sea Lion","Sea Urchin","Seal","Shark","Shortfin Mako Shark","Shovelnose Guitarfish","Shrimp","Silverside Fish","Skipjack Tuna","Slender Snipe Eel","Smalltooth Sawfish","Smelts","Sockeye Salmon","Southern Stingray","Sponge","Spotted Porcupinefish","Spotted Dolphin","Spotted Eagle Ray","Spotted Moray","Squid","Squidworm","Starfish","Stickleback","Stonefish","Stoplight Loosejaw","Sturgeon","Swordfish","Tan Bristlemouth","Tasseled Wobbegong","Terrible Claw Lobster","Threespot Damselfish","Tiger Prawn","Tiger Shark","Tilefish","Toadfish","Tropical Two-Wing Flyfish","Tuna","Umbrella Squid","Velvet Crab","Venus Flytrap Sea Anemone","Vigtorniella Worm","Viperfish","Vampire Squid","Vaquita","Wahoo","Walrus","West Indian Manatee","Whale","Whale Shark","Whiptail Gulper","White-Beaked Dolphin","White-Ring Garden Eel","White Shrimp","Wobbegong","Wrasse","Wreckfish","Xiphosura","Yellowtail Damselfish","Yelloweye Rockfish","Yellow Cup Black Coral","Yellow Tube Sponge","Yellowfin Tuna","Zebrashark","Zooplankton"],
+          //list of desert, grassland, and forest animals comes from http://www.skyenimals.com/
+          "desert" : ["Aardwolf","Addax","African Wild Ass","Ant","Antelope","Armadillo","Baboon","Badger","Bat","Bearded Dragon","Beetle","Bird","Black-footed Cat","Boa","Brown Bear","Bustard","Butterfly","Camel","Caracal","Caracara","Caterpillar","Centipede","Cheetah","Chipmunk","Chuckwalla","Climbing Mouse","Coati","Cobra","Cotton Rat","Cougar","Courser","Crane Fly","Crow","Dassie Rat","Dove","Dunnart","Eagle","Echidna","Elephant","Emu","Falcon","Fly","Fox","Frogmouth","Gecko","Geoffroy's Cat","Gerbil","Grasshopper","Guanaco","Gundi","Hamster","Hawk","Hedgehog","Hyena","Hyrax","Jackal","Kangaroo","Kangaroo Rat","Kestrel","Kowari","Kultarr","Leopard","Lion","Macaw","Meerkat","Mouse","Oryx","Ostrich","Owl","Pronghorn","Python","Rabbit","Raccoon","Rattlesnake","Rhinoceros","Sand Cat","Spectacled Bear","Spiny Mouse","Starling","Stick Bug","Tarantula","Tit","Toad","Tortoise","Tyrant Flycatcher","Viper","Vulture","Waxwing","Xerus","Zebra"],
+          "grassland" : ["Aardvark","Aardwolf","Accentor","African Buffalo","African Wild Dog","Alpaca","Anaconda","Ant","Anteater","Antelope","Armadillo","Baboon","Badger","Bandicoot","Barbet","Bat","Bee","Bee-eater","Beetle","Bird","Bison","Black-footed Cat","Black-footed Ferret","Bluebird","Boa","Bowerbird","Brown Bear","Bush Dog","Bushshrike","Bustard","Butterfly","Buzzard","Caracal","Caracara","Cardinal","Caterpillar","Cheetah","Chipmunk","Civet","Climbing Mouse","Clouded Leopard","Coati","Cobra","Cockatoo","Cockroach","Common Genet","Cotton Rat","Cougar","Courser","Coyote","Crane","Crane Fly","Cricket","Crow","Culpeo","Death Adder","Deer","Deer Mouse","Dingo","Dinosaur","Dove","Drongo","Duck","Duiker","Dunnart","Eagle","Echidna","Elephant","Elk","Emu","Falcon","Finch","Flea","Fly","Flying Frog","Fox","Frog","Frogmouth","Garter Snake","Gazelle","Gecko","Geoffroy's Cat","Gerbil","Giant Tortoise","Giraffe","Grasshopper","Grison","Groundhog","Grouse","Guanaco","Guinea Pig","Hamster","Harrier","Hartebeest","Hawk","Hedgehog","Helmetshrike","Hippopotamus","Hornbill","Hyena","Hyrax","Impala","Jackal","Jaguar","Jaguarundi","Kangaroo","Kangaroo Rat","Kestrel","Kultarr","Ladybug","Leopard","Lion","Macaw","Meerkat","Mouse","Newt","Oryx","Ostrich","Owl","Pangolin","Pheasant","Prairie Dog","Pronghorn","Przewalski's Horse","Python","Quoll","Rabbit","Raven","Rhinoceros","Shelduck","Sloth Bear","Spectacled Bear","Squirrel","Starling","Stick Bug","Tamandua","Tasmanian Devil","Thornbill","Thrush","Toad","Tortoise"],
+          "forest" : ["Agouti","Anaconda","Anoa","Ant","Anteater","Antelope","Armadillo","Asian Black Bear","Aye-aye","Babirusa","Baboon","Badger","Bandicoot","Banteng","Barbet","Basilisk","Bat","Bearded Dragon","Bee","Bee-eater","Beetle","Bettong","Binturong","Bird-of-paradise","Bongo","Bowerbird","Bulbul","Bush Dog","Bushbaby","Bushshrike","Butterfly","Buzzard","Caecilian","Cardinal","Cassowary","Caterpillar","Centipede","Chameleon","Chimpanzee","Cicada","Civet","Clouded Leopard","Coati","Cobra","Cockatoo","Cockroach","Colugo","Cotinga","Cotton Rat","Cougar","Crane Fly","Cricket","Crocodile","Crow","Cuckoo","Cuscus","Death Adder","Deer","Dhole","Dingo","Dinosaur","Drongo","Duck","Duiker","Eagle","Echidna","Elephant","Finch","Flat-headed Cat","Flea","Flowerpecker","Fly","Flying Frog","Fossa","Frog","Frogmouth","Gaur","Gecko","Gorilla","Grison","Hawaiian Honeycreeper","Hawk","Hedgehog","Helmetshrike","Hornbill","Hyrax","Iguana","Jackal","Jaguar","Jaguarundi","Kestrel","Ladybug","Lemur","Leopard","Lion","Macaw","Mandrill","Margay","Monkey","Mouse","Mouse Deer","Newt","Okapi","Old World Flycatcher","Orangutan","Owl","Pangolin","Peafowl","Pheasant","Possum","Python","Quokka","Rabbit","Raccoon","Red Panda","Red River Hog","Rhinoceros","Sloth Bear","Spectacled Bear","Squirrel","Starling","Stick Bug","Sun Bear","Tamandua","Tamarin","Tapir","Tarantula","Thrush","Tiger","Tit","Toad","Tortoise","Toucan","Trogon","Trumpeter","Turaco","Turtle","Tyrant Flycatcher","Viper","Vulture","Wallaby","Warbler","Wasp","Waxwing","Weaver","Weaver-finch","Whistler","White-eye","Whydah","Woodswallow","Worm","Wren","Xenops","Yellowjacket","Accentor","African Buffalo","American Black Bear","Anole","Bird","Bison","Boa","Brown Bear","Chipmunk","Common Genet","Copperhead","Coyote","Deer Mouse","Dormouse","Elk","Emu","Fisher","Fox","Garter Snake","Giant Panda","Giant Tortoise","Groundhog","Grouse","Guanaco","Himalayan Tahr","Kangaroo","Koala","Numbat","Quoll","Raccoon dog","Tasmanian Devil","Thornbill","Turkey","Vole","Weasel","Wildcat","Wolf","Wombat","Woodchuck","Woodpecker"],
+          //list of farm animals comes from https://www.buzzle.com/articles/farm-animals-list.html
+          "farm" : ["Alpaca","Buffalo","Banteng","Cow","Cat","Chicken","Carp","Camel","Donkey","Dog","Duck","Emu","Goat","Gayal","Guinea","Goose","Horse","Honey","Llama","Pig","Pigeon","Rhea","Rabbit","Sheep","Silkworm","Turkey","Yak","Zebu"],
+          //list of pet animals comes from https://www.dogbreedinfo.com/pets/pet.htm
+          "pet" : ["Bearded Dragon","Birds","Burro","Cats","Chameleons","Chickens","Chinchillas","Chinese Water Dragon","Cows","Dogs","Donkey","Ducks","Ferrets","Fish","Geckos","Geese","Gerbils","Goats","Guinea Fowl","Guinea Pigs","Hamsters","Hedgehogs","Horses","Iguanas","Llamas","Lizards","Mice","Mule","Peafowl","Pigs and Hogs","Pigeons","Ponies","Pot Bellied Pig","Rabbits","Rats","Sheep","Skinks","Snakes","Stick Insects","Sugar Gliders","Tarantula","Turkeys","Turtles"],
+          //list of zoo animals comes from https://bronxzoo.com/animals
+          "zoo" : ["Aardvark","African Wild Dog","Aldabra Tortoise","American Alligator","American Bison","Amur Tiger","Anaconda","Andean Condor","Asian Elephant","Baby Doll Sheep","Bald Eagle","Barred Owl","Blue Iguana","Boer Goat","California Sea Lion","Caribbean Flamingo","Chinchilla","Collared Lemur","Coquerel's Sifaka","Cuban Amazon Parrot","Ebony Langur","Fennec Fox","Fossa","Gelada","Giant Anteater","Giraffe","Gorilla","Grizzly Bear","Henkel's Leaf-tailed Gecko","Indian Gharial","Indian Rhinoceros","King Cobra","King Vulture","Komodo Dragon","Linne's Two-toed Sloth","Lion","Little Penguin","Madagascar Tree Boa","Magellanic Penguin","Malayan Tapir","Malayan Tiger","Matschies Tree Kangaroo","Mini Donkey","Monarch Butterfly","Nile crocodile","North American Porcupine","Nubian Ibex","Okapi","Poison Dart Frog","Polar Bear","Pygmy Marmoset","Radiated Tortoise","Red Panda","Red Ruffed Lemur","Ring-tailed Lemur","Ring-tailed Mongoose","Rock Hyrax","Small Clawed Asian Otter","Snow Leopard","Snowy Owl","Southern White-faced Owl","Southern White Rhinocerous","Squirrel Monkey","Tufted Puffin","White Cheeked Gibbon","White-throated Bee Eater","Zebra"]
+        }
     };
 
     var o_hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -6649,6 +6856,7 @@
 
       return result;
     });
+
 
     function _copyObject(source, target) {
       var keys = o_keys(source);

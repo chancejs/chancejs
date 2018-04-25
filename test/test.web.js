@@ -316,7 +316,9 @@ test('email() has a leng specified, should generate string before domain with eq
 // chance.fbid()
 test('fbid() returns what looks like a Facebook id', t => {
     _.times(1000, () => {
-        t.true(_.isNumber(chance.fbid()))
+        let fbid = chance.fbid()
+        t.true(_.isString(fbid))
+        t.is(fbid.length, 16)
     })
 })
 
@@ -536,5 +538,60 @@ test('url() can take and respect extensions', t => {
         t.true(url.split('.').length > 1)
         t.true(url.split('://').length > 1)
         t.not(url.indexOf('.html'), -1)
+    })
+})
+
+// chance.loremPicsum()
+test('loremPicsum() returns loremPicsum url with default width and height', t => {
+    _.times(1000, () => {
+        let loremPicsumUrl = chance.loremPicsum()
+        t.true(_.isString(loremPicsumUrl))
+        t.true(loremPicsumUrl.split('.').length > 1)
+        t.true(loremPicsumUrl.split('://').length > 1)
+        t.true(loremPicsumUrl.split('picsum.photos').length > 1)
+        t.true(loremPicsumUrl.split('/500/500').length > 1)
+        t.true(loremPicsumUrl.split('/?random').length > 1)
+    })
+})
+test('loremPicsum() returns loremPicsum url that respects width and height', t => {
+    _.times(1000, () => {
+        let width = chance.natural();
+        let height = chance.natural();
+        let loremPicsumUrl = chance.loremPicsum({
+            width,
+            height
+        })
+        t.true(_.isString(loremPicsumUrl))
+        t.true(loremPicsumUrl.split('.').length > 1)
+        t.true(loremPicsumUrl.split('://').length > 1)
+        t.true(loremPicsumUrl.split('picsum.photos').length > 1)
+        t.true(loremPicsumUrl.split('/' + width + '/' + height).length > 1)
+        t.true(loremPicsumUrl.split('/?random').length > 1)
+    })
+})
+test('loremPicsum() returns loremPicsum url that respects greyscale', t => {
+    _.times(1000, () => {
+        let loremPicsumUrl = chance.loremPicsum({
+            greyscale: true
+        })
+        t.true(_.isString(loremPicsumUrl))
+        t.true(loremPicsumUrl.split('.').length > 1)
+        t.true(loremPicsumUrl.split('://').length > 1)
+        t.true(loremPicsumUrl.split('picsum.photos').length > 1)
+        t.true(loremPicsumUrl.split('/g/500/500').length > 1)
+        t.true(loremPicsumUrl.split('/?random').length > 1)
+    })
+})
+test('loremPicsum() returns loremPicsum url that respects blurred', t => {
+    _.times(1000, () => {
+        let loremPicsumUrl = chance.loremPicsum({
+            blurred: true
+        })
+        t.true(_.isString(loremPicsumUrl))
+        t.true(loremPicsumUrl.split('.').length > 1)
+        t.true(loremPicsumUrl.split('://').length > 1)
+        t.true(loremPicsumUrl.split('picsum.photos').length > 1)
+        t.true(loremPicsumUrl.split('/500/500').length > 1)
+        t.true(loremPicsumUrl.split('/?blur').length > 1)
     })
 })
