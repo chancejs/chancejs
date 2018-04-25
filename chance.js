@@ -1,4 +1,4 @@
-//  Chance.js 1.0.14
+//  Chance.js 1.0.15
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -72,7 +72,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.0.14";
+    Chance.prototype.VERSION = "1.0.15";
 
     // Random helper functions
     function initOptions(options, defaults) {

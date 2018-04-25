@@ -1,6 +1,6 @@
 {
   "name": "chance",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "main": "chance.js",
   "ignore": [
     "node_modules"
