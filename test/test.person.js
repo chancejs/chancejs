@@ -223,7 +223,7 @@ test('last() returns a random last name', t => {
         t.true(_.isString(last))
         t.true(last.length >= 2)
         t.true(last.length <= 20)
-        t.is(last.split(' ').length, 1)
+        t.true(last.split(' ').length <= 3)
     })
 })
 
