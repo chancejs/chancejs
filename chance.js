@@ -352,8 +352,8 @@
         }
         options = initOptions(options, { length: this.natural({min: 5, max: 20}) });
         testRange(options.length < 0, "Chance: Length cannot be less than zero.");
-        const length = options.length;
-        const content = this.n(this.character, length, options);
+        var length = options.length;
+        var content = this.n(this.character, length, options);
 
         return Buffer.from(content);
     };
@@ -1609,8 +1609,8 @@
                 phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
                 break;
             case 'br':
-                const areaCode = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99"]);
-                let prefix;
+                var areaCode = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99"]);
+                var prefix;
                 if (options.mobile) {
                     // Brasilian official reference (mobile): http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=330
                     prefix = '9' + self.string({ pool: '0123456789', length: 4});
@@ -1618,7 +1618,7 @@
                     // Brasilian official reference: http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=331
                     prefix = this.natural({ min: 2000, max: 5999 }).toString();
                 }
-                const mcdu = self.string({ pool: '0123456789', length: 4});
+                var mcdu = self.string({ pool: '0123456789', length: 4});
                 phone = options.formatted ? '(' + areaCode + ') ' + prefix + '-' + mcdu : areaCode + prefix + mcdu;
                 break;
         }
