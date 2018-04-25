@@ -3,6 +3,10 @@
   * [bower](usage/bower.md)
   * [browser](usage/browser.md)
   * [cli](usage/cli.md)
+  * [node](usage/node.md)
+  * [requirejs](usage/requirejs.md)
+  * [seed](usage/seed.md)
+  * [function](usage/function.md)
 * Basics
 * Finance
 * Location
