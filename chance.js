@@ -13,6 +13,15 @@
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
     var HEX_POOL  = NUMBERS + "abcdef";
 
+    // Errors
+    function UnsupportedError(message) {
+        this.name = 'UnsupportedError';
+        this.message = message || 'This feature is not supported on this platform';
+    }
+
+    UnsupportedError.prototype = new Error();
+    UnsupportedError.prototype.constructor = UnsupportedError;
+
     // Cached array helpers
     var slice = Array.prototype.slice;
 
@@ -328,6 +337,25 @@
             text = this.n(this.character, length, options);
 
         return text.join("");
+    };
+
+    /**
+     *  Return a random buffer
+     *
+     *  @param {Object} [options={}] can specify a length
+     *  @returns {Buffer} a buffer of random length
+     *  @throws {RangeError} length cannot be less than zero
+     */
+    Chance.prototype.buffer = function (options) {
+        if (typeof Buffer === 'undefined') {
+            throw new UnsupportedError('Sorry, the buffer() function is not supported on your platform');
+        }
+        options = initOptions(options, { length: this.natural({min: 5, max: 20}) });
+        testRange(options.length < 0, "Chance: Length cannot be less than zero.");
+        const length = options.length;
+        const content = this.n(this.character, length, options);
+
+        return Buffer.from(content);
     };
 
     // -- End Basics --
