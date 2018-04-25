@@ -980,6 +980,23 @@
         return ssn;
     };
 
+    // Aadhar is similar to ssn, used in India to uniquely identify a person
+    Chance.prototype.aadhar = function (options) {
+        options = initOptions(options, {onlyLastFour: false, separatedByWhiteSpace: true});
+        var aadhar_pool = "1234567890",
+            aadhar,
+            whiteSpace = options.separatedByWhiteSpace ? ' ' : '';
+
+        if(!options.onlyLastFour) {
+            aadhar = this.string({pool: aadhar_pool, length: 4}) + whiteSpace +
+            this.string({pool: aadhar_pool, length: 4}) + whiteSpace +
+            this.string({pool: aadhar_pool, length: 4});
+        } else {
+            aadhar = this.string({pool: aadhar_pool, length: 4});
+        }
+        return aadhar;
+    };
+
     // Return the list of available name suffixes
     // @todo introduce internationalization
     Chance.prototype.name_suffixes = function () {
