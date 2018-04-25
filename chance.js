@@ -1470,7 +1470,7 @@
     Chance.prototype.country = function (options) {
         options = initOptions(options);
         var country = this.pick(this.countries());
-        return options.full ? country.name : country.abbreviation;
+        return options.raw ? country : options.full ? country.name : country.abbreviation;
     };
 
     Chance.prototype.depth = function (options) {
