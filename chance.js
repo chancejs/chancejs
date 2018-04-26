@@ -487,9 +487,7 @@
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
         } else {
-            return this.n(this.natural, count, {max: arr.length - 1}).map(function (i) {
-                return arr[i];
-            });
+            return this.shuffle(arr).slice(0, count);
         }
     };
 

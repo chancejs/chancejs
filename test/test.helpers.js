@@ -154,6 +154,17 @@ test('pickset() does not destroy the original array', t => {
     })
 })
 
+test('pickset() returns unique values', t => {
+    let arr = ['a', 'b', 'c', 'd']
+    _.times(1000, () => {
+        let picked = chance.pickset(arr, 4)
+        t.not(picked.indexOf('a'), -1)
+        t.not(picked.indexOf('b'), -1)
+        t.not(picked.indexOf('c'), -1)
+        t.not(picked.indexOf('d'), -1)
+    })
+})
+
 // chance.shuffle()
 test('shuffle() returns an array of the same size', t => {
     let arr = ['a', 'b', 'c', 'd', 'e']
