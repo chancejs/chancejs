@@ -20,10 +20,12 @@
   * [sentence](text/sentence.md)
   * [syllable](text/syllable.md)
   * [word](text/word.md)
+* Person
+  * [age](person/age.md)
+  * [birthday](person/birthday.md)
 * Finance
 * Location
 * Mobile
-* Person
 * Time
 * Web
 * Helpers
