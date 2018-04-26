@@ -23,6 +23,15 @@
 * Person
   * [age](person/age.md)
   * [birthday](person/birthday.md)
+  * [cf](person/cf.md)
+  * [cpf](person/cpf.md)
+  * [first](person/first.md)
+  * [gender](person/gender.md)
+  * [last](person/last.md)
+  * [name](person/name.md)
+  * [prefix](person/prefix.md)
+  * [ssn](person/ssn.md)
+  * [suffix](person/suffix.md)
 * Finance
 * Location
 * Mobile
