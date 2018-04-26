@@ -32,10 +32,6 @@
   * [prefix](person/prefix.md)
   * [ssn](person/ssn.md)
   * [suffix](person/suffix.md)
-* Finance
-* Location
+* Thing
+  * [animal](thing/animal.md)
 * Mobile
-* Time
-* Web
-* Helpers
-* Miscellaneous
