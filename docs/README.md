@@ -15,11 +15,15 @@
   * [letter](basics/letter.md)
   * [natural](basics/natural.md)
   * [string](basics/string.md)
+* Text
+  * [paragraph](text/paragraph.md)
+  * [sentence](text/sentence.md)
+  * [syllable](text/syllable.md)
+  * [word](text/word.md)
 * Finance
 * Location
 * Mobile
 * Person
-* Text
 * Time
 * Web
 * Helpers
