@@ -37,6 +37,7 @@ Or [view all of the dependents on npm](https://www.npmjs.com/package/chance)
 ## Author
 ### Victor Quinn
 [https://www.victorquinn.com](https://www.victorquinn.com)
+[@victorquinn](https://twitter.com/victorquinn)
 
 Please feel free to reach out to me if you have any questions or suggestions.
 
