@@ -2910,6 +2910,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+git-update-ghpages@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/git-update-ghpages/-/git-update-ghpages-1.3.0.tgz#4cff254e21f64d5a3a29865a01f36fd164d8ca25"
+
 github-markdown-css@2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/github-markdown-css/-/github-markdown-css-2.4.1.tgz#b4736d84eea8367a03b3248cf546dda3e8dc55e3"

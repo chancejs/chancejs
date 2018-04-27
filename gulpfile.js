@@ -7,7 +7,7 @@ const uglify = require('gulp-uglify')
 const pump = require('pump')
 
 gulp.task('lint', () =>
-    gulp.src(['**/*.js', '!node_modules/**', '!dist/**', '!test/helpers/**/*.js'])
+    gulp.src(['**/*.js', '!docs/**', '!node_modules/**', '!dist/**', '!test/helpers/**/*.js'])
         .pipe(eslint({
             parser: 'babel-eslint',
             rules: {
