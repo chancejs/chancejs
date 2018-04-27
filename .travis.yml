@@ -22,6 +22,6 @@ after_script:
 
 after_success:
   - './node_modules/.bin/nyc ava'
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false"]; then ./node_modules/.bin/git-update-ghpages -e; fi
+  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then ./node_modules/.bin/git-update-ghpages -e; fi
 
 sudo: false
