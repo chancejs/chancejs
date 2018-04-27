@@ -1,0 +1,1495 @@
+{
+  "toc": {
+    "sections": [
+      {
+        "title": "Chance",
+        "source": "docs/intro.md",
+        "url": "index.html",
+        "slug": "index",
+        "headings": [
+          {
+            "title": "Acknowledgements & Thanks",
+            "depth": 2,
+            "id": "acknowledgements-and-thanks"
+          }
+        ]
+      },
+      {
+        "title": "Usage",
+        "sections": [
+          {
+            "title": "bower",
+            "source": "docs/usage/bower.md",
+            "url": "usage/bower.html",
+            "slug": "usagebower"
+          },
+          {
+            "title": "browser",
+            "source": "docs/usage/browser.md",
+            "url": "usage/browser.html",
+            "slug": "usagebrowser"
+          },
+          {
+            "title": "cli",
+            "source": "docs/usage/cli.md",
+            "url": "usage/cli.html",
+            "slug": "usagecli"
+          },
+          {
+            "title": "node",
+            "source": "docs/usage/node.md",
+            "url": "usage/node.html",
+            "slug": "usagenode"
+          },
+          {
+            "title": "requirejs",
+            "source": "docs/usage/requirejs.md",
+            "url": "usage/requirejs.html",
+            "slug": "usagerequirejs"
+          },
+          {
+            "title": "seed",
+            "source": "docs/usage/seed.md",
+            "url": "usage/seed.html",
+            "slug": "usageseed"
+          },
+          {
+            "title": "function",
+            "source": "docs/usage/function.md",
+            "url": "usage/function.html",
+            "slug": "usagefunction"
+          }
+        ]
+      },
+      {
+        "title": "Basics",
+        "sections": [
+          {
+            "title": "bool",
+            "source": "docs/basics/bool.md",
+            "url": "basics/bool.html",
+            "slug": "basicsbool"
+          },
+          {
+            "title": "character",
+            "source": "docs/basics/character.md",
+            "url": "basics/character.html",
+            "slug": "basicscharacter"
+          },
+          {
+            "title": "floating",
+            "source": "docs/basics/floating.md",
+            "url": "basics/floating.html",
+            "slug": "basicsfloating"
+          },
+          {
+            "title": "integer",
+            "source": "docs/basics/integer.md",
+            "url": "basics/integer.html",
+            "slug": "basicsinteger"
+          },
+          {
+            "title": "letter",
+            "source": "docs/basics/letter.md",
+            "url": "basics/letter.html",
+            "slug": "basicsletter"
+          },
+          {
+            "title": "natural",
+            "source": "docs/basics/natural.md",
+            "url": "basics/natural.html",
+            "slug": "basicsnatural"
+          },
+          {
+            "title": "string",
+            "source": "docs/basics/string.md",
+            "url": "basics/string.html",
+            "slug": "basicsstring"
+          }
+        ]
+      },
+      {
+        "title": "Text",
+        "sections": [
+          {
+            "title": "paragraph",
+            "source": "docs/text/paragraph.md",
+            "url": "text/paragraph.html",
+            "slug": "textparagraph"
+          },
+          {
+            "title": "sentence",
+            "source": "docs/text/sentence.md",
+            "url": "text/sentence.html",
+            "slug": "textsentence"
+          },
+          {
+            "title": "syllable",
+            "source": "docs/text/syllable.md",
+            "url": "text/syllable.html",
+            "slug": "textsyllable"
+          },
+          {
+            "title": "word",
+            "source": "docs/text/word.md",
+            "url": "text/word.html",
+            "slug": "textword"
+          }
+        ]
+      },
+      {
+        "title": "Person",
+        "sections": [
+          {
+            "title": "age",
+            "source": "docs/person/age.md",
+            "url": "person/age.html",
+            "slug": "personage"
+          },
+          {
+            "title": "birthday",
+            "source": "docs/person/birthday.md",
+            "url": "person/birthday.html",
+            "slug": "personbirthday"
+          },
+          {
+            "title": "cf",
+            "source": "docs/person/cf.md",
+            "url": "person/cf.html",
+            "slug": "personcf"
+          },
+          {
+            "title": "cpf",
+            "source": "docs/person/cpf.md",
+            "url": "person/cpf.html",
+            "slug": "personcpf"
+          },
+          {
+            "title": "first",
+            "source": "docs/person/first.md",
+            "url": "person/first.html",
+            "slug": "personfirst"
+          },
+          {
+            "title": "gender",
+            "source": "docs/person/gender.md",
+            "url": "person/gender.html",
+            "slug": "persongender"
+          },
+          {
+            "title": "last",
+            "source": "docs/person/last.md",
+            "url": "person/last.html",
+            "slug": "personlast"
+          },
+          {
+            "title": "name",
+            "source": "docs/person/name.md",
+            "url": "person/name.html",
+            "slug": "personname"
+          },
+          {
+            "title": "prefix",
+            "source": "docs/person/prefix.md",
+            "url": "person/prefix.html",
+            "slug": "personprefix"
+          },
+          {
+            "title": "ssn",
+            "source": "docs/person/ssn.md",
+            "url": "person/ssn.html",
+            "slug": "personssn"
+          },
+          {
+            "title": "suffix",
+            "source": "docs/person/suffix.md",
+            "url": "person/suffix.html",
+            "slug": "personsuffix"
+          }
+        ]
+      },
+      {
+        "title": "Thing",
+        "sections": [
+          {
+            "title": "animal",
+            "source": "docs/thing/animal.md",
+            "url": "thing/animal.html",
+            "slug": "thinganimal"
+          }
+        ]
+      },
+      {
+        "title": "Mobile",
+        "sections": [
+          {
+            "title": "android_id",
+            "source": "docs/mobile/android_id.md",
+            "url": "mobile/android_id.html",
+            "slug": "mobileandroid_id"
+          },
+          {
+            "title": "apple_token",
+            "source": "docs/mobile/apple_token.md",
+            "url": "mobile/apple_token.html",
+            "slug": "mobileapple_token"
+          },
+          {
+            "title": "bb_pin",
+            "source": "docs/mobile/bb_pin.md",
+            "url": "mobile/bb_pin.html",
+            "slug": "mobilebb_pin"
+          },
+          {
+            "title": "wp7_anid",
+            "source": "docs/mobile/wp7_anid.md",
+            "url": "mobile/wp7_anid.html",
+            "slug": "mobilewp7_anid"
+          },
+          {
+            "title": "wp8_anid2",
+            "source": "docs/mobile/wp8_anid2.md",
+            "url": "mobile/wp8_anid2.html",
+            "slug": "mobilewp8_anid2"
+          }
+        ]
+      },
+      {
+        "title": "Web",
+        "sections": [
+          {
+            "title": "avatar",
+            "source": "docs/web/avatar.md",
+            "url": "web/avatar.html",
+            "slug": "webavatar"
+          },
+          {
+            "title": "color",
+            "source": "docs/web/color.md",
+            "url": "web/color.html",
+            "slug": "webcolor"
+          },
+          {
+            "title": "company",
+            "source": "docs/web/company.md",
+            "url": "web/company.html",
+            "slug": "webcompany"
+          },
+          {
+            "title": "domain",
+            "source": "docs/web/domain.md",
+            "url": "web/domain.html",
+            "slug": "webdomain"
+          },
+          {
+            "title": "email",
+            "source": "docs/web/email.md",
+            "url": "web/email.html",
+            "slug": "webemail"
+          },
+          {
+            "title": "fbid",
+            "source": "docs/web/fbid.md",
+            "url": "web/fbid.html",
+            "slug": "webfbid"
+          },
+          {
+            "title": "google_analytics",
+            "source": "docs/web/google_analytics.md",
+            "url": "web/google_analytics.html",
+            "slug": "webgoogle_analytics"
+          },
+          {
+            "title": "hashtag",
+            "source": "docs/web/hashtag.md",
+            "url": "web/hashtag.html",
+            "slug": "webhashtag"
+          },
+          {
+            "title": "ip",
+            "source": "docs/web/ip.md",
+            "url": "web/ip.html",
+            "slug": "webip"
+          },
+          {
+            "title": "ipv6",
+            "source": "docs/web/ipv6.md",
+            "url": "web/ipv6.html",
+            "slug": "webipv6"
+          },
+          {
+            "title": "klout",
+            "source": "docs/web/klout.md",
+            "url": "web/klout.html",
+            "slug": "webklout"
+          },
+          {
+            "title": "profession",
+            "source": "docs/web/profession.md",
+            "url": "web/profession.html",
+            "slug": "webprofession"
+          },
+          {
+            "title": "tld",
+            "source": "docs/web/tld.md",
+            "url": "web/tld.html",
+            "slug": "webtld"
+          },
+          {
+            "title": "twitter",
+            "source": "docs/web/twitter.md",
+            "url": "web/twitter.html",
+            "slug": "webtwitter"
+          },
+          {
+            "title": "url",
+            "source": "docs/web/url.md",
+            "url": "web/url.html",
+            "slug": "weburl"
+          }
+        ]
+      },
+      {
+        "title": "Location",
+        "sections": [
+          {
+            "title": "address",
+            "source": "docs/location/address.md",
+            "url": "location/address.html",
+            "slug": "locationaddress"
+          },
+          {
+            "title": "altitude",
+            "source": "docs/location/altitude.md",
+            "url": "location/altitude.html",
+            "slug": "locationaltitude"
+          },
+          {
+            "title": "areacode",
+            "source": "docs/location/areacode.md",
+            "url": "location/areacode.html",
+            "slug": "locationareacode"
+          },
+          {
+            "title": "city",
+            "source": "docs/location/city.md",
+            "url": "location/city.html",
+            "slug": "locationcity"
+          },
+          {
+            "title": "coordinates",
+            "source": "docs/location/coordinates.md",
+            "url": "location/coordinates.html",
+            "slug": "locationcoordinates"
+          },
+          {
+            "title": "country",
+            "source": "docs/location/country.md",
+            "url": "location/country.html",
+            "slug": "locationcountry"
+          },
+          {
+            "title": "depth",
+            "source": "docs/location/depth.md",
+            "url": "location/depth.html",
+            "slug": "locationdepth"
+          },
+          {
+            "title": "geohash",
+            "source": "docs/location/geohash.md",
+            "url": "location/geohash.html",
+            "slug": "locationgeohash"
+          },
+          {
+            "title": "latitude",
+            "source": "docs/location/latitude.md",
+            "url": "location/latitude.html",
+            "slug": "locationlatitude"
+          },
+          {
+            "title": "longitude",
+            "source": "docs/location/longitude.md",
+            "url": "location/longitude.html",
+            "slug": "locationlongitude"
+          },
+          {
+            "title": "phone",
+            "source": "docs/location/phone.md",
+            "url": "location/phone.html",
+            "slug": "locationphone"
+          },
+          {
+            "title": "postal",
+            "source": "docs/location/postal.md",
+            "url": "location/postal.html",
+            "slug": "locationpostal"
+          },
+          {
+            "title": "province",
+            "source": "docs/location/province.md",
+            "url": "location/province.html",
+            "slug": "locationprovince"
+          },
+          {
+            "title": "state",
+            "source": "docs/location/state.md",
+            "url": "location/state.html",
+            "slug": "locationstate"
+          },
+          {
+            "title": "street",
+            "source": "docs/location/street.md",
+            "url": "location/street.html",
+            "slug": "locationstreet"
+          },
+          {
+            "title": "zip",
+            "source": "docs/location/zip.md",
+            "url": "location/zip.html",
+            "slug": "locationzip"
+          }
+        ]
+      },
+      {
+        "title": "Time",
+        "sections": [
+          {
+            "title": "ampm",
+            "source": "docs/time/ampm.md",
+            "url": "time/ampm.html",
+            "slug": "timeampm"
+          },
+          {
+            "title": "date",
+            "source": "docs/time/date.md",
+            "url": "time/date.html",
+            "slug": "timedate"
+          },
+          {
+            "title": "hammertime",
+            "source": "docs/time/hammertime.md",
+            "url": "time/hammertime.html",
+            "slug": "timehammertime"
+          },
+          {
+            "title": "hour",
+            "source": "docs/time/hour.md",
+            "url": "time/hour.html",
+            "slug": "timehour"
+          },
+          {
+            "title": "millisecond",
+            "source": "docs/time/millisecond.md",
+            "url": "time/millisecond.html",
+            "slug": "timemillisecond"
+          },
+          {
+            "title": "minute",
+            "source": "docs/time/minute.md",
+            "url": "time/minute.html",
+            "slug": "timeminute"
+          },
+          {
+            "title": "month",
+            "source": "docs/time/month.md",
+            "url": "time/month.html",
+            "slug": "timemonth"
+          },
+          {
+            "title": "second",
+            "source": "docs/time/second.md",
+            "url": "time/second.html",
+            "slug": "timesecond"
+          },
+          {
+            "title": "timestamp",
+            "source": "docs/time/timestamp.md",
+            "url": "time/timestamp.html",
+            "slug": "timetimestamp"
+          },
+          {
+            "title": "timezone",
+            "source": "docs/time/timezone.md",
+            "url": "time/timezone.html",
+            "slug": "timetimezone"
+          },
+          {
+            "title": "weekday",
+            "source": "docs/time/weekday.md",
+            "url": "time/weekday.html",
+            "slug": "timeweekday"
+          },
+          {
+            "title": "year",
+            "source": "docs/time/year.md",
+            "url": "time/year.html",
+            "slug": "timeyear"
+          }
+        ]
+      },
+      {
+        "title": "Finance",
+        "sections": [
+          {
+            "title": "cc",
+            "source": "docs/finance/cc.md",
+            "url": "finance/cc.html",
+            "slug": "financecc"
+          },
+          {
+            "title": "cc_type",
+            "source": "docs/finance/cc_type.md",
+            "url": "finance/cc_type.html",
+            "slug": "financecc_type"
+          },
+          {
+            "title": "currency",
+            "source": "docs/finance/currency.md",
+            "url": "finance/currency.html",
+            "slug": "financecurrency"
+          },
+          {
+            "title": "currency_pair",
+            "source": "docs/finance/currency_pair.md",
+            "url": "finance/currency_pair.html",
+            "slug": "financecurrency_pair"
+          },
+          {
+            "title": "dollar",
+            "source": "docs/finance/dollar.md",
+            "url": "finance/dollar.html",
+            "slug": "financedollar"
+          },
+          {
+            "title": "euro",
+            "source": "docs/finance/euro.md",
+            "url": "finance/euro.html",
+            "slug": "financeeuro"
+          },
+          {
+            "title": "exp",
+            "source": "docs/finance/exp.md",
+            "url": "finance/exp.html",
+            "slug": "financeexp"
+          },
+          {
+            "title": "exp_month",
+            "source": "docs/finance/exp_month.md",
+            "url": "finance/exp_month.html",
+            "slug": "financeexp_month"
+          },
+          {
+            "title": "exp_year",
+            "source": "docs/finance/exp_year.md",
+            "url": "finance/exp_year.html",
+            "slug": "financeexp_year"
+          }
+        ]
+      },
+      {
+        "title": "Helpers",
+        "sections": [
+          {
+            "title": "capitalize",
+            "source": "docs/helpers/capitalize.md",
+            "url": "helpers/capitalize.html",
+            "slug": "helperscapitalize"
+          },
+          {
+            "title": "mixin",
+            "source": "docs/helpers/mixin.md",
+            "url": "helpers/mixin.html",
+            "slug": "helpersmixin"
+          },
+          {
+            "title": "pad",
+            "source": "docs/helpers/pad.md",
+            "url": "helpers/pad.html",
+            "slug": "helperspad"
+          },
+          {
+            "title": "pick",
+            "source": "docs/helpers/pick.md",
+            "url": "helpers/pick.html",
+            "slug": "helperspick"
+          },
+          {
+            "title": "pickone",
+            "source": "docs/helpers/pickone.md",
+            "url": "helpers/pickone.html",
+            "slug": "helperspickone"
+          },
+          {
+            "title": "pickset",
+            "source": "docs/helpers/pickset.md",
+            "url": "helpers/pickset.html",
+            "slug": "helperspickset"
+          },
+          {
+            "title": "set",
+            "source": "docs/helpers/set.md",
+            "url": "helpers/set.html",
+            "slug": "helpersset"
+          },
+          {
+            "title": "shuffle",
+            "source": "docs/helpers/shuffle.md",
+            "url": "helpers/shuffle.html",
+            "slug": "helpersshuffle"
+          }
+        ]
+      },
+      {
+        "title": "Miscellaneous",
+        "sections": [
+          {
+            "title": "coin",
+            "source": "docs/miscellaneous/coin.md",
+            "url": "miscellaneous/coin.html",
+            "slug": "miscellaneouscoin"
+          },
+          {
+            "title": "dice",
+            "source": "docs/miscellaneous/dice.md",
+            "url": "miscellaneous/dice.html",
+            "slug": "miscellaneousdice"
+          },
+          {
+            "title": "guid",
+            "source": "docs/miscellaneous/guid.md",
+            "url": "miscellaneous/guid.html",
+            "slug": "miscellaneousguid"
+          },
+          {
+            "title": "hash",
+            "source": "docs/miscellaneous/hash.md",
+            "url": "miscellaneous/hash.html",
+            "slug": "miscellaneoushash"
+          },
+          {
+            "title": "hidden",
+            "source": "docs/miscellaneous/hidden.md",
+            "url": "miscellaneous/hidden.html",
+            "slug": "miscellaneoushidden"
+          },
+          {
+            "title": "n",
+            "source": "docs/miscellaneous/n.md",
+            "url": "miscellaneous/n.html",
+            "slug": "miscellaneousn"
+          },
+          {
+            "title": "normal",
+            "source": "docs/miscellaneous/normal.md",
+            "url": "miscellaneous/normal.html",
+            "slug": "miscellaneousnormal"
+          },
+          {
+            "title": "radio",
+            "source": "docs/miscellaneous/radio.md",
+            "url": "miscellaneous/radio.html",
+            "slug": "miscellaneousradio"
+          },
+          {
+            "title": "rpg",
+            "source": "docs/miscellaneous/rpg.md",
+            "url": "miscellaneous/rpg.html",
+            "slug": "miscellaneousrpg"
+          },
+          {
+            "title": "tv",
+            "source": "docs/miscellaneous/tv.md",
+            "url": "miscellaneous/tv.html",
+            "slug": "miscellaneoustv"
+          },
+          {
+            "title": "unique",
+            "source": "docs/miscellaneous/unique.md",
+            "url": "miscellaneous/unique.html",
+            "slug": "miscellaneousunique"
+          },
+          {
+            "title": "weighted",
+            "source": "docs/miscellaneous/weighted.md",
+            "url": "miscellaneous/weighted.html",
+            "slug": "miscellaneousweighted"
+          }
+        ]
+      }
+    ]
+  },
+  "index": {
+    "index.html": {
+      "source": "docs/intro.md",
+      "title": "Chance",
+      "pageTitle": "Chance",
+      "slug": "index",
+      "headings": [
+        {
+          "title": "Acknowledgements & Thanks",
+          "depth": 2,
+          "id": "acknowledgements-and-thanks"
+        }
+      ]
+    },
+    "usage/bower.html": {
+      "source": "docs/usage/bower.md",
+      "title": "bower - Chance",
+      "pageTitle": "bower",
+      "slug": "usagebower"
+    },
+    "usage/browser.html": {
+      "source": "docs/usage/browser.md",
+      "title": "browser - Chance",
+      "pageTitle": "browser",
+      "slug": "usagebrowser"
+    },
+    "usage/cli.html": {
+      "source": "docs/usage/cli.md",
+      "title": "cli - Chance",
+      "pageTitle": "cli",
+      "slug": "usagecli"
+    },
+    "usage/node.html": {
+      "source": "docs/usage/node.md",
+      "title": "node - Chance",
+      "pageTitle": "node",
+      "slug": "usagenode"
+    },
+    "usage/requirejs.html": {
+      "source": "docs/usage/requirejs.md",
+      "title": "requirejs - Chance",
+      "pageTitle": "requirejs",
+      "slug": "usagerequirejs"
+    },
+    "usage/seed.html": {
+      "source": "docs/usage/seed.md",
+      "title": "seed - Chance",
+      "pageTitle": "seed",
+      "slug": "usageseed"
+    },
+    "usage/function.html": {
+      "source": "docs/usage/function.md",
+      "title": "function - Chance",
+      "pageTitle": "function",
+      "slug": "usagefunction"
+    },
+    "basics/bool.html": {
+      "source": "docs/basics/bool.md",
+      "title": "bool - Chance",
+      "pageTitle": "bool",
+      "slug": "basicsbool"
+    },
+    "basics/character.html": {
+      "source": "docs/basics/character.md",
+      "title": "character - Chance",
+      "pageTitle": "character",
+      "slug": "basicscharacter"
+    },
+    "basics/floating.html": {
+      "source": "docs/basics/floating.md",
+      "title": "floating - Chance",
+      "pageTitle": "floating",
+      "slug": "basicsfloating"
+    },
+    "basics/integer.html": {
+      "source": "docs/basics/integer.md",
+      "title": "integer - Chance",
+      "pageTitle": "integer",
+      "slug": "basicsinteger"
+    },
+    "basics/letter.html": {
+      "source": "docs/basics/letter.md",
+      "title": "letter - Chance",
+      "pageTitle": "letter",
+      "slug": "basicsletter"
+    },
+    "basics/natural.html": {
+      "source": "docs/basics/natural.md",
+      "title": "natural - Chance",
+      "pageTitle": "natural",
+      "slug": "basicsnatural"
+    },
+    "basics/string.html": {
+      "source": "docs/basics/string.md",
+      "title": "string - Chance",
+      "pageTitle": "string",
+      "slug": "basicsstring"
+    },
+    "text/paragraph.html": {
+      "source": "docs/text/paragraph.md",
+      "title": "paragraph - Chance",
+      "pageTitle": "paragraph",
+      "slug": "textparagraph"
+    },
+    "text/sentence.html": {
+      "source": "docs/text/sentence.md",
+      "title": "sentence - Chance",
+      "pageTitle": "sentence",
+      "slug": "textsentence"
+    },
+    "text/syllable.html": {
+      "source": "docs/text/syllable.md",
+      "title": "syllable - Chance",
+      "pageTitle": "syllable",
+      "slug": "textsyllable"
+    },
+    "text/word.html": {
+      "source": "docs/text/word.md",
+      "title": "word - Chance",
+      "pageTitle": "word",
+      "slug": "textword"
+    },
+    "person/age.html": {
+      "source": "docs/person/age.md",
+      "title": "age - Chance",
+      "pageTitle": "age",
+      "slug": "personage"
+    },
+    "person/birthday.html": {
+      "source": "docs/person/birthday.md",
+      "title": "birthday - Chance",
+      "pageTitle": "birthday",
+      "slug": "personbirthday"
+    },
+    "person/cf.html": {
+      "source": "docs/person/cf.md",
+      "title": "cf - Chance",
+      "pageTitle": "cf",
+      "slug": "personcf"
+    },
+    "person/cpf.html": {
+      "source": "docs/person/cpf.md",
+      "title": "cpf - Chance",
+      "pageTitle": "cpf",
+      "slug": "personcpf"
+    },
+    "person/first.html": {
+      "source": "docs/person/first.md",
+      "title": "first - Chance",
+      "pageTitle": "first",
+      "slug": "personfirst"
+    },
+    "person/gender.html": {
+      "source": "docs/person/gender.md",
+      "title": "gender - Chance",
+      "pageTitle": "gender",
+      "slug": "persongender"
+    },
+    "person/last.html": {
+      "source": "docs/person/last.md",
+      "title": "last - Chance",
+      "pageTitle": "last",
+      "slug": "personlast"
+    },
+    "person/name.html": {
+      "source": "docs/person/name.md",
+      "title": "name - Chance",
+      "pageTitle": "name",
+      "slug": "personname"
+    },
+    "person/prefix.html": {
+      "source": "docs/person/prefix.md",
+      "title": "prefix - Chance",
+      "pageTitle": "prefix",
+      "slug": "personprefix"
+    },
+    "person/ssn.html": {
+      "source": "docs/person/ssn.md",
+      "title": "ssn - Chance",
+      "pageTitle": "ssn",
+      "slug": "personssn"
+    },
+    "person/suffix.html": {
+      "source": "docs/person/suffix.md",
+      "title": "suffix - Chance",
+      "pageTitle": "suffix",
+      "slug": "personsuffix"
+    },
+    "thing/animal.html": {
+      "source": "docs/thing/animal.md",
+      "title": "animal - Chance",
+      "pageTitle": "animal",
+      "slug": "thinganimal"
+    },
+    "mobile/android_id.html": {
+      "source": "docs/mobile/android_id.md",
+      "title": "android_id - Chance",
+      "pageTitle": "android_id",
+      "slug": "mobileandroid_id"
+    },
+    "mobile/apple_token.html": {
+      "source": "docs/mobile/apple_token.md",
+      "title": "apple_token - Chance",
+      "pageTitle": "apple_token",
+      "slug": "mobileapple_token"
+    },
+    "mobile/bb_pin.html": {
+      "source": "docs/mobile/bb_pin.md",
+      "title": "bb_pin - Chance",
+      "pageTitle": "bb_pin",
+      "slug": "mobilebb_pin"
+    },
+    "mobile/wp7_anid.html": {
+      "source": "docs/mobile/wp7_anid.md",
+      "title": "wp7_anid - Chance",
+      "pageTitle": "wp7_anid",
+      "slug": "mobilewp7_anid"
+    },
+    "mobile/wp8_anid2.html": {
+      "source": "docs/mobile/wp8_anid2.md",
+      "title": "wp8_anid2 - Chance",
+      "pageTitle": "wp8_anid2",
+      "slug": "mobilewp8_anid2"
+    },
+    "web/avatar.html": {
+      "source": "docs/web/avatar.md",
+      "title": "avatar - Chance",
+      "pageTitle": "avatar",
+      "slug": "webavatar"
+    },
+    "web/color.html": {
+      "source": "docs/web/color.md",
+      "title": "color - Chance",
+      "pageTitle": "color",
+      "slug": "webcolor"
+    },
+    "web/company.html": {
+      "source": "docs/web/company.md",
+      "title": "company - Chance",
+      "pageTitle": "company",
+      "slug": "webcompany"
+    },
+    "web/domain.html": {
+      "source": "docs/web/domain.md",
+      "title": "domain - Chance",
+      "pageTitle": "domain",
+      "slug": "webdomain"
+    },
+    "web/email.html": {
+      "source": "docs/web/email.md",
+      "title": "email - Chance",
+      "pageTitle": "email",
+      "slug": "webemail"
+    },
+    "web/fbid.html": {
+      "source": "docs/web/fbid.md",
+      "title": "fbid - Chance",
+      "pageTitle": "fbid",
+      "slug": "webfbid"
+    },
+    "web/google_analytics.html": {
+      "source": "docs/web/google_analytics.md",
+      "title": "google_analytics - Chance",
+      "pageTitle": "google_analytics",
+      "slug": "webgoogle_analytics"
+    },
+    "web/hashtag.html": {
+      "source": "docs/web/hashtag.md",
+      "title": "hashtag - Chance",
+      "pageTitle": "hashtag",
+      "slug": "webhashtag"
+    },
+    "web/ip.html": {
+      "source": "docs/web/ip.md",
+      "title": "ip - Chance",
+      "pageTitle": "ip",
+      "slug": "webip"
+    },
+    "web/ipv6.html": {
+      "source": "docs/web/ipv6.md",
+      "title": "ipv6 - Chance",
+      "pageTitle": "ipv6",
+      "slug": "webipv6"
+    },
+    "web/klout.html": {
+      "source": "docs/web/klout.md",
+      "title": "klout - Chance",
+      "pageTitle": "klout",
+      "slug": "webklout"
+    },
+    "web/profession.html": {
+      "source": "docs/web/profession.md",
+      "title": "profession - Chance",
+      "pageTitle": "profession",
+      "slug": "webprofession"
+    },
+    "web/tld.html": {
+      "source": "docs/web/tld.md",
+      "title": "tld - Chance",
+      "pageTitle": "tld",
+      "slug": "webtld"
+    },
+    "web/twitter.html": {
+      "source": "docs/web/twitter.md",
+      "title": "twitter - Chance",
+      "pageTitle": "twitter",
+      "slug": "webtwitter"
+    },
+    "web/url.html": {
+      "source": "docs/web/url.md",
+      "title": "url - Chance",
+      "pageTitle": "url",
+      "slug": "weburl"
+    },
+    "location/address.html": {
+      "source": "docs/location/address.md",
+      "title": "address - Chance",
+      "pageTitle": "address",
+      "slug": "locationaddress"
+    },
+    "location/altitude.html": {
+      "source": "docs/location/altitude.md",
+      "title": "altitude - Chance",
+      "pageTitle": "altitude",
+      "slug": "locationaltitude"
+    },
+    "location/areacode.html": {
+      "source": "docs/location/areacode.md",
+      "title": "areacode - Chance",
+      "pageTitle": "areacode",
+      "slug": "locationareacode"
+    },
+    "location/city.html": {
+      "source": "docs/location/city.md",
+      "title": "city - Chance",
+      "pageTitle": "city",
+      "slug": "locationcity"
+    },
+    "location/coordinates.html": {
+      "source": "docs/location/coordinates.md",
+      "title": "coordinates - Chance",
+      "pageTitle": "coordinates",
+      "slug": "locationcoordinates"
+    },
+    "location/country.html": {
+      "source": "docs/location/country.md",
+      "title": "country - Chance",
+      "pageTitle": "country",
+      "slug": "locationcountry"
+    },
+    "location/depth.html": {
+      "source": "docs/location/depth.md",
+      "title": "depth - Chance",
+      "pageTitle": "depth",
+      "slug": "locationdepth"
+    },
+    "location/geohash.html": {
+      "source": "docs/location/geohash.md",
+      "title": "geohash - Chance",
+      "pageTitle": "geohash",
+      "slug": "locationgeohash"
+    },
+    "location/latitude.html": {
+      "source": "docs/location/latitude.md",
+      "title": "latitude - Chance",
+      "pageTitle": "latitude",
+      "slug": "locationlatitude"
+    },
+    "location/longitude.html": {
+      "source": "docs/location/longitude.md",
+      "title": "longitude - Chance",
+      "pageTitle": "longitude",
+      "slug": "locationlongitude"
+    },
+    "location/phone.html": {
+      "source": "docs/location/phone.md",
+      "title": "phone - Chance",
+      "pageTitle": "phone",
+      "slug": "locationphone"
+    },
+    "location/postal.html": {
+      "source": "docs/location/postal.md",
+      "title": "postal - Chance",
+      "pageTitle": "postal",
+      "slug": "locationpostal"
+    },
+    "location/province.html": {
+      "source": "docs/location/province.md",
+      "title": "province - Chance",
+      "pageTitle": "province",
+      "slug": "locationprovince"
+    },
+    "location/state.html": {
+      "source": "docs/location/state.md",
+      "title": "state - Chance",
+      "pageTitle": "state",
+      "slug": "locationstate"
+    },
+    "location/street.html": {
+      "source": "docs/location/street.md",
+      "title": "street - Chance",
+      "pageTitle": "street",
+      "slug": "locationstreet"
+    },
+    "location/zip.html": {
+      "source": "docs/location/zip.md",
+      "title": "zip - Chance",
+      "pageTitle": "zip",
+      "slug": "locationzip"
+    },
+    "time/ampm.html": {
+      "source": "docs/time/ampm.md",
+      "title": "ampm - Chance",
+      "pageTitle": "ampm",
+      "slug": "timeampm"
+    },
+    "time/date.html": {
+      "source": "docs/time/date.md",
+      "title": "date - Chance",
+      "pageTitle": "date",
+      "slug": "timedate"
+    },
+    "time/hammertime.html": {
+      "source": "docs/time/hammertime.md",
+      "title": "hammertime - Chance",
+      "pageTitle": "hammertime",
+      "slug": "timehammertime"
+    },
+    "time/hour.html": {
+      "source": "docs/time/hour.md",
+      "title": "hour - Chance",
+      "pageTitle": "hour",
+      "slug": "timehour"
+    },
+    "time/millisecond.html": {
+      "source": "docs/time/millisecond.md",
+      "title": "millisecond - Chance",
+      "pageTitle": "millisecond",
+      "slug": "timemillisecond"
+    },
+    "time/minute.html": {
+      "source": "docs/time/minute.md",
+      "title": "minute - Chance",
+      "pageTitle": "minute",
+      "slug": "timeminute"
+    },
+    "time/month.html": {
+      "source": "docs/time/month.md",
+      "title": "month - Chance",
+      "pageTitle": "month",
+      "slug": "timemonth"
+    },
+    "time/second.html": {
+      "source": "docs/time/second.md",
+      "title": "second - Chance",
+      "pageTitle": "second",
+      "slug": "timesecond"
+    },
+    "time/timestamp.html": {
+      "source": "docs/time/timestamp.md",
+      "title": "timestamp - Chance",
+      "pageTitle": "timestamp",
+      "slug": "timetimestamp"
+    },
+    "time/timezone.html": {
+      "source": "docs/time/timezone.md",
+      "title": "timezone - Chance",
+      "pageTitle": "timezone",
+      "slug": "timetimezone"
+    },
+    "time/weekday.html": {
+      "source": "docs/time/weekday.md",
+      "title": "weekday - Chance",
+      "pageTitle": "weekday",
+      "slug": "timeweekday"
+    },
+    "time/year.html": {
+      "source": "docs/time/year.md",
+      "title": "year - Chance",
+      "pageTitle": "year",
+      "slug": "timeyear"
+    },
+    "finance/cc.html": {
+      "source": "docs/finance/cc.md",
+      "title": "cc - Chance",
+      "pageTitle": "cc",
+      "slug": "financecc"
+    },
+    "finance/cc_type.html": {
+      "source": "docs/finance/cc_type.md",
+      "title": "cc_type - Chance",
+      "pageTitle": "cc_type",
+      "slug": "financecc_type"
+    },
+    "finance/currency.html": {
+      "source": "docs/finance/currency.md",
+      "title": "currency - Chance",
+      "pageTitle": "currency",
+      "slug": "financecurrency"
+    },
+    "finance/currency_pair.html": {
+      "source": "docs/finance/currency_pair.md",
+      "title": "currency_pair - Chance",
+      "pageTitle": "currency_pair",
+      "slug": "financecurrency_pair"
+    },
+    "finance/dollar.html": {
+      "source": "docs/finance/dollar.md",
+      "title": "dollar - Chance",
+      "pageTitle": "dollar",
+      "slug": "financedollar"
+    },
+    "finance/euro.html": {
+      "source": "docs/finance/euro.md",
+      "title": "euro - Chance",
+      "pageTitle": "euro",
+      "slug": "financeeuro"
+    },
+    "finance/exp.html": {
+      "source": "docs/finance/exp.md",
+      "title": "exp - Chance",
+      "pageTitle": "exp",
+      "slug": "financeexp"
+    },
+    "finance/exp_month.html": {
+      "source": "docs/finance/exp_month.md",
+      "title": "exp_month - Chance",
+      "pageTitle": "exp_month",
+      "slug": "financeexp_month"
+    },
+    "finance/exp_year.html": {
+      "source": "docs/finance/exp_year.md",
+      "title": "exp_year - Chance",
+      "pageTitle": "exp_year",
+      "slug": "financeexp_year"
+    },
+    "helpers/capitalize.html": {
+      "source": "docs/helpers/capitalize.md",
+      "title": "capitalize - Chance",
+      "pageTitle": "capitalize",
+      "slug": "helperscapitalize"
+    },
+    "helpers/mixin.html": {
+      "source": "docs/helpers/mixin.md",
+      "title": "mixin - Chance",
+      "pageTitle": "mixin",
+      "slug": "helpersmixin"
+    },
+    "helpers/pad.html": {
+      "source": "docs/helpers/pad.md",
+      "title": "pad - Chance",
+      "pageTitle": "pad",
+      "slug": "helperspad"
+    },
+    "helpers/pick.html": {
+      "source": "docs/helpers/pick.md",
+      "title": "pick - Chance",
+      "pageTitle": "pick",
+      "slug": "helperspick"
+    },
+    "helpers/pickone.html": {
+      "source": "docs/helpers/pickone.md",
+      "title": "pickone - Chance",
+      "pageTitle": "pickone",
+      "slug": "helperspickone"
+    },
+    "helpers/pickset.html": {
+      "source": "docs/helpers/pickset.md",
+      "title": "pickset - Chance",
+      "pageTitle": "pickset",
+      "slug": "helperspickset"
+    },
+    "helpers/set.html": {
+      "source": "docs/helpers/set.md",
+      "title": "set - Chance",
+      "pageTitle": "set",
+      "slug": "helpersset"
+    },
+    "helpers/shuffle.html": {
+      "source": "docs/helpers/shuffle.md",
+      "title": "shuffle - Chance",
+      "pageTitle": "shuffle",
+      "slug": "helpersshuffle"
+    },
+    "miscellaneous/coin.html": {
+      "source": "docs/miscellaneous/coin.md",
+      "title": "coin - Chance",
+      "pageTitle": "coin",
+      "slug": "miscellaneouscoin"
+    },
+    "miscellaneous/dice.html": {
+      "source": "docs/miscellaneous/dice.md",
+      "title": "dice - Chance",
+      "pageTitle": "dice",
+      "slug": "miscellaneousdice"
+    },
+    "miscellaneous/guid.html": {
+      "source": "docs/miscellaneous/guid.md",
+      "title": "guid - Chance",
+      "pageTitle": "guid",
+      "slug": "miscellaneousguid"
+    },
+    "miscellaneous/hash.html": {
+      "source": "docs/miscellaneous/hash.md",
+      "title": "hash - Chance",
+      "pageTitle": "hash",
+      "slug": "miscellaneoushash"
+    },
+    "miscellaneous/hidden.html": {
+      "source": "docs/miscellaneous/hidden.md",
+      "title": "hidden - Chance",
+      "pageTitle": "hidden",
+      "slug": "miscellaneoushidden"
+    },
+    "miscellaneous/n.html": {
+      "source": "docs/miscellaneous/n.md",
+      "title": "n - Chance",
+      "pageTitle": "n",
+      "slug": "miscellaneousn"
+    },
+    "miscellaneous/normal.html": {
+      "source": "docs/miscellaneous/normal.md",
+      "title": "normal - Chance",
+      "pageTitle": "normal",
+      "slug": "miscellaneousnormal"
+    },
+    "miscellaneous/radio.html": {
+      "source": "docs/miscellaneous/radio.md",
+      "title": "radio - Chance",
+      "pageTitle": "radio",
+      "slug": "miscellaneousradio"
+    },
+    "miscellaneous/rpg.html": {
+      "source": "docs/miscellaneous/rpg.md",
+      "title": "rpg - Chance",
+      "pageTitle": "rpg",
+      "slug": "miscellaneousrpg"
+    },
+    "miscellaneous/tv.html": {
+      "source": "docs/miscellaneous/tv.md",
+      "title": "tv - Chance",
+      "pageTitle": "tv",
+      "slug": "miscellaneoustv"
+    },
+    "miscellaneous/unique.html": {
+      "source": "docs/miscellaneous/unique.md",
+      "title": "unique - Chance",
+      "pageTitle": "unique",
+      "slug": "miscellaneousunique"
+    },
+    "miscellaneous/weighted.html": {
+      "source": "docs/miscellaneous/weighted.md",
+      "title": "weighted - Chance",
+      "pageTitle": "weighted",
+      "slug": "miscellaneousweighted"
+    }
+  },
+  "sources": {
+    "docs/intro.md": "index.html",
+    "docs/usage/bower.md": "usage/bower.html",
+    "docs/usage/browser.md": "usage/browser.html",
+    "docs/usage/cli.md": "usage/cli.html",
+    "docs/usage/node.md": "usage/node.html",
+    "docs/usage/requirejs.md": "usage/requirejs.html",
+    "docs/usage/seed.md": "usage/seed.html",
+    "docs/usage/function.md": "usage/function.html",
+    "docs/basics/bool.md": "basics/bool.html",
+    "docs/basics/character.md": "basics/character.html",
+    "docs/basics/floating.md": "basics/floating.html",
+    "docs/basics/integer.md": "basics/integer.html",
+    "docs/basics/letter.md": "basics/letter.html",
+    "docs/basics/natural.md": "basics/natural.html",
+    "docs/basics/string.md": "basics/string.html",
+    "docs/text/paragraph.md": "text/paragraph.html",
+    "docs/text/sentence.md": "text/sentence.html",
+    "docs/text/syllable.md": "text/syllable.html",
+    "docs/text/word.md": "text/word.html",
+    "docs/person/age.md": "person/age.html",
+    "docs/person/birthday.md": "person/birthday.html",
+    "docs/person/cf.md": "person/cf.html",
+    "docs/person/cpf.md": "person/cpf.html",
+    "docs/person/first.md": "person/first.html",
+    "docs/person/gender.md": "person/gender.html",
+    "docs/person/last.md": "person/last.html",
+    "docs/person/name.md": "person/name.html",
+    "docs/person/prefix.md": "person/prefix.html",
+    "docs/person/ssn.md": "person/ssn.html",
+    "docs/person/suffix.md": "person/suffix.html",
+    "docs/thing/animal.md": "thing/animal.html",
+    "docs/mobile/android_id.md": "mobile/android_id.html",
+    "docs/mobile/apple_token.md": "mobile/apple_token.html",
+    "docs/mobile/bb_pin.md": "mobile/bb_pin.html",
+    "docs/mobile/wp7_anid.md": "mobile/wp7_anid.html",
+    "docs/mobile/wp8_anid2.md": "mobile/wp8_anid2.html",
+    "docs/web/avatar.md": "web/avatar.html",
+    "docs/web/color.md": "web/color.html",
+    "docs/web/company.md": "web/company.html",
+    "docs/web/domain.md": "web/domain.html",
+    "docs/web/email.md": "web/email.html",
+    "docs/web/fbid.md": "web/fbid.html",
+    "docs/web/google_analytics.md": "web/google_analytics.html",
+    "docs/web/hashtag.md": "web/hashtag.html",
+    "docs/web/ip.md": "web/ip.html",
+    "docs/web/ipv6.md": "web/ipv6.html",
+    "docs/web/klout.md": "web/klout.html",
+    "docs/web/profession.md": "web/profession.html",
+    "docs/web/tld.md": "web/tld.html",
+    "docs/web/twitter.md": "web/twitter.html",
+    "docs/web/url.md": "web/url.html",
+    "docs/location/address.md": "location/address.html",
+    "docs/location/altitude.md": "location/altitude.html",
+    "docs/location/areacode.md": "location/areacode.html",
+    "docs/location/city.md": "location/city.html",
+    "docs/location/coordinates.md": "location/coordinates.html",
+    "docs/location/country.md": "location/country.html",
+    "docs/location/depth.md": "location/depth.html",
+    "docs/location/geohash.md": "location/geohash.html",
+    "docs/location/latitude.md": "location/latitude.html",
+    "docs/location/longitude.md": "location/longitude.html",
+    "docs/location/phone.md": "location/phone.html",
+    "docs/location/postal.md": "location/postal.html",
+    "docs/location/province.md": "location/province.html",
+    "docs/location/state.md": "location/state.html",
+    "docs/location/street.md": "location/street.html",
+    "docs/location/zip.md": "location/zip.html",
+    "docs/time/ampm.md": "time/ampm.html",
+    "docs/time/date.md": "time/date.html",
+    "docs/time/hammertime.md": "time/hammertime.html",
+    "docs/time/hour.md": "time/hour.html",
+    "docs/time/millisecond.md": "time/millisecond.html",
+    "docs/time/minute.md": "time/minute.html",
+    "docs/time/month.md": "time/month.html",
+    "docs/time/second.md": "time/second.html",
+    "docs/time/timestamp.md": "time/timestamp.html",
+    "docs/time/timezone.md": "time/timezone.html",
+    "docs/time/weekday.md": "time/weekday.html",
+    "docs/time/year.md": "time/year.html",
+    "docs/finance/cc.md": "finance/cc.html",
+    "docs/finance/cc_type.md": "finance/cc_type.html",
+    "docs/finance/currency.md": "finance/currency.html",
+    "docs/finance/currency_pair.md": "finance/currency_pair.html",
+    "docs/finance/dollar.md": "finance/dollar.html",
+    "docs/finance/euro.md": "finance/euro.html",
+    "docs/finance/exp.md": "finance/exp.html",
+    "docs/finance/exp_month.md": "finance/exp_month.html",
+    "docs/finance/exp_year.md": "finance/exp_year.html",
+    "docs/helpers/capitalize.md": "helpers/capitalize.html",
+    "docs/helpers/mixin.md": "helpers/mixin.html",
+    "docs/helpers/pad.md": "helpers/pad.html",
+    "docs/helpers/pick.md": "helpers/pick.html",
+    "docs/helpers/pickone.md": "helpers/pickone.html",
+    "docs/helpers/pickset.md": "helpers/pickset.html",
+    "docs/helpers/set.md": "helpers/set.html",
+    "docs/helpers/shuffle.md": "helpers/shuffle.html",
+    "docs/miscellaneous/coin.md": "miscellaneous/coin.html",
+    "docs/miscellaneous/dice.md": "miscellaneous/dice.html",
+    "docs/miscellaneous/guid.md": "miscellaneous/guid.html",
+    "docs/miscellaneous/hash.md": "miscellaneous/hash.html",
+    "docs/miscellaneous/hidden.md": "miscellaneous/hidden.html",
+    "docs/miscellaneous/n.md": "miscellaneous/n.html",
+    "docs/miscellaneous/normal.md": "miscellaneous/normal.html",
+    "docs/miscellaneous/radio.md": "miscellaneous/radio.html",
+    "docs/miscellaneous/rpg.md": "miscellaneous/rpg.html",
+    "docs/miscellaneous/tv.md": "miscellaneous/tv.html",
+    "docs/miscellaneous/unique.md": "miscellaneous/unique.html",
+    "docs/miscellaneous/weighted.md": "miscellaneous/weighted.html",
+    "docs/analytics.js": "analytics.js",
+    "docs/chance.css": "chance.css",
+    "docs/chance.js": "chance.js",
+    "docs/chance.min.js": "chance.min.js",
+    "docs/chance.min.js.map": "chance.min.js.map",
+    "docs/inspector.png": "inspector.png",
+    "docs/logo.png": "logo.png"
+  }
+}

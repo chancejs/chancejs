@@ -1,361 +1,336 @@
----
-title: "Chance.js: Utility library to generate anything random for JavaScript"
-layout: default
-description: >
-  Utility library to generate anything random for JavaScript
-version: 1.0.13
-github_url: https://github.com/chancejs/chancejs
----
-
-<div id="menu_icon">≣</div>
-
-<aside id="sidebar" class="interface">
-
-  <a class="toc_title" href="#">
-    Chance.js <span class="version">({{ page.version }})</span>
-  </a>
-
-  <ul class=toc_section>
-    <li><a href="#download">Download</a></li>
-    <li><a href="#todo">Todo</a></li>
-    <li><a href="#changelog">Change Log</a></li>
-    <li><a href="#thanks">Acknowledgements</a></li>
-  </ul>
-
-  <a class=toc_title href="#usage">Usage</a>
-  {% assign posts = site.categories.usage %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#basics">Basics</a>
-  {% assign posts = site.categories.basics %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#text">Text</a>
-  {% assign posts = site.categories.text %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#person">Person</a>
-  {% assign posts = site.categories.person %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#thing">Thing</a>
-  {% assign posts = site.categories.thing %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#mobile">Mobile</a>
-  {% assign posts = site.categories.mobile %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#web">Web</a>
-  {% assign posts = site.categories.web %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#location">Location</a>
-  {% assign posts = site.categories.location %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#time">Time</a>
-  {% assign posts = site.categories.time %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#finance">Finance</a>
-  {% assign posts = site.categories.finance %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#helpers">Helpers</a>
-  {% assign posts = site.categories.helpers %}
-  {% include methods_sidebar.html %}
-
-  <a class=toc_title href="#miscellaneous">Miscellaneous</a>
-  {% assign posts = site.categories.miscellaneous %}
-  {% include methods_sidebar.html %}
-</aside>
-
-<div class="container">
-
-  <header>
-  <h1><img src=logo.png alt=Chance.js></h1>
-
-  <p>
-    <b>Chance</b> is a minimalist generator of random <a href="#true-random">[1]</a> strings, numbers, etc. to help
-    reduce some monotony particularly while writing automated tests or anywhere else you need anything random.
-  </p>
-  <p>
-    Chance is open source software and is released under the
-    developer and business-friendly
-    <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
-  </p>
-  <p>
-    <b>Chance</b> is loaded on this site so you can just open the console on your browser and play!
-    <img class="image" src="inspector.png">
-  </p>
-  <p>
-    <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://chancejs.com/" data-text="Chance - Utility library to generate random things for JavaScript" data-count="horizontal" data-via="victorquinn">Tweet</a>
-  </p>
-  <p>
-    Written by <a href="https://www.victorquinn.com">Victor Quinn</a>
-  </p>
-  <h3 id=npm>NPM</h3>
-  <p><a href="https://nodei.co/npm/chance/"><img src="https://nodei.co/npm/chance.png?downloads=true"></a></p>
-  <h3 id=download>Download Chance</h3>
-  <ul class=downloads>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/style.css?t=615badd5">
+    <link rel="stylesheet" href="chance.css?t=e8885f20">
+    <script src="assets/script.js?t=42463e55"></script>
+    <script src="chance.js?t=8d610f67"></script>
+    <script src="analytics.js?t=84f0b0a9"></script>
+    <script src="https://platform.twitter.com/widgets.js"></script>
+    <title>Chance</title>
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body class="-menu-visible">
+    <div class="doc-layout">
+      <div class="toggle menu-toggle js-menu-toggle"></div>
+      <div class="menu toc-menu">
+        <li class="menu-item -level-0 -parent">
+          <ul class="submenu">
+            <li class="menu-item -level-1"><a class="link title -active link-index" href="index.html">Chance</a>
+              <ul class="headings heading-list">
+                <li class="heading-item -depth-2"><a class="hlink link-acknowledgements-and-thanks" href="#acknowledgements-and-thanks">Acknowledgements &amp; Thanks</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Usage</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-usagebower" href="usage/bower.html">bower</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-usagebrowser" href="usage/browser.html">browser</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-usagecli" href="usage/cli.html">cli</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-usagenode" href="usage/node.html">node</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-usagerequirejs" href="usage/requirejs.html">requirejs</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-usageseed" href="usage/seed.html">seed</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-usagefunction" href="usage/function.html">function</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Basics</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-basicsbool" href="basics/bool.html">bool</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-basicscharacter" href="basics/character.html">character</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-basicsfloating" href="basics/floating.html">floating</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-basicsinteger" href="basics/integer.html">integer</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-basicsletter" href="basics/letter.html">letter</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-basicsnatural" href="basics/natural.html">natural</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-basicsstring" href="basics/string.html">string</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Text</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-textparagraph" href="text/paragraph.html">paragraph</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-textsentence" href="text/sentence.html">sentence</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-textsyllable" href="text/syllable.html">syllable</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-textword" href="text/word.html">word</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Person</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-personage" href="person/age.html">age</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personbirthday" href="person/birthday.html">birthday</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personcf" href="person/cf.html">cf</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personcpf" href="person/cpf.html">cpf</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personfirst" href="person/first.html">first</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-persongender" href="person/gender.html">gender</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personlast" href="person/last.html">last</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personname" href="person/name.html">name</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personprefix" href="person/prefix.html">prefix</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personssn" href="person/ssn.html">ssn</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-personsuffix" href="person/suffix.html">suffix</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Thing</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-thinganimal" href="thing/animal.html">animal</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Mobile</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-mobileandroid_id" href="mobile/android_id.html">android_id</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-mobileapple_token" href="mobile/apple_token.html">apple_token</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-mobilebb_pin" href="mobile/bb_pin.html">bb_pin</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-mobilewp7_anid" href="mobile/wp7_anid.html">wp7_anid</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-mobilewp8_anid2" href="mobile/wp8_anid2.html">wp8_anid2</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Web</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-webavatar" href="web/avatar.html">avatar</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webcolor" href="web/color.html">color</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webcompany" href="web/company.html">company</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webdomain" href="web/domain.html">domain</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webemail" href="web/email.html">email</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webfbid" href="web/fbid.html">fbid</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webgoogle_analytics" href="web/google_analytics.html">google_analytics</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webhashtag" href="web/hashtag.html">hashtag</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webip" href="web/ip.html">ip</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webipv6" href="web/ipv6.html">ipv6</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webklout" href="web/klout.html">klout</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webprofession" href="web/profession.html">profession</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webtld" href="web/tld.html">tld</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-webtwitter" href="web/twitter.html">twitter</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-weburl" href="web/url.html">url</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Location</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-locationaddress" href="location/address.html">address</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationaltitude" href="location/altitude.html">altitude</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationareacode" href="location/areacode.html">areacode</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationcity" href="location/city.html">city</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationcoordinates" href="location/coordinates.html">coordinates</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationcountry" href="location/country.html">country</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationdepth" href="location/depth.html">depth</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationgeohash" href="location/geohash.html">geohash</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationlatitude" href="location/latitude.html">latitude</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationlongitude" href="location/longitude.html">longitude</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationphone" href="location/phone.html">phone</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationpostal" href="location/postal.html">postal</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationprovince" href="location/province.html">province</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationstate" href="location/state.html">state</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationstreet" href="location/street.html">street</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationzip" href="location/zip.html">zip</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Time</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-timeampm" href="time/ampm.html">ampm</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timedate" href="time/date.html">date</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timehammertime" href="time/hammertime.html">hammertime</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timehour" href="time/hour.html">hour</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timemillisecond" href="time/millisecond.html">millisecond</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timeminute" href="time/minute.html">minute</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timemonth" href="time/month.html">month</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timesecond" href="time/second.html">second</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timetimestamp" href="time/timestamp.html">timestamp</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timetimezone" href="time/timezone.html">timezone</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timeweekday" href="time/weekday.html">weekday</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-timeyear" href="time/year.html">year</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Finance</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-financecc" href="finance/cc.html">cc</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financecc_type" href="finance/cc_type.html">cc_type</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financecurrency" href="finance/currency.html">currency</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financecurrency_pair" href="finance/currency_pair.html">currency_pair</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financedollar" href="finance/dollar.html">dollar</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financeeuro" href="finance/euro.html">euro</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financeexp" href="finance/exp.html">exp</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financeexp_month" href="finance/exp_month.html">exp_month</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-financeexp_year" href="finance/exp_year.html">exp_year</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Helpers</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-helperscapitalize" href="helpers/capitalize.html">capitalize</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-helpersmixin" href="helpers/mixin.html">mixin</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-helperspad" href="helpers/pad.html">pad</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-helperspick" href="helpers/pick.html">pick</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-helperspickone" href="helpers/pickone.html">pickone</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-helperspickset" href="helpers/pickset.html">pickset</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-helpersset" href="helpers/set.html">set</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-helpersshuffle" href="helpers/shuffle.html">shuffle</a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item -level-1 -parent"><span class="title">Miscellaneous</span>
+              <ul class="submenu">
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneouscoin" href="miscellaneous/coin.html">coin</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousdice" href="miscellaneous/dice.html">dice</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousguid" href="miscellaneous/guid.html">guid</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneoushash" href="miscellaneous/hash.html">hash</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneoushidden" href="miscellaneous/hidden.html">hidden</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousn" href="miscellaneous/n.html">n</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousnormal" href="miscellaneous/normal.html">normal</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousradio" href="miscellaneous/radio.html">radio</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousrpg" href="miscellaneous/rpg.html">rpg</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneoustv" href="miscellaneous/tv.html">tv</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousunique" href="miscellaneous/unique.html">unique</a>
+                </li>
+                <li class="menu-item -level-2"><a class="link title  link-miscellaneousweighted" href="miscellaneous/weighted.html">weighted</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </div>
+      <div class="body page-index">
+        <div class="header-nav">
+          <div class="right"><a class="iconlink" href="https://github.com/chancejs/chancejs" data-title="chancejs/chancejs">
+              <!-- span.title Open in GitHub--><span class="icon -github"></span></a>
+          </div>
+        </div>
+        <div class="markdown-body"><h1 id=""><img src="logo.png" alt="Chance"></h1>
+<p><strong>Chance</strong> is a minimalist generator of random <a href="#true-random">[1]</a>
+strings, numbers, etc. to help reduce some monotony particularly while writing
+automated tests or anywhere else you need anything random.</p>
+<p><strong>Chance</strong> is open source software and is released under the developer and
+business-friendly <a href="http://en.wikipedia.org/wiki/MIT_License">MIT License</a></p>
+<p><strong>Chance</strong> is loaded on this site so you can just open the console on your
+browser and play!</p>
+<p><img src="inspector.png" alt="Chance Web Inspector"></p>
+<p><a class="twitter-share-button" href="https://twitter.com/share" data-size="large" data-text="Chance - Utility library to generate random things for JavaScript" data-hashtags="chancejs,javascript" data-url="http://chancejs.com/" data-count="horizontal" data-via="victorquinn">
+Tweet
+</a></p>
+<p>Written by <a href="https://www.victorquinn.com">Victor Quinn</a></p>
+<p><a href="https://nodei.co/npm/chance/"><img src="https://nodei.co/npm/chance.png?downloads=true" alt="Chance on NPM"></a></p>
+<ul class="downloads">
     <li>
-      <a href="chance.js" class="download" download="chance.js">chance.js v{{ page.version }} (for development)</a>
+      <a href="chance.js" class="download" download="chance.js">chance.js (for development)</a>
       - <i>95KB uncompressed</i>
     </li>
     <li>
-      <a href="chance.min.js" class="download">chance.min.js v{{ page.version }} (for production)</a>
-      – <i>55KB, 17KB when gzipped</i>
+      <a href="chance.min.js" class="download">chance.min.js (for production)</a>
+      &#x2013; <i>55KB, 17KB when gzipped</i>
     </li>
   </ul>
+<p>Or move on to the <a href="usage/bower.html">Usage</a> section for many other ways to get and use Chance.</p>
+<h2 id="acknowledgements-and-thanks">Acknowledgements &amp; Thanks</h2>
+<p>Thank you to <a href="https://github.com/banksean">Sean McCullough</a> for your <a href="https://gist.github.com/banksean/300494">Mersenne Twister gist</a> on which almost the entirety of this library is dependent. And to Takuji Nishimura and Makoto Matsumoto who wrote the original C version on which Sean&apos;s JavaScript gist is based.</p>
+<p>And of course a monster thank you to all of the <a href="https://github.com/chancejs/chancejs/graphs/contributors">Contributors</a> to this project!</p>
+<p><small>&#xA9; 2013 <a href="https://www.victorquinn.com">Victor Quinn</a>
+Chance and this documentation are released under the terms of the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</small></p>
+<p><a id="true-random">[1]</a> Of course true mathematicians out there would say that this ought to be considered as only generating pseudo-random things, not true random. For that we&apos;d need some external entropy, not depending on a Mersenne Twister, blah, blah, blah. However, for most practical uses of this library for which it was created and intended, such as generating random names and addresses for automated tests, our random is good enough. But it should probably NOT be used for any cryptographic applications requiring true-random. See <a href="http://vq.io/12hBd84">Wikipedia&apos;s article</a> for more info.</p>
 
-  <p>
-    Or <b><a href="{{ page.github_url }}">grab the latest version on Github</a></b>.
-  </p>
-
-  <ul class=downloads>
-    <li>
-      <iframe src="http://ghbtns.com/github-btn.html?user=chancejs&repo=chancejs&type=watch&count=true"
-      allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-      <iframe src="http://ghbtns.com/github-btn.html?user=chancejs&repo=chancejs&type=fork&count=true"
-      allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-    </li>
-  </ul>
-
-  <a href="https://travis-ci.org/chancejs/chancejs"><img src="https://travis-ci.org/chancejs/chancejs.png"></a>
-  </header>
-
-  <section id=documentation>
-    <hr>
-
-    <h2 id="usage">Usage</h2>
-    {% assign posts = site.categories.usage %}
-    {% include methods_full.html %}
-
-    <h2 id="basics">Basics</h2>
-    {% assign posts = site.categories.basics %}
-    {% include methods_full.html %}
-
-    <h2 id="text">Text</h2>
-    {% assign posts = site.categories.text %}
-    {% include methods_full.html %}
-
-    <h2 id="person">Person</h2>
-    {% assign posts = site.categories.person %}
-    {% include methods_full.html %}
-
-    <h2 id="thing">Thing</h2>
-    {% assign posts = site.categories.thing %}
-    {% include methods_full.html %}
-
-    <h2 id="mobile">Mobile</h2>
-    {% assign posts = site.categories.mobile %}
-    {% include methods_full.html %}
-
-    <h2 id="web">Web</h2>
-    {% assign posts = site.categories.web %}
-    {% include methods_full.html %}
-
-    <h2 id="location">Location</h2>
-    {% assign posts = site.categories.location %}
-    {% include methods_full.html %}
-
-    <h2 id="time">Time</h2>
-    <p>
-      <em>For more complex time manipulation, <a href="http://momentjs.com">Moment</a> is
-        strongly recommended. It would be out of this library's core competency to try and
-        provide date objects of all formats</em>
-    </p>
-
-    {% assign posts = site.categories.time %}
-    {% include methods_full.html %}
-
-    <h2 id="finance">Finance</h2>
-    {% assign posts = site.categories.finance %}
-    {% include methods_full.html %}
-
-    <h2 id="helpers">Helpers</h2>
-    {% assign posts = site.categories.helpers %}
-    {% include methods_full.html %}
-
-    <h2 id="miscellaneous">Miscellaneous methods</h2>
-    {% assign posts = site.categories.miscellaneous %}
-    {% include methods_full.html %}
-
-    <hr>
-    <h2 id="todo">Todo</h2>
-    <ul>
-      {% for todo in site.categories.todo %}
-      <li>
-        <article class=todo id="todo-{{ todo.title }}">
-          <p>
-            <strong>{{ todo.title }}</strong>{{ todo.content }}
-          </p>
-        </article>
-      </li>
-      {% endfor %}
-    </ul>
-
-    <hr>
-    <h2 id="changelog">Change Log</h2>
-    {% for change in site.categories.changelog %}
-    <article class=changelog id="changelog-{{ change.title }}">
-      <h3>
-        {{ change.title }}
-        <small>&mdash; <i>{{ change.date | date_to_string }}</i>
-        {% if change.diff %}&mdash; <a href="{{ page.github_url }}/compare/{{ change.diff }}">diff</a>{% endif %}
-        </small>
-      </h3>
-      {{ change.content }}
-    </article>
-    {% endfor %}
-  </section>
-
-  <h2 id="thanks">Acknowledgements & Thanks</h2>
-  <p>
-    This documentation is based on the layout of the
-    <a href="https://zeptojs.com">Zepto.js</a> which itself is based on the layout of the
-    <a href="https://github.com/documentcloud/backbone/">Backbone.js</a>
-    documentation, which is released under the
-    <a href="https://github.com/documentcloud/backbone/blob/master/LICENSE">MIT license</a>.
-  </p>
-  <p>
-    Thank you to <a href="https://github.com/banksean">Sean McCullough</a> for your <a href="https://gist.github.com/banksean/300494">Mersenne Twister gist</a> on which almost the entirety of this library is dependent. And to Takuji Nishimura and Makoto Matsumoto who wrote the original C version on which Sean's JavaScript gist is based.
-  </p>
-  <p>
-    And of course a monster thank you to all of the <a href="https://github.com/chancejs/chancejs/graphs/contributors">Contributors</a> to this project!
-  </p>
-  <p>
-    <small>
-      &copy; 2013 <a href="https://www.victorquinn.com">Victor Quinn</a><br>
-      Chance and this documentation are released under the terms of the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
-    </small>
-  </p>
-
-  <footer>
-    <p>
-      <a id="true-random">[1]</a> - Of course true mathematicians out there would say that this ought to be
-      considered as only generating pseudo-random things, not true random. For that
-      we'd need some external entropy, not depending on a Mersenne Twister,
-      blah, blah, blah. However, for most practical uses of this library for which
-      it was created and intended, such as generating random names and addresses for
-      automated tests, our random is good enough. But it should probably NOT be used
-      for any cryptographic applications requiring true-random. See
-      <a href="http://vq.io/12hBd84">Wikipedia's article</a> for more info.
-    </p>
-  </footer>
-</div>
-
-<script src="chance.js"></script>
-
-<script src="zepto.min.js"></script>
-<script src="touch.js"></script>
-
-<script>
-  var reflowTimeout;
-
-  function injectScript(src) {
-    var s = document.createElement('script')
-    s.src = src; s.async = true
-    $('script').first().before(s)
-  }
-
-  // Reflow all elements on the page.
-  function reflowFixedPositions() {
-    var docStyle = document.documentElement.style
-    docStyle.paddingRight = '1px'
-    setTimeout(function(){ docStyle.paddingRight = '' }, 0)
-  }
-
-  $('.signature code').html(function(i, html){
-    return html
-      .replace(/\[([^\[]+)\]$/mg, '<span class=version>$1+</span>')
-      .replace(/\)([^()]+)$/mg, ') <span class=return>$1</span>')
-  })
-
-  $(document).on('mouseover', 'span.version', function(){
-    var el = $(this)
-    if (!el.attr('title'))
-      el.attr('title', "This feature is only available in Zepto " + el.text())
-  })
-
-  if ($.os.ios || /\bMac.+\bSafari\b/.test(navigator.userAgent))
-    $(document.body).addClass('emoji-enabled')
-
-  // don't follow links when the sidebar is tap-enabled
-  $('#sidebar').on('click', 'a', function(e){
-    return !$('body').hasClass('navigating')
-  })
-
-  $('#sidebar').on('tap', 'a', function(e){
-    location.href = this.href;
-
-    closeMenu()
-    setTimeout(function(){
-      // fixes sidebar becoming unscrollable in Safari 6
-      reflowFixedPositions()
-    }, 10)
-    return false
-  })
-
-  $(window).on('scroll', function(){
-    if(reflowTimeout) clearTimeout(reflowTimeout)
-    reflowTimeout = setTimeout(reflowFixedPositions, 200)
-  })
-
-  function closeMenu(){
-    if ($('body').hasClass('navigating')) {
-      $('body').removeClass('navigating')
-      setTimeout(function(){
-        $('#sidebar').css('display','none')
-      }, 350)
-    }
-  }
-
-  // show/hide menu on mobile
-  $('#menu_icon').on('tap', function(){
-    if ($('body').hasClass('navigating')) {
-      closeMenu()
-    } else {
-      $('#sidebar').css('display','block')
-      $('#sidebar')[0].offsetLeft // force render
-      $('body').addClass('navigating')
-    }
-    return false
-  })
-
-  // change the title of the page so bookmarks have a better default
-  if ($.os.ios || $.os.android)
-    document.title = 'Chance Docs'
-
-  // For retina screens, use a hi-res version of the tour image.
-  // We're swapping this out on-demand (not an ideal solution)
-  // to avoid rendering bugs on iOS.
-  /*
-  $('#tour > img')[0].src =
-    ('devicePixelRatio' in window && devicePixelRatio > 1) ?
-    'intro2x.jpg' : 'intro.jpg'
-  */
-  var tour = $('#tour'), tourSlides = tour.children(),
-      tourSlide = 0, tourSlidesTotal = 5
-
-  function advanceTourSlide(delta){
-    tourSlide = (tourSlide + delta + tourSlidesTotal) % tourSlidesTotal
-    var offset = tourSlide * tour.width()
-    tourSlides.animate({ translateX: -offset + 'px' })
-  }
-
-  tour.on('click swipeLeft', function(){ advanceTourSlide(+1) })
-      .on('swipeRight', function(){ advanceTourSlide(-1) })
-
-  if (/^(localhost|chancejs)|\.(dev|local)$/.test(location.hostname) && $.os.iphone && !/Simulator/.test(navigator.userAgent))
-    injectScript('livereload.js')
-
-  injectScript('http://platform.twitter.com/widgets.js')
-</script>
-
-<script type="text/javascript">
-window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
-window.analytics.load("5u8961mhro");
-window.analytics.page();
-</script>
+        </div>
+        <div class="footer-nav">
+          <div class="right"><a href="usage/bower.html"><span class="label">Next: </span><span class="title">bower</span></a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
