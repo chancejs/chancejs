@@ -27,16 +27,26 @@ Written by [Victor Quinn](https://www.victorquinn.com)
 
 [![Chance on NPM](https://nodei.co/npm/chance.png?downloads=true)](https://nodei.co/npm/chance/)
 
-## Download Chance
-
 <ul class=downloads>
     <li>
-      <a href="chance.js" class="download" download="chance.js">chance.js v{{ page.version }} (for development)</a>
+      <a href="chance.js" class="download" download="chance.js">chance.js (for development)</a>
       - <i>95KB uncompressed</i>
     </li>
     <li>
-      <a href="chance.min.js" class="download">chance.min.js v{{ page.version }} (for production)</a>
+      <a href="chance.min.js" class="download">chance.min.js (for production)</a>
       – <i>55KB, 17KB when gzipped</i>
     </li>
   </ul>
 
+Or move on to the [Usage](usage/bower.md) section for many other ways to get and use Chance.
+
+## Acknowledgements & Thanks
+
+Thank you to [Sean McCullough](https://github.com/banksean) for your [Mersenne Twister gist](https://gist.github.com/banksean/300494) on which almost the entirety of this library is dependent. And to Takuji Nishimura and Makoto Matsumoto who wrote the original C version on which Sean's JavaScript gist is based.
+
+And of course a monster thank you to all of the [Contributors](https://github.com/chancejs/chancejs/graphs/contributors) to this project!
+
+<small>© 2013 [Victor Quinn](https://www.victorquinn.com)
+Chance and this documentation are released under the terms of the [MIT license](http://opensource.org/licenses/MIT).</small>
+
+<a id="true-random">[1]</a> Of course true mathematicians out there would say that this ought to be considered as only generating pseudo-random things, not true random. For that we'd need some external entropy, not depending on a Mersenne Twister, blah, blah, blah. However, for most practical uses of this library for which it was created and intended, such as generating random names and addresses for automated tests, our random is good enough. But it should probably NOT be used for any cryptographic applications requiring true-random. See [Wikipedia's article](http://vq.io/12hBd84) for more info.

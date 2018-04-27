@@ -118,3 +118,5 @@
   * [tv](miscellaneous/tv.md)
   * [unique](miscellaneous/unique.md)
   * [weighted](miscellaneous/weighted.md)
+
+<script type="text/javascript" src="chance.js"></script>
