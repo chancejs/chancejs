@@ -377,6 +377,51 @@ test('natural() throws an error if numerals is less than 1', t => {
     t.throws(fn, 'Chance: Numerals cannot be less than one.')
 })
 
+test('prime() returns a number', t => {
+    t.is(typeof chance.prime(), 'number')
+})
+
+test('prime() throws an error if min < 0', t => {
+    const fn = () => chance.prime({ min: -23 })
+    t.throws(fn, 'Chance: Min cannot be less than zero.')
+})
+
+test('prime() throws an error if min > max', t => {
+    const fn = () => chance.prime({ min: 1000, max: 500 })
+    t.throws(fn, 'Chance: Min cannot be greater than Max.')
+})
+
+test('prime() is always positive and odd (or 2)', t => {
+    let positiveCount = 0
+    _.times(1000, () => {
+        const prime = chance.prime()
+        if (prime > 0 && (prime % 2 === 1 || prime === 2)) {
+            positiveCount++
+        }
+    })
+    t.is(positiveCount, 1000)
+})
+
+test('prime() can take just a min and obey it', t => {
+    _.times(1000, () => {
+        t.true(chance.prime({ min: 5000 }) >= 5000)
+    })
+})
+
+test('prime() can take just a max and obey it', t => {
+    _.times(1000, () => {
+        t.true(chance.prime({ max: 20000 }) <= 20000)
+    })
+})
+
+test('prime() can take both a max and min and obey them both', t => {
+    _.times(1000, () => {
+        const prime = chance.prime({ min: 90, max: 100 })
+        t.true(prime >= 90)
+        t.true(prime <= 100)
+    })
+})
+
 test('set() works as expected', t => {
     let cData = { lastNames: ['customName', 'testLast'] }
     chance.set(cData)
