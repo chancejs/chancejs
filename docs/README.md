@@ -14,6 +14,7 @@
   * [integer](basics/integer.md)
   * [letter](basics/letter.md)
   * [natural](basics/natural.md)
+  * [prime](basics/prime.md)
   * [string](basics/string.md)
 * Text
   * [paragraph](text/paragraph.md)
