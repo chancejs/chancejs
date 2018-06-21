@@ -298,6 +298,11 @@ chance.gender()
 <pre><code class="lang-js">  Chance.gender();
   =&gt; <span class="pl-s">&apos;Female&apos;</span>
 </code></pre>
+<p>Extra genders can be provided using the <code>extraGenders</code> key in the optional options argument:</p>
+<pre><code class="lang-js">  Chance.gender({
+    <span class="hljs-attr">extraGenders</span>: [<span class="pl-s">&apos;Agender&apos;</span>, <span class="pl-s">&apos;Genderqueer&apos;</span>, <span class="pl-s">&apos;Trans&apos;</span>, <span class="pl-s">&apos;Pangender&apos;</span>]
+  });
+</code></pre>
 
         </div>
         <div class="footer-nav">
