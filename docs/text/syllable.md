@@ -14,5 +14,5 @@ chance.syllable();
 
 The syllable is returned in all lower case.
 
-A syllable generally alternates between vowel and consanant and is used as the
+A syllable generally alternates between vowel and consonant and is used as the
 core building block for a word.
