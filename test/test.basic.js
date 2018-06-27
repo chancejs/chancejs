@@ -163,9 +163,11 @@ test('character() allows only alpha', t => {
     })
 })
 
-test('character() throws when specifying both alpha and symbols', t => {
-    const fn = () => chance.character({alpha: true, symbols: true})
-    t.throws(fn, 'Chance: Cannot specify both alpha and symbols.')
+test('character() allows only alphanumeric', t => {
+    _.times(1000, () => {
+        let char = chance.character({ alpha: true, numeric: true })
+        t.true(/[a-zA-Z0-9]/.test(char))
+    })
 })
 
 test('character() obeys upper case', t => {

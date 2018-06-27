@@ -167,17 +167,12 @@
     /**
      *  Return a random character.
      *
-     *  @param {Object} [options={}] can specify a character pool, only alpha,
-     *    only symbols, and casing (lower or upper)
+     *  @param {Object} [options={}] can specify a character pool or alpha,
+     *    numeric, symbols and casing (lower or upper)
      *  @returns {String} a single random character
-     *  @throws {RangeError} Can only specify alpha or symbols, not both
      */
     Chance.prototype.character = function (options) {
         options = initOptions(options);
-        testRange(
-            options.alpha && options.symbols,
-            "Chance: Cannot specify both alpha and symbols."
-        );
 
         var symbols = "!@#$%^&*()[]",
             letters, pool;
@@ -192,12 +187,20 @@
 
         if (options.pool) {
             pool = options.pool;
-        } else if (options.alpha) {
-            pool = letters;
-        } else if (options.symbols) {
-            pool = symbols;
         } else {
-            pool = letters + NUMBERS + symbols;
+            pool = '';
+            if (options.alpha) {
+                pool += letters;
+            }
+            if (options.numeric) {
+                pool += NUMBERS;
+            }
+            if (options.symbols) {
+                pool += symbols;
+            }
+            if (!pool) {
+                pool = letters + NUMBERS + symbols;
+            }
         }
 
         return pool.charAt(this.natural({max: (pool.length - 1)}));
