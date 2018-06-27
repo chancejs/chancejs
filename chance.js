@@ -490,7 +490,15 @@
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
         } else {
-            return this.shuffle(arr).slice(0, count);
+            var array = arr.slice(0);
+            var end = array.length;
+
+            return this.n(() => {
+                var index = this.natural({max: --end});
+                var value = array[index];
+                array[index] = array[end];
+                return value;
+            }, Math.min(end, count));
         }
     };
 

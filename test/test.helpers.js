@@ -144,6 +144,14 @@ test('pickset() returns multiple elements when called with count > 1', t => {
     })
 })
 
+test('pickset() returns no more values than the size of the array', t => {
+    let arr = ['a', 'b', 'c', 'd']
+    _.times(1000, () => {
+        let picked = chance.pickset(arr, 5)
+        t.is(picked.length, 4)
+    })
+})
+
 test('pickset() does not destroy the original array', t => {
     let arr = ['a', 'b', 'c', 'd', 'e', 'f'];
     _.times(1000, () => {
