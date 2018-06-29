@@ -34,20 +34,20 @@ gulp.task('test', () =>
 )
 
 gulp.task('watch', () => {
-    var watcher = gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])
+    gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])
 })
 
 gulp.task('watch-lint', () => {
-    var watcher = gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint'])
+    gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint'])
 })
 
-gulp.task('build', function (cb) {
+gulp.task('build', (cb) => {
     pump([ gulp.src('chance.js'), sourcemaps.init(),
         rename('chance.min.js'), uglify(), sourcemaps.write('.'),
         gulp.dest('dist'),
     ], cb)
 })
 
-gulp.task('travis', ['lint', 'test'])
+gulp.task('travis', gulp.series('lint', 'test'))
 
-gulp.task('default', ['watch', 'lint', 'test'])
+gulp.task('default', gulp.series('watch', 'lint', 'test'))
