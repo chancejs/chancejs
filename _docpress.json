@@ -101,6 +101,12 @@
             "slug": "basicsnatural"
           },
           {
+            "title": "prime",
+            "source": "docs/basics/prime.md",
+            "url": "basics/prime.html",
+            "slug": "basicsprime"
+          },
+          {
             "title": "string",
             "source": "docs/basics/string.md",
             "url": "basics/string.html",
@@ -810,6 +816,12 @@
       "pageTitle": "natural",
       "slug": "basicsnatural"
     },
+    "basics/prime.html": {
+      "source": "docs/basics/prime.md",
+      "title": "prime - Chance",
+      "pageTitle": "prime",
+      "slug": "basicsprime"
+    },
     "basics/string.html": {
       "source": "docs/basics/string.md",
       "title": "string - Chance",
@@ -1390,6 +1402,7 @@
     "docs/basics/integer.md": "basics/integer.html",
     "docs/basics/letter.md": "basics/letter.html",
     "docs/basics/natural.md": "basics/natural.html",
+    "docs/basics/prime.md": "basics/prime.html",
     "docs/basics/string.md": "basics/string.html",
     "docs/text/paragraph.md": "text/paragraph.html",
     "docs/text/sentence.md": "text/sentence.html",
