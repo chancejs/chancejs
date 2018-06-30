@@ -21,7 +21,7 @@
     "dirty-chai": "^1.2.2",
     "docpress": "0.7.1",
     "git-update-ghpages": "1.3.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-ava": "^0.17.1",
     "gulp-eslint": "^3.0.1",
     "gulp-jshint": "^2.0.4",
@@ -64,8 +64,14 @@
     ]
   },
   "docpress": {
-    "scripts": ["chance.js", "analytics.js", "https://platform.twitter.com/widgets.js"],
+    "scripts": [
+      "chance.js",
+      "analytics.js",
+      "https://platform.twitter.com/widgets.js"
+    ],
     "github": "chancejs/chancejs",
-    "css": ["docs/chance.css"]
+    "css": [
+      "docs/chance.css"
+    ]
   }
 }
