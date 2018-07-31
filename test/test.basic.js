@@ -475,3 +475,17 @@ test('string() obeys symbol', t => {
         t.true(/[\!\@\#\$\%\^\&\*\(\)\[\]]+/.test(str))
     })
 })
+
+test('falsy() should return a falsy value', t => {
+    _.times(1000, () => {
+        const value = chance.falsy()
+        t.falsy(value)
+    })
+})
+
+test('falsy() should return a falsy value using a pool data', t => {
+    _.times(1000, () => {
+        const value = chance.falsy({pool: [null, undefined]})
+        t.falsy(value)
+    })
+})
