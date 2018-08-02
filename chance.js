@@ -379,12 +379,17 @@
     /**
      *  Return a random string
      *
-     *  @param {Object} [options={}] can specify a length
+     *  @param {Object} [options={}] can specify a length or min and max
      *  @returns {String} a string of random length
      *  @throws {RangeError} length cannot be less than zero
      */
     Chance.prototype.string = function (options) {
-        options = initOptions(options, { length: this.natural({min: 5, max: 20}) });
+        options = initOptions(options, { min: 5, max: 20 });
+
+        if (!options.length) {
+            options.length = this.natural({ min: options.min, max: options.max })
+        }
+
         testRange(options.length < 0, "Chance: Length cannot be less than zero.");
         var length = options.length,
             text = this.n(this.character, length, options);
