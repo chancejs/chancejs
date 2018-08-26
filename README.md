@@ -29,6 +29,7 @@ See the [full docs](https://chancejs.com) for details on installation and usage.
 * [Mocker Data Generator](https://github.com/danibram/mocker-data-generator/) - Minimal JSON data generator.
 * [swagger-mock-api](https://github.com/dzdrazil/swagger-mock-api/) - Generate API mocks from a Swagger spec file enriched with Chance types and constraints
 * [fony](https://github.com/captainsafia/fony) - A simple command line tool for generating fake data from a template string
+* [easygraphql-mock](https://github.com/EasyGraphQL/easygraphql-mock) - Generate a mock of your GraphQL schema.
 
 Or [view all of the dependents on npm](https://www.npmjs.com/package/chance)
 
