@@ -184,6 +184,42 @@ test('character() obeys lower case', t => {
     })
 })
 
+test('floating_matrix() will not take invalid row number', t => {
+    const fn = () => chance.floating_matrix(0, 1)
+    t.throws(fn, "Chance: Number of rows must be greater than zero")
+})
+
+test('floating_matrix() will not take invalid column number', t => {
+    const fn = () => chance.floating_matrix(1, 0)
+    t.throws(fn, "Chance: Number of columns must be greater than zero")
+})
+
+test('floating_matrix() returns an array with correct rows', t => {
+	t.is(chance.floating_matrix(2,3).length, 2)
+})
+
+test('floating_matrix() returns an array with correct columns', t => {
+	t.is(chance.floating_matrix(2,3)[0].length, 3)
+})
+
+test('floating_matrix() passes through options to float generator', t => {
+	var matrix = chance.floating_matrix(2,2, {min: 0, max: 1});
+	
+	t.true(0 <= matrix[0][0] && matrix[0][0] <= 1);
+	t.true(0 <= matrix[0][1] && matrix[0][1] <= 1);
+	t.true(0 <= matrix[1][0] && matrix[1][0] <= 1);
+	t.true(0 <= matrix[0][0] && matrix[0][0] <= 1);
+
+	var matrix = chance.floating_matrix(2,2, {min: .5,  max: 1});
+	
+	t.true(.5 <= matrix[0][0] && matrix[0][0] <= 1);
+	t.true(.5 <= matrix[0][1] && matrix[0][1] <= 1);
+	t.true(.5 <= matrix[1][0] && matrix[1][0] <= 1);
+	t.true(.5 <= matrix[0][0] && matrix[0][0] <= 1);
+	
+})
+
+
 test('floating() returns a random floating', t => {
     t.is(typeof chance.floating(), 'number')
 })
