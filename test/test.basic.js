@@ -202,12 +202,18 @@ test('floating_matrix() returns an array with correct columns', t => {
 	t.is(chance.floating_matrix(2,3)[0].length, 3)
 })
 
+test('floating_matrix() returns row vector instead of matrix with length one columns', t => {
+	t.is(typeof chance.floating_matrix(2, 1)[0], 'number');
+	t.is(typeof chance.floating_matrix(2, 1)[1], 'number');
+})
+
 test('floating_matrix() passes through options to float generator', t => {
 	var matrix = chance.floating_matrix(2,2, {min: 0, max: 1});
 	t.true(0 <= matrix[0][0] && matrix[0][0] <= 1);
 	t.true(0 <= matrix[0][1] && matrix[0][1] <= 1);
 	t.true(0 <= matrix[1][0] && matrix[1][0] <= 1);
 	t.true(0 <= matrix[0][0] && matrix[0][0] <= 1);
+
 	var matrix = chance.floating_matrix(2,2, {min: .5,  max: 1});
 	t.true(.5 <= matrix[0][0] && matrix[0][0] <= 1);
 	t.true(.5 <= matrix[0][1] && matrix[0][1] <= 1);

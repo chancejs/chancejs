@@ -218,12 +218,21 @@
     Chance.prototype.floating_matrix = function (n, m, options) {
          testRange(n <= 0, 'Chance: Number of rows must be greater than zero');
          testRange(m <= 0, 'Chance: Number of columns must be greater than zero');
-             return this.n(function() {
-                   return this.n(function() {
-                          return this.floating(options);
-                   }, m)
-             }, n);
-    }
+
+         if (m === 1) {
+               return this.n(function() { return this.floating(options) }, n);
+         }
+
+         if (n === 1) {
+               return this.n(function() { return this.floating(options) }, m);
+         }
+
+         return this.n(function() {
+                 return this.n(function() {
+                       return this.floating(options);
+               }, m)
+         }, n);
+}
 
     // Note, wanted to use "float" or "double" but those are both JS reserved words.
 
@@ -378,11 +387,11 @@
     Chance.prototype.hex = function (options) {
         options = initOptions(options, {min: 0, max: MAX_INT, casing: 'lower'});
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
-		var integer = this.natural({min: options.min, max: options.max});
-		if (options.casing === 'upper') {
-			return integer.toString(16).toUpperCase();
-		}
-		return integer.toString(16);
+                var integer = this.natural({min: options.min, max: options.max});
+                if (options.casing === 'upper') {
+                        return integer.toString(16).toUpperCase();
+                }
+                return integer.toString(16);
     };
 
     Chance.prototype.letter = function(options) {
