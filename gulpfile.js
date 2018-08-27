@@ -33,11 +33,6 @@ gulp.task('test', () =>
         .pipe(ava({ verbose: true }))
 )
 
-gulp.task('test-matrix', () =>
-    gulp.src('test/test.basic.js')
-        .pipe(ava({ verbose: true }))
-)
-
 
 gulp.task('watch', () => {
     gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])

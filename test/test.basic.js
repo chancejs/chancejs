@@ -204,19 +204,16 @@ test('floating_matrix() returns an array with correct columns', t => {
 
 test('floating_matrix() passes through options to float generator', t => {
 	var matrix = chance.floating_matrix(2,2, {min: 0, max: 1});
-	
 	t.true(0 <= matrix[0][0] && matrix[0][0] <= 1);
 	t.true(0 <= matrix[0][1] && matrix[0][1] <= 1);
 	t.true(0 <= matrix[1][0] && matrix[1][0] <= 1);
 	t.true(0 <= matrix[0][0] && matrix[0][0] <= 1);
-
 	var matrix = chance.floating_matrix(2,2, {min: .5,  max: 1});
-	
 	t.true(.5 <= matrix[0][0] && matrix[0][0] <= 1);
 	t.true(.5 <= matrix[0][1] && matrix[0][1] <= 1);
 	t.true(.5 <= matrix[1][0] && matrix[1][0] <= 1);
 	t.true(.5 <= matrix[0][0] && matrix[0][0] <= 1);
-	
+
 })
 
 
