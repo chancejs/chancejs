@@ -1592,6 +1592,22 @@
         }
         var phone;
         switch (options.country) {
+            case 'de' :
+                if (!options.mobile) {
+                    numPick = self.pickone([
+                        '0' + self.string({ pool: '123456789', length: self.pickone([2,3]) }) + ' / ' + self.string({ pool: '0123456789', length: self.natural({ min: 4, max: 8 })}),
+                        '0' + self.string({ pool: '123456789', length: 4}) + ' / ' + self.string({ pool: '0123456789', length: self.natural({ min: 4, max: 7 })}),
+                        '03' + self.string({  pool: '123456789', length: 4 }) + ' / ' + self.string({ pool: '0123456789', length: self.natural({ min: 4, max: 6 }) })
+                    ]);
+                    phone = options.formatted ? '+49 (0) ' + numPick.substr(1) : numPick.replace(' / ', '').trim()
+                } else {
+                    numPick = self.pickone([
+                        '01' + self.pickone([5,6,7]) + self.natural({ min: 1, max: 9 }) + ' / ' + self.string({ pool: '0123456789', length: 7 }),
+                        '015' + self.string({ pool: '0123456789', length: 2}) + ' / ' + self.string({ pool: '0123456789', length: 7 })
+                    ]);
+                    phone = options.formatted ? '+49 ' + numPick.substr(1) : numPick.replace(' / ', '').trim()
+                }
+                break;
             case 'fr':
                 if (!options.mobile) {
                     numPick = this.pick([
