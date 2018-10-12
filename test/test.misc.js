@@ -85,7 +85,7 @@ test('d100() returns a properly bounded d100', t => {
 
 
 // chance.emotion()
-test('emotion() returns a random emotion name', t => {
+test('emotion() returns a random emotion', t => {
     _.times(1000, () => {
         let emotion = chance.emotion()
         t.true(_.isString(emotion))
