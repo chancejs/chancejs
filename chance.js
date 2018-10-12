@@ -6911,7 +6911,7 @@
              "Joy",
              "Surprise",
              "Anger",
-             "Sadness", 
+             "Sadness",
              "Fear"
         ],
     };
