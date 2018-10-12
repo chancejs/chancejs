@@ -6908,11 +6908,11 @@
         ],
         emotions: [
             "love",
-             "Joy",
-             "Surprise",
-             "Anger",
-             "Sadness",
-             "Fear"
+            "joy",
+            "surprise",
+            "anger",
+            "sadness",
+            "fear"
         ],
     };
 
