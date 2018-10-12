@@ -83,6 +83,17 @@ test('d100() returns a properly bounded d100', t => {
     })
 })
 
+
+// chance.emotion()
+test('emotion() returns a random emotion name', t => {
+    _.times(1000, () => {
+        let emotion = chance.emotion()
+        t.true(_.isString(emotion))
+        t.true(emotion.length >= 2)
+        t.true(emotion.length <= 30)
+    })
+})
+
 // chance.guid()
 test('guid() returns a proper guid', t => {
     _.times(1000, () => {
