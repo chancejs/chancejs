@@ -1851,12 +1851,20 @@
             date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
         }
 
+        function prependZero(number) {
+            return ('0' + number);
+        }
+
+        function formatDigitsOf(number){
+            return (number < 10) ? prependZero(number) : number;
+        }
+
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
             // months but not day for some odd reason.
-            date_string = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+            date_string = formatDigitsOf(date.getMonth() + 1) + '/' + formatDigitsOf(date.getDate()) + '/' + date.getFullYear();
         } else {
-            date_string = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+            date_string = formatDigitsOf(date.getDate()) + '/' + formatDigitsOf(date.getMonth() + 1) + '/' + date.getFullYear();
         }
 
         return options.string ? date_string : date;
