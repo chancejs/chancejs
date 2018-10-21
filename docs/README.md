@@ -97,6 +97,12 @@
   * [exp](finance/exp.md)
   * [exp_month](finance/exp_month.md)
   * [exp_year](finance/exp_year.md)
+* Music
+  * [chord_quality](music/chord_quality.md)
+  * [chord](music/chord.md)
+  * [midi_note](music/midi_note.md)
+  * [note](music/note.md)
+  * [tempo](music/tempo.md)
 * Helpers
   * [capitalize](helpers/capitalize.md)
   * [mixin](helpers/mixin.md)
