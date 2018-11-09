@@ -515,6 +515,12 @@ test('states() with country of "uk" returns 129 UK counties', t => {
     }).length, 129)
 })
 
+test('states() with country of "mx" returns 32 MX states', t => {
+    t.is(chance.states({
+        country: 'mx'
+    }).length, 32)
+})
+
 // chance.street()
 test('street() works', t => {
     _.times(100, () => t.is(typeof chance.street(), 'string'))
