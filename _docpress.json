@@ -431,6 +431,12 @@
             "slug": "locationpostal"
           },
           {
+            "title": "postcode",
+            "source": "docs/location/postcode.md",
+            "url": "location/postcode.html",
+            "slug": "locationpostcode"
+          },
+          {
             "title": "province",
             "source": "docs/location/province.md",
             "url": "location/province.html",
@@ -1116,6 +1122,12 @@
       "pageTitle": "postal",
       "slug": "locationpostal"
     },
+    "location/postcode.html": {
+      "source": "docs/location/postcode.md",
+      "title": "postcode - Chance",
+      "pageTitle": "postcode",
+      "slug": "locationpostcode"
+    },
     "location/province.html": {
       "source": "docs/location/province.md",
       "title": "province - Chance",
@@ -1452,6 +1464,7 @@
     "docs/location/longitude.md": "location/longitude.html",
     "docs/location/phone.md": "location/phone.html",
     "docs/location/postal.md": "location/postal.html",
+    "docs/location/postcode.md": "location/postcode.html",
     "docs/location/province.md": "location/province.html",
     "docs/location/state.md": "location/state.html",
     "docs/location/street.md": "location/street.html",
