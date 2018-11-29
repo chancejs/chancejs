@@ -70,6 +70,7 @@
   * [longitude](location/longitude.md)
   * [phone](location/phone.md)
   * [postal](location/postal.md)
+  * [postcode](location/postcode.md)
   * [province](location/province.md)
   * [state](location/state.md)
   * [street](location/street.md)
