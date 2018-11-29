@@ -400,7 +400,6 @@ test('postal() returns a valid basic postal code', t => {
 test('postcode() returns a valid basic postcode', t => {
     _.times(10, () => {
         let postcode = chance.postcode();
-        console.log(postcode);
         t.regex(postcode, /^[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}$/);
     })
 })
