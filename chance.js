@@ -543,7 +543,7 @@
             var array = arr.slice(0);
             var end = array.length;
 
-            return this.n(() => {
+            return this.n(function () {
                 var index = this.natural({max: --end});
                 var value = array[index];
                 array[index] = array[end];
