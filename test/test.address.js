@@ -404,6 +404,13 @@ test('postcode() returns a valid basic postcode', t => {
     })
 })
 
+test('postcode() returns a valid basic postcode for fr', t => {
+    _.times(10, () => {
+        let postcode = chance.postcode({ country: 'fr' });
+        t.regex(postcode, /^(([0-8][0-9])|(9[0-5]))[0-9]{3}$/);
+    })
+})
+
 // chance.province()
 test('province() returns a random (short) province name', t => {
     _.times(1000, () => t.true(chance.province().length < 3))
@@ -529,6 +536,10 @@ test('street() works', t => {
 
 test('street() works with it country', t => {
     _.times(100, () => t.is(typeof chance.street({ country: 'it' }), 'string'))
+})
+
+test('street() works with fr country', t => {
+    _.times(100, () => t.is(typeof chance.street({ country: 'fr' }), 'string'))
 })
 
 // chance.street_suffix()

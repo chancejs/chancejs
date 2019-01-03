@@ -114,3 +114,39 @@ test('vat() returns a valid italian vat number', t => {
         t.true(chance.luhn_check(vat))
     })
 })
+
+// chance.fr_social_security_number()
+test('fr_social_security_number() returns a valid french social security number', t => {
+    _.times(1000, () => {
+        let ssn = chance.fr_social_security_number({
+            gender: 'male',
+            birthday: new Date(1982, 4, 23),
+            postcode: '13012'
+        })
+        t.true(_.isString(ssn))
+        t.is(ssn.length, 15)
+        let first = ssn.charAt(0)
+        let year = ssn.substr(1, 2);
+        let month = ssn.substr(3, 2);
+        let departement = ssn.substr(5, 2);
+        t.true(first === '1' || first === '2')
+        t.true(year === '82')
+        t.true(month === '05')
+        t.true(departement === '13')
+        t.true(chance.fr_social_security_number_modulo_check(ssn))
+    })
+})
+test('fr_social_security_number() returns a valid french social security number with no input', t => {
+    _.times(1000, () => {
+        let ssn = chance.fr_social_security_number()
+        t.true(_.isString(ssn))
+        t.is(ssn.length, 15)
+        let first = ssn.charAt(0)
+        let month = +ssn.substr(3, 2);
+        let departement = +ssn.substr(5, 2);
+        t.true(first === '1' || first === '2')
+        t.true(month < 13)
+        t.true(departement < 96)
+        t.true(chance.fr_social_security_number_modulo_check(ssn))
+    })
+})
