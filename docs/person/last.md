@@ -3,7 +3,7 @@
 ```js
 // usage
 chance.last()
-chance.last({ nationality: 'us' })
+chance.last({ nationality: 'en' })
 ```
 
 Generate a random last name
@@ -20,4 +20,4 @@ Chance.last({ nationality: 'it' });
 => 'Giovannini'
 ```
 
-Note, currently support for nationality is limited to: `'us', 'it'`.
+Note, currently support for nationality is limited to: `'en', 'it'`.
