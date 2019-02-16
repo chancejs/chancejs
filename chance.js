@@ -292,6 +292,23 @@
           options.max = Math.pow(10, options.numerals) - 1;
         }
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
+
+        if (options.exclude) {
+            testRange(!Array.isArray(options.exclude), "Chance: exclude must be an array.")
+
+            for (const exclusion of options.exclude) {
+                testRange(!Number.isInteger(exclusion), "Chance: exclude must be numbers.")
+            }
+
+            let random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
+            for (const exclusion of options.exclude.sort()) {
+                if (random < exclusion) {
+                    break
+                }
+                random++
+            }
+            return random
+        }
         return this.integer(options);
     };
 
