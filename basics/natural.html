@@ -308,6 +308,10 @@ chance.natural({ <span class="hljs-attr">min</span>: <span class="hljs-number">1
 <pre><code class="lang-js">chance.natural({<span class="hljs-attr">min</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">20</span>});
 =&gt; <span class="hljs-number">14</span>
 </code></pre>
+<p>Can optionally provide numbers you wish to exclude.</p>
+<pre><code class="lang-js">chance.natural({<span class="hljs-attr">min</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">max</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">exclude</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>]});
+=&gt; <span class="hljs-number">2</span>
+</code></pre>
 <p>These are inclusive, so they are included in the range. This means
 <code>chance.natural({min: 1, max: 3});</code> would return either 1, 2, or 3 or:</p>
 <pre><code class="lang-js"><span class="pl-c">// Specific case</span>
