@@ -17,6 +17,7 @@
     "ava": "^0.19.1",
     "babel-eslint": "^7.2.3",
     "chai": "^3.5.0",
+    "concurrently": "^4.1.0",
     "coveralls": "^2.11.2",
     "dirty-chai": "^1.2.2",
     "docpress": "0.7.1",
@@ -32,14 +33,24 @@
     "jshint-stylish": "^2.2.1",
     "lodash": "^4.17.4",
     "nyc": "^10.3.2",
-    "pump": "^1.0.2"
+    "onchange": "^5.2.0",
+    "pump": "^1.0.2",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-immutable": "^5.2.0",
+    "typescript": "^3.3.3"
   },
   "scripts": {
     "coverage": "nyc npm test && nyc report --reporter=text-lcov --report-dir=./coverage > ./coverage/lcov.info",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
     "lint": "eslint --ignore-path .gitignore chance.js",
-    "test": "ava"
+    "lint:ts": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts'",
+    "lint:ts:fix": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts' --fix",
+    "watch": "yarn lint && onchange '**/*.ts' -- yarn lint",
+    "test": "yarn run build",
+    "clean": "rm -rf ./built",
+    "build": "yarn run clean && tsc"
   },
   "keywords": [
     "chance",
