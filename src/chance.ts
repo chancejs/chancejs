@@ -1,4 +1,4 @@
 
 export function fun() {
-  return true;
+  return true
 }

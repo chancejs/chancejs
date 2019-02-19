@@ -47,7 +47,7 @@
     "lint": "eslint --ignore-path .gitignore chance.js",
     "lint:ts": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts'",
     "lint:ts:fix": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts' --fix",
-    "watch": "yarn lint && onchange '**/*.ts' -- yarn lint",
+    "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint",
     "test": "yarn run build",
     "clean": "rm -rf ./built",
     "build": "yarn run clean && tsc"

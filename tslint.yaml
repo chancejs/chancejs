@@ -8,6 +8,12 @@ linterOptions:
     - node_modules/**/*.ts
 rules:
   trailing-comma: true
-  semicolon: false
+  semicolon:
+    - true
+    - never
   no-console: true
+  variable-name:
+    - true
+    - check-format
+    - allow-snake-case
 
