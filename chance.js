@@ -1688,10 +1688,10 @@
                 if (options.mobile) {
                     areaCode="04";
                     numPick = self.string({pool:'0123456789', length:8});
-                    phone = areaCode + numPick;  //no formatting for mobile.
+                    phone = `${areaCode}${numPick}`;  //no formatting for mobile.
                 } else {
                     numPick = self.string({pool:'123456789', length:1}) + self.string({pool:'0123456789',length:7});
-                    phone = options.formatted ? '(' + areaCode + ') ' + numPick : areaCode + numPick;
+                    phone = options.formatted ? `(${areaCode}) ${numPick}` : `${areaCode}${numPick}`;
                 }
                 break;
                 
