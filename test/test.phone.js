@@ -34,7 +34,7 @@ test('phone() with country au option', t => {
     _.times(1000, () => {
         let phone = chance.phone({ country: 'au', formatted:false });
         t.true(_.isString(phone))
-        t.true(/^0[2,3,7,8][0-9]{8}$/.test(phone))    
+        t.true(/^0[2,3,7,8][0-9]{8}$/.test(phone))
     })
 })
 
@@ -42,7 +42,7 @@ test('phone() with country au and mobile option', t => {
     _.times(1000, () => {
         let phone = chance.phone({ country: 'au', mobile:true });
         t.true(_.isString(phone))
-        t.true(/^04[0-9]{8}$/.test(phone))        
+        t.true(/^04[0-9]{8}$/.test(phone))
     })
 })
 
