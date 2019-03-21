@@ -6598,7 +6598,7 @@
             "Civil Engineer",
             "Claims Manager",
             "Clinical Research Assistant",
-            "Collections Manager.",
+            "Collections Manager",
             "Compliance Manager",
             "Comptroller",
             "Computer Manager",
