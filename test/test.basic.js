@@ -369,6 +369,34 @@ test('natural() respects numerals', t => {
     })
 })
 
+test('natural() works with excluded numbers', t => {
+    _.times(1000, () => {
+        let natural = chance.natural({ min: 1, max: 5, exclude: [1, 3] })
+        t.true(natural <= 5)
+        t.true(natural >= 1)
+        t.true(natural !== 1)
+        t.true(natural !== 3)
+    })
+})
+
+test('natural() works within empty exclude option', t => {
+    _.times(1000, () => {
+        let natural = chance.natural({ min: 1, max: 5, exclude: [] })
+        t.true(natural <= 5)
+        t.true(natural >= 1)
+    })
+})
+
+test('natural() throws an error if exclude is not an array', t => {
+    const fn = () => chance.natural({ min: 1, max: 5, exclude: "foo" })
+    t.throws(fn, 'Chance: exclude must be an array.')
+})
+
+test('natural() throws an error if exclude is not an array', t => {
+    const fn = () => chance.natural({ min: 1, max: 5, exclude: ["puppies", 1] })
+    t.throws(fn, 'Chance: exclude must be numbers.')
+})
+
 test('natural() throws an error if min > max', t => {
     const fn = () => chance.natural({ min: 1000, max: 500 })
     t.throws(fn, 'Chance: Min cannot be greater than Max.')

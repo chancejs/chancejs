@@ -23,6 +23,8 @@ browser and play!
     Tweet
 </a>
 
+<iframe src="https://ghbtns.com/github-btn.html?user=chancejs&repo=chancejs&type=star&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+
 Written by [Victor Quinn](https://www.victorquinn.com)
 
 [![Chance on NPM](https://nodei.co/npm/chance.png?downloads=true)](https://nodei.co/npm/chance/)
