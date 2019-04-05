@@ -67,6 +67,7 @@
   * [depth](location/depth.md)
   * [geohash](location/geohash.md)
   * [latitude](location/latitude.md)
+  * [locale](location/locale.md)
   * [longitude](location/longitude.md)
   * [phone](location/phone.md)
   * [postal](location/postal.md)
