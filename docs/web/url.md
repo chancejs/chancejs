@@ -5,7 +5,7 @@
 chance.url()
 chance.url({protocol: 'ftp'})
 chance.url({domain: 'www.socialradar.com'})
-chance.url({domain_profix: 'docs'})
+chance.url({domain_prefix: 'docs'})
 chance.url({path: 'images'})
 chance.url({extensions: ['gif', 'jpg', 'png']})
 ```
