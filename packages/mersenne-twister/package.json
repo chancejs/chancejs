@@ -4,7 +4,7 @@
   "description": "Mersenne Twister, the underlying pseudo random number generator for Chance",
   "main": "lib/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,12 @@
   "author": "Victor Quinn <mail@victorquinn.com>",
   "license": "MIT",
   "devDependencies": {
+    "ava": "^1.4.1",
     "typescript": "^3.4.5"
+  },
+  "ava": {
+    "files": [
+      "lib/**/*.test.js"
+    ]
   }
 }

@@ -3,5 +3,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib"
-  }
+  },
+  "references": [
+    { "path": "../mersenne-twister" }
+  ]
 }

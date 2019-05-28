@@ -4,7 +4,9 @@
   "description": "ChanceJS core utilities",
   "main": "lib/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "node_modules/.bin/tslint -c tslint.yaml 'src/**/*.ts'",
+    "test": "ava",
+    "watch": "yarn lint && node_modules/.bin/onchange 'src/**/*.ts' -- yarn lint"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,17 @@
   "author": "Victor Quinn <mail@victorquinn.com>",
   "license": "MIT",
   "devDependencies": {
+    "ava": "^1.4.1",
+    "onchange": "^6.0.0",
+    "tslint": "^5.16.0",
     "typescript": "^3.4.5"
+  },
+  "ava": {
+    "files": [
+      "lib/**/*.test.js"
+    ]
+  },
+  "dependencies": {
+    "@chancejs/mersenne-twister": "^1.0.0"
   }
 }

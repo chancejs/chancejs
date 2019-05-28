@@ -52,7 +52,7 @@
     "lint": "eslint --ignore-path .gitignore chance.js",
     "lint:ts": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts'",
     "lint:ts:fix": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts' --fix",
-    "build": "tsc -b packages/core packages/mersenne-twister",
+    "build": "tsc -b packages/mersenne-twister packages/core",
     "clean": "rimraf packages/**/lib",
     "test": "lerna run test",
     "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint"
