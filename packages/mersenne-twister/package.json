@@ -1,0 +1,24 @@
+{
+  "name": "@chancejs/mersenne-twister",
+  "version": "1.0.0",
+  "description": "Mersenne Twister, the underlying pseudo random number generator for Chance",
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/chancejs/chancejs"
+  },
+  "keywords": [
+    "chance",
+    "mersenne",
+    "twister",
+    "random"
+  ],
+  "author": "Victor Quinn <mail@victorquinn.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.4.5"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@chancejs/core",
+  "version": "1.0.0",
+  "description": "ChanceJS core utilities",
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/chancejs/chancejs"
+  },
+  "keywords": [
+    "chance",
+    "chancejs",
+    "random",
+    "dice"
+  ],
+  "author": "Victor Quinn <mail@victorquinn.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.4.5"
+  }
+}

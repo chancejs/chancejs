@@ -2,6 +2,7 @@
   "name": "chance",
   "main": "./chance.js",
   "version": "1.1.1",
+  "private": true,
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
@@ -31,27 +32,30 @@
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
     "jshint-stylish": "^2.2.1",
+    "lerna": "^3.14.1",
     "lodash": "^4.17.4",
     "nyc": "^10.3.2",
     "onchange": "^5.2.0",
     "pump": "^1.0.2",
+    "rimraf": "^2.6.3",
     "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-immutable": "^5.2.0",
-    "typescript": "^3.3.3"
+    "typescript": "^3.4.5"
   },
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov --report-dir=./coverage > ./coverage/lcov.info",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
     "lint": "eslint --ignore-path .gitignore chance.js",
     "lint:ts": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts'",
     "lint:ts:fix": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts' --fix",
-    "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint",
-    "test": "node_modules/.bin/ava tests/**/*.ts",
-    "clean": "rm -rf ./built",
-    "build": "yarn run clean && tsc"
+    "build": "tsc -b packages/core packages/mersenne-twister",
+    "clean": "rimraf packages/**/lib",
+    "test": "lerna run test",
+    "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint"
   },
   "keywords": [
     "chance",
@@ -99,5 +103,8 @@
     "require": [
       "ts-node/register"
     ]
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": true,
+    "strict": true,
+    "composite": true,
+    "esModuleInterop": true,
+    "target": "es5",
+    "incremental": true
+  }
+}
