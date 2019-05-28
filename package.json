@@ -54,7 +54,8 @@
     "lint:ts:fix": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts' --fix",
     "build": "tsc -b packages/mersenne-twister packages/core",
     "clean": "rimraf packages/**/lib",
-    "test": "lerna run test",
+    "pretest": "lerna bootstrap --use-workspaces && yarn run lint",
+    "test": "lerna run test --use-workspaces",
     "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint"
   },
   "keywords": [
