@@ -35,6 +35,7 @@
     "nyc": "^10.3.2",
     "onchange": "^5.2.0",
     "pump": "^1.0.2",
+    "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-immutable": "^5.2.0",
@@ -48,7 +49,7 @@
     "lint:ts": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts'",
     "lint:ts:fix": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts' --fix",
     "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint",
-    "test": "yarn run build",
+    "test": "node_modules/.bin/ava tests/**/*.ts",
     "clean": "rm -rf ./built",
     "build": "yarn run clean && tsc"
   },
@@ -88,6 +89,15 @@
     "github": "chancejs/chancejs",
     "css": [
       "docs/chance.css"
+    ]
+  },
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
     ]
   }
 }
