@@ -23,6 +23,9 @@
     "ava": "^1.4.1",
     "typescript": "^3.4.5"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "ava": {
     "files": [
       "lib/**/*.test.js"
