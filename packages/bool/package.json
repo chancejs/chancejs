@@ -1,6 +1,6 @@
 {
   "name": "@chancejs/bool",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "ChanceJS random bool generator",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
@@ -34,7 +34,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@chancejs/core": "^2.2.2",
+    "@chancejs/core": "^2.2.3",
     "@types/node": "^12.0.3"
   }
 }

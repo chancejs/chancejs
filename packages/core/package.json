@@ -1,6 +1,6 @@
 {
   "name": "@chancejs/core",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "ChanceJS core utilities",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
