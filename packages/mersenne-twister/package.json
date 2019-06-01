@@ -1,6 +1,6 @@
 {
   "name": "@chancejs/mersenne-twister",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Mersenne Twister, the underlying pseudo random number generator for Chance",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
