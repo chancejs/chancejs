@@ -45,9 +45,9 @@ test('bool() takes and obeys likelihood', t => {
     t.true(trueCount > 900)
 })
 
-// test('bool() throws an error if likelihood < 0 or > 100', t => {
-//     const fn1 = () => chance.bool({likelihood: -23})
-//     t.throws(fn1, RangeError)
-//     const fn2 = () => chance.bool({likelihood: 7933})
-//     t.throws(fn2, RangeError)
-// })
+test('bool() throws an error if likelihood < 0 or > 100', t => {
+    const fn1 = () => chance.bool({likelihood: -23})
+    t.throws(fn1, RangeError)
+    const fn2 = () => chance.bool({likelihood: 7933})
+    t.throws(fn2, RangeError)
+})

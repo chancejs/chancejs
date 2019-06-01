@@ -57,7 +57,8 @@
     "clean": "rimraf packages/**/lib",
     "publish": "yarn build && lerna publish",
     "pretest": "lerna bootstrap --use-workspaces && yarn run lint",
-    "test": "lerna run test --use-workspaces",
+    "test": "ava",
+    "test:watch": "ava --watch && ./node_modules/.bin/onchange '**/*.ts' -- yarn build",
     "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint"
   },
   "keywords": [

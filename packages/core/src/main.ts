@@ -28,10 +28,9 @@ export default class Core {
             likelihood = options.likelihood
         }
 
-        // testRange(
-        //     options.likelihood < 0 || options.likelihood > 100,
-        //     "Chance: Likelihood accepts values from 0 to 100."
-        // )
+	if (likelihood < 0 || likelihood > 100) {
+	    throw new RangeError('Chance: Likelihood accepts values from 0 to 100.')
+	}
 
         return this.random() * 100 < likelihood
     }
