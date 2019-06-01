@@ -7,6 +7,7 @@ linterOptions:
   exclude:
     - node_modules/**/*.ts
     - packages/**/node_modules/**/*
+    - packages/**/lib/**
 rules:
   trailing-comma: true
   semicolon:

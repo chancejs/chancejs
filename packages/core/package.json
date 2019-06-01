@@ -1,12 +1,11 @@
 {
   "name": "@chancejs/core",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "ChanceJS core utilities",
   "main": "lib/main.js",
+  "typings": "lib/main.d.ts",
   "scripts": {
-    "lint": "node_modules/.bin/tslint -c tslint.yaml 'src/**/*.ts'",
     "test": "ava",
-    "watch": "yarn lint && node_modules/.bin/onchange 'src/**/*.ts' -- yarn lint"
   },
   "repository": {
     "type": "git",
@@ -32,6 +31,7 @@
     ]
   },
   "dependencies": {
-    "@chancejs/mersenne-twister": "^1.0.0"
+    "@chancejs/mersenne-twister": "^0.0.0",
+    "@types/node": "^12.0.3"
   }
 }

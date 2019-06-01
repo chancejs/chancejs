@@ -27,6 +27,7 @@ export default class Core {
         } else {
             likelihood = options.likelihood
         }
+
         // testRange(
         //     options.likelihood < 0 || options.likelihood > 100,
         //     "Chance: Likelihood accepts values from 0 to 100."
