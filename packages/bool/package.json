@@ -1,0 +1,40 @@
+{
+  "name": "@chancejs/bool",
+  "version": "2.2.2",
+  "description": "ChanceJS random bool generator",
+  "main": "lib/main.js",
+  "typings": "lib/main.d.ts",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/chancejs/chancejs"
+  },
+  "keywords": [
+    "chance",
+    "chancejs",
+    "random",
+    "bool"
+  ],
+  "author": "Victor Quinn <mail@victorquinn.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^1.4.1",
+    "onchange": "^6.0.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "ava": {
+    "files": [
+      "lib/**/*.test.js"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@chancejs/core": "^2.2.2",
+    "@types/node": "^12.0.3"
+  }
+}
