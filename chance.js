@@ -1712,23 +1712,31 @@
         return fsa + " " + ldu;
     };
 
-    Chance.prototype.postcode = function () {
-        // Area
-        var area = this.pick(this.get("postcodeAreas")).code;
-        // District
-        var district = this.natural({max: 9});
-        // Sub-District
-        var subDistrict = this.bool() ? this.character({alpha: true, casing: "upper"}) : "";
-        // Outward Code
-        var outward = area + district + subDistrict;
-        // Sector
-        var sector = this.natural({max: 9});
-        // Unit
-        var unit = this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
-        // Inward Code
-        var inward = sector + unit;
-
-        return outward + " " + inward;
+    Chance.prototype.postcode = function (options) {
+        options = initOptions(options);
+        switch (options.country) {
+            case 'fr':
+                var first = this.natural({max: 9});
+                var second = first < 9 ? this.natural({max: 9}) : this.natural({max: 5});
+                return `${first}${second}${this.natural({max: 9})}${this.natural({max: 9})}${this.natural({max: 9})}`;
+            default:
+                // Area
+                var area = this.pick(this.get("postcodeAreas")).code;
+                // District
+                var district = this.natural({max: 9});
+                // Sub-District
+                var subDistrict = this.bool() ? this.character({alpha: true, casing: "upper"}) : "";
+                // Outward Code
+                var outward = area + district + subDistrict;
+                // Sector
+                var sector = this.natural({max: 9});
+                // Unit
+                var unit = this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
+                // Inward Code
+                var inward = sector + unit;
+                return outward + " " + inward;
+                break;
+        }
     };
 
     Chance.prototype.counties = function (options) {
@@ -1781,6 +1789,7 @@
                 }
                 break;
             case 'it':
+            case 'fr':
                 states = this.get("country_regions")[options.country.toLowerCase()];
                 break;
             case 'uk':
@@ -1805,6 +1814,7 @@
                     this.street_suffix(options).name;
                 break;
             case 'it':
+            case 'fr':
                 street = this.word({ syllables: options.syllables });
                 street = this.capitalize(street);
                 street = (options.short_suffix ?
@@ -2291,6 +2301,47 @@
         }
 
         return arr.join('') + controlNumber;
+    };
+    /**
+     * Returns the french social security number from the official calculation
+     *
+     * @param  [Object] options = { gender: female|male,
+                                    birthday: JavaScript date object,
+                                    postcode: string(5), 5 numbers
+                                   }
+     * @return [string] french social security number
+     */
+    Chance.prototype.fr_social_security_number = function (options) {
+        options = initOptions(options, {country: 'fr'});
+        var gender = !!options.gender ? options.gender : this.gender(),
+            birthday = !!options.birthday ? options.birthday : this.birthday(),
+            postcode = !!options.postcode ? options.postcode : this.postcode({country: 'fr'});
+        var arr = [
+            gender.toLowerCase() === 'male' ? 1 : 2,
+            `00${birthday.getFullYear().toString().substr(-2)}`.substr(-2),
+            `00${birthday.getMonth() + 1}`.substr(-2),
+            `00${postcode.substr(0, 2)}`.substr(-2),
+            `000${this.natural({max: 999})}`.substr(-3),
+            `000${this.natural({max: 999})}`.substr(-3)
+        ];
+        var arrAsString = arr.join('');
+        var arrAsNumber = +arrAsString.replace([/[A|B]/gi], '0');
+        var modulo = arrAsNumber%97;
+        arrAsString += `00${modulo}`.substr(-2);
+        return arrAsString;
+    };
+    /**
+     * Checks the modulo at the end of a french social security number
+     *
+     * @param [string] french social security number
+     * @return [boolean] is valid
+     */
+    Chance.prototype.fr_social_security_number_modulo_check = function (ssn) {
+        if (ssn.length === 15) {
+            var modulo = +ssn.substr(-2), ssnAsNumber = +ssn.substr(0, 13);
+            return ssnAsNumber%97 === modulo;
+        }
+        return false;
     };
 
     // -- End Regional
@@ -3884,6 +3935,22 @@
                 { name: "Calabria", abbreviation: "CAL" },
                 { name: "Sicilia", abbreviation: "SIC" },
                 { name: "Sardegna", abbreviation: "SAR" }
+            ],
+            //source : http://regionfrance.com/nouvelles-regions-de-france
+            fr: [
+                { name: "Auvergne-Rhône-Alpes", prefecture: "Lyon" },
+                { name: "Bourgogne-Franche-Comté", prefecture: "Dijon" },
+                { name: "Bretagne", prefecture: "Rennes" },
+                { name: "Centre-Val de Loire", prefecture: "Orléans" },
+                { name: "Corse", prefecture: "Ajaccio" },
+                { name: "Grand Est", prefecture: "Strasbourg" },
+                { name: "Hauts-de-France", prefecture: "Lille" },
+                { name: "Île-de-France", prefecture: "Paris" },
+                { name: "Normandie", prefecture: "Rouen" },
+                { name: "Nouvelle-Aquitaine", prefecture: "Bordeaux" },
+                { name: "Occitanie", prefecture: "Toulouse" },
+                { name: "Pays de la Loire", prefecture: "Nantes" },
+                { name: "Provence-Alpes-Côte d’Azur", prefecture: "Marseille" },
             ]
         },
 
@@ -4015,7 +4082,19 @@
                 {name: 'Street', abbreviation: 'St'},
                 {name: 'Terrace', abbreviation: 'Ter'},
                 {name: 'Valley', abbreviation: 'Val'}
-            ]
+            ],
+            'fr': [
+                {name: 'Avenue', abbreviation: 'Av.'},
+                {name: 'Boulevard', abbreviation: 'Bvd'},
+                {name: 'Parc', abbreviation: 'Parc'},
+                {name: 'Chemin', abbreviation: 'Ch.'},
+                {name: 'Place', abbreviation: 'Pl.'},
+                {name: 'Rue', abbreviation: 'Rue'},
+                {name: 'Square', abbreviation: 'Sq.'},
+                {name: 'Route', abbreviation: 'Rt.'},
+                {name: 'Terrace', abbreviation: 'Ter.'},
+                {name: 'Impasse', abbreviation: 'Imp.'}
+            ],
         },
 
         months: [
