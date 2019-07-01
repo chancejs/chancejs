@@ -451,12 +451,12 @@
             newOptions.layer-=1;
             obj[title] = this.json(newOptions);
           } else {
-              if(newOptions.arrLables.length>=1){
-                obj[title]=this.pickone(newOptions.arrObjects);
+              if(options.arrLables.length>=1){
+                obj[title]=this.pickone(options.arrObjects);
               }
               else{
                 obj[title]=this.string();
-              }v
+              }
           }
         }
         return obj;
