@@ -440,19 +440,23 @@
         for(var i = 0; i < options.number; i++) {
           var nested=this.bool();
           var title;
-          if(arrLables.length>=1)
+          if(arrLables.length>=1){
             title=this.pickone(arrLables);
-          else
+          }
+          else{
             title=this.string();
+          }
           if(nested && options.layer>=2){
             var newOptions=options;
             newOptions.layer-=1;
             obj[title] = this.json(arr,newOptions);
           } else {
-              if(arrLables.length>=1)
+              if(arrLables.length>=1){
                 obj[title]=this.pickone(arrObjects);
-              else
+              }
+              else{
                 obj[title]=this.string();
+              }
           }
         }
         return obj;
