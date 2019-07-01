@@ -440,8 +440,8 @@
         for(var i = 0; i < options.number; i++) {
           var nested=this.bool();
           var title;
-          if(arrLables.length>=1){
-            title=this.pickone(arrLables);
+          if(options.arrLables.length>=1){
+            title=this.pickone(options.arrLables);
           }
           else{
             title=this.string();
@@ -449,14 +449,14 @@
           if(nested && options.layer>=2){
             var newOptions=options;
             newOptions.layer-=1;
-            obj[title] = this.json(arr,newOptions);
+            obj[title] = this.json(newOptions);
           } else {
-              if(arrLables.length>=1){
-                obj[title]=this.pickone(arrObjects);
+              if(newOptions.arrLables.length>=1){
+                obj[title]=this.pickone(newOptions.arrObjects);
               }
               else{
                 obj[title]=this.string();
-              }
+              }v
           }
         }
         return obj;
