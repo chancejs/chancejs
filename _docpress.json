@@ -71,6 +71,12 @@
             "slug": "basicsbool"
           },
           {
+            "title": "falsy",
+            "source": "docs/basics/falsy.md",
+            "url": "basics/falsy.html",
+            "slug": "basicsfalsy"
+          },
+          {
             "title": "character",
             "source": "docs/basics/character.md",
             "url": "basics/character.html",
@@ -798,6 +804,12 @@
       "pageTitle": "bool",
       "slug": "basicsbool"
     },
+    "basics/falsy.html": {
+      "source": "docs/basics/falsy.md",
+      "title": "falsy - Chance",
+      "pageTitle": "falsy",
+      "slug": "basicsfalsy"
+    },
     "basics/character.html": {
       "source": "docs/basics/character.md",
       "title": "character - Chance",
@@ -1421,6 +1433,7 @@
     "docs/usage/seed.md": "usage/seed.html",
     "docs/usage/function.md": "usage/function.html",
     "docs/basics/bool.md": "basics/bool.html",
+    "docs/basics/falsy.md": "basics/falsy.html",
     "docs/basics/character.md": "basics/character.html",
     "docs/basics/floating.md": "basics/floating.html",
     "docs/basics/integer.md": "basics/integer.html",
