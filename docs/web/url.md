@@ -35,7 +35,7 @@ Optionally specify a domain prefix and domain will be random, and domain prefix 
 
 ```js
 chance.url({domain_prefix: 'docs'})
-=> '"http://docs.tuos.ni/itecabup'
+=> 'http://docs.tuos.ni/itecabup'
 ```
 
 Optionally specify a path and it will be obeyed.
