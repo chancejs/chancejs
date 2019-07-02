@@ -413,6 +413,12 @@
             "slug": "locationlatitude"
           },
           {
+            "title": "locale",
+            "source": "docs/location/locale.md",
+            "url": "location/locale.html",
+            "slug": "locationlocale"
+          },
+          {
             "title": "longitude",
             "source": "docs/location/longitude.md",
             "url": "location/longitude.html",
@@ -1104,6 +1110,12 @@
       "pageTitle": "latitude",
       "slug": "locationlatitude"
     },
+    "location/locale.html": {
+      "source": "docs/location/locale.md",
+      "title": "locale - Chance",
+      "pageTitle": "locale",
+      "slug": "locationlocale"
+    },
     "location/longitude.html": {
       "source": "docs/location/longitude.md",
       "title": "longitude - Chance",
@@ -1461,6 +1473,7 @@
     "docs/location/depth.md": "location/depth.html",
     "docs/location/geohash.md": "location/geohash.html",
     "docs/location/latitude.md": "location/latitude.html",
+    "docs/location/locale.md": "location/locale.html",
     "docs/location/longitude.md": "location/longitude.html",
     "docs/location/phone.md": "location/phone.html",
     "docs/location/postal.md": "location/postal.html",

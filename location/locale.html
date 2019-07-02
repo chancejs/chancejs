@@ -8,7 +8,7 @@
     <script src="../chance.js?t=8d610f67"></script>
     <script src="../analytics.js?t=84f0b0a9"></script>
     <script src="https://platform.twitter.com/widgets.js"></script>
-    <title>hashtag - Chance</title>
+    <title>locale - Chance</title>
     <meta name="viewport" content="width=device-width">
   </head>
   <body class="-menu-visible">
@@ -131,7 +131,7 @@
                 </li>
                 <li class="menu-item -level-2"><a class="link title  link-webgoogle_analytics" href="../web/google_analytics.html">google_analytics</a>
                 </li>
-                <li class="menu-item -level-2"><a class="link title -active link-webhashtag" href="../web/hashtag.html">hashtag</a>
+                <li class="menu-item -level-2"><a class="link title  link-webhashtag" href="../web/hashtag.html">hashtag</a>
                 </li>
                 <li class="menu-item -level-2"><a class="link title  link-webip" href="../web/ip.html">ip</a>
                 </li>
@@ -169,7 +169,7 @@
                 </li>
                 <li class="menu-item -level-2"><a class="link title  link-locationlatitude" href="../location/latitude.html">latitude</a>
                 </li>
-                <li class="menu-item -level-2"><a class="link title  link-locationlocale" href="../location/locale.html">locale</a>
+                <li class="menu-item -level-2"><a class="link title -active link-locationlocale" href="../location/locale.html">locale</a>
                 </li>
                 <li class="menu-item -level-2"><a class="link title  link-locationlongitude" href="../location/longitude.html">longitude</a>
                 </li>
@@ -290,25 +290,32 @@
           </ul>
         </li>
       </div>
-      <div class="body page-webhashtag">
+      <div class="body page-locationlocale">
         <div class="header-nav">
           <div class="right"><a class="iconlink" href="https://github.com/chancejs/chancejs" data-title="chancejs/chancejs">
               <!-- span.title Open in GitHub--><span class="icon -github"></span></a>
           </div>
         </div>
-        <div class="markdown-body"><h1 id="hashtag">hashtag</h1>
+        <div class="markdown-body"><h1 id="locale">locale</h1>
 <pre><code class="lang-js"><span class="pl-c">// usage</span>
-chance.hashtag()
+chance.locale()
+chance.locale({<span class="hljs-attr">region</span>: <span class="pl-c1">true</span>})
 </code></pre>
-<p>Return a random hashtag. This is a string of the form &apos;#thisisahashtag&apos;.</p>
-<pre><code class="lang-js">chance.hashtag()
-=&gt; <span class="pl-s">&apos;#dichumwa&apos;</span>
+<p>Generate a random ISO-639-1 language code</p>
+<pre><code class="lang-js">chance.locale();
+=&gt; <span class="pl-s">&apos;ca&apos;</span>
 </code></pre>
+<p>Generate a random IETF region code</p>
+<pre><code class="lang-js">chance.locale({<span class="hljs-attr">region</span>: <span class="pl-c1">true</span>});
+=&gt; <span class="pl-s">&apos;es-EA&apos;</span>
+</code></pre>
+<p><em>Note, the language codes comes from the <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO-639-1 spec</a>
+and the region codes come from <a href="http://data.okfn.org/data/core/language-codes#resource-language-codes-full">IETF standard</a></em></p>
 
         </div>
         <div class="footer-nav">
-          <div class="left"><a href="../web/google_analytics.html"><span class="title">google_analytics</span></a></div>
-          <div class="right"><a href="../web/ip.html"><span class="label">Next: </span><span class="title">ip</span></a></div>
+          <div class="left"><a href="../location/latitude.html"><span class="title">latitude</span></a></div>
+          <div class="right"><a href="../location/longitude.html"><span class="label">Next: </span><span class="title">longitude</span></a></div>
         </div>
       </div>
     </div>

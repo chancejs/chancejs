@@ -169,6 +169,8 @@
                 </li>
                 <li class="menu-item -level-2"><a class="link title  link-locationlatitude" href="../location/latitude.html">latitude</a>
                 </li>
+                <li class="menu-item -level-2"><a class="link title  link-locationlocale" href="../location/locale.html">locale</a>
+                </li>
                 <li class="menu-item -level-2"><a class="link title  link-locationlongitude" href="../location/longitude.html">longitude</a>
                 </li>
                 <li class="menu-item -level-2"><a class="link title  link-locationphone" href="../location/phone.html">phone</a>
@@ -297,7 +299,9 @@
         <div class="markdown-body"><h1 id="url">url</h1>
 <pre><code class="lang-js"><span class="pl-c">// usage</span>
 chance.url()
+chance.url({<span class="hljs-attr">protocol</span>: <span class="pl-s">&apos;ftp&apos;</span>})
 chance.url({<span class="hljs-attr">domain</span>: <span class="pl-s">&apos;www.socialradar.com&apos;</span>})
+chance.url({<span class="hljs-attr">domain_prefix</span>: <span class="pl-s">&apos;docs&apos;</span>})
 chance.url({<span class="hljs-attr">path</span>: <span class="pl-s">&apos;images&apos;</span>})
 chance.url({<span class="hljs-attr">extensions</span>: [<span class="pl-s">&apos;gif&apos;</span>, <span class="pl-s">&apos;jpg&apos;</span>, <span class="pl-s">&apos;png&apos;</span>]})
 </code></pre>
@@ -305,9 +309,17 @@ chance.url({<span class="hljs-attr">extensions</span>: [<span class="pl-s">&apos
 <pre><code class="lang-js">chance.url()
 =&gt; <span class="pl-s">&apos;http://vanogsi.io/pateliivi&apos;</span>
 </code></pre>
+<p>Optionally specify a protocol and the url will be random but the protocol will not.</p>
+<pre><code class="lang-js">chance.url({<span class="hljs-attr">protocol</span>: <span class="pl-s">&apos;ftp&apos;</span>})
+=&gt; <span class="pl-s">&apos;ftp://mibfu.nr/kardate&apos;</span>
+</code></pre>
 <p>Optionally specify a domain and the url will be random but the domain will not.</p>
 <pre><code class="lang-js">chance.url({<span class="hljs-attr">domain</span>: <span class="pl-s">&apos;www.socialradar.com&apos;</span>})
 =&gt; <span class="pl-s">&apos;http://www.socialradar.com/hob&apos;</span>
+</code></pre>
+<p>Optionally specify a domain prefix and domain will be random, and domain prefix will not.</p>
+<pre><code class="lang-js">chance.url({<span class="hljs-attr">domain_prefix</span>: <span class="pl-s">&apos;docs&apos;</span>})
+=&gt; <span class="pl-s">&apos;http://docs.tuos.ni/itecabup&apos;</span>
 </code></pre>
 <p>Optionally specify a path and it will be obeyed.</p>
 <pre><code class="lang-js">chance.url({<span class="hljs-attr">path</span>: <span class="pl-s">&apos;images&apos;</span>})
