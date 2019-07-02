@@ -9,6 +9,7 @@
   * [function](usage/function.md)
 * Basics
   * [bool](basics/bool.md)
+  * [falsy](basics/falsy.md)
   * [character](basics/character.md)
   * [floating](basics/floating.md)
   * [integer](basics/integer.md)

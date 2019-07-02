@@ -146,6 +146,16 @@
         return this.random() * 100 < options.likelihood;
     };
 
+    Chance.prototype.falsy = function (options) {
+        // return a random falsy value
+        options = initOptions(options, {pool: [false, null, 0, NaN, '']})
+        var pool = options.pool,
+            index = this.integer({min: 0, max: pool.length}),
+            value = pool[index];
+
+        return value;
+    }
+
     Chance.prototype.animal = function (options){
       //returns a random animal
       options = initOptions(options);
