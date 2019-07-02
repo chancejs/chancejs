@@ -286,7 +286,7 @@ test('tv() works as expected', t => {
     })
 })
 
-// chance.radio()
+// chance.json()
 test('json() works as expected', t => {
     _.times(1000, () => {
         let json = chance.json()
