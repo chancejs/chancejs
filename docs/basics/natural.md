@@ -22,6 +22,12 @@ chance.natural({min: 1, max: 20});
 => 14
 ```
 
+Can optionally provide numbers you wish to exclude.
+
+```js
+chance.natural({min: 1, max: 5, exclude: [1, 3]});
+=> 2
+```
 
 These are inclusive, so they are included in the range. This means
 ```chance.natural({min: 1, max: 3});``` would return either 1, 2, or 3 or:

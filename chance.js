@@ -1,4 +1,4 @@
-//  Chance.js 1.0.16
+//  Chance.js 1.0.18
 //  http://chancejs.com
 //  (c) 2013 Victor Quinn
 //  Chance may be freely distributed or modified under the MIT license.
@@ -72,7 +72,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.0.16";
+    Chance.prototype.VERSION = "1.0.18";
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -145,6 +145,16 @@
 
         return this.random() * 100 < options.likelihood;
     };
+
+    Chance.prototype.falsy = function (options) {
+        // return a random falsy value
+        options = initOptions(options, {pool: [false, null, 0, NaN, '']})
+        var pool = options.pool,
+            index = this.integer({min: 0, max: pool.length}),
+            value = pool[index];
+
+        return value;
+    }
 
     Chance.prototype.animal = function (options){
       //returns a random animal
@@ -292,6 +302,23 @@
           options.max = Math.pow(10, options.numerals) - 1;
         }
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
+
+        if (options.exclude) {
+            testRange(!Array.isArray(options.exclude), "Chance: exclude must be an array.")
+
+            for (const exclusion of options.exclude) {
+                testRange(!Number.isInteger(exclusion), "Chance: exclude must be numbers.")
+            }
+
+            let random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
+            for (const exclusion of options.exclude.sort()) {
+                if (random < exclusion) {
+                    break
+                }
+                random++
+            }
+            return random
+        }
         return this.integer(options);
     };
 
@@ -548,7 +575,7 @@
             var array = arr.slice(0);
             var end = array.length;
 
-            return this.n(() => {
+            return this.n(function () {
                 var index = this.natural({max: --end});
                 var value = array[index];
                 array[index] = array[end];
@@ -1700,6 +1727,25 @@
         return fsa + " " + ldu;
     };
 
+    Chance.prototype.postcode = function () {
+        // Area
+        var area = this.pick(this.get("postcodeAreas")).code;
+        // District
+        var district = this.natural({max: 9});
+        // Sub-District
+        var subDistrict = this.bool() ? this.character({alpha: true, casing: "upper"}) : "";
+        // Outward Code
+        var outward = area + district + subDistrict;
+        // Sector
+        var sector = this.natural({max: 9});
+        // Unit
+        var unit = this.character({alpha: true, casing: "upper"}) + this.character({alpha: true, casing: "upper"});
+        // Inward Code
+        var inward = sector + unit;
+
+        return outward + " " + inward;
+    };
+
     Chance.prototype.counties = function (options) {
         options = initOptions(options, { country: 'uk' });
         return this.get("counties")[options.country.toLowerCase()];
@@ -1750,6 +1796,7 @@
                 }
                 break;
             case 'it':
+            case 'mx':
                 states = this.get("country_regions")[options.country.toLowerCase()];
                 break;
             case 'uk':
@@ -2598,6 +2645,9 @@
             // Data taken from https://fr.wikipedia.org/wiki/Liste_des_noms_de_famille_les_plus_courants_en_France
             "fr": ["Martin","Bernard","Thomas","Petit","Robert","Richard","Durand","Dubois","Moreau","Laurent","Simon","Michel","Lefèvre","Leroy","Roux","David","Bertrand","Morel","Fournier","Girard","Bonnet","Dupont","Lambert","Fontaine","Rousseau","Vincent","Müller","Lefèvre","Faure","André","Mercier","Blanc","Guérin","Boyer","Garnier","Chevalier","François","Legrand","Gauthier","Garcia","Perrin","Robin","Clément","Morin","Nicolas","Henry","Roussel","Matthieu","Gautier","Masson","Marchand","Duval","Denis","Dumont","Marie","Lemaire","Noël","Meyer","Dufour","Meunier","Brun","Blanchard","Giraud","Joly","Rivière","Lucas","Brunet","Gaillard","Barbier","Arnaud","Martínez","Gérard","Roche","Renard","Schmitt","Roy","Leroux","Colin","Vidal","Caron","Picard","Roger","Fabre","Aubert","Lemoine","Renaud","Dumas","Lacroix","Olivier","Philippe","Bourgeois","Pierre","Benoît","Rey","Leclerc","Payet","Rolland","Leclercq","Guillaume","Lecomte","López","Jean","Dupuy","Guillot","Hubert","Berger","Carpentier","Sánchez","Dupuis","Moulin","Louis","Deschamps","Huet","Vasseur","Perez","Boucher","Fleury","Royer","Klein","Jacquet","Adam","Paris","Poirier","Marty","Aubry","Guyot","Carré","Charles","Renault","Charpentier","Ménard","Maillard","Baron","Bertin","Bailly","Hervé","Schneider","Fernández","Le GallGall","Collet","Léger","Bouvier","Julien","Prévost","Millet","Perrot","Daniel","Le RouxRoux","Cousin","Germain","Breton","Besson","Langlois","Rémi","Le GoffGoff","Pelletier","Lévêque","Perrier","Leblanc","Barré","Lebrun","Marchal","Weber","Mallet","Hamon","Boulanger","Jacob","Monnier","Michaud","Rodríguez","Guichard","Gillet","Étienne","Grondin","Poulain","Tessier","Chevallier","Collin","Chauvin","Da SilvaSilva","Bouchet","Gay","Lemaître","Bénard","Maréchal","Humbert","Reynaud","Antoine","Hoarau","Perret","Barthélemy","Cordier","Pichon","Lejeune","Gilbert","Lamy","Delaunay","Pasquier","Carlier","LaporteLaporte"]
         },
+
+        // Data taken from http://geoportal.statistics.gov.uk/datasets/ons-postcode-directory-latest-centroids
+        postcodeAreas: [{code: 'AB'}, {code: 'AL'}, {code: 'B'}, {code: 'BA'}, {code: 'BB'}, {code: 'BD'}, {code: 'BH'}, {code: 'BL'}, {code: 'BN'}, {code: 'BR'}, {code: 'BS'}, {code: 'BT'}, {code: 'CA'}, {code: 'CB'}, {code: 'CF'}, {code: 'CH'}, {code: 'CM'}, {code: 'CO'}, {code: 'CR'}, {code: 'CT'}, {code: 'CV'}, {code: 'CW'}, {code: 'DA'}, {code: 'DD'}, {code: 'DE'}, {code: 'DG'}, {code: 'DH'}, {code: 'DL'}, {code: 'DN'}, {code: 'DT'}, {code: 'DY'}, {code: 'E'}, {code: 'EC'}, {code: 'EH'}, {code: 'EN'}, {code: 'EX'}, {code: 'FK'}, {code: 'FY'}, {code: 'G'}, {code: 'GL'}, {code: 'GU'}, {code: 'GY'}, {code: 'HA'}, {code: 'HD'}, {code: 'HG'}, {code: 'HP'}, {code: 'HR'}, {code: 'HS'}, {code: 'HU'}, {code: 'HX'}, {code: 'IG'}, {code: 'IM'}, {code: 'IP'}, {code: 'IV'}, {code: 'JE'}, {code: 'KA'}, {code: 'KT'}, {code: 'KW'}, {code: 'KY'}, {code: 'L'}, {code: 'LA'}, {code: 'LD'}, {code: 'LE'}, {code: 'LL'}, {code: 'LN'}, {code: 'LS'}, {code: 'LU'}, {code: 'M'}, {code: 'ME'}, {code: 'MK'}, {code: 'ML'}, {code: 'N'}, {code: 'NE'}, {code: 'NG'}, {code: 'NN'}, {code: 'NP'}, {code: 'NR'}, {code: 'NW'}, {code: 'OL'}, {code: 'OX'}, {code: 'PA'}, {code: 'PE'}, {code: 'PH'}, {code: 'PL'}, {code: 'PO'}, {code: 'PR'}, {code: 'RG'}, {code: 'RH'}, {code: 'RM'}, {code: 'S'}, {code: 'SA'}, {code: 'SE'}, {code: 'SG'}, {code: 'SK'}, {code: 'SL'}, {code: 'SM'}, {code: 'SN'}, {code: 'SO'}, {code: 'SP'}, {code: 'SR'}, {code: 'SS'}, {code: 'ST'}, {code: 'SW'}, {code: 'SY'}, {code: 'TA'}, {code: 'TD'}, {code: 'TF'}, {code: 'TN'}, {code: 'TQ'}, {code: 'TR'}, {code: 'TS'}, {code: 'TW'}, {code: 'UB'}, {code: 'W'}, {code: 'WA'}, {code: 'WC'}, {code: 'WD'}, {code: 'WF'}, {code: 'WN'}, {code: 'WR'}, {code: 'WS'}, {code: 'WV'}, {code: 'YO'}, {code: 'ZE'}],
 
         // Data taken from https://github.com/umpirsky/country-list/blob/master/data/en_US/country.json
         countries: [{"name":"Afghanistan","abbreviation":"AF"},{"name":"Åland Islands","abbreviation":"AX"},{"name":"Albania","abbreviation":"AL"},{"name":"Algeria","abbreviation":"DZ"},{"name":"American Samoa","abbreviation":"AS"},{"name":"Andorra","abbreviation":"AD"},{"name":"Angola","abbreviation":"AO"},{"name":"Anguilla","abbreviation":"AI"},{"name":"Antarctica","abbreviation":"AQ"},{"name":"Antigua & Barbuda","abbreviation":"AG"},{"name":"Argentina","abbreviation":"AR"},{"name":"Armenia","abbreviation":"AM"},{"name":"Aruba","abbreviation":"AW"},{"name":"Ascension Island","abbreviation":"AC"},{"name":"Australia","abbreviation":"AU"},{"name":"Austria","abbreviation":"AT"},{"name":"Azerbaijan","abbreviation":"AZ"},{"name":"Bahamas","abbreviation":"BS"},{"name":"Bahrain","abbreviation":"BH"},{"name":"Bangladesh","abbreviation":"BD"},{"name":"Barbados","abbreviation":"BB"},{"name":"Belarus","abbreviation":"BY"},{"name":"Belgium","abbreviation":"BE"},{"name":"Belize","abbreviation":"BZ"},{"name":"Benin","abbreviation":"BJ"},{"name":"Bermuda","abbreviation":"BM"},{"name":"Bhutan","abbreviation":"BT"},{"name":"Bolivia","abbreviation":"BO"},{"name":"Bosnia & Herzegovina","abbreviation":"BA"},{"name":"Botswana","abbreviation":"BW"},{"name":"Brazil","abbreviation":"BR"},{"name":"British Indian Ocean Territory","abbreviation":"IO"},{"name":"British Virgin Islands","abbreviation":"VG"},{"name":"Brunei","abbreviation":"BN"},{"name":"Bulgaria","abbreviation":"BG"},{"name":"Burkina Faso","abbreviation":"BF"},{"name":"Burundi","abbreviation":"BI"},{"name":"Cambodia","abbreviation":"KH"},{"name":"Cameroon","abbreviation":"CM"},{"name":"Canada","abbreviation":"CA"},{"name":"Canary Islands","abbreviation":"IC"},{"name":"Cape Verde","abbreviation":"CV"},{"name":"Caribbean Netherlands","abbreviation":"BQ"},{"name":"Cayman Islands","abbreviation":"KY"},{"name":"Central African Republic","abbreviation":"CF"},{"name":"Ceuta & Melilla","abbreviation":"EA"},{"name":"Chad","abbreviation":"TD"},{"name":"Chile","abbreviation":"CL"},{"name":"China","abbreviation":"CN"},{"name":"Christmas Island","abbreviation":"CX"},{"name":"Cocos (Keeling) Islands","abbreviation":"CC"},{"name":"Colombia","abbreviation":"CO"},{"name":"Comoros","abbreviation":"KM"},{"name":"Congo - Brazzaville","abbreviation":"CG"},{"name":"Congo - Kinshasa","abbreviation":"CD"},{"name":"Cook Islands","abbreviation":"CK"},{"name":"Costa Rica","abbreviation":"CR"},{"name":"Côte d'Ivoire","abbreviation":"CI"},{"name":"Croatia","abbreviation":"HR"},{"name":"Cuba","abbreviation":"CU"},{"name":"Curaçao","abbreviation":"CW"},{"name":"Cyprus","abbreviation":"CY"},{"name":"Czech Republic","abbreviation":"CZ"},{"name":"Denmark","abbreviation":"DK"},{"name":"Diego Garcia","abbreviation":"DG"},{"name":"Djibouti","abbreviation":"DJ"},{"name":"Dominica","abbreviation":"DM"},{"name":"Dominican Republic","abbreviation":"DO"},{"name":"Ecuador","abbreviation":"EC"},{"name":"Egypt","abbreviation":"EG"},{"name":"El Salvador","abbreviation":"SV"},{"name":"Equatorial Guinea","abbreviation":"GQ"},{"name":"Eritrea","abbreviation":"ER"},{"name":"Estonia","abbreviation":"EE"},{"name":"Ethiopia","abbreviation":"ET"},{"name":"Falkland Islands","abbreviation":"FK"},{"name":"Faroe Islands","abbreviation":"FO"},{"name":"Fiji","abbreviation":"FJ"},{"name":"Finland","abbreviation":"FI"},{"name":"France","abbreviation":"FR"},{"name":"French Guiana","abbreviation":"GF"},{"name":"French Polynesia","abbreviation":"PF"},{"name":"French Southern Territories","abbreviation":"TF"},{"name":"Gabon","abbreviation":"GA"},{"name":"Gambia","abbreviation":"GM"},{"name":"Georgia","abbreviation":"GE"},{"name":"Germany","abbreviation":"DE"},{"name":"Ghana","abbreviation":"GH"},{"name":"Gibraltar","abbreviation":"GI"},{"name":"Greece","abbreviation":"GR"},{"name":"Greenland","abbreviation":"GL"},{"name":"Grenada","abbreviation":"GD"},{"name":"Guadeloupe","abbreviation":"GP"},{"name":"Guam","abbreviation":"GU"},{"name":"Guatemala","abbreviation":"GT"},{"name":"Guernsey","abbreviation":"GG"},{"name":"Guinea","abbreviation":"GN"},{"name":"Guinea-Bissau","abbreviation":"GW"},{"name":"Guyana","abbreviation":"GY"},{"name":"Haiti","abbreviation":"HT"},{"name":"Honduras","abbreviation":"HN"},{"name":"Hong Kong SAR China","abbreviation":"HK"},{"name":"Hungary","abbreviation":"HU"},{"name":"Iceland","abbreviation":"IS"},{"name":"India","abbreviation":"IN"},{"name":"Indonesia","abbreviation":"ID"},{"name":"Iran","abbreviation":"IR"},{"name":"Iraq","abbreviation":"IQ"},{"name":"Ireland","abbreviation":"IE"},{"name":"Isle of Man","abbreviation":"IM"},{"name":"Israel","abbreviation":"IL"},{"name":"Italy","abbreviation":"IT"},{"name":"Jamaica","abbreviation":"JM"},{"name":"Japan","abbreviation":"JP"},{"name":"Jersey","abbreviation":"JE"},{"name":"Jordan","abbreviation":"JO"},{"name":"Kazakhstan","abbreviation":"KZ"},{"name":"Kenya","abbreviation":"KE"},{"name":"Kiribati","abbreviation":"KI"},{"name":"Kosovo","abbreviation":"XK"},{"name":"Kuwait","abbreviation":"KW"},{"name":"Kyrgyzstan","abbreviation":"KG"},{"name":"Laos","abbreviation":"LA"},{"name":"Latvia","abbreviation":"LV"},{"name":"Lebanon","abbreviation":"LB"},{"name":"Lesotho","abbreviation":"LS"},{"name":"Liberia","abbreviation":"LR"},{"name":"Libya","abbreviation":"LY"},{"name":"Liechtenstein","abbreviation":"LI"},{"name":"Lithuania","abbreviation":"LT"},{"name":"Luxembourg","abbreviation":"LU"},{"name":"Macau SAR China","abbreviation":"MO"},{"name":"Macedonia","abbreviation":"MK"},{"name":"Madagascar","abbreviation":"MG"},{"name":"Malawi","abbreviation":"MW"},{"name":"Malaysia","abbreviation":"MY"},{"name":"Maldives","abbreviation":"MV"},{"name":"Mali","abbreviation":"ML"},{"name":"Malta","abbreviation":"MT"},{"name":"Marshall Islands","abbreviation":"MH"},{"name":"Martinique","abbreviation":"MQ"},{"name":"Mauritania","abbreviation":"MR"},{"name":"Mauritius","abbreviation":"MU"},{"name":"Mayotte","abbreviation":"YT"},{"name":"Mexico","abbreviation":"MX"},{"name":"Micronesia","abbreviation":"FM"},{"name":"Moldova","abbreviation":"MD"},{"name":"Monaco","abbreviation":"MC"},{"name":"Mongolia","abbreviation":"MN"},{"name":"Montenegro","abbreviation":"ME"},{"name":"Montserrat","abbreviation":"MS"},{"name":"Morocco","abbreviation":"MA"},{"name":"Mozambique","abbreviation":"MZ"},{"name":"Myanmar (Burma)","abbreviation":"MM"},{"name":"Namibia","abbreviation":"NA"},{"name":"Nauru","abbreviation":"NR"},{"name":"Nepal","abbreviation":"NP"},{"name":"Netherlands","abbreviation":"NL"},{"name":"New Caledonia","abbreviation":"NC"},{"name":"New Zealand","abbreviation":"NZ"},{"name":"Nicaragua","abbreviation":"NI"},{"name":"Niger","abbreviation":"NE"},{"name":"Nigeria","abbreviation":"NG"},{"name":"Niue","abbreviation":"NU"},{"name":"Norfolk Island","abbreviation":"NF"},{"name":"North Korea","abbreviation":"KP"},{"name":"Northern Mariana Islands","abbreviation":"MP"},{"name":"Norway","abbreviation":"NO"},{"name":"Oman","abbreviation":"OM"},{"name":"Pakistan","abbreviation":"PK"},{"name":"Palau","abbreviation":"PW"},{"name":"Palestinian Territories","abbreviation":"PS"},{"name":"Panama","abbreviation":"PA"},{"name":"Papua New Guinea","abbreviation":"PG"},{"name":"Paraguay","abbreviation":"PY"},{"name":"Peru","abbreviation":"PE"},{"name":"Philippines","abbreviation":"PH"},{"name":"Pitcairn Islands","abbreviation":"PN"},{"name":"Poland","abbreviation":"PL"},{"name":"Portugal","abbreviation":"PT"},{"name":"Puerto Rico","abbreviation":"PR"},{"name":"Qatar","abbreviation":"QA"},{"name":"Réunion","abbreviation":"RE"},{"name":"Romania","abbreviation":"RO"},{"name":"Russia","abbreviation":"RU"},{"name":"Rwanda","abbreviation":"RW"},{"name":"Samoa","abbreviation":"WS"},{"name":"San Marino","abbreviation":"SM"},{"name":"São Tomé and Príncipe","abbreviation":"ST"},{"name":"Saudi Arabia","abbreviation":"SA"},{"name":"Senegal","abbreviation":"SN"},{"name":"Serbia","abbreviation":"RS"},{"name":"Seychelles","abbreviation":"SC"},{"name":"Sierra Leone","abbreviation":"SL"},{"name":"Singapore","abbreviation":"SG"},{"name":"Sint Maarten","abbreviation":"SX"},{"name":"Slovakia","abbreviation":"SK"},{"name":"Slovenia","abbreviation":"SI"},{"name":"Solomon Islands","abbreviation":"SB"},{"name":"Somalia","abbreviation":"SO"},{"name":"South Africa","abbreviation":"ZA"},{"name":"South Georgia & South Sandwich Islands","abbreviation":"GS"},{"name":"South Korea","abbreviation":"KR"},{"name":"South Sudan","abbreviation":"SS"},{"name":"Spain","abbreviation":"ES"},{"name":"Sri Lanka","abbreviation":"LK"},{"name":"St. Barthélemy","abbreviation":"BL"},{"name":"St. Helena","abbreviation":"SH"},{"name":"St. Kitts & Nevis","abbreviation":"KN"},{"name":"St. Lucia","abbreviation":"LC"},{"name":"St. Martin","abbreviation":"MF"},{"name":"St. Pierre & Miquelon","abbreviation":"PM"},{"name":"St. Vincent & Grenadines","abbreviation":"VC"},{"name":"Sudan","abbreviation":"SD"},{"name":"Suriname","abbreviation":"SR"},{"name":"Svalbard & Jan Mayen","abbreviation":"SJ"},{"name":"Swaziland","abbreviation":"SZ"},{"name":"Sweden","abbreviation":"SE"},{"name":"Switzerland","abbreviation":"CH"},{"name":"Syria","abbreviation":"SY"},{"name":"Taiwan","abbreviation":"TW"},{"name":"Tajikistan","abbreviation":"TJ"},{"name":"Tanzania","abbreviation":"TZ"},{"name":"Thailand","abbreviation":"TH"},{"name":"Timor-Leste","abbreviation":"TL"},{"name":"Togo","abbreviation":"TG"},{"name":"Tokelau","abbreviation":"TK"},{"name":"Tonga","abbreviation":"TO"},{"name":"Trinidad & Tobago","abbreviation":"TT"},{"name":"Tristan da Cunha","abbreviation":"TA"},{"name":"Tunisia","abbreviation":"TN"},{"name":"Turkey","abbreviation":"TR"},{"name":"Turkmenistan","abbreviation":"TM"},{"name":"Turks & Caicos Islands","abbreviation":"TC"},{"name":"Tuvalu","abbreviation":"TV"},{"name":"U.S. Outlying Islands","abbreviation":"UM"},{"name":"U.S. Virgin Islands","abbreviation":"VI"},{"name":"Uganda","abbreviation":"UG"},{"name":"Ukraine","abbreviation":"UA"},{"name":"United Arab Emirates","abbreviation":"AE"},{"name":"United Kingdom","abbreviation":"GB"},{"name":"United States","abbreviation":"US"},{"name":"Uruguay","abbreviation":"UY"},{"name":"Uzbekistan","abbreviation":"UZ"},{"name":"Vanuatu","abbreviation":"VU"},{"name":"Vatican City","abbreviation":"VA"},{"name":"Venezuela","abbreviation":"VE"},{"name":"Vietnam","abbreviation":"VN"},{"name":"Wallis & Futuna","abbreviation":"WF"},{"name":"Western Sahara","abbreviation":"EH"},{"name":"Yemen","abbreviation":"YE"},{"name":"Zambia","abbreviation":"ZM"},{"name":"Zimbabwe","abbreviation":"ZW"}],
@@ -3850,6 +3900,40 @@
                 { name: "Calabria", abbreviation: "CAL" },
                 { name: "Sicilia", abbreviation: "SIC" },
                 { name: "Sardegna", abbreviation: "SAR" }
+            ],
+            mx: [
+                { name: 'Aguascalientes', abbreviation: 'AGU' },
+                { name: 'Baja California', abbreviation: 'BCN' },
+                { name: 'Baja California Sur', abbreviation: 'BCS' },
+                { name: 'Campeche', abbreviation: 'CAM' },
+                { name: 'Chiapas', abbreviation: 'CHP' },
+                { name: 'Chihuahua', abbreviation: 'CHH' },
+                { name: 'Ciudad de México', abbreviation: 'DIF' },
+                { name: 'Coahuila', abbreviation: 'COA' },
+                { name: 'Colima', abbreviation: 'COL' },
+                { name: 'Durango', abbreviation: 'DUR' },
+                { name: 'Guanajuato', abbreviation: 'GUA' },
+                { name: 'Guerrero', abbreviation: 'GRO' },
+                { name: 'Hidalgo', abbreviation: 'HID' },
+                { name: 'Jalisco', abbreviation: 'JAL' },
+                { name: 'México', abbreviation: 'MEX' },
+                { name: 'Michoacán', abbreviation: 'MIC' },
+                { name: 'Morelos', abbreviation: 'MOR' },
+                { name: 'Nayarit', abbreviation: 'NAY' },
+                { name: 'Nuevo León', abbreviation: 'NLE' },
+                { name: 'Oaxaca', abbreviation: 'OAX' },
+                { name: 'Puebla', abbreviation: 'PUE' },
+                { name: 'Querétaro', abbreviation: 'QUE' },
+                { name: 'Quintana Roo', abbreviation: 'ROO' },
+                { name: 'San Luis Potosí', abbreviation: 'SLP' },
+                { name: 'Sinaloa', abbreviation: 'SIN' },
+                { name: 'Sonora', abbreviation: 'SON' },
+                { name: 'Tabasco', abbreviation: 'TAB' },
+                { name: 'Tamaulipas', abbreviation: 'TAM' },
+                { name: 'Tlaxcala', abbreviation: 'TLA' },
+                { name: 'Veracruz', abbreviation: 'VER' },
+                { name: 'Yucatán', abbreviation: 'YUC' },
+                { name: 'Zacatecas', abbreviation: 'ZAC' }
             ]
         },
 
@@ -6564,7 +6648,7 @@
             "Civil Engineer",
             "Claims Manager",
             "Clinical Research Assistant",
-            "Collections Manager.",
+            "Collections Manager",
             "Compliance Manager",
             "Comptroller",
             "Computer Manager",

@@ -397,6 +397,13 @@ test('postal() returns a valid basic postal code', t => {
     })
 })
 
+test('postcode() returns a valid basic postcode', t => {
+    _.times(10, () => {
+        let postcode = chance.postcode();
+        t.regex(postcode, /^[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}$/);
+    })
+})
+
 // chance.province()
 test('province() returns a random (short) province name', t => {
     _.times(1000, () => t.true(chance.province().length < 3))
@@ -513,6 +520,12 @@ test('states() with country of "uk" returns 129 UK counties', t => {
     t.is(chance.states({
         country: 'uk'
     }).length, 129)
+})
+
+test('states() with country of "mx" returns 32 MX states', t => {
+    t.is(chance.states({
+        country: 'mx'
+    }).length, 32)
 })
 
 // chance.street()

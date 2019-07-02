@@ -23,6 +23,8 @@ browser and play!
     Tweet
 </a>
 
+<iframe src="https://ghbtns.com/github-btn.html?user=chancejs&repo=chancejs&type=star&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+
 Written by [Victor Quinn](https://www.victorquinn.com)
 
 [![Chance on NPM](https://nodei.co/npm/chance.png?downloads=true)](https://nodei.co/npm/chance/)
@@ -50,3 +52,5 @@ And of course a monster thank you to all of the [Contributors](https://github.co
 Chance and this documentation are released under the terms of the [MIT license](http://opensource.org/licenses/MIT).</small>
 
 <a id="true-random">[1]</a> Of course true mathematicians out there would say that this ought to be considered as only generating pseudo-random things, not true random. For that we'd need some external entropy, not depending on a Mersenne Twister, blah, blah, blah. However, for most practical uses of this library for which it was created and intended, such as generating random names and addresses for automated tests, our random is good enough. But it should probably NOT be used for any cryptographic applications requiring true-random. See [Wikipedia's article](http://vq.io/12hBd84) for more info.
+
+<a href="https://www.gosquared.com/analytics/?utm_campaign=badge"><img src="https://stats.gs/badge" alt="Analytics by GoSquared" /></a>
