@@ -458,7 +458,7 @@
               }
           }
         }
-        return obj;
+        return JSON.stringify(obj);
     };
 
     // -- End Basics --
