@@ -445,7 +445,7 @@
           else{
             title=this.string();
           }
-          if(nested && options.layer>=2){
+          if(options.nested && options.layer>=2){
             var newOptions=options;
             newOptions.layer-=1;
             obj[title] = this.json(newOptions);
