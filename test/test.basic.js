@@ -513,6 +513,8 @@ test('string() can take just a min and obey it', t => {
 test('string() can take just a max and obey it', t => {
     _.times(1000, () => {
         t.true(chance.string({ max: 20 }).length <= 20)
+    })
+})
 
 test('falsy() should return a falsy value', t => {
     _.times(1000, () => {
