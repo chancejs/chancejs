@@ -7264,7 +7264,7 @@
             })()
 
             // kept random number same size as time used previously to ensure no unexpected results downstream
-            seed = Math.floor(Math.random()*Math.pow(10,13));
+            seed = Math.floor(randomFunc()*Math.pow(10,13));
         }
         /* Period parameters */
         this.N = 624;
