@@ -7224,6 +7224,45 @@
      */
     var MersenneTwister = function (seed) {
         if (seed === undefined) {
+            var randomFunc = (function() {
+                // Code adapted from https://github.com/DavidAnson/math-random-polyfill/blob/master/math-random-polyfill.js
+
+                // Math.random fallback 
+                if (typeof window === "undefined") return Math.random
+
+                // Feature detection
+                var crypto = window.crypto || window.msCrypto;
+
+                // More feature detection
+                if (window.Uint32Array && crypto && crypto.getRandomValues) {
+
+                    // Capture functions and values
+                    var Math_random = Math.random.bind(Math);
+                    var crypto_getRandomValues = crypto.getRandomValues.bind(crypto);
+                    var highShift = Math.pow(2, 32);
+                    var highMask = Math.pow(2, 53 - 32) - 1;
+
+                    // Math.random polyfill
+                    return function math_random_polyfill() {
+                        try {
+                            // Get random bits for numerator
+                            var array = new Uint32Array(2);
+                            crypto_getRandomValues(array);
+                            var numerator = ((array[0] & highMask) * highShift) + array[1];
+
+                            // Divide by maximum-value denominator
+                            var denominator = MAX_INT + 1;
+                            return numerator / denominator;
+                        } catch (ex) {
+                            // Exception in crypto.getRandomValues, fall back to Math.random
+                            return Math_random();
+                        }
+                    };
+                }
+                // Math.random fallback
+                else return Math.random
+            })()
+
             // kept random number same size as time used previously to ensure no unexpected results downstream
             seed = Math.floor(Math.random()*Math.pow(10,13));
         }
