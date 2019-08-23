@@ -715,6 +715,10 @@
         if (arr.length !== weights.length) {
             throw new RangeError("Chance: Length of array and weights must match");
         }
+        
+        if (arr.length === 0) {
+            throw new RangeError("Chance: Cannot weighted() from an empty array");
+        }
 
         // scan weights array and sum valid entries
         var sum = 0;
