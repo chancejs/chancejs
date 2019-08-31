@@ -11,9 +11,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: npm install and lint
+      - name: install and lint
         run: |
-          npm install
-          npm lint
+          yarn
+          yarn run lint
         env:
           CI: true
