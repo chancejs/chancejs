@@ -1,11 +1,11 @@
-import test from 'ava'
 import bool from './main'
+import test from 'ava'
 
-test('bool() returns a random boolean', t => {
+test('bool() returns a random boolean', (t) => {
     t.is(typeof bool(), 'boolean')
 })
 
-test('bool() is within the bounds of what we would call random', t => {
+test('bool() is within the bounds of what we would call random', (t) => {
     let trueCount = 0
     for (let i=0; i < 1000; i++) {
         if (bool()) {
@@ -20,7 +20,7 @@ test('bool() is within the bounds of what we would call random', t => {
     t.true((trueCount > 200) && (trueCount < 800))
 })
 
-test('bool() takes and obeys likelihood', t => {
+test('bool() takes and obeys likelihood', (t) => {
     let trueCount = 0
     for (let i=0; i < 1000; i++) {
         if (bool({ likelihood: 30 })) {
@@ -42,7 +42,7 @@ test('bool() takes and obeys likelihood', t => {
     t.true(trueCount > 900)
 })
 
-test('bool() throws an error if likelihood < 0 or > 100', t => {
+test('bool() throws an error if likelihood < 0 or > 100', (t) => {
     const fn1 = () => bool({likelihood: -23})
     t.throws(fn1, RangeError)
     const fn2 = () => bool({likelihood: 7933})

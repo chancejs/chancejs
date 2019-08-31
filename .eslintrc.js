@@ -8,11 +8,14 @@ module.exports = {
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
-        "define": "writable",
-        "chance": "writable"
     },
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 2018
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "modules": true,
+      }
     },
     "rules": {
         "accessor-pairs": "error",

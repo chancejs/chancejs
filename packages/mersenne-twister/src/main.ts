@@ -1,4 +1,5 @@
 /* tslint:disable:no-bitwise */
+/* eslint no-invalid-this: "off" */
 
 // Mersenne Twister from https://gist.github.com/banksean/300494
 /*
@@ -46,11 +47,17 @@
 
 export default class MersenneTwister {
     private N: number
+
     private M: number
+
     private MATRIX_A: number
+
     private UPPER_MASK: number
+
     private LOWER_MASK: number
+
     private mt: any[]
+
     private mti: number
 
     constructor(seed: number) {
@@ -109,27 +116,22 @@ export default class MersenneTwister {
     }
 
     /* generates a random number on [0,0x7fffffff]-interval */
-    public genrand_int31 = (): number => {
-        return (this.genrand_int32() >>> 1)
-    }
+    public genrand_int31 = (): number => (this.genrand_int32() >>> 1)
 
     /* generates a random number on [0,1]-real-interval */
-    public genrand_real1 = (): number => {
-        return this.genrand_int32() * (1.0 / 4294967295.0)
+    public genrand_real1 = (): number => this.genrand_int32() * (1.0 / 4294967295.0)
         /* divided by 2^32-1 */
-    }
+
 
     /* generates a random number on [0,1)-real-interval */
-    public random = (): number => {
-        return this.genrand_int32() * (1.0 / 4294967296.0)
+    public random = (): number => this.genrand_int32() * (1.0 / 4294967296.0)
         /* divided by 2^32 */
-    }
+
 
     /* generates a random number on (0,1)-real-interval */
-    public genrand_real3 = (): number => {
-        return (this.genrand_int32() + 0.5) * (1.0 / 4294967296.0)
+    public genrand_real3 = (): number => (this.genrand_int32() + 0.5) * (1.0 / 4294967296.0)
         /* divided by 2^32 */
-    }
+
 
     /* generates a random number on [0,1) with 53-bit resolution*/
     public genrand_res53 = (): number => {

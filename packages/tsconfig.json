@@ -1,7 +1,8 @@
 {
-    "files": [],
-    "references": [
-        { "path": "core" },
-        { "path": "mersenne-twister" }
-    ]
+  "extends": "../tsconfig.json",
+  "files": [],
+  "references": [
+    { "path": "core" },
+    { "path": "mersenne-twister" }
+  ]
 }

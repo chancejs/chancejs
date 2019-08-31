@@ -5,6 +5,7 @@
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "ava"
   },
   "repository": {
