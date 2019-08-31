@@ -1,25 +1,24 @@
 name: Code Coverage
 
-on:
-  pull_request:
-    branches:
-      - master
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
     steps:
       - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
-      - run: npm test
-
-  coverage:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - run: npm run coverage
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm test
+          npm run coverage
+        env:
+          CI: true
