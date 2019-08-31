@@ -21,6 +21,7 @@ jobs:
         with:
           node-version: 12
       - name: build and deploy
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == 'true'
         run: |
           yarn
           yarn docs
