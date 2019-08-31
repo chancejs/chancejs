@@ -21,6 +21,9 @@ jobs:
           yarn
           yarn run test
           yarn version --patch
+        env:
+          GIT_AUTHOR_NAME: "Actions Bot"
+          GIT_AUTHOR_EMAIL: no-reply@github.com
 
   publish-npm:
     needs: build
