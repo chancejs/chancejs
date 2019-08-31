@@ -303,6 +303,7 @@
 chance.character()
 chance.character({ <span class="hljs-attr">pool</span>: <span class="pl-s">&apos;abcde&apos;</span> })
 chance.character({ <span class="hljs-attr">alpha</span>: <span class="pl-c1">true</span> })
+chance.character({ <span class="hljs-attr">numeric</span>: <span class="pl-c1">true</span> })
 chance.character({ <span class="hljs-attr">casing</span>: <span class="pl-s">&apos;lower&apos;</span> })
 chance.character({ <span class="hljs-attr">symbols</span>: <span class="pl-c1">true</span> })
 </code></pre>
@@ -319,9 +320,13 @@ only from that pool.</p>
 <pre><code class="lang-js">chance.character({ <span class="hljs-attr">pool</span>: <span class="pl-s">&apos;abcde&apos;</span> });
 =&gt; <span class="pl-s">&apos;c&apos;</span>
 </code></pre>
-<p>Optionally specify alpha for only an alphanumeric character.</p>
+<p>Optionally specify alpha for an alphabetic character.</p>
 <pre><code class="lang-js">chance.character({ <span class="hljs-attr">alpha</span>: <span class="pl-c1">true</span> });
 =&gt; <span class="pl-s">&apos;N&apos;</span>
+</code></pre>
+<p>Optionally specify numeric for a numeric character.</p>
+<pre><code class="lang-js">chance.character({ <span class="hljs-attr">numeric</span>: <span class="pl-c1">true</span> });
+=&gt; <span class="pl-s">&apos;8&apos;</span>
 </code></pre>
 <p>Default includes both upper and lower case. It&apos;s possible to specify one or the
 other.</p>

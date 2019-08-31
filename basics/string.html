@@ -303,6 +303,9 @@
 chance.string()
 chance.string({ <span class="hljs-attr">length</span>: <span class="hljs-number">5</span> })
 chance.string({ <span class="hljs-attr">pool</span>: <span class="pl-s">&apos;abcde&apos;</span> })
+chance.string({ <span class="hljs-attr">alpha</span>: <span class="pl-c1">true</span> })
+chance.string({ <span class="hljs-attr">casing</span>: <span class="pl-s">&apos;lower&apos;</span> })
+chance.string({ <span class="hljs-attr">symbols</span>: <span class="pl-c1">true</span> })
 </code></pre>
 <p>Return a random string.</p>
 <pre><code class="lang-js">  chance.string();
@@ -324,6 +327,10 @@ only from that pool.</p>
 <p>Of course these options can also be combined.</p>
 <pre><code class="lang-js">  chance.string({ <span class="hljs-attr">length</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">pool</span>: <span class="pl-s">&apos;abcde&apos;</span> });
   =&gt; <span class="pl-s">&apos;cbbdc&apos;</span>
+</code></pre>
+<p>All the options for <a href="character.html">chance.character()</a> are supported:</p>
+<pre><code class="lang-js">  chance.string({ <span class="hljs-attr">length</span>: <span class="hljs-number">8</span>, <span class="hljs-attr">casing</span>: <span class="pl-s">&apos;upper&apos;</span>, <span class="hljs-attr">alpha</span>: <span class="pl-c1">true</span>, <span class="hljs-attr">numeric</span>: <span class="pl-c1">true</span> });
+  =&gt; <span class="pl-s">&apos;3THK7GB1&apos;</span>
 </code></pre>
 
         </div>
