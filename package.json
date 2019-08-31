@@ -35,7 +35,7 @@
     "pump": "^1.0.2"
   },
   "scripts": {
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov --temp-dir=./coverage/lcov.info",
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov --report-dir=./coverage > ./coverage/lcov.info",
     "docs": "docpress build",
     "docs-publish": "git-update-ghpages -e",
     "lint": "eslint --ignore-path .gitignore chance.js",
