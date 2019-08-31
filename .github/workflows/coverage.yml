@@ -11,10 +11,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: npm install, build, and test
+      - name: install and coverage
         run: |
-          npm install
-          npm run coverage
+          yarn
+          yarn run coverage
         env:
           CI: true
 
