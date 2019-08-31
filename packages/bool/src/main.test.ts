@@ -1,4 +1,4 @@
-import bool from './main'
+import { bool } from './main'
 import test from 'ava'
 
 test('bool() returns a random boolean', (t) => {

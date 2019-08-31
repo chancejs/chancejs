@@ -1,4 +1,4 @@
-import Core from '@chancejs/core'
+import { Core } from '@chancejs/core'
 
 export interface IBoolOptions {
     likelihood: number
@@ -14,7 +14,7 @@ const chance = new Core()
  *  @throws {RangeError} if the likelihood is out of bounds
  *  @returns {Bool} either true or false
  */
-export default function bool(options?: IBoolOptions): boolean {
+export function bool(options?: IBoolOptions): boolean {
     let likelihood: number
     if (options === undefined) {
         likelihood = 50

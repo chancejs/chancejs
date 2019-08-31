@@ -45,7 +45,7 @@
   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
-export default class MersenneTwister {
+export class MersenneTwister {
     private N: number
 
     private M: number

@@ -1,7 +1,7 @@
-import Chance from './main'
+import { Core } from './main'
 import test from 'ava'
 
-const chance = new Chance()
+const chance = new Core()
 
 test('chance() returns a random number', (t) => {
     t.is(typeof chance.random(), 'number')

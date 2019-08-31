@@ -1,4 +1,4 @@
-import MersenneTwister from './main'
+import { MersenneTwister } from './main'
 import test from 'ava'
 
 test("test", (t) => {
