@@ -23,3 +23,7 @@ jobs:
           yarn docs:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: chancejs/chancejs
+          GIT_NAME: Travis CI
+          GIT_EMAIL: mail@victorquinn.ocm
+          GIT_SOURCE: _docpress
