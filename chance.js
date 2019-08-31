@@ -170,7 +170,7 @@
           return this.pick(this.get("animals")[options.type.toLowerCase()]);
       }
        //if user does not put in any animal type, will return a random animal regardless
-      animalTypeArray = ["desert","forest","ocean","zoo","farm","pet","grassland"];
+      var animalTypeArray = ["desert","forest","ocean","zoo","farm","pet","grassland"];
       return this.pick(this.get("animals")[this.pick(animalTypeArray)]);
     };
 
@@ -435,7 +435,7 @@
 
     EscapeToken.prototype = {
         substitute: function () {
-            if (!/[\{\}\\]/.test(this.c)) {
+            if (!/[{}\\]/.test(this.c)) {
                 throw new Error('Invalid escape sequence: "\\' + this.c + '".')
             }
             return this.c
@@ -465,7 +465,7 @@
     function parseTemplate(template) {
         var tokens = []
         var mode = 'identity'
-        for (i = 0; i<template.length; i++) {
+        for (var i = 0; i<template.length; i++) {
             var c = template[i]
             switch (mode) {
                 case 'escape':
@@ -796,7 +796,7 @@
         text = this.capitalize(text);
 
         // Make sure punctuation has a usable value
-        if (punctuation !== false && !/^[\.\?;!:]$/.test(punctuation)) {
+        if (punctuation !== false && !/^[.?;!:]$/.test(punctuation)) {
             punctuation = '.';
         }
 
@@ -998,7 +998,7 @@
       if (options.nationality === "*") {
         var allLastNames = []
         var lastNames = this.get("lastNames")
-        Object.keys(lastNames).forEach(function(key, i){
+        Object.keys(lastNames).forEach(function(key){
           allLastNames = allLastNames.concat(lastNames[key])
         })
         return this.pick(allLastNames)
@@ -2475,7 +2475,7 @@
     // -- Miscellaneous --
 
     // Coin - Flip, flip, flipadelphia
-    Chance.prototype.coin = function(options) {
+    Chance.prototype.coin = function() {
       return this.bool() ? "heads" : "tails";
     }
 
