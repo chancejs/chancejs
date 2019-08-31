@@ -41,10 +41,7 @@
     "pump": "^1.0.2",
     "rimraf": "^2.6.3",
     "ts-node": "^8.0.2",
-    "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-immutable": "^5.2.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.3"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
@@ -54,8 +51,6 @@
     "lint": "eslint --ignore-path .gitignore '**/*.ts'",
     "lint:fix": "eslint --ignore-path .gitignore '**/*.ts' --fix",
     "lint:fix-dry-run": "eslint --ignore-path .gitignore '**/*.ts' --fix-dry-run",
-    "lint:ts": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts'",
-    "lint:ts:fix": "node_modules/.bin/tslint -c tslint.yaml '**/*.ts' --fix",
     "build": "lerna run build",
     "clean": "rimraf packages/**/lib",
     "publish": "yarn build && lerna publish",

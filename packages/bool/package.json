@@ -24,7 +24,7 @@
     "ava": "^1.4.1",
     "onchange": "^6.0.0",
     "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.3"
   },
   "ava": {
     "files": [
