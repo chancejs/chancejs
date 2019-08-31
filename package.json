@@ -37,7 +37,7 @@
     "coverage": "nyc npm test && nyc report --reporter=text-lcov",
     "docs": "docpress build",
     "docs-publish": "git-update-ghpages -e",
-    "lint": "gulp lint",
+    "lint": "eslint --ignore-path .gitignore chance.js",
     "test": "gulp test"
   },
   "keywords": [
@@ -77,5 +77,8 @@
     "css": [
       "docs/chance.css"
     ]
+  },
+  "dependencies": {
+    "eslint": "^6.3.0"
   }
 }
