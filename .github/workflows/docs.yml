@@ -16,10 +16,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: build and deploy
         run: |
           yarn
           yarn docs
           yarn docs:publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
