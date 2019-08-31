@@ -15,7 +15,8 @@ module.exports = {
       "sourceType": "module",
       "ecmaFeatures": {
         "modules": true,
-      }
+      },
+      "warnOnUnsupportedTypeScriptVersion": false
     },
     "rules": {
         "accessor-pairs": "error",
