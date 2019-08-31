@@ -1,6 +1,6 @@
 {
   "name": "@chancejs/chance",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "ChanceJS main -- a placeholder in the org until the whole thing is built",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
