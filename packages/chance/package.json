@@ -1,0 +1,42 @@
+{
+  "name": "@chancejs/chance",
+  "version": "2.2.5",
+  "description": "ChanceJS main -- a placeholder in the org until the whole thing is built",
+  "main": "lib/main.js",
+  "typings": "lib/main.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/chancejs/chancejs"
+  },
+  "keywords": [
+    "chance",
+    "chancejs",
+    "random",
+    "bool"
+  ],
+  "author": "Victor Quinn <mail@victorquinn.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^1.4.1",
+    "onchange": "^6.0.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.5.3"
+  },
+  "ava": {
+    "files": [
+      "lib/**/*.test.js"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@chancejs/bool": "^2.2.5",
+    "@chancejs/core": "^2.2.5",
+    "@types/node": "^12.0.3"
+  }
+}
