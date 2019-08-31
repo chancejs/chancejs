@@ -20,6 +20,7 @@ jobs:
         run: |
           yarn
           yarn run test
+          yarn version
 
   publish-npm:
     needs: build
