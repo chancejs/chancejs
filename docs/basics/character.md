@@ -5,6 +5,7 @@
 chance.character()
 chance.character({ pool: 'abcde' })
 chance.character({ alpha: true })
+chance.character({ numeric: true })
 chance.character({ casing: 'lower' })
 chance.character({ symbols: true })
 ```
@@ -31,11 +32,18 @@ chance.character({ pool: 'abcde' });
 => 'c'
 ```
 
-Optionally specify alpha for only an alphanumeric character.
+Optionally specify alpha for an alphabetic character.
 
 ```js
 chance.character({ alpha: true });
 => 'N'
+```
+
+Optionally specify numeric for a numeric character.
+
+```js
+chance.character({ numeric: true });
+=> '8'
 ```
 
 Default includes both upper and lower case. It's possible to specify one or the

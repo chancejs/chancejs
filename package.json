@@ -34,7 +34,8 @@
     "pump": "^1.0.2"
   },
   "scripts": {
-    "test": "gulp travis"
+    "test": "gulp travis",
+    "docs": "docpress"
   },
   "keywords": [
     "chance",

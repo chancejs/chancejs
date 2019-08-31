@@ -5,6 +5,9 @@
 chance.string()
 chance.string({ length: 5 })
 chance.string({ pool: 'abcde' })
+chance.string({ alpha: true })
+chance.string({ casing: 'lower' })
+chance.string({ symbols: true })
 ```
 
 Return a random string.
@@ -41,4 +44,11 @@ Of course these options can also be combined.
 ```js
   chance.string({ length: 5, pool: 'abcde' });
   => 'cbbdc'
+```
+
+All the options for [chance.character()](./character.md) are supported:
+
+```js
+  chance.string({ length: 8, casing: 'upper', alpha: true, numeric: true });
+  => '3THK7GB1'
 ```
