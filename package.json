@@ -34,8 +34,10 @@
     "pump": "^1.0.2"
   },
   "scripts": {
-    "test": "gulp travis",
-    "docs": "docpress"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "docs": "docpress build",
+    "docs-publish": "git-update-ghpages -e",
+    "test": "gulp travis"
   },
   "keywords": [
     "chance",

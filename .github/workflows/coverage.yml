@@ -1,0 +1,26 @@
+name: Code Coverage
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npm install -g gulp-cli
+      - run: gulp travis
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - run: npm run coverage
