@@ -37,7 +37,8 @@
     "coverage": "nyc npm test && nyc report --reporter=text-lcov",
     "docs": "docpress build",
     "docs-publish": "git-update-ghpages -e",
-    "test": "gulp travis"
+    "lint": "gulp lint",
+    "test": "gulp test"
   },
   "keywords": [
     "chance",
