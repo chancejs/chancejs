@@ -39,7 +39,7 @@
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
     "lint": "eslint --ignore-path .gitignore chance.js",
-    "test": "gulp test"
+    "test": "ava"
   },
   "keywords": [
     "chance",
