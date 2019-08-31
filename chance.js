@@ -20,7 +20,7 @@
     }
 
     UnsupportedError.prototype = new Error();
-    UnsupportedError.prototype.constructor = UnsupportedError;
+  UnsupportedError.prototype.constructor = UnsupportedError;;;
 
     // Cached array helpers
     var slice = Array.prototype.slice;
