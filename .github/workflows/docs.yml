@@ -18,7 +18,8 @@ jobs:
           node-version: 12
       - env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-        yarn
-        yarn docs
-        yarn docs-publish
+      - name: build and deploy
+        run: |
+          yarn
+          yarn docs
+          yarn docs:publish
