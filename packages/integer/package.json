@@ -1,13 +1,14 @@
 {
-  "name": "@chancejs/chance",
-  "version": "2.2.6",
-  "description": "ChanceJS main -- a placeholder in the org until the whole thing is built",
+  "name": "@chancejs/integer",
+  "version": "2.2.5",
+  "description": "ChanceJS random integer generator",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
   "scripts": {
     "build": "tsc",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov --report-dir=./coverage > ./coverage/lcov.info",
-    "test": "ava"
+    "test": "ava",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -36,8 +37,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@chancejs/bool": "^2.2.5",
-    "@chancejs/integer": "^2.2.5",
+    "@chancejs/core": "^2.2.5",
     "@types/node": "^12.0.3"
   }
 }

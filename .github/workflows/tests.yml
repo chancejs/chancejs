@@ -18,6 +18,7 @@ jobs:
       - name: yarn install and test
         run: |
           yarn
+          yarn bootstrap
           yarn run test
         env:
           CI: true

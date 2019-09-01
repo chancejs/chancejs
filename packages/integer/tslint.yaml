@@ -1,0 +1,21 @@
+---
+extends:
+  - tslint:recommended
+  - tslint-config-prettier
+  - tslint-immutable
+linterOptions:
+  exclude:
+    - node_modules/**/*.ts
+    - packages/**/node_modules/**/*
+    - packages/**/lib/**
+rules:
+  trailing-comma: true
+  semicolon:
+    - true
+    - never
+  no-console: true
+  variable-name:
+    - true
+    - check-format
+    - allow-snake-case
+
