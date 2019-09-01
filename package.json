@@ -47,7 +47,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces --npm-client=yarn",
     "coverage": "yarn coverage:lerna && yarn coverage:merge",
-    "coverage:lerna": "lerna run coverage --parallel",
+    "coverage:lerna": "lerna run coverage",
     "coverage:merge": "lcov-result-merger 'packages/*/coverage/lcov.info' coverage/lcov.info",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
