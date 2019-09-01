@@ -54,7 +54,7 @@
     "lint": "eslint --ignore-path .gitignore '**/*.ts'",
     "lint:fix": "eslint --ignore-path .gitignore '**/*.ts' --fix",
     "lint:fix-dry-run": "eslint --ignore-path .gitignore '**/*.ts' --fix-dry-run",
-    "build": "lerna run build --parallel",
+    "build": "lerna run build",
     "clean": "rimraf packages/**/lib",
     "publish": "yarn build && lerna publish",
     "pretest": "lerna bootstrap --use-workspaces --npm-client=yarn && yarn run lint",
