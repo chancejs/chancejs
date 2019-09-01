@@ -45,7 +45,7 @@
     "typescript": "^3.5.3"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --use-workspaces --npm-client=yarn",
     "coverage": "yarn coverage:lerna && yarn coverage:merge",
     "coverage:lerna": "lerna run coverage --parallel",
     "coverage:merge": "lcov-result-merger 'packages/*/coverage/lcov.info' coverage/lcov.info",
@@ -57,7 +57,7 @@
     "build": "lerna run build --parallel",
     "clean": "rimraf packages/**/lib",
     "publish": "yarn build && lerna publish",
-    "pretest": "lerna bootstrap --use-workspaces && yarn run lint",
+    "pretest": "lerna bootstrap --use-workspaces --npm-client=yarn && yarn run lint",
     "test": "yarn build && yarn test:lerna",
     "test:lerna": "lerna run test --parallel",
     "test:watch": "ava --watch && ./node_modules/.bin/onchange '**/*.ts' -- yarn build",
