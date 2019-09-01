@@ -2,8 +2,9 @@
   "name": "chance",
   "main": "./chance.js",
   "version": "1.1.1",
+  "private": true,
   "description": "Chance - Utility library to generate anything random",
-  "homepage": "http://chancejs.com",
+  "homepage": "https://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
   "bugs": {
     "url": "https://github.com/chancejs/chancejs/issues"
@@ -14,9 +15,12 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^12.7.3",
+    "@typescript-eslint/parser": "^2.0.0",
     "ava": "^0.19.1",
     "babel-eslint": "^7.2.3",
     "chai": "^3.5.0",
+    "concurrently": "^4.1.0",
     "coveralls": "^2.11.2",
     "dirty-chai": "^1.2.2",
     "docpress": "0.7.1",
@@ -30,16 +34,34 @@
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
     "jshint-stylish": "^2.2.1",
+    "lcov-result-merger": "^3.1.0",
+    "lerna": "^3.14.1",
     "lodash": "^4.17.4",
     "nyc": "^10.3.2",
-    "pump": "^1.0.2"
+    "onchange": "^5.2.0",
+    "pump": "^1.0.2",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.5.3"
   },
   "scripts": {
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov --report-dir=./coverage > ./coverage/lcov.info",
+    "bootstrap": "lerna bootstrap --use-workspaces --npm-client=yarn",
+    "coverage": "yarn coverage:lerna && yarn coverage:merge",
+    "coverage:lerna": "lerna run coverage",
+    "coverage:merge": "lcov-result-merger 'packages/*/coverage/lcov.info' coverage/lcov.info",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
-    "lint": "eslint --ignore-path .gitignore chance.js",
-    "test": "ava"
+    "lint": "eslint --ignore-path .gitignore '**/*.ts'",
+    "lint:fix": "eslint --ignore-path .gitignore '**/*.ts' --fix",
+    "lint:fix-dry-run": "eslint --ignore-path .gitignore '**/*.ts' --fix-dry-run",
+    "build": "lerna run build",
+    "clean": "rimraf packages/**/lib",
+    "publish": "yarn build && lerna publish",
+    "pretest": "lerna bootstrap --use-workspaces --npm-client=yarn && yarn run lint",
+    "test": "yarn build && yarn test:lerna",
+    "test:lerna": "lerna run test --parallel",
+    "test:watch": "ava --watch && ./node_modules/.bin/onchange '**/*.ts' -- yarn build",
+    "watch": "yarn lint && node_modules/.bin/onchange '**/*.ts' -- yarn lint"
   },
   "keywords": [
     "chance",
@@ -78,5 +100,8 @@
     "css": [
       "docs/chance.css"
     ]
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
