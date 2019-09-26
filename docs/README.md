@@ -114,6 +114,7 @@
   * [dice](miscellaneous/dice.md)
   * [guid](miscellaneous/guid.md)
   * [hash](miscellaneous/hash.md)
+  * [mac](miscellaneous/mac.md)
   * [hidden](miscellaneous/hidden.md)
   * [n](miscellaneous/n.md)
   * [normal](miscellaneous/normal.md)
