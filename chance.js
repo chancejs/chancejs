@@ -2589,6 +2589,78 @@
         return this.bimd5.md5(opts.str, opts.key, opts.raw);
     };
 
+        /**
+     * #Description:
+     * =====================================================
+     * Generate random MAC address
+     *
+     * #Examples :
+     * =====================================================
+     *
+     * Return random file name with random extension. The file extension
+     * is provided by a predefined collection of extensions. More about the extension
+     * pool can be found in #Extension Pool section
+     *
+     * chance.mac()
+     * => 
+     *
+     * @return [string]
+     *
+     */
+    Chance.prototype.mac = function (options) {
+      var opts = { delimiter: ':', oui: null, upperCase: true };
+      if (!options) {
+          options = {};
+      }
+      else if (typeof options !== 'object') {
+          return null;
+      }
+      else if(options.constructor === 'Array') {
+          return null;
+      }
+      if(options.delimiter != null) {
+        if(typeof options.delimiter !== "string") {
+          throw new Error('delimeter in options must be a string');
+        }
+        opts.delimiter = options.delimiter;
+      }
+      if(options.upperCase != null) {
+        if(typeof options.upperCase !== "boolean") {
+          throw new Error('upperCase in options must be a boolean');
+        }
+        opts.upperCase = options.upperCase;
+      }
+      var octetRegex = "([0-9A-F]){2}";
+      var pool = "ABCDEF1234567890";
+      if(!opts.upperCase) {
+          octetRegex = "([0-9a-f]){2}";
+          pool = "abcdef1234567890";
+      }
+      if(options.oui != null) {
+        if(typeof options.oui !== "string") {
+          throw new Error('oui in options must be a string');
+        }
+        var delim = opts.delimiter.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        var rgx = new RegExp("^(" + octetRegex + delim + "){2}" + octetRegex + "(" + delim + ")?$");
+        if(!rgx.test(options.oui)) {
+          throw new Error('oui in options must be in the form of three octets with a delimiter in between according to the other specifications of uppercase and delimiter');
+        }
+        if(options.oui.slice(-1) != opts.delimiter) {
+          options.oui += opts.delimiter;
+        }
+        opts.oui = options.oui;
+      }
+      var repetitions = 6;
+      if(opts.oui) {
+        repetitions = 3;
+      } else {
+        opts.oui = "";
+      }
+      return opts.oui + this.n(this.string, repetitions, { pool: pool, length: 2 }).join(opts.delimiter);
+    }
+
+
+
     /**
      * #Description:
      * =====================================================
