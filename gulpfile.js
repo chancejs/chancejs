@@ -6,32 +6,28 @@ const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
 const pump = require('pump')
 
-gulp.task('lint', () =>
-    gulp.src(['**/*.js', '!docs/**', '!node_modules/**', '!dist/**', '!test/helpers/**/*.js'])
-        .pipe(eslint({
+gulp.task('lint', () => gulp.src(['**/*.js', '!docs/**', '!node_modules/**', '!dist/**', '!test/helpers/**/*.js'])
+          .pipe(eslint({
             parser: 'babel-eslint',
             rules: {
-                // quotes: ['error', 'single'],
-                'curly': 'error',
-                'eqeqeq': 'error',
-                'new-parens': 'error',
-                'no-cond-assign': 'error',
-                'no-console': 'error',
-                'no-debugger': 'error',
-                'no-empty': 'error',
-                'no-fallthrough': 'error',
-                'no-trailing-spaces': 'error',
-                'no-mixed-spaces-and-tabs': 'error',
+              // quotes: ['error', 'single'],
+              'curly': 'error',
+              'eqeqeq': 'error',
+              'new-parens': 'error',
+              'no-cond-assign': 'error',
+              'no-console': 'error',
+              'no-debugger': 'error',
+              'no-empty': 'error',
+              'no-fallthrough': 'error',
+              'no-trailing-spaces': 'error',
+              'no-mixed-spaces-and-tabs': 'error',
             }
-        }))
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError())
-)
+          }))
+          .pipe(eslint.format())
+          .pipe(eslint.failAfterError()))
 
-gulp.task('test', () =>
-    gulp.src('test/**/*.js')
-        .pipe(ava({ verbose: true }))
-)
+gulp.task('test', () => gulp.src('test/**/*.js')
+          .pipe(ava({ verbose: true })))
 
 gulp.task('watch', () => {
     gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])

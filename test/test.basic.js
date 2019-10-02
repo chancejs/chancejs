@@ -529,3 +529,32 @@ test('falsy() should return a falsy value using a pool data', t => {
         t.falsy(value)
     })
 })
+
+test('template() returns alpha numeric substituted', t => {
+    _.times(1000, () => {
+        let str = chance.template('ID-{Aa}-{##}')
+        t.regex(str, /^ID-[A-Z][a-z]-[0-9][0-9]$/)
+    })
+})
+
+test('template() rejects unknown tokens', t => {
+    t.throws(() => chance.template('{Aa-}'), 'Invalid replacement character: "-".')
+    t.throws(() => chance.template('{Aa{}'), 'Invalid replacement character: "{".')
+    t.throws(() => chance.template('{Aab}'), 'Invalid replacement character: "b".')
+})
+
+test('template() allows escape sequnce', t => {
+    t.is(chance.template('\\\\ID-\\{Aa\\}'), '\\ID-{Aa}')
+})
+
+test('template() rejects invalid escape sequnce', t => {
+    t.throws(() => chance.template('ID-\\Aa'), 'Invalid escape sequence: "\\A".')
+})
+
+test('template() cannot be undefined', t => {
+    t.throws(() => chance.template(), 'Template string is required')
+})
+
+test('template() cannot be empty', t => {
+    t.throws(() => chance.template(''), 'Template string is required')
+})
