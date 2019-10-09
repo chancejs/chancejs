@@ -546,6 +546,22 @@
         return Buffer.from(content);
     };
 
+    /**
+     * Return a random object
+     *
+     *  @param {Object} [options={}]
+     *  @returns {Object} an object with a random key/value
+     */
+    Chance.prototype.object = function(options) {
+        options = initOptions(options, {
+            key: this.word(),
+            value: this.word()
+        });
+        const obj = {[options.key]: options.value}
+
+        return obj;
+    }
+
     // -- End Basics --
 
     // -- Helpers --
