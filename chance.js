@@ -306,13 +306,13 @@
         if (options.exclude) {
             testRange(!Array.isArray(options.exclude), "Chance: exclude must be an array.")
 
-            for (var exclusionIndex in options.exclude) {
+            for (const exclusionIndex in options.exclude) {
                 testRange(!Number.isInteger(options.exclude[exclusionIndex]), "Chance: exclude must be numbers.")
             }
 
             let random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
             var sortedExclusions = options.exclude.sort();
-            for (var exclusionIndex in sortedExclusions) {
+            for (const exclusionIndex in sortedExclusions) {
                 if (random < sortedExclusions[exclusionIndex]) {
                     break
                 }
