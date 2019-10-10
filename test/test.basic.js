@@ -504,6 +504,18 @@ test('string() obeys symbol', t => {
     })
 })
 
+test('string() can take just a min and obey it', t => {
+    _.times(1000, () => {
+        t.true(chance.string({ min: 6 }).length >= 6)
+    })
+})
+
+test('string() can take just a max and obey it', t => {
+    _.times(1000, () => {
+        t.true(chance.string({ max: 20 }).length <= 20)
+    })
+})
+
 test('falsy() should return a falsy value', t => {
     _.times(1000, () => {
         const value = chance.falsy()
