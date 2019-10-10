@@ -306,13 +306,13 @@
         if (options.exclude) {
             testRange(!Array.isArray(options.exclude), "Chance: exclude must be an array.")
 
-            for (var exclusionIndex in options.exclude) {
+            for (const exclusionIndex in options.exclude) {
                 testRange(!Number.isInteger(options.exclude[exclusionIndex]), "Chance: exclude must be numbers.")
             }
 
             let random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
             var sortedExclusions = options.exclude.sort();
-            for (var exclusionIndex in sortedExclusions) {
+            for (const exclusionIndex in sortedExclusions) {
                 if (random < sortedExclusions[exclusionIndex]) {
                     break
                 }
@@ -550,6 +550,22 @@
 
         return Buffer.from(content);
     };
+
+    /**
+     * Return a random object
+     *
+     *  @param {Object} [options={}]
+     *  @returns {Object} an object with a random key/value
+     */
+    Chance.prototype.object = function(options) {
+        options = initOptions(options, {
+            key: this.word(),
+            value: this.word()
+        });
+        const obj = {[options.key]: options.value}
+
+        return obj;
+    }
 
     // -- End Basics --
 

@@ -558,3 +558,35 @@ test('template() cannot be undefined', t => {
 test('template() cannot be empty', t => {
     t.throws(() => chance.template(''), 'Template string is required')
 })
+
+test('object() returns an object', t => {
+    t.is(typeof chance.object(), 'object')
+    t.true(chance.object() instanceof Object)
+})
+
+test('object() has a single key/value', t => {
+    t.is(Object.keys(chance.object()).length, 1)
+})
+
+test('object() return object with specified key', t => {
+    const key = chance.word();
+    const obj = chance.object({key})
+
+    t.is(Object.keys(obj)[0], key)
+})
+
+test('object() return object with specified value', t => {
+    const value = chance.word();
+    const obj = chance.object({value})
+
+    t.is(obj[Object.keys(obj)[0]], value)
+})
+
+test('object() return object with specified key and value', t => {
+    const key = chance.word();
+    const value = chance.word();
+    const obj = chance.object({key, value})
+
+    t.is(Object.keys(obj)[0], key)
+    t.is(obj[key], value)
+})
