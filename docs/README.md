@@ -17,6 +17,7 @@
   * [natural](basics/natural.md)
   * [prime](basics/prime.md)
   * [string](basics/string.md)
+  * [template](basics/template.md)
 * Text
   * [paragraph](text/paragraph.md)
   * [sentence](text/sentence.md)
