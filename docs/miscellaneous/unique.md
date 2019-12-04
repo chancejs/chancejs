@@ -19,7 +19,7 @@ Optionally specify the comparator used to determine whether a generated item is 
 
 ```js
 chance.unique(chance.currency, 2, {
-comparator: function(err, val) {
+comparator: function(arr, val) {
 return arr.reduce(function(acc, item) {
 return acc || (item.code === val.code);
 }, false);
