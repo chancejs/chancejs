@@ -32,11 +32,11 @@ Written by [Victor Quinn](https://www.victorquinn.com)
 <ul class=downloads>
     <li>
       <a href="chance.js" class="download" download="chance.js">chance.js (for development)</a>
-      - <i>95KB uncompressed</i>
+      - <i>335KB, 82KB when gzipped</i>
     </li>
     <li>
       <a href="chance.min.js" class="download">chance.min.js (for production)</a>
-      – <i>55KB, 17KB when gzipped</i>
+      – <i>117KB, 37KB when gzipped</i>
     </li>
   </ul>
 
