@@ -1,4 +1,4 @@
-# bool
+# Falsy
 
 ```js
     // usages
