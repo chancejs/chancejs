@@ -1,4 +1,4 @@
-# Falsy
+# falsy
 
 ```js
     // usages
