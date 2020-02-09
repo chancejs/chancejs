@@ -296,3 +296,13 @@ test('tv() works as expected', t => {
         t.true(/^[KW][A-Z][A-Z][A-Z]/.test(tv))
     })
 })
+
+// chance.mongo_objectid()
+test('mongo_objectid() returns a proper objectId', t => {
+    _.times(1000, () => {
+        const objectId = chance.mongo_objectid();
+        const hexTimestamp = objectId.substring(0,8);
+        t.true(_.isDate(new Date(parseInt(hexTimestamp, 16) * 1000)));
+        t.is(objectId.length, 24);
+    })
+})
