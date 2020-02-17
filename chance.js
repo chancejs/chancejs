@@ -8,6 +8,7 @@
     // Constants
     var MAX_INT = 9007199254740992;
     var MIN_INT = -MAX_INT;
+    var STEP = 1;
     var NUMBERS = '0123456789';
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
@@ -269,6 +270,8 @@
      *  NOTE the max and min are INCLUDED in the range. So:
      *  chance.integer({min: 1, max: 3});
      *  would return either 1, 2, or 3.
+     *  chance.integer({min: 1, max: 20, step: 5});
+     *  would return either 5, 10, 15, or 20.
      *
      *  @param {Object} [options={}] can specify a min and/or max
      *  @returns {Number} a single random integer number
@@ -277,10 +280,13 @@
     Chance.prototype.integer = function (options) {
         // 9007199254740992 (2^53) is the max integer number in JavaScript
         // See: http://vq.io/132sa2j
-        options = initOptions(options, {min: MIN_INT, max: MAX_INT});
+        options = initOptions(options, {min: MIN_INT, max: MAX_INT, step: STEP});
         testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
-        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
+        const num = Math.floor(this.random() * (options.max - options.min + 1) + options.min);
+
+        return num % options.step < 3 ? ( num % options.step === 0 ? num : Math.floor(num / options.step ) * options.step) : Math.ceil(num / options.step) * options.step;
+
     };
 
     /**
