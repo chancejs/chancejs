@@ -1301,6 +1301,7 @@
             identicon: 'identicon', // Geometric pattern based on hash
             monsterid: 'monsterid', // A generated monster icon
             wavatar: 'wavatar', // A generated face
+            robohash: 'robohash', // A generated robot icon
             retro: 'retro', // 8-bit icon
             blank: 'blank' // A transparent png
         };
