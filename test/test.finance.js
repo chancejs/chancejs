@@ -214,7 +214,34 @@ test('luhn_check() properly checks if number passes the Luhn algorithm', t => {
 })
 
 test('iban() returns an iban', t => {
+    let ibanCountries = chance.get('ibanCountries')
+    
     let iban = chance.iban()
+    let ibanCC = iban.substring(0,2)    
+    let ibanCountry = ibanCountries.filter(function (item) { return item.cc === ibanCC; })[0];
+    let ibanRulePairs = ibanCountry.ibanStruct.substring(5, ibanCountry.ibanStruct.length).match(/\d+!\D/g);
+    let regexpRule = '^[A-Z]{2}[0-9]{2}';
+    for (const p of ibanRulePairs) {
+        let regexpPairRule = '';
+        let len = p.split('!')[0]
+        let format = p.split('!')[1];
+        switch (format) {
+            case 'n':
+                regexpPairRule = '[0-9]' + '{' + len + '}';
+                break;
+            case 'a':
+                regexpPairRule = '[A-Z]' + '{' + len + '}';
+                break;
+            default:
+                regexpPairRule = '[A-Z0-9]' + '{' + len + '}';
+                break;
+        }
+        regexpRule = regexpRule + regexpPairRule;
+    }
+    regexpRule = regexpRule + '$'
+    let regexp = new RegExp(regexpRule)
+
     t.true(_.isString(iban))
-    t.true(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{1,26}$/.test(iban))
+    t.true(regexp.test(iban))
+    t.is(iban.length,ibanCountry.ibanLength)
 })
