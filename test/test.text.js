@@ -110,3 +110,14 @@ test('paragraph() will obey bounds', t => {
         t.is(len, 6)
     })
 })
+
+test('paragraph) will obey line breaks', t => {
+    _.times(100, () => {
+        let rand = _.random(1, 50);
+        let paragraph = chance.paragraph({ sentences: rand, linebreak: true })
+        t.true(_.isString(paragraph))
+
+        let len = paragraph.split('\n').length
+        t.is(len, rand);
+    })
+})
