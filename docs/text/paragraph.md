@@ -4,6 +4,7 @@
 // usage
 chance.paragraph()
 chance.paragraph({ sentences: 1 })
+chance.paragraph({ linebreak: true })
 ```
 
 Return a random paragraph generated from sentences populated by semi-pronounceable
@@ -23,6 +24,16 @@ Optionally specify the number of sentences in the paragraph.
   => 'Idefeulo foc omoemowa wahteze liv juvde puguprof epehuji upuga zige odfe igo sit pilamhul oto ukurecef.'
 ```
 
+Optionally specify if each sentence in the paragraph should start a new line.
+
+```js
+  chance.paragraph({ linebreak: true });
+  => `
+      Moku kazkubib adi apo bebiw movarne rab tusa vura nok ji iv otukib dewut.
+      Tiwlo orojel vuhhet emluliv loha ma rulical fokuv re dob fabup bit.
+      Veza ermethit osgues dohjeci pezlal su ibi cib zerezci bode ca hopmub gigwosut culhoca nubu.
+     `
+```
 
 
 

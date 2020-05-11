@@ -782,9 +782,10 @@
         options = initOptions(options);
 
         var sentences = options.sentences || this.natural({min: 3, max: 7}),
-            sentence_array = this.n(this.sentence, sentences);
+            sentence_array = this.n(this.sentence, sentences),
+            separator = options.linebreak === true ? '\n' : ' ';
 
-        return sentence_array.join(' ');
+        return sentence_array.join(separator);
     };
 
     // Could get smarter about this than generating random words and
