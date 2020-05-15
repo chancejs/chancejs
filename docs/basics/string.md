@@ -34,14 +34,14 @@ Can optionally specify a length and the string will be exactly that length.
   => 'YN%fG'
 ```
 
-Can optionally specify a min and the string will have a minimum lentgh
+Can optionally specify a min and the string will have a minimum length
 
 ```js
   chance.string({ min: 5 });
   => '6(Ow1wF)qjUm%W)B2[Q]'
 ```
 
-Can optionally specify a max and the string will have a maximum lentgh
+Can optionally specify a max and the string will have a maximum length
 
 ```js
   chance.string({ max: 20 });
