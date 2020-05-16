@@ -289,6 +289,16 @@ test('domain() obeys tld, if specified', t => {
     })
 })
 
+test('domain() obeys tld, if specified and tld is an array', t => {
+    _.times(1000, () => {
+        const tldList = ['com', 'net', 'org']
+        const domain = chance.domain({ tld: tldList })
+        const tldOfDomain = domain.split('.')[1]
+        t.true(_.isString(domain))
+        t.true(tldList.includes(tldOfDomain))
+    })
+})
+  
 // chance.email()
 test('email() returns what looks like an email', t => {
     _.times(1000, () => {
