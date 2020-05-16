@@ -6,7 +6,7 @@ const chance = new Chance()
 
 test('Domain test when tld key equals a string', (t) => {
   _.times(1000, () => {
-    const tld = '.com'
+    const tld = 'com'
     const domain = chance.domain({ tld })
     t.true(domain.endsWith(tld))
   })
