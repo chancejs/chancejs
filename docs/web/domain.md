@@ -20,3 +20,9 @@ chance.domain({tld: 'ie'})
 => 'gotaujo.ie'
 ```
 
+Or you can set an array for tld key to choose random one between them as well.
+```js
+chance.domain({tld: ['com', 'org', 'net']})
+=> 'sojuaie.org'
+```
+

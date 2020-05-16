@@ -312,6 +312,7 @@
 
             let random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
             var sortedExclusions = options.exclude.sort();
+            // eslint-disable-next-line no-redeclare
             for (var exclusionIndex in sortedExclusions) {
                 if (random < sortedExclusions[exclusionIndex]) {
                     break
@@ -1512,6 +1513,9 @@
 
     Chance.prototype.domain = function (options) {
         options = initOptions(options);
+         if(Array.isArray(options.tld)){
+            options.tld = this.pickone(options.tld)
+         }
         return this.word() + '.' + (options.tld || this.tld());
     };
 
