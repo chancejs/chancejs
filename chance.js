@@ -1703,13 +1703,75 @@
     };
 
     Chance.prototype.latitude = function (options) {
-        options = initOptions(options, {fixed: 5, min: -90, max: 90});
-        return this.floating({min: options.min, max: options.max, fixed: options.fixed});
+        // Constants - Formats
+        const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
+
+        options = initOptions(options, 
+            options && options.format && [DDM, DMS].includes(options.format.toLowerCase()) ?
+            {min: 0, max: 89, fixed: 4} :
+            {fixed: 5, min: -90, max: 90, format: DD});
+
+        const format = options.format.toLowerCase();
+        
+        if (format === DDM || format === DMS) {
+            testRange(options.min < 0 || options.min > 89, "Chance: Min specified is out of range. Should be between 0 - 89");
+            testRange(options.max < 0 || options.max > 89, "Chance: Max specified is out of range. Should be between 0 - 89");
+            testRange(options.fixed > 4, 'Chance: Fixed specified should be below or equal to 4');
+        }
+
+        switch (format) {
+            case DDM: {
+                return 'N ' + 
+                        this.integer({min: options.min, max: options.max}) + '°' + 
+                        this.floating({min: 0, max: 59, fixed: options.fixed});
+            }
+            case DMS: {
+                return 'N ' + 
+                        this.integer({min: options.min, max: options.max}) + '°' + 
+                        this.integer({min: 0, max: 59}) + '’' + 
+                        this.floating({min: 0, max: 59, fixed: options.fixed}) + '”';
+            }
+            case DD:
+            default: {    
+                return this.floating({min: options.min, max: options.max, fixed: options.fixed});
+            }
+        }
     };
 
     Chance.prototype.longitude = function (options) {
-        options = initOptions(options, {fixed: 5, min: -180, max: 180});
-        return this.floating({min: options.min, max: options.max, fixed: options.fixed});
+        // Constants - Formats
+        const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
+
+        options = initOptions(options, 
+            options && options.format && [DDM, DMS].includes(options.format.toLowerCase()) ?
+            {min: 0, max: 179, fixed: 4} :
+            {fixed: 5, min: -180, max: 180, format: DD});
+
+        const format = options.format.toLowerCase();
+
+        if (format === DDM || format === DMS) {
+            testRange(options.min < 0 || options.min > 179, "Chance: Min specified is out of range. Should be between 0 - 179");
+            testRange(options.max < 0 || options.max > 179, "Chance: Max specified is out of range. Should be between 0 - 179");
+            testRange(options.fixed > 4, 'Chance: Fixed specified should be below or equal to 4');
+        }
+
+        switch (format) {
+            case DDM: {
+                return 'W ' + 
+                        this.integer({min: options.min, max: options.max}) + '°' + 
+                        this.floating({min: 0, max: 59.9999, fixed: options.fixed})
+            }
+            case DMS: {
+                return 'W ' +
+                        this.integer({min: options.min, max: options.max}) + '°' +
+                        this.integer({min: 0, max: 59}) + '’' +
+                        this.floating({min: 0, max: 59.9999, fixed: options.fixed}) + '”';
+            }
+            case DD:
+            default: {    
+                return this.floating({min: options.min, max: options.max, fixed: options.fixed});
+            }
+        }
     };
 
     Chance.prototype.phone = function (options) {
