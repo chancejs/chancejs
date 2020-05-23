@@ -1174,7 +1174,6 @@
         return idn;
     };
 
-
     Chance.prototype.ssn = function (options) {
         options = initOptions(options, {ssnFour: false, dashes: true});
         var ssn_pool = "1234567890",
@@ -1808,6 +1807,18 @@
                 var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
                 phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
                 break;
+            case 'au':
+                var areaCode = this.pick(["02","03","07","08"]); //https://www.australia.gov.au/about-australia/facts-and-figures/telephone-country-and-area-codes
+                if (options.mobile) {
+                    areaCode="04";
+                    numPick = self.string({pool:'0123456789', length:8});
+                    phone = `${areaCode}${numPick}`;  //no formatting for mobile.
+                } else {
+                    numPick = self.string({pool:'123456789', length:1}) + self.string({pool:'0123456789',length:7});
+                    phone = options.formatted ? `(${areaCode}) ${numPick}` : `${areaCode}${numPick}`;
+                }
+                break;
+
             case 'br':
                 var areaCode = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99"]);
                 var prefix;
@@ -2354,7 +2365,6 @@
                     evens  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                     odds   = "BAKPLCQDREVOSFTGUHMINJWZYX",
                     digit  = 0;
-
 
                 for(var i = 0; i < 15; i++) {
                     if (i % 2 !== 0) {
@@ -7126,7 +7136,6 @@
       return result;
     });
 
-
     function _copyObject(source, target) {
       var keys = o_keys(source);
       var key;
@@ -7342,7 +7351,6 @@
        LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
        Any feedback is very welcome.
        http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
