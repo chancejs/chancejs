@@ -34,10 +34,10 @@ By default longitude' format is dd, can specify otherwise.
 
 ```js
 chance.longitude({format: 'ddm'});
-=> "N 41°44.9592"
+=> "41°44.9592"
 ```
 
 ```js
 chance.longitude({format: 'dms'});
-=> "N 56°2’9.8187”"
+=> "56°2’9.8187”"
 ```

@@ -89,7 +89,7 @@ test('coordinates() looks right', t => {
 
 test('coordinates() returns coordinates in DD format as default', t => {
     _.times(1000, () => {
-        const CHARS_NOT_TO_CONTAIN = ['N', 'W', '°', '’', '”']
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
         
         let coordinates = chance.coordinates()
         let [ latitude, longitude ] = coordinates.split(',')
@@ -103,7 +103,7 @@ test('coordinates() returns coordinates in DD format as default', t => {
 
 test('coordinates() will obey DD format', t => {
     _.times(1000, () => {
-        const CHARS_NOT_TO_CONTAIN = ['N', 'W', '°', '’', '”']
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
         
         let coordinates = chance.coordinates({format: 'dd'})
         let [ latitude, longitude ] = coordinates.split(',')
@@ -125,8 +125,8 @@ test('coordinates() will obey DDM format', t => {
 
         t.true(_.isString(coordinates))
         t.is(coordinates.split(',').length, 2)
-        t.true(['N', ...CHARS_TO_CONTAIN].every(char => latitude.includes(char)))
-        t.true(['W', ...CHARS_TO_CONTAIN].every(char => longitude.includes(char)))
+        t.true(CHARS_TO_CONTAIN.every(char => latitude.includes(char)))
+        t.true(CHARS_TO_CONTAIN.every(char => longitude.includes(char)))
         t.true(CHARS_NOT_TO_CONTAIN.every(char => !latitude.includes(char)))
         t.true(CHARS_NOT_TO_CONTAIN.every(char => !longitude.includes(char)))
     })
@@ -141,8 +141,8 @@ test('coordinates() will obey DMS format', t => {
 
         t.true(_.isString(coordinates))
         t.is(coordinates.split(',').length, 2)
-        t.true(['N', ...CHARS_TO_CONTAIN].every(char => latitude.includes(char)))
-        t.true(['W', ...CHARS_TO_CONTAIN].every(char => longitude.includes(char)))
+        t.true(CHARS_TO_CONTAIN.every(char => latitude.includes(char)))
+        t.true(CHARS_TO_CONTAIN.every(char => longitude.includes(char)))
     })
 })
 
@@ -271,7 +271,7 @@ test('latitude() will accept a max and obey it', t => {
 
 test('latitude() returns latitude in DD format as default', t => {
     _.times(1000, () => {
-        const CHARS_NOT_TO_CONTAIN = ['N', 'W', '°', '’', '”']
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
         
         let latitude = chance.latitude()
 
@@ -282,7 +282,7 @@ test('latitude() returns latitude in DD format as default', t => {
 
 test('latitude() will obey DD format', t => {
     _.times(1000, () => {
-        const CHARS_NOT_TO_CONTAIN = ['N', 'W', '°', '’', '”']
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
         
         let latitude = chance.latitude({format: 'dd'})
 
@@ -293,7 +293,7 @@ test('latitude() will obey DD format', t => {
 
 test('latitude() will obey DDM format', t => {
     _.times(1000, () => {
-        const CHARS_TO_CONTAIN = ['N', '°']
+        const CHARS_TO_CONTAIN = ['°']
         const CHARS_NOT_TO_CONTAIN = ['’', '”']
         
         let latitude = chance.latitude({format: 'ddm'})
@@ -306,7 +306,7 @@ test('latitude() will obey DDM format', t => {
 
 test('latitude() will obey DMS format', t => {
     _.times(1000, () => {
-        const CHARS_TO_CONTAIN = ['N', '°', '’', '”']
+        const CHARS_TO_CONTAIN = ['°', '’', '”']
         
         let latitude = chance.latitude({format: 'dms'})
 
@@ -348,7 +348,7 @@ test('longitude() will accept a max and obey it', t => {
 
 test('longitude() returns longitude in DD format as default', t => {
     _.times(1000, () => {
-        const CHARS_NOT_TO_CONTAIN = ['N', 'W', '°', '’', '”']
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
         
         let longitude = chance.longitude()
 
@@ -359,7 +359,7 @@ test('longitude() returns longitude in DD format as default', t => {
 
 test('longitude() will obey DD format', t => {
     _.times(1000, () => {
-        const CHARS_NOT_TO_CONTAIN = ['N', 'W', '°', '’', '”']
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
         
         let longitude = chance.longitude({format: 'dd'})
 
@@ -370,7 +370,7 @@ test('longitude() will obey DD format', t => {
 
 test('longitude() will obey DDM format', t => {
     _.times(1000, () => {
-        const CHARS_TO_CONTAIN = ['W', '°']
+        const CHARS_TO_CONTAIN = ['°']
         const CHARS_NOT_TO_CONTAIN = ['’', '”']
         
         let longitude = chance.longitude({format: 'ddm'})
@@ -383,7 +383,7 @@ test('longitude() will obey DDM format', t => {
 
 test('longitude() will obey DMS format', t => {
     _.times(1000, () => {
-        const CHARS_TO_CONTAIN = ['W', '°', '’', '”']
+        const CHARS_TO_CONTAIN = ['°', '’', '”']
         
         let longitude = chance.longitude({format: 'dms'})
 

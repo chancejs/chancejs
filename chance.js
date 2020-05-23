@@ -1721,13 +1721,11 @@
 
         switch (format) {
             case DDM: {
-                return 'N ' + 
-                        this.integer({min: options.min, max: options.max}) + '°' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' + 
                         this.floating({min: 0, max: 59, fixed: options.fixed});
             }
             case DMS: {
-                return 'N ' + 
-                        this.integer({min: options.min, max: options.max}) + '°' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' + 
                         this.integer({min: 0, max: 59}) + '’' + 
                         this.floating({min: 0, max: 59, fixed: options.fixed}) + '”';
             }
@@ -1757,13 +1755,11 @@
 
         switch (format) {
             case DDM: {
-                return 'W ' + 
-                        this.integer({min: options.min, max: options.max}) + '°' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' + 
                         this.floating({min: 0, max: 59.9999, fixed: options.fixed})
             }
             case DMS: {
-                return 'W ' +
-                        this.integer({min: options.min, max: options.max}) + '°' +
+                return  this.integer({min: options.min, max: options.max}) + '°' +
                         this.integer({min: 0, max: 59}) + '’' +
                         this.floating({min: 0, max: 59.9999, fixed: options.fixed}) + '”';
             }

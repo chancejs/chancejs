@@ -34,10 +34,10 @@ By default latitudes' format is dd, can specify otherwise.
 
 ```js
 chance.latitude({format: 'ddm'});
-=> "N 41°44.9592"
+=> "41°44.9592"
 ```
 
 ```js
 chance.latitude({format: 'dms'});
-=> "N 56°2’9.8187”"
+=> "56°2’9.8187”"
 ```

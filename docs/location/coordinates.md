@@ -25,10 +25,10 @@ By default cooridnates' format is dd, can specify otherwise.
 
 ```js
 chance.coordinates({format: 'ddm'});
-=> "N 41°44.9592, W 25°56.2622"
+=> "41°44.9592, 25°56.2622"
 ```
 
 ```js
 chance.coordinates({format: 'dms'});
-=> "N 56°2’9.8187”, W 79°55’40.6812”"
+=> "56°2’9.8187”, 79°55’40.6812”"
 ```
