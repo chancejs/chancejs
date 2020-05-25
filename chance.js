@@ -1962,6 +1962,7 @@
                     states = states.concat(armed_forces);
                 }
                 break;
+            case 'br':
             case 'it':
             case 'mx':
                 states = this.get("country_regions")[options.country.toLowerCase()];
@@ -1986,6 +1987,17 @@
                 street += options.short_suffix ?
                     this.street_suffix(options).abbreviation :
                     this.street_suffix(options).name;
+                break;
+            case 'br':
+                street = this.word({ syllables: options.syllables });
+                street = this.capitalize(street);
+                let sufix = this.weighted(
+                  [{name: 'Avenida', abbreviation: 'Av'}, {name: 'Rua', abbreviation: 'R'}, street_suffix(options)],
+                  [1, 2, 1]
+                );
+                street = (options.short_suffix ?
+                    sufix.abbreviation + ". " :
+                    sufix.name) + " " + street;
                 break;
             case 'it':
                 street = this.word({ syllables: options.syllables });
@@ -4101,6 +4113,35 @@
                 { name: 'Veracruz', abbreviation: 'VER' },
                 { name: 'Yucatán', abbreviation: 'YUC' },
                 { name: 'Zacatecas', abbreviation: 'ZAC' }
+            ],
+            br: [
+                { name: " Acre", abbreviation: "AC" },
+                { name: " Alagoas", abbreviation: "AL" },
+                { name: " Amapá", abbreviation: "AP" },
+                { name: " Amazonas", abbreviation: "AM" },
+                { name: " Bahia", abbreviation: "BA" },
+                { name: " Ceará", abbreviation: "CE" },
+                { name: " Distrito Federal", abbreviation: "DF" },
+                { name: " Espírito Santo", abbreviation: "ES" },
+                { name: " Goiás", abbreviation: "GO" },
+                { name: " Maranhão", abbreviation: "MA" },
+                { name: " Mato Grosso", abbreviation: "MT" },
+                { name: " Mato Grosso do Sul", abbreviation: "MS" },
+                { name: " Minas Gerais", abbreviation: "MG" },
+                { name: " Pará", abbreviation: "PA" },
+                { name: " Paraíba ", abbreviation: "PB" },
+                { name: " Paraná", abbreviation: "PR" },
+                { name: " Pernambuco", abbreviation: "PE" },
+                { name: " Piauí", abbreviation: "PI" },
+                { name: " Rio de Janeiro", abbreviation: "RJ" },
+                { name: " Rio Grande do Norte", abbreviation: "RN" },
+                { name: " Rio Grande do Sul ", abbreviation: "RS" },
+                { name: " Rondônia", abbreviation: "RO" },
+                { name: " Roraima", abbreviation: "RR" },
+                { name: " Santa Catarina ", abbreviation: "SC" },
+                { name: " São Paulo ", abbreviation: "SP" },
+                { name: " Sergipe", abbreviation: "SE" },
+                { name: " Tocantins", abbreviation: "TO" },
             ]
         },
 
@@ -4232,6 +4273,57 @@
                 {name: 'Street', abbreviation: 'St'},
                 {name: 'Terrace', abbreviation: 'Ter'},
                 {name: 'Valley', abbreviation: 'Val'}
+            ],
+            'br': [
+                {name: 'Acesso', abbreviation: 'Ac'},
+                {name: 'Alameda', abbreviation: 'Al'},
+                {name: 'Atalho', abbreviation: 'Atl'},
+                {name: 'Avenida', abbreviation: 'Av'},
+                {name: 'Baixa', abbreviation: 'Bx'},
+                {name: 'Beco', abbreviation: 'Bc'},
+                {name: 'Calçada', abbreviation: 'Calc'},
+                {name: 'Caminho', abbreviation: 'Cam'},
+                {name: 'Canal', abbreviation: 'Can'},
+                {name: 'Circular', abbreviation: 'Circ'},
+                {name: 'Complexo viário', abbreviation: 'Cmp-vr'},
+                {name: 'Conjunto', abbreviation: 'Cj'},
+                {name: 'Corredor', abbreviation: 'Cor'},
+                {name: 'Desvio', abbreviation: 'Dsv'},
+                {name: 'Elevado', abbreviation: 'Evd'},
+                {name: 'Esplanada', abbreviation: 'Esp'},
+                {name: 'Estação', abbreviation: 'Etc'},
+                {name: 'Estância', abbreviation: 'Etb'},
+                {name: 'Estrada', abbreviation: 'Est'},
+                {name: 'Favela', abbreviation: 'Fav'},
+                {name: 'Forte', abbreviation: 'Fte'},
+                {name: 'Galeria', abbreviation: 'Gal'},
+                {name: 'Jardim', abbreviation: 'Jd'},
+                {name: 'Lagoa', abbreviation: 'Lga'},
+                {name: 'Largo', abbreviation: 'Lg'},
+                {name: 'Monte', abbreviation: 'Tem'},
+                {name: 'Morro', abbreviation: 'Mro'},
+                {name: 'Parada', abbreviation: 'Pda'},
+                {name: 'Paralela', abbreviation: 'Par'},
+                {name: 'Parque', abbreviation: 'Pq'},
+                {name: 'Passagem', abbreviation: 'Psg'},
+                {name: 'Passarela', abbreviation: 'Psa'},
+                {name: 'Passeio', abbreviation: 'Pas'},
+                {name: 'Pátio', abbreviation: 'Pat'},
+                {name: 'Ponta', abbreviation: 'Pnt'},
+                {name: 'Ponte', abbreviation: 'Pte'},
+                {name: 'Porto', abbreviation: 'Pto'},
+                {name: 'Praça', abbreviation: 'Pc'},
+                {name: 'Praia', abbreviation: 'Pr'},
+                {name: 'Quadra', abbreviation: 'Q'},
+                {name: 'Rodovia', abbreviation: 'Rod'},
+                {name: 'Rotatória', abbreviation: 'Rtt'},
+                {name: 'Rua', abbreviation: 'R'},
+                {name: 'Terminal', abbreviation: 'Ter'},
+                {name: 'Trevo', abbreviation: 'Trv'},
+                {name: 'Túnel', abbreviation: 'Tun'},
+                {name: 'Via', abbreviation: 'V'},
+                {name: 'Viaduto', abbreviation: 'Vd'},
+                {name: 'Viela', abbreviation: 'Vla'},
             ]
         },
 
