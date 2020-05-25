@@ -1992,7 +1992,7 @@
                 street = this.word({ syllables: options.syllables });
                 street = this.capitalize(street);
                 let sufix = this.weighted(
-                  [{name: 'Avenida', abbreviation: 'Av'}, {name: 'Rua', abbreviation: 'R'}, street_suffix(options)],
+                  [{name: 'Avenida', abbreviation: 'Av'}, {name: 'Rua', abbreviation: 'R'}, this.street_suffix(options)],
                   [1, 2, 1]
                 );
                 street = (options.short_suffix ?
