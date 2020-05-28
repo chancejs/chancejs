@@ -1,4 +1,3 @@
-import { Core } from '@chancejs/core'
 import { integer } from '@chancejs/integer';
 
 /**
@@ -9,8 +8,6 @@ type FalsyValue = false | null | undefined | number | '';
 export interface IFalsyOptions {
     pool: FalsyValue[];
 }
-
-const chance = new Core()
 
 /**
  *  Return a random falsy value (false, null, undefined, 0, NaN, '').
