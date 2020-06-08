@@ -1571,6 +1571,20 @@
         return this.natural({min: 1, max: 99});
     };
 
+    Chance.prototype.mac = function (options) {
+        // Todo: This could also be extended to EUI-64 based MACs
+        // (https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml#ethernet-numbers-4)
+        // Todo: This can return some reserved MACs (similar to IP function)
+        // this should probably be updated to account for that rare as it may be
+        options = initOptions(options, { delimiter: ':' });
+        return this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2);
+    };
+
     Chance.prototype.semver = function (options) {
         options = initOptions(options, { include_prerelease: true });
 
