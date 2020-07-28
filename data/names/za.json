@@ -1,0 +1,44 @@
+{
+  "dataSources": [
+    "https://www.brandsouthafrica.com/people-culture/people/baby-names-030915?gclid=EAIaIQobChMIkfia9u3w6gIV4D6tBh0m1Qu-EAAYASAAEgJ8TfD_BwE",
+    "https://forebears.io/south-africa/surnames"
+  ],
+  "firstNames": {
+    "female": [
+      "Iminathi",
+      "Minenhle",
+      "Rethabile",
+      "Bokamoso",
+      "Karabou",
+      "Amogelang",
+      "Tshegofatso",
+      "Lesedi",
+      "Amahle",
+      "Thandolwethu"
+    ],
+    "male": [
+      "Junior",
+      "Bandile",
+      "Kungawo",
+      "Siyabonga",
+      "Lethabo",
+      "Khayone",
+      "Mpho",
+      "Bokamoso",
+      "Kamogelo",
+      "Thato"
+    ]
+  },
+  "lastNames": [
+    "Dlamini",
+    "Nkosi",
+    "Ndlovu",
+    "Khumalo",
+    "Sithole",
+    "Mahlangu",
+    "Mokoena",
+    "Mkhize",
+    "Mthembu",
+    "Zulu"
+  ]
+}

@@ -70,7 +70,7 @@
         };
 
         this.namesData = {};
-        var nameLocales = ['en']
+        var nameLocales = ['de', 'en', 'es', 'fr', 'it', 'jp', 'nl', 'uk', 'za']
         for (var locale of nameLocales) {
           this.namesData[locale] = require('./data/names/' + locale + '.json')
         }
@@ -984,7 +984,10 @@
     };
 
     Chance.prototype.first = function (options) {
-        options = initOptions(options, {gender: this.gender(), nationality: 'en'});
+        options = initOptions(options, {gender: this.gender(), nationality: '*'});
+        if (options.nationality === "*") {
+          options.nationality = this.pick(Object.keys(this.namesData))
+        }
         return this.pick(this.namesData[options.nationality]['firstNames'][options.gender.toLowerCase()]);
     };
 
@@ -1009,17 +1012,9 @@
     Chance.prototype.last = function (options) {
       options = initOptions(options, {nationality: '*'});
       if (options.nationality === "*") {
-        var allLastNames = []
-        var lastNames = this.get("lastNames")
-        Object.keys(lastNames).forEach(function(key){
-          allLastNames = allLastNames.concat(lastNames[key])
-        })
-        return this.pick(allLastNames)
+        options.nationality = this.pick(Object.keys(this.namesData))
       }
-      else {
-        return this.pick(this.get("lastNames")[options.nationality.toLowerCase()]);
-      }
-
+      return this.pick(this.namesData[options.nationality.toLowerCase()]['lastNames']);
     };
 
     Chance.prototype.israelId=function(){

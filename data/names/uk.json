@@ -1,8 +1,10 @@
 {
-  "dataSource": "https://surnames.behindthename.com/top/lists/england-wales/1991",
+  "dataSources": [
+    "https://surnames.behindthename.com/top/lists/england-wales/1991"
+  ],
   "firstNames": {
-    "female": [],
-    "male": []
+    "female": ["Mary", "Emma", "Elizabeth", "Minnie", "Margaret"],
+    "male": ["James", "John", "Robert", "Michael", "William"]
   },
   "lastNames": [
     "Smith",

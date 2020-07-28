@@ -1,5 +1,7 @@
 {
-  "dataSource": "http://www.voornamelijk.nl/meest-voorkomende-achternamen-in-nederland-en-amsterdam/",
+  "dataSources": [
+    "http://www.voornamelijk.nl/meest-voorkomende-achternamen-in-nederland-en-amsterdam/"
+  ],
   "firstNames": {
     "female": [
       "Ada",

@@ -1,5 +1,5 @@
 {
-  "dataSource": "http://www.dati.gov.it/dataset/comune-di-firenze_0163",
+  "dataSources": ["http://www.dati.gov.it/dataset/comune-di-firenze_0163"],
   "firstNames": {
     "female": [
       "Ada",

@@ -1,8 +1,33 @@
 {
-  "dataSource": "https://surnames.behindthename.com/top/lists/germany/2017",
+  "dataSources": [
+    "https://surnames.behindthename.com/top/lists/germany/2017",
+    "https://en.wikipedia.org/wiki/German_name#Popular_given_names"
+  ],
   "firstNames": {
-    "female": [],
-    "male": []
+    "female": [
+      "Emma",
+      "Mia",
+      "Hannah",
+      "Sofia",
+      "Emilia",
+      "Anna",
+      "Lena",
+      "Lea",
+      "Emilie",
+      "Marie"
+    ],
+    "male": [
+      "Ben",
+      "Luis",
+      "Paul",
+      "Lukas",
+      "Jonas",
+      "Leon",
+      "Finn",
+      "Noah",
+      "Elias",
+      "Luca"
+    ]
   },
   "lastNames": [
     "Müller",

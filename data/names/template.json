@@ -1,5 +1,5 @@
 {
-  "dataSource": "A URL where the data was taken from",
+  "dataSourcea": ["A URL where the data was taken from"],
   "firstNames": {
     "female": [],
     "male": []

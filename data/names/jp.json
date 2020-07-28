@@ -1,8 +1,10 @@
 {
-  "dataSource": "http://www.japantimes.co.jp/life/2009/10/11/lifestyle/japans-top-100-most-common-family-names/",
+  "dataSources": [
+    "http://www.japantimes.co.jp/life/2009/10/11/lifestyle/japans-top-100-most-common-family-names/"
+  ],
   "firstNames": {
-    "female": [],
-    "male": []
+    "female": ["Sakura", "Yui", "Akari", "Hana", "Mei"],
+    "male": ["Haruto", "Sota", "Yuto", "Haruki", "Riku"]
   },
   "lastNames": [
     "Sato",

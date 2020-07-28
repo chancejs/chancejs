@@ -1,5 +1,7 @@
 {
-  "dataSource": "https://fr.wikipedia.org/wiki/Liste_de_pr%C3%A9noms_fran%C3%A7ais_et_de_la_francophonie",
+  "dataSources": [
+    "https://fr.wikipedia.org/wiki/Liste_de_pr%C3%A9noms_fran%C3%A7ais_et_de_la_francophonie"
+  ],
   "firstNames": {
     "female": [
       "Abdon",

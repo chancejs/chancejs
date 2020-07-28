@@ -1,8 +1,10 @@
 {
-  "dataSource": "http://www.lowchensaustralia.com/names/popular-spanish-names.htm",
+  "dataSources": [
+    "http://www.lowchensaustralia.com/names/popular-spanish-names.htm"
+  ],
   "firstNames": {
-    "female": [],
-    "male": []
+    "female": ["Sophia", "Emily", "Alyssia"],
+    "male": ["Ellias", "Matthis", "Nathanael"]
   },
   "lastNames": [
     "Garcia",
