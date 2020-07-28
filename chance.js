@@ -69,6 +69,12 @@
             return this.mt.random(this.seed);
         };
 
+        this.namesData = {};
+        var nameLocales = ['en']
+        for (var locale of nameLocales) {
+          this.namesData[locale] = require('./data/names/' + locale + '.json')
+        }
+
         return this;
     }
 
@@ -979,7 +985,7 @@
 
     Chance.prototype.first = function (options) {
         options = initOptions(options, {gender: this.gender(), nationality: 'en'});
-        return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);
+        return this.pick(this.namesData[options.nationality]['firstNames'][options.gender.toLowerCase()]);
     };
 
     Chance.prototype.profession = function (options) {
@@ -1706,13 +1712,13 @@
         // Constants - Formats
         const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
 
-        options = initOptions(options, 
+        options = initOptions(options,
             options && options.format && [DDM, DMS].includes(options.format.toLowerCase()) ?
             {min: 0, max: 89, fixed: 4} :
             {fixed: 5, min: -90, max: 90, format: DD});
 
         const format = options.format.toLowerCase();
-        
+
         if (format === DDM || format === DMS) {
             testRange(options.min < 0 || options.min > 89, "Chance: Min specified is out of range. Should be between 0 - 89");
             testRange(options.max < 0 || options.max > 89, "Chance: Max specified is out of range. Should be between 0 - 89");
@@ -1721,16 +1727,16 @@
 
         switch (format) {
             case DDM: {
-                return  this.integer({min: options.min, max: options.max}) + '°' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' +
                         this.floating({min: 0, max: 59, fixed: options.fixed});
             }
             case DMS: {
-                return  this.integer({min: options.min, max: options.max}) + '°' + 
-                        this.integer({min: 0, max: 59}) + '’' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' +
+                        this.integer({min: 0, max: 59}) + '’' +
                         this.floating({min: 0, max: 59, fixed: options.fixed}) + '”';
             }
             case DD:
-            default: {    
+            default: {
                 return this.floating({min: options.min, max: options.max, fixed: options.fixed});
             }
         }
@@ -1740,7 +1746,7 @@
         // Constants - Formats
         const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
 
-        options = initOptions(options, 
+        options = initOptions(options,
             options && options.format && [DDM, DMS].includes(options.format.toLowerCase()) ?
             {min: 0, max: 179, fixed: 4} :
             {fixed: 5, min: -180, max: 180, format: DD});
@@ -1755,7 +1761,7 @@
 
         switch (format) {
             case DDM: {
-                return  this.integer({min: options.min, max: options.max}) + '°' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' +
                         this.floating({min: 0, max: 59.9999, fixed: options.fixed})
             }
             case DMS: {
@@ -1764,7 +1770,7 @@
                         this.floating({min: 0, max: 59.9999, fixed: options.fixed}) + '”';
             }
             case DD:
-            default: {    
+            default: {
                 return this.floating({min: options.min, max: options.max, fixed: options.fixed});
             }
         }
