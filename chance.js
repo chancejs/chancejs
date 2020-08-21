@@ -5472,10 +5472,24 @@
                     ]
                   },
                   {
-                    "name": "Pacific Standard Time",
+                    "name": "Pacific Daylight Time",
                     "abbr": "PDT",
                     "offset": -7,
                     "isdst": true,
+                    "text": "(UTC-07:00) Pacific Time (US & Canada)",
+                    "utc": [
+                      "America/Dawson",
+                      "America/Los_Angeles",
+                      "America/Tijuana",
+                      "America/Vancouver",
+                      "America/Whitehorse"
+                    ]
+                  },
+                  {
+                    "name": "Pacific Standard Time",
+                    "abbr": "PST",
+                    "offset": -8,
+                    "isdst": false,
                     "text": "(UTC-08:00) Pacific Time (US & Canada)",
                     "utc": [
                       "America/Dawson",
@@ -5661,7 +5675,7 @@
                   },
                   {
                     "name": "Paraguay Standard Time",
-                    "abbr": "PST",
+                    "abbr": "PYT",
                     "offset": -4,
                     "isdst": false,
                     "text": "(UTC-04:00) Asuncion",
@@ -5809,7 +5823,7 @@
                   {
                     "name": "Greenland Standard Time",
                     "abbr": "GDT",
-                    "offset": -2,
+                    "offset": -3,
                     "isdst": true,
                     "text": "(UTC-03:00) Greenland",
                     "utc": [
@@ -5853,7 +5867,8 @@
                     "abbr": "MDT",
                     "offset": -1,
                     "isdst": true,
-                    "text": "(UTC-02:00) Mid-Atlantic - Old"
+                    "text": "(UTC-02:00) Mid-Atlantic - Old",
+                    "utc": []
                   },
                   {
                     "name": "Azores Standard Time",
@@ -5890,7 +5905,7 @@
                   },
                   {
                     "name": "UTC",
-                    "abbr": "CUT",
+                    "abbr": "UTC",
                     "offset": 0,
                     "isdst": false,
                     "text": "(UTC) Coordinated Universal Time",
@@ -5901,20 +5916,42 @@
                   },
                   {
                     "name": "GMT Standard Time",
+                    "abbr": "GMT",
+                    "offset": 0,
+                    "isdst": false,
+                    "text": "(UTC) Edinburgh, London",
+                    "utc": [
+                      "Europe/Isle_of_Man",
+                      "Europe/Guernsey",
+                      "Europe/Jersey",
+                      "Europe/London"
+                    ]
+                  },
+                  {
+                    "name": "British Summer Time",
+                    "abbr": "BST",
+                    "offset": 1,
+                    "isdst": true,
+                    "text": "(UTC+01:00) Edinburgh, London",
+                    "utc": [
+                      "Europe/Isle_of_Man",
+                      "Europe/Guernsey",
+                      "Europe/Jersey",
+                      "Europe/London"
+                    ]
+                  },
+                  {
+                    "name": "GMT Standard Time",
                     "abbr": "GDT",
                     "offset": 1,
                     "isdst": true,
-                    "text": "(UTC) Dublin, Edinburgh, Lisbon, London",
+                    "text": "(UTC) Dublin, Lisbon",
                     "utc": [
                       "Atlantic/Canary",
                       "Atlantic/Faeroe",
                       "Atlantic/Madeira",
                       "Europe/Dublin",
-                      "Europe/Guernsey",
-                      "Europe/Isle_of_Man",
-                      "Europe/Jersey",
-                      "Europe/Lisbon",
-                      "Europe/London"
+                      "Europe/Lisbon"
                     ]
                   },
                   {
@@ -6091,7 +6128,24 @@
                     "abbr": "EEDT",
                     "offset": 3,
                     "isdst": true,
-                    "text": "(UTC+02:00) E. Europe"
+                    "text": "(UTC+02:00) E. Europe",
+                    "utc": [
+                      "Asia/Nicosia",
+                      "Europe/Athens",
+                      "Europe/Bucharest",
+                      "Europe/Chisinau",
+                      "Europe/Helsinki",
+                      "Europe/Kiev",
+                      "Europe/Mariehamn",
+                      "Europe/Nicosia",
+                      "Europe/Riga",
+                      "Europe/Sofia",
+                      "Europe/Tallinn",
+                      "Europe/Uzhgorod",
+                      "Europe/Vilnius",
+                      "Europe/Zaporozhye"
+                
+                    ]
                   },
                   {
                     "name": "South Africa Standard Time",
@@ -6136,8 +6190,8 @@
                     "name": "Turkey Standard Time",
                     "abbr": "TDT",
                     "offset": 3,
-                    "isdst": true,
-                    "text": "(UTC+02:00) Istanbul",
+                    "isdst": false,
+                    "text": "(UTC+03:00) Istanbul",
                     "utc": [
                       "Europe/Istanbul"
                     ]
@@ -6187,10 +6241,9 @@
                     "abbr": "KST",
                     "offset": 3,
                     "isdst": false,
-                    "text": "(UTC+03:00) Kaliningrad, Minsk",
+                    "text": "(UTC+02:00) Kaliningrad",
                     "utc": [
-                      "Europe/Kaliningrad",
-                      "Europe/Minsk"
+                      "Europe/Kaliningrad"
                     ]
                   },
                   {
@@ -6231,6 +6284,32 @@
                     ]
                   },
                   {
+                    "name": "Moscow Standard Time",
+                    "abbr": "MSK",
+                    "offset": 3,
+                    "isdst": false,
+                    "text": "(UTC+03:00) Moscow, St. Petersburg, Volgograd, Minsk",
+                    "utc": [
+                        "Europe/Kirov",
+                      "Europe/Moscow",
+                      "Europe/Simferopol",
+                      "Europe/Volgograd",
+                      "Europe/Minsk"
+                    ]
+                  },
+                  {
+                    "name": "Samara Time",
+                    "abbr": "SAMT",
+                    "offset": 4,
+                    "isdst": false,
+                    "text": "(UTC+04:00) Samara, Ulyanovsk, Saratov",
+                    "utc": [
+                        "Europe/Astrakhan",
+                      "Europe/Samara",
+                        "Europe/Ulyanovsk"
+                    ]
+                  },
+                  {
                     "name": "Iran Standard Time",
                     "abbr": "IDT",
                     "offset": 4.5,
@@ -6263,19 +6342,6 @@
                     ]
                   },
                   {
-                    "name": "Russian Standard Time",
-                    "abbr": "RST",
-                    "offset": 4,
-                    "isdst": false,
-                    "text": "(UTC+04:00) Moscow, St. Petersburg, Volgograd",
-                    "utc": [
-                      "Europe/Moscow",
-                      "Europe/Samara",
-                      "Europe/Simferopol",
-                      "Europe/Volgograd"
-                    ]
-                  },
-                  {
                     "name": "Mauritius Standard Time",
                     "abbr": "MST",
                     "offset": 4,
@@ -6289,7 +6355,7 @@
                   },
                   {
                     "name": "Georgian Standard Time",
-                    "abbr": "GST",
+                    "abbr": "GET",
                     "offset": 4,
                     "isdst": false,
                     "text": "(UTC+04:00) Tbilisi",
@@ -6338,8 +6404,18 @@
                     ]
                   },
                   {
+                    "name": "Yekaterinburg Time",
+                    "abbr": "YEKT",
+                    "offset": 5,
+                    "isdst": false,
+                    "text": "(UTC+05:00) Yekaterinburg",
+                    "utc": [
+                      "Asia/Yekaterinburg"
+                    ]
+                  },
+                  {
                     "name": "Pakistan Standard Time",
-                    "abbr": "PST",
+                    "abbr": "PKT",
                     "offset": 5,
                     "isdst": false,
                     "text": "(UTC+05:00) Islamabad, Karachi",
@@ -6354,7 +6430,7 @@
                     "isdst": false,
                     "text": "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi",
                     "utc": [
-                      "Asia/Calcutta"
+                      "Asia/Kolkata"
                     ]
                   },
                   {
@@ -6374,7 +6450,7 @@
                     "isdst": false,
                     "text": "(UTC+05:45) Kathmandu",
                     "utc": [
-                      "Asia/Katmandu"
+                      "Asia/Kathmandu"
                     ]
                   },
                   {
@@ -6382,7 +6458,7 @@
                     "abbr": "CAST",
                     "offset": 6,
                     "isdst": false,
-                    "text": "(UTC+06:00) Astana",
+                    "text": "(UTC+06:00) Nur-Sultan (Astana)",
                     "utc": [
                       "Antarctica/Vostok",
                       "Asia/Almaty",
@@ -6402,16 +6478,6 @@
                     "utc": [
                       "Asia/Dhaka",
                       "Asia/Thimphu"
-                    ]
-                  },
-                  {
-                    "name": "Ekaterinburg Standard Time",
-                    "abbr": "EST",
-                    "offset": 6,
-                    "isdst": false,
-                    "text": "(UTC+06:00) Ekaterinburg",
-                    "utc": [
-                      "Asia/Yekaterinburg"
                     ]
                   },
                   {
@@ -6529,16 +6595,16 @@
                   {
                     "name": "North Asia East Standard Time",
                     "abbr": "NAEST",
-                    "offset": 9,
+                    "offset": 8,
                     "isdst": false,
-                    "text": "(UTC+09:00) Irkutsk",
+                    "text": "(UTC+08:00) Irkutsk",
                     "utc": [
                       "Asia/Irkutsk"
                     ]
                   },
                   {
-                    "name": "Tokyo Standard Time",
-                    "abbr": "TST",
+                    "name": "Japan Standard Time",
+                    "abbr": "JST",
                     "offset": 9,
                     "isdst": false,
                     "text": "(UTC+09:00) Osaka, Sapporo, Tokyo",
@@ -6633,9 +6699,9 @@
                   {
                     "name": "Yakutsk Standard Time",
                     "abbr": "YST",
-                    "offset": 10,
+                    "offset": 9,
                     "isdst": false,
-                    "text": "(UTC+10:00) Yakutsk",
+                    "text": "(UTC+09:00) Yakutsk",
                     "utc": [
                       "Asia/Chita",
                       "Asia/Khandyga",
@@ -6726,7 +6792,10 @@
                     "abbr": "KDT",
                     "offset": 13,
                     "isdst": true,
-                    "text": "(UTC+12:00) Petropavlovsk-Kamchatsky - Old"
+                    "text": "(UTC+12:00) Petropavlovsk-Kamchatsky - Old",
+                    "utc": [
+                      "Asia/Kamchatka"
+                    ]
                   },
                   {
                     "name": "Tonga Standard Time",
