@@ -312,8 +312,8 @@
 
             var random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
             var sortedExclusions = options.exclude.sort();
-            for (var exclusionIndex in sortedExclusions) {
-                if (random < sortedExclusions[exclusionIndex]) {
+            for (var sortedExclusionIndex in sortedExclusions) {
+                if (random < sortedExclusions[sortedExclusionIndex]) {
                     break
                 }
                 random++
@@ -1571,6 +1571,20 @@
         return this.natural({min: 1, max: 99});
     };
 
+    Chance.prototype.mac = function (options) {
+        // Todo: This could also be extended to EUI-64 based MACs
+        // (https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml#ethernet-numbers-4)
+        // Todo: This can return some reserved MACs (similar to IP function)
+        // this should probably be updated to account for that rare as it may be
+        options = initOptions(options, { delimiter: ':' });
+        return this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2) + options.delimiter +
+               this.pad(this.natural({max: 255}).toString(16),2);
+    };
+
     Chance.prototype.semver = function (options) {
         options = initOptions(options, { include_prerelease: true });
 
@@ -1708,13 +1722,15 @@
         // Constants - Formats
         const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
 
-        options = initOptions(options, 
+        options = initOptions(
+options,
             options && options.format && [DDM, DMS].includes(options.format.toLowerCase()) ?
             {min: 0, max: 89, fixed: 4} :
-            {fixed: 5, min: -90, max: 90, format: DD});
+            {fixed: 5, min: -90, max: 90, format: DD}
+);
 
         const format = options.format.toLowerCase();
-        
+
         if (format === DDM || format === DMS) {
             testRange(options.min < 0 || options.min > 89, "Chance: Min specified is out of range. Should be between 0 - 89");
             testRange(options.max < 0 || options.max > 89, "Chance: Max specified is out of range. Should be between 0 - 89");
@@ -1723,16 +1739,16 @@
 
         switch (format) {
             case DDM: {
-                return  this.integer({min: options.min, max: options.max}) + '°' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' +
                         this.floating({min: 0, max: 59, fixed: options.fixed});
             }
             case DMS: {
-                return  this.integer({min: options.min, max: options.max}) + '°' + 
-                        this.integer({min: 0, max: 59}) + '’' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' +
+                        this.integer({min: 0, max: 59}) + '’' +
                         this.floating({min: 0, max: 59, fixed: options.fixed}) + '”';
             }
             case DD:
-            default: {    
+            default: {
                 return this.floating({min: options.min, max: options.max, fixed: options.fixed});
             }
         }
@@ -1742,10 +1758,12 @@
         // Constants - Formats
         const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
 
-        options = initOptions(options, 
+        options = initOptions(
+options,
             options && options.format && [DDM, DMS].includes(options.format.toLowerCase()) ?
             {min: 0, max: 179, fixed: 4} :
-            {fixed: 5, min: -180, max: 180, format: DD});
+            {fixed: 5, min: -180, max: 180, format: DD}
+);
 
         const format = options.format.toLowerCase();
 
@@ -1757,7 +1775,7 @@
 
         switch (format) {
             case DDM: {
-                return  this.integer({min: options.min, max: options.max}) + '°' + 
+                return  this.integer({min: options.min, max: options.max}) + '°' +
                         this.floating({min: 0, max: 59.9999, fixed: options.fixed})
             }
             case DMS: {
@@ -1766,7 +1784,7 @@
                         this.floating({min: 0, max: 59.9999, fixed: options.fixed}) + '”';
             }
             case DD:
-            default: {    
+            default: {
                 return this.floating({min: options.min, max: options.max, fixed: options.fixed});
             }
         }
