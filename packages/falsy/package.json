@@ -1,7 +1,7 @@
 {
-  "name": "@chancejs/chance",
-  "version": "2.2.6",
-  "description": "ChanceJS main -- a placeholder in the org until the whole thing is built",
+  "name": "@chancejs/falsy",
+  "version": "2.2.5",
+  "description": "ChanceJS random falsy generator",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
   "scripts": {
@@ -17,7 +17,7 @@
     "chance",
     "chancejs",
     "random",
-    "bool"
+    "falsy"
   ],
   "author": "Victor Quinn <mail@victorquinn.com>",
   "license": "MIT",
@@ -36,9 +36,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@chancejs/bool": "^2.2.5",
+    "@chancejs/core": "^2.2.5",
     "@chancejs/integer": "^2.2.5",
-    "@chancejs/falsy": "^2.2.5",
     "@types/node": "^12.0.3"
   }
 }

@@ -1,4 +1,4 @@
-import { bool, integer } from './main'
+import { bool, integer, falsy } from './main'
 import test from 'ava'
 
 test('bool() returns a random boolean', (t) => {
@@ -7,4 +7,8 @@ test('bool() returns a random boolean', (t) => {
 
 test('integer() exists and returns a number', (t) => {
   t.is(typeof integer(), 'number')
+})
+
+test('falsy() exists and returns a falsy value', (t) => {
+  t.falsy(falsy())
 })
