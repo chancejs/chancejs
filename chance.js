@@ -310,7 +310,7 @@
                 testRange(!Number.isInteger(options.exclude[exclusionIndex]), "Chance: exclude must be numbers.")
             }
 
-            let random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
+            var random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
             var sortedExclusions = options.exclude.sort();
             for (var exclusionIndex in sortedExclusions) {
                 if (random < sortedExclusions[exclusionIndex]) {
