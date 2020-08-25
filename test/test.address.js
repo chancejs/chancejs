@@ -417,6 +417,22 @@ test('phone() obeys formatted option and parens option', t => {
     })
 })
 
+test("phone() obeys exampleNumber option", (t) => {
+  _.times(1000, () => {
+    let phone = chance.phone({ exampleNumber: true });
+    t.true(_.isString(phone));
+    t.true(/^\(555\)?[\-. ]?([2-9][0-9]{2,2})[\-. ]?([0-9]{4,4})$/.test(phone));
+  });
+});
+
+test("phone() obeys formatted option and exampleNumber option", (t) => {
+  _.times(1000, () => {
+    let phone = chance.phone({ exampleNumber: true, formatted: false });
+    t.true(_.isString(phone));
+    t.true(/^555[2-9]\d{6,6}$/.test(phone));
+  });
+});
+
 test('phone() with uk option works', t => {
     t.true(_.isString(chance.phone({ country: 'uk' })))
 })

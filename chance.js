@@ -1659,7 +1659,9 @@
     Chance.prototype.areacode = function (options) {
         options = initOptions(options, {parens : true});
         // Don't want area codes to start with 1, or have a 9 as the second digit
-        var areacode = this.natural({min: 2, max: 9}).toString() +
+        var areacode = options.exampleNumber ?
+        "555" :
+        this.natural({min: 2, max: 9}).toString() +
                 this.natural({min: 0, max: 8}).toString() +
                 this.natural({min: 0, max: 9}).toString();
 
@@ -1784,7 +1786,8 @@
         options = initOptions(options, {
             formatted: true,
             country: 'us',
-            mobile: false
+            mobile: false,
+            exampleNumber: false,
         });
         if (!options.formatted) {
             options.parens = false;
