@@ -6165,7 +6165,6 @@ options,
                       "Europe/Uzhgorod",
                       "Europe/Vilnius",
                       "Europe/Zaporozhye"
-                
                     ]
                   },
                   {
