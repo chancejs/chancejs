@@ -39,3 +39,10 @@ For `uk` and `fr`, optionally specify a mobile phone.
 chance.phone({ country: 'uk', mobile: true });
 => '07624 321221'
 ```
+
+For `us`, optionally specify an exampleNumber for a '555' area code.
+
+```js
+chance.phone({ country: 'us', exampleNumber: true });
+=> '(555) 927-2152'
+```
