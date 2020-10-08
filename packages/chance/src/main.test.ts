@@ -1,4 +1,4 @@
-import { bool, integer, falsy } from './main'
+import { bool, falsy, integer } from './main'
 import test from 'ava'
 
 test('bool() returns a random boolean', (t) => {

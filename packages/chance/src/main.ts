@@ -1,6 +1,6 @@
 import { bool } from '@chancejs/bool'
-import { integer } from '@chancejs/integer'
 import { falsy } from '@chancejs/falsy'
+import { integer } from '@chancejs/integer'
 
 export {
   bool,
