@@ -33,6 +33,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
+    "husky": "^4.3.0",
     "jshint-stylish": "^2.2.1",
     "lcov-result-merger": "^3.1.0",
     "lerna": "^3.14.1",
@@ -103,5 +104,10 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn test"
+    }
+  }
 }
