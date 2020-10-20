@@ -16,9 +16,10 @@ export interface IFalsyOptions {
  *      of possible values.
  *  @returns {FalsyValue} One of [false, null, undefined, 0, NaN, ''], or of the pool provided.
  */
-export function falsy(options?: IFalsyOptions): FalsyValue {
-    const {pool} = {...options, pool: [false, null, undefined, 0, NaN, ''] as const};
-    const value = pool[integer(0, pool.length - 1)];
+const defaultOptions: IFalsyOptions = { pool: [false, null, undefined, 0, NaN, ''] };
+export function falsy(options = defaultOptions): FalsyValue {
+    const { pool } = options;
+    const value = pool[integer({ min: 0, max: pool.length - 1 })];
 
     return value;
 }

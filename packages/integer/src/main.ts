@@ -4,8 +4,13 @@ const core = new Core()
 
 // 9007199254740992 (2^53) is the max integer number in JavaScript
 // See: http://vq.io/132sa2j
-const MAX_INT = 9007199254740992
-const MIN_INT = -MAX_INT
+export const MAX_INT = 9007199254740992
+export const MIN_INT = -MAX_INT
+
+export interface IIntegerOptions {
+  min?: number
+  max?: number
+}
 
 /**
  *  Return a random integer
@@ -18,7 +23,8 @@ const MIN_INT = -MAX_INT
  *  @returns {Number} a single random integer number
  *  @throws {RangeError} min cannot be greater than max
  */
-export function integer(min = MIN_INT, max = MAX_INT): number {
+const defaultOptions: IIntegerOptions = { min: MIN_INT, max: MAX_INT }
+export function integer({ min = MIN_INT, max = MAX_INT } = defaultOptions): number {
   if (min > max) {
     throw new RangeError('Chance: Min cannot be greater than Max.')
   }

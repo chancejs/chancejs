@@ -23,7 +23,7 @@ export function bool(options?: IBoolOptions): boolean {
     }
 
     if (likelihood < 0 || likelihood > 100) {
-	throw new RangeError('Chance: Likelihood accepts values from 0 to 100.')
+        throw new RangeError('Chance: Likelihood accepts values from 0 to 100.')
     }
 
     return chance.random() * 100 < likelihood
