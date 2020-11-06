@@ -228,7 +228,7 @@ test('floating() will not take both fixed and precision', t => {
 })
 
 test('get() works as expected', t => {
-    let data = chance.get('lastNames')
+    let data = chance.get('countries')
     t.true(typeof data === 'object')
 })
 
