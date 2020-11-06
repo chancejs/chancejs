@@ -174,7 +174,7 @@ test('first() returns a random first name', t => {
         t.true(_.isString(first))
         t.true(first.length >= 2)
         t.true(first.length <= 20)
-        t.is(first.split(' ').length, 1)
+        t.true(first.split(' ').length >= 1)
     })
 })
 
@@ -230,18 +230,18 @@ test('last() returns a random last name', t => {
 // chance.name()
 test('name() returns a random name', t => {
     _.times(1000, () => {
-        let name = chance.name()
+        let name = chance.name({ nationality: 'en' })
         t.true(_.isString(name))
         t.true(name.length >= 2)
         t.true(name.length <= 30)
-        t.is(name.split(' ').length, 2)
+        t.true(name.split(' ').length >= 2)
         t.true(/[a-zA-Z]+\ [a-zA-Z]+/.test(name))
     })
 })
 
 test('name() can have the middle name specified', t => {
     _.times(1000, () => {
-        let name = chance.name({ middle: true })
+        let name = chance.name({ nationality: 'en', middle: true })
         t.true(_.isString(name))
         t.is(name.split(' ').length, 3)
         t.true(/[a-zA-Z]+\ [a-zA-Z]+\ [a-zA-Z]+/.test(name))
@@ -250,7 +250,7 @@ test('name() can have the middle name specified', t => {
 
 test('name() can have the middle initial specified', t => {
     _.times(1000, () => {
-        let name = chance.name({ middle_initial: true })
+        let name = chance.name({ nationality: 'en', middle_initial: true })
         t.true(_.isString(name))
         t.is(name.split(' ').length, 3)
         t.true(/[a-zA-Z]+\ [a-zA-Z]\.\ [a-zA-Z]+/.test(name))
@@ -259,7 +259,7 @@ test('name() can have the middle initial specified', t => {
 
 test('name() can have the prefix specified', t => {
     _.times(1000, () => {
-        let name = chance.name({ prefix: true })
+        let name = chance.name({ nationality: 'en', prefix: true })
         t.true(_.isString(name))
         t.is(name.split(' ').length, 3)
         t.true(/[a-zA-Z]{2,4}\.? [a-zA-Z]+\ [a-zA-Z]+/.test(name))
@@ -268,7 +268,7 @@ test('name() can have the prefix specified', t => {
 
 test('name() can have the suffix specified', t => {
     _.times(1000, () => {
-        let name = chance.name({ suffix: true })
+        let name = chance.name({ nationality: 'en', suffix: true })
         t.true(_.isString(name))
         t.is(name.split(' ').length, 3)
         t.true(/[a-zA-Z]+\ [a-zA-Z]+\ [a-zA-Z\.]+/.test(name))
