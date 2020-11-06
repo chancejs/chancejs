@@ -3,7 +3,7 @@
 ```js
 // usage
 chance.first()
-chance.first({ nationality: 'us' })
+chance.first({ nationality: 'en' })
 ```
 
 Generate a random first name
@@ -27,5 +27,5 @@ Chance.first({ nationality: "it" });
 => 'Alberto'
 ```
 
-Note, currently support for nationality is limited to: `'us', 'it'`.
+Note, currently support for nationality is limited to: `'en', 'it', 'nl', 'fr'`.
 

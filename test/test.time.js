@@ -240,6 +240,7 @@ test('timezone() returns a timezone', t => {
         t.true(_.isString(timezone.name))
         t.true(timezone.abbr.length < 6)
         t.true(_.isNumber(timezone.offset))
+        t.true(_.isArray(timezone.utc))
     })
 })
 

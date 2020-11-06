@@ -397,6 +397,27 @@ test('locales() should return a list of locales', t => {
     t.true(locales.length > 100)
 })
 
+// chance.mac()
+test('mac() returns what looks like an MAC address (EUI-48)', t => {
+    _.times(1000, () => {
+        let mac = chance.mac()
+        t.true(_.isString(mac))
+        t.is(mac.split(':').length, 6)
+        t.true(/^[0-9a-f]{2}\:[0-9a-f]{2}\:[0-9a-f]{2}\:[0-9a-f]{2}\:[0-9a-f]{2}\:[0-9a-f]{2}$/.test(mac))
+    })
+})
+test('mac() uses delimiter option for MAC address', t => {
+_.times(1000, () => {
+        const delimiter = ([':','-','.'])[Math.floor(Math.random() * 3)]
+        let mac = chance.mac({ delimiter })
+        t.true(_.isString(mac))
+        t.is(mac.split(delimiter).length, 6)
+        t.true((
+            new RegExp(`^${Array(6).fill('[0-9a-f]{2}').join(`\\${delimiter}`)}$`)
+        ).test(mac))
+    })
+})
+
 // chance.md5()
 test('md5() should create a hex-encoded MD5 hash of a random ASCII value when passed nothing', t => {
     t.is(chance.md5().length, '2063c1608d6e0baf80249c42e2be5804'.length)
