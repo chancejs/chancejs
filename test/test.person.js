@@ -178,6 +178,11 @@ test('first() returns a random first name', t => {
     })
 })
 
+test('first() with undefined countries input throws', t => {
+    const fn = () => chance.first({ nationality: 'us' })
+    t.throws(fn, 'us is not a provided country in the firstname database!')
+})
+
 // chance.gender()
 test('gender() returns a random gender', t => {
     _.times(1000, () => t.true(/(Male|Female)/.test(chance.gender())))

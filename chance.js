@@ -979,7 +979,10 @@
 
     Chance.prototype.first = function (options) {
         options = initOptions(options, {gender: this.gender(), nationality: 'en'});
-        return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);
+        if (this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()] === undefined)
+            throw new UnsupportedError(String(options.nationality) + ' is not a provided country in the firstname database!');
+        else    
+            return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);
     };
 
     Chance.prototype.profession = function (options) {
