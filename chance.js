@@ -2104,7 +2104,7 @@ options,
             newMonth = (date.getMonth() + 1);
         }
         else {
-            newMonth = '0' + (date.getDate() + 1);
+            newMonth = '0' + (date.getMonth() + 1);
         }
 
         if (options.american) {
