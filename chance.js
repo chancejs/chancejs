@@ -531,6 +531,83 @@
             .join('');
     };
 
+	/**
+     *  Return a random string matching the given pattern.
+     *
+     *
+     *  in this pattern "?" be replaced with a random lower case letter
+     *  Example: chance.lexify('Hello ???')
+     *
+     *  @param {String} pattern string.
+     *  @returns {String} a random string matching the pattern.
+     */
+
+	Chance.prototype.lexify = function (pattern) {
+		var tokens = []
+		for (var i = 0; i<pattern.length; i++) {  
+			var c = pattern[i]
+			if(c === '?'){
+				tokens.push(this.character({ pool: CHARS_LOWER }))
+			}else{
+				tokens.push(c)
+			}
+		}
+		return tokens.join('')
+		
+    };
+
+	/**
+     *  Return a random string matching the given pattern.
+     *
+     *
+     *  in this pattern "?" be replaced with a random lower case letter and "#" be replaced with random digit
+     *  Example: chance.lexify('Hello ??##')
+     *
+     *  @param {String} pattern string.
+     *  @returns {String} a random string matching the pattern.
+     */
+
+	Chance.prototype.bothify = function (pattern) {
+		var tokens = []
+		for (var i = 0; i<pattern.length; i++) {  
+			var c = pattern[i]
+			if(c === '?'){
+				tokens.push(this.character({ pool: CHARS_LOWER }))
+			}else if(c === '#'){
+				tokens.push(this.character({ pool: NUMBERS }))
+			}else{
+				tokens.push(c)
+			}
+		}
+		return tokens.join('')
+		
+    };
+
+	/**
+     *  Return a random string matching the given pattern.
+     *
+     *
+     *  in this pattern "*" be replaced with a random ascii letter
+     *  Example: chance.lexify('Hello ***')
+     *
+     *  @param {String} pattern string.
+     *  @returns {String} a random string matching the pattern.
+     */
+
+	Chance.prototype.asciify = function (pattern) {
+		var tokens = []
+		for (var i = 0; i<pattern.length; i++) {  
+			var c = pattern[i]
+			if(c === '*'){
+				var randomAsciiCode = this.integer({min: 33, max: 126});
+				tokens.push(String.fromCharCode(randomAsciiCode))
+			}else{
+				tokens.push(c)
+			}
+		}
+		return tokens.join('')
+		
+    };
 
     /**
      *  Return a random buffer
