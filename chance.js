@@ -209,7 +209,16 @@
                 pool += symbols;
             }
             if (!pool) {
-                pool = letters + NUMBERS + symbols;
+                // undefined is for checking if {alpha : false} not in options
+                if (typeof options.alpha === 'undefined') {
+                    pool += letters;
+                }
+                if (typeof options.numeric === 'undefined') {
+                    pool += NUMBERS;
+                }
+                if (typeof options.symbols === 'undefined') {
+                    pool += symbols;
+                }
             }
         }
 
