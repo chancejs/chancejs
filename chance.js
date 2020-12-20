@@ -2091,12 +2091,28 @@ options,
             date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
         }
 
+        var newDay = '';
+        if (date.getDate() > 9) {
+            newDay = date.getDate();
+        }
+        else {
+            newDay = '0' + date.getDate();
+        }
+
+        var newMonth = '';
+        if (date.getMonth() > 8) {
+            newMonth = (date.getMonth() + 1);
+        }
+        else {
+            newMonth = '0' + (date.getDate() + 1);
+        }
+
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
             // months but not day for some odd reason.
-            date_string = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+            date_string = newMonth + '/' + newDay + '/' + date.getFullYear();
         } else {
-            date_string = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+            date_string = newDay + '/' + newMonth + '/' + date.getFullYear();
         }
 
         return options.string ? date_string : date;

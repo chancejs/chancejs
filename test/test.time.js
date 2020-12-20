@@ -198,7 +198,7 @@ test('month() will return a raw month', t => {
 
 test('month() returns a month, can specify min and max', t => {
     _.times(1000, () => {
-        let month = chance.month({raw: true, min: 5, max: 10})
+        let month = chance.month({ raw: true, min: 5, max: 10 })
         t.false(_.isString(month))
         t.true(month.numeric >= 5)
         t.true(month.numeric <= 10)
@@ -207,7 +207,7 @@ test('month() returns a month, can specify min and max', t => {
 
 test('month() returns a month, can specify just min', t => {
     _.times(1000, () => {
-        let month = chance.month({raw: true, min: 5})
+        let month = chance.month({ raw: true, min: 5 })
         t.false(_.isString(month))
         t.true(month.numeric >= 5)
         t.true(month.numeric <= 12)
@@ -216,7 +216,7 @@ test('month() returns a month, can specify just min', t => {
 
 test('month() returns a month, can specify just max', t => {
     _.times(1000, () => {
-        let month = chance.month({raw: true, max: 7})
+        let month = chance.month({ raw: true, max: 7 })
         t.false(_.isString(month))
         t.true(month.numeric >= 1)
         t.true(month.numeric <= 7)
