@@ -178,19 +178,10 @@
      *  Return a random character.
      *
      *  @param {Object} [options={}] can specify a character pool or alpha,
-     *    numeric, alphanumeric, symbols and casing (lower or upper)
+     *    numeric, symbols and casing (lower or upper)
      *  @returns {String} a single random character
      */
     Chance.prototype.character = function (options) {
-        if (typeof options !== 'undefined') {
-            if (typeof options.alphanumeric !== 'undefined') {
-                if (options.alphanumeric == true) {
-                    options.alpha = true;
-                    options.numeric = true;
-                }
-            }
-        }
-
         options = initOptions(options);
 
         var symbols = "!@#$%^&*()[]",
