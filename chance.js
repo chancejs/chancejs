@@ -744,7 +744,12 @@
     };
 
     // Given an array, returns a random set with 'count' elements
-    Chance.prototype.pickset = function (arr, count) {
+    Chance.prototype.pickset = function (arr, count,options) {
+		options = initOptions(options,{distinct : true});
+		var exclude
+		if(options.exclude){
+			exclude = options.exclude
+		}
         if (count === 0) {
             return [];
         }
@@ -754,6 +759,9 @@
         if (count < 0) {
             throw new RangeError("Chance: Count must be a positive number");
         }
+		if(options.distinct && ((count + exclude.length)> arr.length)) {
+			throw new RangeError("Chance: Cannot pickset() from array with this options");
+		}
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
         } else {
@@ -761,9 +769,28 @@
             var end = array.length;
 
             return this.n(function () {
-                var index = this.natural({max: --end});
-                var value = array[index];
-                array[index] = array[end];
+				if(!options.distinct){
+					while(true){
+						var index = this.natural({max: --end});
+							if(!exclude.includes(array[index])){
+								break;
+							}else{
+								end++;
+							}
+					}
+					var value = array[index];
+				}else{
+					while(true){
+						var index = this.natural({max: --end});
+							if(!exclude.includes(array[index])){
+								break;
+							}else{
+								end++;
+							}
+					}
+					var value = array[index];
+                	array[index] = array[end];
+					}
                 return value;
             }, Math.min(end, count));
         }
