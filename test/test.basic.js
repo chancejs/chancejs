@@ -170,6 +170,13 @@ test('character() allows only alphanumeric', t => {
     })
 })
 
+test('character() allows when element is false', t => {
+    _.times(1000, () => {
+        let char = chance.character({ alpha: false })
+        t.true(/[!@#$%^&*()\[\]0-9]/.test(char))
+    })
+})
+
 test('character() obeys upper case', t => {
     _.times(1000, () => {
         let char = chance.character({ alpha: true, casing: 'upper' })
