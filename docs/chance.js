@@ -473,8 +473,25 @@
         return arr[this.natural({max: arr.length - 1})];
     };
 
-    // Given an array, returns a random set with 'count' elements
-    Chance.prototype.pickset = function (arr, count) {
+    /**
+     *  Given an array, returns a random set with 'count' elements
+     *
+     *  @param {Array} arr given array
+     *  @param {Number} count the number of random items
+     *  @param {Object} [options={distinct:true, exclude:undefined}] distinct for the distinction of random items and exclude content won't appear in the result
+     *  @returns {Array} an array of length `count` random items of arr
+     *
+     */
+    Chance.prototype.pickset = function (arr, count, options) {
+        if (typeof count === 'object') {
+            options = count;
+            count = 1;
+        }
+        if (options !== undefined) {
+            var {distinct = true, exclude = undefined} = oo;
+        } else {
+            var {distinct = true, exclude = undefined} = {};
+        }
         if (count === 0) {
             return [];
         }
@@ -484,10 +501,30 @@
         if (count < 0) {
             throw new RangeError("Chance: Count must be a positive number");
         }
+        if  (exclude !== undefined) {
+            var excluded = new Set();
+            exclude.forEach(item => excluded.add(item));
+            for (var i = arr.length - 1; i >= 0; i--) {
+                if (excluded.has(arr[i])) {
+                    arr.splice(i, 1);
+                }
+            }
+            if (arr.length === 0){
+                throw new RangeError("Chance: Cannot pickset() from an empty array");
+            }
+        }
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
-        } else {
+        } 
+        else if (distinct){
             return this.shuffle(arr).slice(0, count);
+        }
+        else {
+            var result = [];
+            for (var i = 0; i < count; i++){
+                result.push(this.pickone(arr));
+            }
+            return result;
         }
     };
 
