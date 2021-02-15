@@ -1890,7 +1890,7 @@ options,
                         '06' + self.string({ pool: '0123456789', length: 7}),
                         '07' + self.string({ pool: '0123456789', length: 7}),
                         '08' + self.string({ pool: '0123456789', length: 7}),
-                        '09' + self.string({ pool: '0123456789', length: 7}),                        
+                        '09' + self.string({ pool: '0123456789', length: 7}),                      
                     ]);
                     phone = options.formatted || numPick;
                 } else {
