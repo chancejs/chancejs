@@ -1879,27 +1879,6 @@ options,
                     phone = options.formatted || numPick;
                 }
                 break;
-            case 'us':
-                var areacode = this.areacode(options).toString();
-                var exchange = this.natural({ min: 2, max: 9 }).toString() +
-                    this.natural({ min: 0, max: 9 }).toString() +
-                    this.natural({ min: 0, max: 9 }).toString();
-                var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
-                phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
-                break;
-            case 'br':
-                var areaCode = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99"]);
-                var prefix;
-                if (options.mobile) {
-                    // Brasilian official reference (mobile): http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=330
-                    prefix = '9' + self.string({ pool: '0123456789', length: 4});
-                } else {
-                    // Brasilian official reference: http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=331
-                    prefix = this.natural({ min: 2000, max: 5999 }).toString();
-                }
-                var mcdu = self.string({ pool: '0123456789', length: 4});
-                phone = options.formatted ? '(' + areaCode + ') ' + prefix + '-' + mcdu : areaCode + prefix + mcdu;
-                break;
             case 'uae':
                     //https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Arab_Emirates
                 if (!options.mobile) {
@@ -1925,6 +1904,27 @@ options,
                     ]);
                     phone = options.formatted || numPick;
                 }
+                break;
+            case 'us':
+                var areacode = this.areacode(options).toString();
+                var exchange = this.natural({ min: 2, max: 9 }).toString() +
+                    this.natural({ min: 0, max: 9 }).toString() +
+                    this.natural({ min: 0, max: 9 }).toString();
+                var subscriber = this.natural({ min: 1000, max: 9999 }).toString(); // this could be random [0-9]{4}
+                phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
+                break;
+            case 'br':
+                var areaCode = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99"]);
+                var prefix;
+                if (options.mobile) {
+                    // Brasilian official reference (mobile): http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=330
+                    prefix = '9' + self.string({ pool: '0123456789', length: 4});
+                } else {
+                    // Brasilian official reference: http://www.anatel.gov.br/setorregulado/plano-de-numeracao-brasileiro?id=331
+                    prefix = this.natural({ min: 2000, max: 5999 }).toString();
+                }
+                var mcdu = self.string({ pool: '0123456789', length: 4});
+                phone = options.formatted ? '(' + areaCode + ') ' + prefix + '-' + mcdu : areaCode + prefix + mcdu;
                 break;
         }
         return phone;
