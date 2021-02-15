@@ -1900,6 +1900,32 @@ options,
                 var mcdu = self.string({ pool: '0123456789', length: 4});
                 phone = options.formatted ? '(' + areaCode + ') ' + prefix + '-' + mcdu : areaCode + prefix + mcdu;
                 break;
+            case 'uae':
+                    //https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Arab_Emirates
+                if (!options.mobile) {
+                    numPick = this.pick([
+                        '02' + self.string({ pool: '0123456789', length: 7}),
+                        '03' + self.string({ pool: '0123456789', length: 7}),
+                        '04' + self.string({ pool: '0123456789', length: 7}),
+                        '05' + self.string({ pool: '0123456789', length: 7}),
+                        '06' + self.string({ pool: '0123456789', length: 7}),
+                        '07' + self.string({ pool: '0123456789', length: 7}),
+                        '08' + self.string({ pool: '0123456789', length: 7}),
+                        '09' + self.string({ pool: '0123456789', length: 7}),                        
+                    ]);
+                    phone = options.formatted || numPick;
+                } else {
+                    numPick = this.pick([
+                        '050' + self.string({ pool: '0123456789', length: 7}),
+                        '052' + self.string({ pool: '0123456789', length: 7}),
+                        '054' + self.string({ pool: '0123456789', length: 7}),
+                        '055' + self.string({ pool: '0123456789', length: 7}),
+                        '056' + self.string({ pool: '0123456789', length: 7}),
+                        '058' + self.string({ pool: '0123456789', length: 7}),
+                    ]);
+                    phone = options.formatted || numPick;
+                }
+                break;
         }
         return phone;
     };
