@@ -1,216 +1,220 @@
-/// <reference path="../chance.js" />
-/// <reference path="../node_modules/underscore/underscore-min.js" />
+import test from 'ava'
+import Chance from '../chance.js'
+import _ from 'lodash'
 
-var expect = chai.expect;
+const chance = new Chance()
 
-describe("Credit Card", function () {
-    var type, number, exp, month, year, chance = new Chance();
+// chance.cc()
+test('cc() passes the luhn algorithm', t => {
+    _.times(1000, () => {
+        let number = chance.cc()
+        t.true(chance.luhn_check(number))
+    })
+})
 
-    describe("Luhn Check", function () {
-        it("checks if number passes Luhn algorithm", function () {
-            expect(chance.luhn_check(49927398716)).to.be.true;
-            expect(chance.luhn_check(1234567812345670)).to.be.true;
-            expect(chance.luhn_check(49927398717)).to.be.false;
-            expect(chance.luhn_check(1234567812345678)).to.be.false;
-        });
-    });
+test('cc() can take a type arg and obey it', t => {
+    _.times(1000, () => {
+        let type = chance.cc_type({ raw: true })
+        let number = chance.cc({ type: type.name })
+        t.is(number.length, type.length)
+    })
+})
 
-    describe("Types", function () {
-        it("cc_types() returns an array of credit card types", function () {
-            expect(chance.cc_types()).to.be.an('array');
-        });
+test('cc() can take a short_name type arg and obey it', t => {
+    _.times(1000, () => {
+        let type = chance.cc_type({ raw: true })
+        let number = chance.cc({ type: type.short_name })
+        t.is(number.length, type.length)
+    })
+})
 
-        it("cc_type() returns a random credit card type", function () {
-            _(1000).times(function () {
-                type = chance.cc_type();
-                expect(type).to.be.a("string");
-            });
-        });
+// chance.cc_type()
+test('cc_type() returns a random credit card type', t => {
+    _.times(1000, () => {
+        t.true(_.isString(chance.cc_type()))
+    })
+})
 
-        it("cc_type() can take a raw arg and obey it", function () {
-            _(1000).times(function () {
-                type = chance.cc_type({ raw: true });
-                expect(type).to.have.property('name').with.a('string');
-                expect(type).to.have.property('short_name').with.a('string');
-                expect(type).to.have.property('prefix').with.a('string');
-                expect(type).to.have.property('length').with.a('number');
-            });
-        });
+test('cc_type() can take a raw arg and obey it', t => {
+    _.times(1000, () => {
+        let type = chance.cc_type({ raw: true })
+        t.truthy(type.name)
+        t.truthy(type.short_name)
+        t.truthy(type.prefix)
+        t.truthy(type.length)
+    })
+})
 
-        it("cc_type() can take a name arg and obey to it", function () {
-            _(1000).times(function () {
-                type = chance.cc_type({ name: "Visa", raw: true });
-                expect(type.name).to.equal("Visa");
-            });
-        });
+test('cc_type() can take a name arg and obey it', t => {
+    _.times(1000, () => {
+        let type = chance.cc_type({ name: 'Visa', raw: true })
+        t.is(type.name, 'Visa')
+    })
+})
 
-        it("bogus cc_type() throws an error", function () {
-            expect(function() { chance.cc_type({ name: 'potato' }); }).to.throw(RangeError);
-        });
-    });
+test('cc_type() with bogus type throws', t => {
+    const fn = () => chance.cc_type({ name: 'potato' })
+    t.throws(fn, 'Chance: Credit card type \'potato\' is not supported')
+})
 
-    describe("Number", function () {
+// chance.cc_types()
+test('cc_types() returns an array of credit card types', t => {
+    t.true(_.isArray(chance.cc_types()))
+})
 
-        it("passes the Luhn algorithm", function () {
-            _(1000).times(function () {
-                number = chance.cc();
-                expect(chance.luhn_check(number)).to.equal(true);
-            });
-        });
+// chance.currency()
+test('currency() returns a currency', t => {
+    _.times(1000, () => {
+        let currency = chance.currency()
+        t.true(_.isObject(currency))
+        t.truthy(currency.code)
+        t.is(currency.code.length, 3)
+        t.truthy(currency.name)
+    })
+})
 
-        it("cc() can take a type arg and obey to it", function () {
-            _(1000).times(function () {
-                type = chance.cc_type({ raw: true });
-                number = chance.cc({ type: type.name });
-                expect(number).to.have.length(type.length);
-            });
-        });
+// chance.currency_pair()
+test('currency_pair() returns a currency pair', t => {
+    _.times(1000, () => {
+        let currency_pair = chance.currency_pair()
+        t.true(_.isArray(currency_pair))
+        t.is(currency_pair.length, 2)
+        t.not(currency_pair[0].code, currency_pair[1].code)
+    })
+})
 
-        it("cc() can take a short_name type arg and obey to it", function () {
-            _(1000).times(function () {
-                type = chance.cc_type({ raw: true });
-                number = chance.cc({ type: type.short_name });
-                expect(number).to.have.length(type.length);
-            });
-        });
-    });
+test('currency_pair() can return string version', t => {
+    _.times(1000, () => {
+        let currency_pair = chance.currency_pair(true)
+        t.true(_.isString(currency_pair))
+        t.is(currency_pair.length, 7)
+        t.true(/^[A-Z][A-Z][A-Z]+\/[A-Z][A-Z][A-Z]$/.test(currency_pair))
+    })
+})
 
-    describe("Dollar", function () {
-        var dollar, chance = new Chance();
+// chance.dollar()
+test('dollar() returns a proper dollar amount', t => {
+    let dollar = chance.dollar()
+    t.true(/\$[0-9]+\.[0-9]+/.test(dollar))
+    let dollarFloat = parseFloat(dollar.substring(1, dollar.length))
+    t.true(dollarFloat < 10001)
+})
 
-        it("returns a proper dollar amount", function () {
-            _(1000).times(function () {
-                dollar = chance.dollar();
-                expect(dollar).to.match(/\$[0-9]+\.[0-9]+/);
-                dollar = parseFloat(dollar.substring(1, dollar.length));
-                expect(dollar).to.be.below(10001);
-            });
-        });
+test('dollar() obeys min and max, if provided', t => {
+    _.times(1000, () => {
+        let dollar = chance.dollar({ max: 20 })
+        let dollarFloat = parseFloat(dollar.substring(1, dollar.length))
+        t.true(dollarFloat <= 20)
+    })
 
-        it("obeys min and max", function () {
-            _(1000).times(function () {
-                dollar = chance.dollar({max: 20});
-                dollar = parseFloat(dollar.substring(1, dollar.length));
-                expect(dollar).to.not.be.above(20);
-            });
-        });
+    _.times(1000, () => {
+        let dollar = chance.dollar({ min: 20 })
+        let dollarFloat = parseFloat(dollar.substring(1, dollar.length))
+        t.true(dollarFloat >= 20)
+    })
+})
 
-        it("negative works", function () {
-            _(1000).times(function () {
-                dollar = chance.dollar({min: -200, max: -1});
-                expect(dollar.charAt(0)).to.equal('-');
-            });
-        });
-    });
+test('dollar() can take negative min and max', t => {
+    _.times(1000, () => {
+        let dollar = chance.dollar({ min: -200, max: -1 })
+        t.is(dollar.charAt(0), '-')
+        let dollarFloat = parseFloat(dollar.substring(2, dollar.length))
+        // This is necessary because we strip the - when parsing
+        dollarFloat *= -1
+        t.true(dollarFloat <= -1)
+        t.true(dollarFloat >= -200)
+    })
+})
 
-    describe("currency", function () {
-        var currency, chance = new Chance();
+// chance.euro()
+test('euro() returns a proper euro amount', t => {
+    let euro = chance.euro()
+    t.true(/[0-9]+,?\.?[0-9]+?€/.test(euro))
+    let euroFloat = parseFloat(euro.substring(euro.length, -1))
+    t.true(euroFloat < 10001)
+})
 
-        it("returns a currency", function () {
-            _(1000).times(function () {
-                currency = chance.currency();
-                expect(currency).to.be.an("object");
-                expect(currency.code).to.exist;
-                expect(currency.code.length).to.equal(3);
-                expect(currency.name).to.be.ok;
-            });
-        });
+// chance.exp()
+test('exp() looks correct', t => {
+    _.times(1000, () => {
+        let exp = chance.exp()
+        t.true(_.isString(exp))
+        t.is(exp.length, 7)
+        t.true(/([0-9]{2})\/([0-9]{4})/.test(exp))
+    })
+})
 
-        it("returns a currency pair", function () {
-            _(1000).times(function () {
-                var currency_pair = chance.currency_pair();
-                expect(currency_pair).to.be.an("array");
-                expect(currency_pair.length).to.equal(2);
-                expect(currency_pair[0].code).to.not.equal(currency_pair[1].code);
-            });
-        });
-    });
+test('exp() will respect object argument', t => {
+    _.times(1000, () => {
+        let exp = chance.exp({ raw: true })
+        t.true(_.isObject(exp))
+        t.truthy(exp.month)
+        t.true(_.isString(exp.month))
+        t.truthy(exp.year)
+        t.true(_.isString(exp.year))
+    })
+})
 
-    describe("currency_pair", function () {
-        var currency_pair, chance = new Chance();
+test('exp() returs a valid credit card expiration (in a future date)', t => {
+    _.times(1000, () => {
+        let exp = chance.exp({ raw: true })
+        let now = new Date()
+        let nowMonth = now.getMonth() + 1
+        let nowYear = now.getFullYear()
+        let expMonth = parseInt(exp.month, 10)
+        let expYear = parseInt(exp.year, 10)
 
-        it("returns a currency_pair", function () {
-            _(1000).times(function () {
-                currency_pair = chance.currency_pair();
-                expect(currency_pair).to.be.an("array");
-                expect(currency_pair.length).to.equal(2);
-                expect(currency_pair[0]).to.be.an("object");
-            });
-        });
+        t.true(expYear >= nowYear)
+        if (expYear === nowYear) {
+            t.true(expMonth >= nowMonth)
+        }
+    })
+})
 
-        it("returns a currency pair", function () {
-            _(1000).times(function () {
-                currency_pair = chance.currency_pair(true);
-                expect(currency_pair).to.be.a("string");
-                expect(currency_pair.length).to.equal(7);
-                expect(currency_pair).to.match(/^[A-Z][A-Z][A-Z]+\/[A-Z][A-Z][A-Z]$/);
-            });
-        });
-    });
+// chance.exp_month()
+test('exp_month() returns a numeric month with leading 0', t => {
+    _.times(1000, () => {
+        let month = chance.exp_month()
+        t.true(_.isString(month))
+        t.is(month.length, 2)
+    })
+})
 
-    describe("Expiration", function () {
-        it("exp() looks correct", function () {
-            _(1000).times(function () {
-                exp = chance.exp();
-                expect(exp).to.be.a('string');
-                expect(exp).to.have.length(7);
-                expect(exp).to.match(/([0-9]{2})\/([0-9]{4})/);
-            });
-        });
+// chance.exp_year()
+test('exp_year() returns an expiration year', t => {
+    _.times(1000, () => {
+        let year = chance.exp_year()
+        t.true(_.isString(year))
+        let parsedYear = parseInt(year, 10)
+        let curYear = new Date().getFullYear()
+        t.true(parsedYear >= curYear)
+        t.true(parsedYear <= curYear + 10)
+    })
+})
 
-        it("exp() will respect object argument", function () {
-            _(1000).times(function () {
-                exp = chance.exp({raw: true});
-                expect(exp).to.be.an('object');
-                expect(exp).to.have.property('month').with.a('string');
-                expect(exp).to.have.property('year').with.a('string');
-            });
-        });
+test('exp_month() will return a future month if requested', t => {
+    _.times(1000, () => {
+        let nowMonth = new Date().getMonth() + 1
+        let expMonth = parseInt(chance.exp_month({ future: true }), 10)
+        if (nowMonth !== 12) {
+            t.true(expMonth > nowMonth)
+        } else {
+            t.true(expMonth >= 1)
+            t.true(expMonth <= 12)
+        }
+    })
+})
 
-        it("exp() returns a valid credit card expiration date (ie a future date)", function () {
-            _(1000).times(function () {
-                exp = chance.exp({raw: true});
+// chance.luhn_check()
+test('luhn_check() properly checks if number passes the Luhn algorithm', t => {
+    t.true(chance.luhn_check(49927398716))
+    t.true(chance.luhn_check(1234567812345670))
+    t.false(chance.luhn_check(49927398717))
+    t.false(chance.luhn_check(1234567812345678))
+})
 
-                var now = new Date();
-                var nowMonth = now.getMonth() + 1;
-                var nowYear = now.getFullYear();
-                var expMonth = parseInt(exp.month, 10);
-                var expYear = parseInt(exp.year, 10);
-
-                expect(expYear).to.be.at.least(nowYear);
-
-                if(expYear === nowYear) {
-                    expect(expMonth).to.be.above(nowMonth);
-                }
-
-            });
-        });
-
-        it("exp_month() returns a numeric month with leading 0", function () {
-            _(1000).times(function () {
-                month = chance.exp_month();
-                expect(month).to.be.a('string');
-                expect(month).to.have.length(2);
-            });
-        });
-
-        it("exp_year() returns an expiration year", function () {
-            _(1000).times(function () {
-                year = chance.exp_year();
-                expect(year).to.be.within(new Date().getFullYear(), new Date().getFullYear() + 10);
-            });
-        });
-
-        it("exp_month() will return a future month if passed {future: true}", function () {
-            _(1000).times(function () {
-                var nowMonth = new Date().getMonth() + 1;
-                var expMonth = parseInt(chance.exp_month({ future: true }), 10);
-                if(nowMonth !== 12) {
-                    expect(expMonth).to.be.above(nowMonth);
-                } else {
-                    expect(expMonth).to.be.within(1, 12);
-                }
-            });
-        });        
-    });
-});
+test('iban() returns an iban', t => {
+    let iban = chance.iban()
+    t.true(_.isString(iban))
+    t.true(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{1,26}$/.test(iban))
+})

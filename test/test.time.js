@@ -1,267 +1,300 @@
-/// <reference path="../chance.js" />
-/// <reference path="../node_modules/underscore/underscore-min.js" />
+import test from 'ava'
+import Chance from '../chance.js'
+import _ from 'lodash'
 
-var expect = chai.expect;
+const chance = new Chance()
 
-describe("Time", function () {
-    var ampm, date, hammertime, hour, minute, timestamp, month, weekday, year, bounds, chance = new Chance();
+// chance.ampm()
+test('ampm() returns am or pm', t => {
+    _.times(1000, () => {
+        let ampm = chance.ampm()
+        t.true(_.isString(ampm))
+        t.true(/^([ap]m)$/m.test(ampm))
+    })
+})
 
-    it("ampm() returns am or pm", function () {
-        _(1000).times(function () {
-            ampm = chance.ampm();
-            expect(ampm).to.be.a('string');
-            expect(ampm).to.match(/^([ap]m)$/m);
-        });
-    });
+// chance.date()
+test('date() returns a random date', t => {
+    _.times(1000, () => {
+        let date = chance.date()
+        t.true(_.isDate(date))
+        t.truthy(date.getTime())
+    })
+})
 
-    it("date() returns a date", function () {
-        _(1000).times(function () {
-            date = chance.date();
-            expect(date).to.be.a('Date');
-            expect(date.getTime()).to.be.ok;
-        });
-    });
+test('date() accepts an american option', t => {
+    _.times(1000, () => {
+        let date = chance.date({ american: chance.bool() })
+        t.true(_.isDate(date))
+        t.truthy(date.getTime())
+    })
+})
 
-    it("date() accepts an american option", function () {
-        _(1000).times(function () {
-            date = chance.date({ american: true });
-            expect(date).to.be.a('Date');
-            expect(date.getTime()).to.be.ok;
-        });
-    });
+test('date() can have some default provided and obey them', t => {
+    _.times(1000, () => {
+        // One of each month type in terms of number of days.
+        let month = [0, 1, 3][Math.floor(Math.random() * 3)]
 
-    it("hammertime() works", function () {
-        _(1000).times(function () {
-            hammertime = chance.hammertime();
-            expect(hammertime).to.be.a('number');
-            expect(hammertime).to.be.within(1, 8640000000000000);
-        });
-    });
+        let date = chance.date({ year: 1983 })
+        t.true(_.isDate(date))
+        t.is(date.getFullYear(), 1983)
 
-    it("date() can have some defaults provided and obeys them", function () {
-        _(1000).times(function () {
-            // One of each month type in terms of number of days.
-            var month = [0, 1, 3][Math.floor(Math.random() * 3)];
+        date = chance.date({ month: month })
+        t.true(_.isDate(date))
+        t.is(date.getMonth(), month)
 
-            date = chance.date({year: 1983});
-            expect(date).to.be.a('Date');
-            expect(date.getFullYear()).to.equal(1983);
+        date = chance.date({ day: 21 })
+        t.true(_.isDate(date))
+        t.is(date.getDate(), 21)
+    })
+})
 
-            date = chance.date({month: month});
-            expect(date).to.be.a('Date');
-            expect(date.getMonth()).to.equal(month);
+test('date() can specify min and max', t => {
+    _.times(1000, () => {
+        let bounds = {
+            min: new Date(),
+            max: new Date(new Date().getTime() + 1234567890123),
+        }
+        let date = chance.date(bounds)
+        t.true(_.isDate(date))
+        t.true(date >= bounds.min)
+        t.true(date <= bounds.max)
+    })
+})
 
-            date = chance.date({day: 21});
-            expect(date).to.be.a('Date');
-            expect(date.getDate()).to.equal(21);
-        });
-    });
+test('date() returns a date, can specify just min', t => {
+    _.times(1000, () => {
+        let bounds = { min: new Date() }
+        let date = chance.date(bounds)
+        t.true(_.isDate(date))
+        t.true(date >= bounds.min)
+    })
+})
 
-    it("date() returns a date, can specify min and max", function () {
-        _(1000).times(function () {
-            bounds = {min: new Date(), max: new Date(new Date().getTime() + 1234567890123)};
-            date = chance.date(bounds);
-            expect(date).to.be.a('Date');
-            expect(date).to.be.within(bounds.min, bounds.max);
-        });
-    });
+test('date() returns a date, can specify just max', t => {
+    _.times(1000, () => {
+        let bounds = { max: new Date() }
+        let date = chance.date(bounds)
+        t.true(_.isDate(date))
+        t.true(date <= bounds.max)
+    })
+})
 
-    it("date() returns a date, can specify just min", function () {
-        _(1000).times(function () {
-            bounds = {min: new Date()};
-            date = chance.date(bounds);
-            expect(date).to.be.a('Date');
-            expect(date).to.be.above(bounds.min);
-        });
-    });
+test('date() can return a string date', t => {
+    _.times(1000, () => {
+        let date = chance.date({ string: true })
+        t.true(_.isString(date))
+        t.true(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m.test(date))
+    })
+})
 
-    it("date() returns a date, can specify just max", function () {
-        _(1000).times(function () {
-            bounds = {max: new Date()};
-            date = chance.date(bounds);
-            expect(date).to.be.below(bounds.max);
-            // Ensure date not negative. Perhaps add BCE/AD and such later,
-            // but for now just positive is good enough.
-            expect(date).to.be.above(0);
-        });
-    });
+// chance.hammertime()
+test('hammertime() works', t => {
+    _.times(1000, () => {
+        let hammertime = chance.hammertime()
+        t.true(_.isNumber(hammertime))
+        t.true(hammertime > 0)
+        t.true(hammertime < 8640000000000000)
+    })
+})
 
-    it("date() can return a string date", function () {
-        _(1000).times(function () {
-            expect(chance.date({string: true})).to.be.a('string');
-            expect(chance.date({string: true})).to.match(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m);
-        });
-    });
+// chance.hour()
+test('hour() returns an hour', t => {
+    _.times(1000, () => {
+        let hour = chance.hour()
+        t.true(_.isNumber(hour))
+        t.true(hour >= 1)
+        t.true(hour <= 12)
+    })
+})
 
-    it("hour() returns a hour", function () {
-        _(1000).times(function () {
-            hour = chance.hour();
-            expect(hour).to.be.a('number');
-            expect(hour).to.be.within(1, 12);
-        });
-    });
+test('hour() returns an hour in 24 hour format', t => {
+    _.times(1000, () => {
+        let hour = chance.hour({ twentyfour: true })
+        t.true(_.isNumber(hour))
+        t.true(hour >= 0)
+        t.true(hour <= 23)
+    })
+})
 
-    it("hour() returns a hour in 24 hour format", function () {
-        _(1000).times(function () {
-            hour = chance.hour({twentyfour: true});
-            expect(hour).to.be.a('number');
-            expect(hour).to.be.within(0, 23);
-        });
-    });
+test('hour() returns an hour, can specify min and max', t => {
+    _.times(1000, () => {
+        let hour = chance.hour({ min: 7, max: 10 })
+        t.true(_.isNumber(hour))
+        t.true(hour >= 7)
+        t.true(hour <= 10)
+    })
+})
 
-    it("hour() returns a hour, can specify min and max", function () {
-        _(1000).times(function () {
-            hour = chance.hour({min: 7, max: 10});
-            expect(hour).to.be.a('number');
-            expect(hour).to.be.within(7, 10);
-        });
-    });
+test('hour() returns an hour, can specify just min', t => {
+    _.times(1000, () => {
+        let hour = chance.hour({ min: 7 })
+        t.true(_.isNumber(hour))
+        t.true(hour >= 7)
+        t.true(hour <= 12)
+    })
+})
 
-    it("hour() returns a hour, can specify just min", function () {
-        _(1000).times(function () {
-            hour = chance.hour({min: 5});
-            expect(hour).to.be.a('number');
-            expect(hour).to.be.within(5, 12);
-        });
-    });
+test('hour() returns an hour, can specify just max', t => {
+    _.times(1000, () => {
+        let hour = chance.hour({ max: 10 })
+        t.true(_.isNumber(hour))
+        t.true(hour >= 1)
+        t.true(hour <= 10)
+    })
+})
 
-    it("hour() returns a hour, can specify just max", function () {
-        _(1000).times(function () {
-            hour = chance.hour({max: 7});
-            expect(hour).to.be.a('number');
-            expect(hour).to.be.within(1, 7);
-        });
-    });
+// chance.minute()
+test('minute() returns a minute', t => {
+    _.times(1000, () => {
+        let minute = chance.minute()
+        t.true(_.isNumber(minute))
+        t.true(minute >= 0)
+        t.true(minute <= 59)
+    })
+})
 
-    it("minute() returns a minute", function () {
-        _(1000).times(function () {
-            minute = chance.minute();
-            expect(minute).to.be.a('number');
-            expect(minute).to.be.within(0, 59);
-        });
-    });
+test('minute() returns an minute, can specify min and max', t => {
+    _.times(1000, () => {
+        let minute = chance.minute({ min: 18, max: 35 })
+        t.true(_.isNumber(minute))
+        t.true(minute >= 18)
+        t.true(minute <= 35)
+    })
+})
 
-    it("minute() returns a minute, can specify min and max", function () {
-        _(1000).times(function () {
-            minute = chance.minute({min: 18, max: 35});
-            expect(minute).to.be.a('number');
-            expect(minute).to.be.within(18, 35);
-        });
-    });
+test('minute() returns an minute, can specify just min', t => {
+    _.times(1000, () => {
+        let minute = chance.minute({ min: 5 })
+        t.true(_.isNumber(minute))
+        t.true(minute >= 5)
+        t.true(minute <= 59)
+    })
+})
 
-    it("minute() returns a minute, can specify just min", function () {
-        _(1000).times(function () {
-            minute = chance.minute({min: 5});
-            expect(minute).to.be.a('number');
-            expect(minute).to.be.within(5, 59);
-        });
-    });
+test('minute() returns an minute, can specify just max', t => {
+    _.times(1000, () => {
+        let minute = chance.minute({ max: 32 })
+        t.true(_.isNumber(minute))
+        t.true(minute >= 0)
+        t.true(minute <= 32)
+    })
+})
 
-    it("minute() returns a minute, can specify just max", function () {
-        _(1000).times(function () {
-            minute = chance.minute({max: 32});
-            expect(minute).to.be.a('number');
-            expect(minute).to.be.within(0, 32);
-        });
-    });
+test('month() returns a month', t => {
+    _.times(1000, () => {
+        let month = chance.month()
+        t.true(_.isString(month))
+    })
+})
 
-    it("month() returns a month", function () {
-        _(1000).times(function () {
-            month = chance.month();
-            expect(month).to.be.a('string');
-        });
-    });
+test('month() will return a raw month', t => {
+    _.times(1000, () => {
+        let month = chance.month({ raw: true })
+        t.false(_.isString(month))
+        t.true(_.isObject(month))
+    })
+})
 
-    it("month() will return a raw month", function () {
-        _(1000).times(function () {
-            month = chance.month({raw: true});
-            expect(month).to.not.be.a('string');
-            expect(month).to.be.an('object');
-        });
-    });
+test('month() returns a month, can specify min and max', t => {
+    _.times(1000, () => {
+        let month = chance.month({raw: true, min: 5, max: 10})
+        t.false(_.isString(month))
+        t.true(month.numeric >= 5)
+        t.true(month.numeric <= 10)
+    })
+})
 
-    it("month() returns a month, can specify min and max", function () {
-        _(1000).times(function () {
-            month = chance.month({raw: true, min: 5, max: 10});
-            expect(month).to.not.be.a('string');
-            expect(month.numeric).to.be.within(5, 10);
-        });
-    });
+test('month() returns a month, can specify just min', t => {
+    _.times(1000, () => {
+        let month = chance.month({raw: true, min: 5})
+        t.false(_.isString(month))
+        t.true(month.numeric >= 5)
+        t.true(month.numeric <= 12)
+    })
+})
 
-    it("month() returns a month, can specify just min", function () {
-        _(1000).times(function () {
-            month = chance.month({raw: true, min: 5});
-            expect(month).to.not.be.a('string');
-            expect(month.numeric).to.be.within(5, 12);
-        });
-    });
+test('month() returns a month, can specify just max', t => {
+    _.times(1000, () => {
+        let month = chance.month({raw: true, max: 7})
+        t.false(_.isString(month))
+        t.true(month.numeric >= 1)
+        t.true(month.numeric <= 7)
+    })
+})
 
-    it("month() returns a month, can specify just max", function () {
-        _(1000).times(function () {
-            month = chance.month({raw: true, max: 7});
-            expect(month).to.not.be.a('string');
-            expect(month.numeric).to.be.within(1, 7);
-        });
-    });
+// chance.timestamp()
+test('timestamp() returns a timestamp', t => {
+    _.times(1000, () => {
+        let timestamp = chance.timestamp()
+        t.true(_.isNumber(timestamp))
+        t.true(timestamp > 0)
+        t.true(timestamp <= parseInt(new Date().getTime() / 1000, 10))
+    })
+})
 
+// chance.timezone()
+test('timezone() returns a timezone', t => {
+    _.times(1000, () => {
+        let timezone = chance.timezone()
+        t.true(_.isString(timezone.name))
+        t.true(timezone.abbr.length < 6)
+        t.true(_.isNumber(timezone.offset))
+        t.true(_.isArray(timezone.utc))
+    })
+})
 
-    it("timestamp() returns a timestamp", function () {
-        _(1000).times(function () {
-            timestamp = chance.timestamp();
-            expect(timestamp).to.be.a('number');
-            expect(timestamp).to.be.within(1, parseInt(new Date().getTime() / 1000, 10));
-        });
-    });
+// chance.weekday()
+test('weekday() will return a weekday as a string', t => {
+    _.times(1000, () => {
+        let weekday = chance.weekday()
+        t.true(_.isString(weekday))
+    })
+})
 
-    it("weekday() will return a weekday as a string", function () {
-        _(1000).times(function () {
-            weekday = chance.weekday();
-            expect(weekday).to.be.a('string');
-        });
-    });
+test('weekday() can take work: true and obey it', t => {
+    _.times(1000, () => {
+        let weekday = chance.weekday({ weekday_only: true })
+        t.true(_.isString(weekday))
+        t.not(weekday, 'Saturday')
+        t.not(weekday, 'Sunday')
+    })
+})
 
-    it("weekday() can take work: true and obey it", function () {
-        _(1000).times(function () {
-            weekday = chance.weekday({weekday_only: true});
-            expect(weekday).to.be.a('string');
-            expect(weekday).to.not.equal('Saturday');
-            expect(weekday).to.not.equal('Sunday');
-            console.log(weekday);
-        });
-    });
+// chance.year()
+test('year() returns a year, default between today and a century after', t => {
+    _.times(1000, () => {
+        let year = chance.year()
+        t.true(_.isString(year))
+        t.true(year >= new Date().getFullYear())
+        t.true(year <= new Date().getFullYear() + 100)
+    })
+})
 
-    it("year() returns a year, default between today and a century after", function () {
-        _(1000).times(function () {
-            year = chance.year();
-            expect(year).to.be.a('string');
-            expect(year).to.be.within(new Date().getFullYear(), new Date().getFullYear() + 100);
-        });
-    });
+test('year() returns a year, can specify min and max', t => {
+    _.times(1000, () => {
+        let year = chance.year({ min: 2500, max: 2600 })
+        t.true(_.isString(year))
+        t.true(year >= 2500)
+        t.true(year <= 2600)
+    })
+})
 
-    it("year() returns a year, can specify min and max", function () {
-        _(1000).times(function () {
-            year = chance.year({min: 2500, max: 2600});
-            expect(year).to.be.a('string');
-            expect(year).to.be.within(2500, 2600);
-        });
-    });
+test('year() returns a year, can specify just min', t => {
+    _.times(1000, () => {
+        let year = chance.year({ min: 2500 })
+        t.true(_.isString(year))
+        t.true(year >= 2500)
+    })
+})
 
-    it("year() returns a year, can specify just min", function () {
-        _(1000).times(function () {
-            year = chance.year({min: 2500});
-            expect(year).to.be.a('string');
-            expect(year).to.be.above(2499);
-        });
-    });
-
-    it("year() returns a year, can specify just max", function () {
-        _(1000).times(function () {
-            year = chance.year({max: 2500});
-            expect(year).to.be.below(2501);
-            // Ensure year not negative. Perhaps add BCE/AD and such later,
-            // but for now just positive is good enough.
-            expect(year).to.be.above(0);
-        });
-    });
-
-});
+test('year() returns a year, can specify just max', t => {
+    _.times(1000, () => {
+        let year = chance.year({ max: 2500 })
+        t.true(_.isString(year))
+        t.true(year <= 2501)
+        // Ensure year not negative. Perhaps add BCE/AD and such later,
+        // but for now just positive is good enough.
+        t.true(year >= 0)
+    })
+})

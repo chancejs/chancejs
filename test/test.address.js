@@ -1,472 +1,756 @@
-/// <reference path="../chance.js" />
-/// <reference path="../node_modules/underscore/underscore-min.js" />
-/// <reference path="lib/phone_number_js/dist/phoneNumber.min.js" />
-
-var expect = chai.expect;
-
-describe("Address", function () {
-    var zip, postal, suffix, suffixes, state, address, country, chance = new Chance();
-
-    describe("Zip", function () {
-        it("returns a valid basic zip code", function () {
-            _(1000).times(function () {
-                zip = chance.zip();
-                expect(zip.length).to.equal(5);
-                expect(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip)).to.be.true;
-            });
-        });
-
-        it("returns a valid zip+4 code", function () {
-            _(1000).times(function () {
-                zip = chance.zip({plusfour: true});
-                expect(zip.length).to.equal(10);
-                expect(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip)).to.be.true;
-            });
-        });
-    });
-
-    describe("Postal", function () {
-        it("returns a valid basic postal code", function () {
-            _(1000).times(function () {
-                postal = chance.postal();
-                expect(postal.length).to.equal(7);
-                _.times(6, function(n) {
-                    expect(postal.charAt(n).toUpperCase()).to.equal(postal.charAt(n));
-                });
-            });
-        });
-    });
-
-    describe("Street", function () {
-        it("street suffixes returns the suffix array", function () {
-            suffixes = chance.street_suffixes();
-            expect(suffixes).to.be.an('array');
-            _.each(suffixes, function (suffix) {
-                expect(suffix).to.have.keys('name', 'abbreviation');
-            });
-
-        });
-
-        it("street suffixes are short", function () {
-            suffixes = chance.street_suffixes();
-            _.each(suffixes, function (suffix) {
-                expect(suffix.abbreviation).to.have.length.below(5);
-            });
-        });
-
-        it("full street suffixes are longish", function () {
-            suffixes = chance.street_suffixes();
-            _.each(suffixes, function (suffix) {
-                expect(suffix.name).to.have.length.above(2);
-            });
-        });
-
-        it("street suffix returns a single suffix", function () {
-            _(1000).times(function () {
-                suffix = chance.street_suffix();
-                expect(suffix).to.be.an('object');
-                expect(suffix.name).to.be.a('string');
-                expect(suffix.abbreviation).to.be.a('string');
-            });
-        });
-    });
-
-    describe("State", function () {
-        it("states() returns an array of states", function () {
-            expect(chance.states()).to.be.an('array');
-        });
-
-        it("state() returns a random (short) state name", function () {
-            _(1000).times(function () {
-                state = chance.state();
-                expect(state.length).to.be.below(3);
-            });
-        });
-
-        it("state( { country: 'it' } ) returns a random (short) state name", function () {
-            _(1000).times(function () {
-                state = chance.state( { country: 'it' } );
-                expect(state.length).to.equal(3);
-            });
-        });
-
-        it("state({full: true}) returns a random (long) state name", function () {
-            _(1000).times(function () {
-                state = chance.state({full: true});
-                expect(state.length).to.be.above(2);
-            });
-        });
-
-        it("state({country: 'it', full: true}) returns a random (long) state name", function () {
-            _(1000).times(function () {
-                state = chance.state({country: 'it', full: true});
-                expect(state.length).to.be.above(2);
-            });
-        });
-
-        it("state({country: 'uk', full: true}) returns a random (long) state name", function () {
-            _(1000).times(function () {
-                state = chance.state({country: 'uk', full: true});
-                expect(state.length).to.be.above(2);
-            });
-        });
-
-        it("states() returns all 50 US States and DC", function () {
-            expect(chance.states()).to.have.length(51);
-        });
-
-        it("states({territories: true}) returns 50 US States, DC, and 7 US Territories", function () {
-            expect(chance.states({territories: true})).to.have.length(58);
-        });
-
-        it("states({territories: true, us_states_and_dc: false}) returns 7 US Territories", function () {
-            expect(chance.states({territories: true, us_states_and_dc: false})).to.have.length(7);
-        });
-
-        it("states({armed_forces: true}) returns 50 US States, DC, and 3 Armed Forces Military States", function () {
-            expect(chance.states({armed_forces: true})).to.have.length(54);
-        });
-
-        it("states({armed_forces: true, us_states_and_dc: false}) returns 3 Armed Forces Military States", function () {
-            expect(chance.states({armed_forces: true, us_states_and_dc: false})).to.have.length(3);
-        });
-
-        it("states({territories: true, armed_forces: true}) returns 50 US States, DC, 7 US Territories, and 3 Armed Forces Military States", function () {
-            expect(chance.states({territories: true, armed_forces: true})).to.have.length(61);
-        });
-
-        it("states({territories: true, armed_forces: true, us_states_and_dc: false}) returns 7 US Territories and 3 Armed Forces Military States", function () {
-            expect(chance.states({territories: true, armed_forces: true, us_states_and_dc: false})).to.have.length(10);
-        });
-
-        it("states({country: 'it') returns 20 Italian Regions", function () {
-            expect(chance.states({country: 'it'})).to.have.length(20);
-        });
-
-        it("states({country: 'uk') returns 90 UK Conties", function () {
-            expect(chance.states({country: 'uk'})).to.have.length(90);
-        });
-    });
-
-    describe("Province", function () {
-        it("provinces() returns an array of provinces", function () {
-            expect(chance.provinces()).to.be.an('array');
-        });
-
-        it("provinces() to support internationalization", function () {
-            expect(chance.provinces()).not.to.equal(chance.provinces( { country: 'it' } ));
-        });
-
-        it("province() returns a random (short) province name", function () {
-            _(1000).times(function () {
-                expect(chance.province()).to.have.length.below(3);
-            });
-        });
-
-        it("province({full: true}) returns a random (long) province name", function () {
-            _(1000).times(function () {
-                expect(chance.province({full: true})).to.have.length.above(2);
-            });
-        });
-
-        it("province({ country: 'it', full: true}) returns a random (long) province name", function () {
-            _(1000).times(function () {
-                expect(chance.province({country: 'it', full: true})).to.have.length.above(2);
-            });
-        });
-    });
-
-    describe("Counties", function () {
-        it("provinces() returns an array of counties", function () {
-            expect(chance.counties()).to.be.an('array');
-        });
-
-        it("counties({full: true}) returns a random (long) county name", function () {
-            _(1000).times(function () {
-                expect(chance.counties({full: true})).to.have.length.above(2);
-            });
-        });
-
-        it("province({ country: 'uk', full: true}) returns a random (long) county name", function () {
-            _(1000).times(function () {
-                expect(chance.counties({country: 'uk', full: true})).to.have.length.above(2);
-            });
-        });
-    });
-
-    describe("Address", function () {
-        it("address() returns a string", function () {
-            expect(chance.address()).to.be.an('string');
-        });
-
-        it("address() starts with a number", function () {
-            _(1000).times(function () {
-                expect(chance.address()).to.match(/[0-9]+.+/);
-            });
-        });
-
-        it("address() can take short_suffix arg and obey it", function () {
-            _(1000).times(function () {
-                address = chance.address({short_suffix: true});
-                expect(address.split(' ')[2].length).to.be.below(5);
-            });
-        });
-    });
-
-    describe("Phone Number", function () {
-        it("areacode() looks right", function () {
-            expect(chance.areacode()).to.be.a('string');
-            _(1000).times(function () {
-                expect(chance.areacode()).to.match(/^\(([2-9][0-8][0-9])\)$/);
-            });
-        });
-
-        it("areacode({parens: false}) looks right", function () {
-            _(1000).times(function () {
-                expect(chance.areacode({parens: false})).to.be.a('string');
-                expect(chance.areacode({parens: false})).to.match(/^([2-9][0-8][0-9])$/);
-            });
-        });
-
-        it("phone() returns a string", function () {
-            expect(chance.phone()).to.be.a('string');
-        });
-
-        it("phone() looks like an actual phone number", function () {
-            _(1000).times(function () {
-                expect(chance.phone()).to.match(/^\(([2-9][0-8][0-9])\)?[\-. ]?([2-9][0-9]{2,2})[\-. ]?([0-9]{4,4})$/);
-            });
-        });
-
-        it('phone({formatted: false}) looks right', function () {
-            _(1000).times(function () {
-                expect(chance.phone({formatted : false})).to.be.a('string');
-                expect(chance.phone({formatted : false})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
-            });
-        });
-
-        it('phone({formatted: false, parens: true}) is unformatted', function () {
-            _(1000).times(function () {
-                expect(chance.phone({formatted : false, parens: true})).to.be.a('string');
-                expect(chance.phone({formatted : false, parens: true})).to.match(/^[2-9][0-8]\d[2-9]\d{6,6}$/);
-            });
-        });
-
-        it("phone({country: 'uk'}) returns a string", function () {
-            expect(chance.phone({country: 'uk'})).to.be.a('string');
-        });
-
-        it("phone({country: 'uk', mobile: true}) returns a string", function () {
-            expect(chance.phone({country: 'uk', mobile: true})).to.be.a('string');
-        });
-
-        it('phone({country: "uk"}) looks right', function () {
-            _(1000).times(function () {
-                expect(phoneNumber.isValid(chance.phone({country: 'uk'}))).to.be.true;
-            });
-        });
-
-        it('phone({country: "uk", formatted: false}) looks right', function () {
-            _(1000).times(function () {
-                expect(phoneNumber.isValid(phoneNumber.format(chance.phone({country: 'uk', formatted: false})))).to.be.true;
-            });
-        });
-
-        it('phone({country: "uk", mobile: true}) looks right', function () {
-            _(1000).times(function () {
-                expect(phoneNumber.isValid(chance.phone({country: 'uk', mobile: true}))).to.be.true;
-            });
-        });
-
-        it('phone({country: "uk", mobile: true, formatted: false}) looks right', function () {
-            _(1000).times(function () {
-                expect(phoneNumber.isValid(phoneNumber.format(chance.phone({country: 'uk', mobile: true, formatted: false})))).to.be.true;
-            });
-        });
-
-        it("phone({country: 'fr'}) returns a string", function () {
-            expect(chance.phone({country: 'fr'})).to.be.a('string');
-        });
-
-        it("phone({country: 'fr', mobile: true}) returns a string", function () {
-            expect(chance.phone({country: 'fr', mobile: true})).to.be.a('string');
-        });
-
-        it('phone({country: "fr"}) looks right', function () {
-            _(1000).times(function () {
-                expect(chance.phone({country: 'fr'})).match(/0[123459] .. .. .. ../);
-            });
-        });
-
-        it('phone({country: "fr", formatted: false}) looks right', function () {
-            _(1000).times(function () {
-                expect(chance.phone({country: 'fr', formatted: false})).match(/0........./);
-            });
-        });
-
-        it('phone({country: "fr", mobile: true}) looks right', function () {
-            _(1000).times(function () {
-                expect(chance.phone({country: 'fr', mobile: true})).match(/0[67] .. .. .. ../);
-            });
-        });
-
-        it('phone({country: "fr", mobile: true, formatted: false}) looks right', function () {
-            _(1000).times(function () {
-                expect(chance.phone({country: 'fr', mobile: true, formatted: false})).match(/0[67]......../);
-            });
-        });
-    });
-
-    describe("Country", function () {
-        it("countries() returns an array of countries", function () {
-            expect(chance.countries()).to.be.an('array');
-        });
-
-        it("country() returns a random (short) country name", function () {
-            _(1000).times(function () {
-                country = chance.country();
-                expect(country.length).to.equal(2);
-            });
-        });
-
-        it("country({full: true}) returns a random country name", function () {
-            _(1000).times(function () {
-                country = chance.country({full: true});
-                expect(country.length).to.be.above(2);
-            });
-        });
-    });
-
-    describe("City", function () {
-        it("city() looks right", function () {
-            expect(chance.city()).to.be.a('string');
-        });
-    });
-
-    describe("Latitude", function () {
-        it("latitude() looks right", function () {
-            expect(chance.latitude()).to.be.a('number');
-        });
-
-        it("latitude() is in the right range", function () {
-            _(1000).times(function () {
-                expect(chance.latitude()).to.be.within(-90, 90);
-            });
-        });
-
-        it("latitude() will accept a min and obey it", function () {
-            _(1000).times(function () {
-                var min = chance.floating({min: -90, max: 90});
-                expect(chance.latitude({min: min})).to.be.within(min, 90);
-            });
-        });
-
-        it("latitude() will accept a max and obey it", function () {
-            _(1000).times(function () {
-                var max = chance.floating({min: -90, max: 90});
-                expect(chance.latitude({max: max})).to.be.within(-90, max);
-            });
-        });
-    });
-
-    describe("Altitude", function () {
-        it("looks right", function () {
-            expect(chance.altitude()).to.be.a('number');
-        });
-
-        it("is in the right range", function () {
-            _(1000).times(function () {
-                expect(chance.altitude()).to.be.within(0, 8848);
-            });
-        });
-
-        it("will accept a min and obey it", function () {
-            _(1000).times(function () {
-                var min = chance.floating({min: 0, max: 8848});
-                expect(chance.altitude({min: min})).to.be.within(min, 8848);
-            });
-        });
-
-        it("will accept a max and obey it", function () {
-            _(1000).times(function () {
-                var max = chance.floating({min: 1000, max: 9000});
-                expect(chance.altitude({max: max})).to.be.within(0, max);
-            });
-        });
-    });
-
-    describe("Depth", function () {
-        it("looks right", function () {
-            expect(chance.depth()).to.be.a('number');
-        });
-
-        it("is in the right range", function () {
-            _(1000).times(function () {
-                expect(chance.depth()).to.be.within(-10994, 0);
-            });
-        });
-
-        it("will accept a min and obey it", function () {
-            _(1000).times(function () {
-                var min = chance.floating({min: -10994, max: 0});
-                expect(chance.depth({min: min})).to.be.within(min, 0);
-            });
-        });
-
-        it("will accept a max and obey it", function () {
-            _(1000).times(function () {
-                var max = chance.floating({min: -10994, max: 0});
-                expect(chance.depth({max: max})).to.be.within(-10994, max);
-            });
-        });
-    });
-
-    describe("Longitude", function () {
-        it("longitude() looks right", function () {
-            expect(chance.longitude()).to.be.a('number');
-        });
-
-        it("longitude() is in the right range", function () {
-            _(1000).times(function () {
-                expect(chance.longitude()).to.be.within(-180, 180);
-            });
-        });
-
-        it("longitude() will accept a min and obey it", function () {
-            _(1000).times(function () {
-                var min = chance.floating({min: -180, max: 180});
-                expect(chance.longitude({min: min})).to.be.within(min, 180);
-            });
-        });
-
-        it("longitude() will accept a max and obey it", function () {
-            _(1000).times(function () {
-                var max = chance.floating({min: -180, max: 180});
-                expect(chance.longitude({max: max})).to.be.within(-180, max);
-            });
-        });
-    });
-
-    describe("Geohash", function () {
-        it("geohash() looks right", function() {
-            expect(chance.geohash()).to.be.a('string');
-            expect(chance.geohash()).to.have.length(7);
-        });
-
-        it("geohash() will accept a length and obey it", function() {
-            _(1000).times(function () {
-                var length = chance.d10();
-                expect(chance.geohash({ length: length })).to.have.length(length);
-            });
-        });
-    });
-
-    describe("Coordinates", function () {
-        it("coordinates() looks about right", function () {
-            _(1000).times(function () {
-                expect(chance.coordinates()).to.be.a('string');
-                expect(chance.coordinates().split(',')).to.have.length(2);
-            });
-        });
-    });
+import test from 'ava'
+import Chance from '../chance.js'
+import _ from 'lodash'
+import phoneNumber from './helpers/phoneNumber.min.js'
+
+const chance = new Chance()
+
+// chance.address()
+test('address() returns a string', t => {
+    t.true(_.isString(chance.address()))
+})
+
+test('address() starts with a number', t => {
+    _.times(1000, () => t.true(/[0-9]+.+/.test(chance.address())))
+})
+
+test('address() can take a short_suffix arg and obey it', t => {
+    _.times(1000, () => {
+        let address = chance.address({ short_suffix: true })
+        t.true(address.split(' ')[2].length < 5)
+    })
+})
+
+// chance.altitude()
+test('altitude() looks right', t => {
+    t.is(typeof chance.altitude(), 'number')
+})
+
+test('altitude() is in the right range', t => {
+    _.times(1000, () => {
+        let altitude = chance.altitude()
+        t.true(altitude > 0)
+        t.true(altitude < 8848)
+    })
+})
+
+test('altitude() will accept a min and obey it', t => {
+    _.times(1000, () => {
+        let min = chance.floating({ min: 0, max: 8848 })
+        let altitude = chance.altitude({ min: min })
+        t.true(altitude > min)
+        t.true(altitude < 8848)
+    })
+})
+
+test('altitude() will accept a max and obey it', t => {
+    _.times(1000, () => {
+        let max = chance.floating({ min: 0, max: 8848 })
+        let altitude = chance.altitude({ max: max })
+        t.true(altitude > 0)
+        t.true(altitude < max)
+    })
+})
+
+// chance.areacode()
+test('areacode() looks right', t => {
+    _.times(1000, () => {
+        let areacode = chance.areacode()
+        t.true(_.isString(areacode))
+        t.true(/^\(([2-9][0-8][0-9])\)$/.test(areacode))
+    })
+})
+
+test('areacode() can take parens', t => {
+    _.times(1000, () => {
+        let areacode = chance.areacode({ parens: false })
+        t.true(_.isString(areacode))
+        t.true(/^([2-9][0-8][0-9])$/.test(areacode))
+    })
+})
+
+// chance.city()
+test('city() looks right', t => {
+    _.times(1000, () => {
+        let city = chance.city()
+        t.true(_.isString(city))
+        t.true(/[a-zA-Z]+/.test(city))
+    })
+})
+
+// chance.coordinates()
+test('coordinates() looks right', t => {
+    _.times(1000, () => {
+        let coordinates = chance.coordinates()
+        t.true(_.isString(coordinates))
+        t.is(coordinates.split(',').length, 2)
+    })
+})
+
+test('coordinates() returns coordinates in DD format as default', t => {
+    _.times(1000, () => {
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
+        
+        let coordinates = chance.coordinates()
+        let [ latitude, longitude ] = coordinates.split(',')
+
+        t.true(_.isString(coordinates))
+        t.is(coordinates.split(',').length, 2)
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !latitude.includes(char)))
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !longitude.includes(char)))
+    })
+})
+
+test('coordinates() will obey DD format', t => {
+    _.times(1000, () => {
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
+        
+        let coordinates = chance.coordinates({format: 'dd'})
+        let [ latitude, longitude ] = coordinates.split(',')
+
+        t.true(_.isString(coordinates))
+        t.is(coordinates.split(',').length, 2)
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !latitude.includes(char)))
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !longitude.includes(char)))
+    })
+})
+
+test('coordinates() will obey DDM format', t => {
+    _.times(1000, () => {
+        const CHARS_TO_CONTAIN = ['°']
+        const CHARS_NOT_TO_CONTAIN = ['’', '”']
+        
+        let coordinates = chance.coordinates({format: 'ddm'})
+        let [ latitude, longitude ] = coordinates.split(',')
+
+        t.true(_.isString(coordinates))
+        t.is(coordinates.split(',').length, 2)
+        t.true(CHARS_TO_CONTAIN.every(char => latitude.includes(char)))
+        t.true(CHARS_TO_CONTAIN.every(char => longitude.includes(char)))
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !latitude.includes(char)))
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !longitude.includes(char)))
+    })
+})
+
+test('coordinates() will obey DMS format', t => {
+    _.times(1000, () => {
+        const CHARS_TO_CONTAIN = ['°', '’', '”']
+        
+        let coordinates = chance.coordinates({format: 'dms'})
+        let [ latitude, longitude ] = coordinates.split(',')
+
+        t.true(_.isString(coordinates))
+        t.is(coordinates.split(',').length, 2)
+        t.true(CHARS_TO_CONTAIN.every(char => latitude.includes(char)))
+        t.true(CHARS_TO_CONTAIN.every(char => longitude.includes(char)))
+    })
+})
+
+// chance.counties()
+test('counties() returns an array of counties', t => {
+    t.true(_.isArray(chance.counties()))
+})
+
+test('counties() returns a (long) county name', t => {
+    _.times(1000, () => t.true(chance.counties({ full: true }).length > 2))
+})
+
+test('counties() can return a random (long) county name', t => {
+    _.times(1000, () => {
+        t.true(chance.counties({ full: true, country: 'uk' }).length > 2)
+    })
+})
+
+// chance.countries()
+test('countries() returns an array of countries', t => {
+    t.true(_.isArray(chance.countries()))
+})
+
+// chance.country()
+test('country() returns a random (short) country name', t => {
+    _.times(1000, () => {
+        t.is(chance.country().length, 2)
+    })
+})
+
+test('country() returns a random (long) country name', t => {
+    _.times(1000, () => {
+        t.true(chance.country({ full: true }).length > 2)
+    })
+})
+
+// chance.county()
+test('county() returns a random county name', t => {
+    _.times(1000, () => {
+        t.true(_.isString(chance.county()))
+    })
+})
+
+test('country() returns a random (long) country name', t => {
+    _.times(1000, () => {
+        t.true(chance.country({ full: true }).length > 2)
+    })
+})
+
+// chance.depth()
+test('depth() looks right', t => {
+    t.is(typeof chance.depth(), 'number')
+})
+
+test('depth() is in the right range', t => {
+    _.times(1000, () => {
+        let depth = chance.depth()
+        t.true(depth > -10994)
+        t.true(depth < 0)
+    })
+})
+
+test('depth() will accept a min and obey it', t => {
+    _.times(1000, () => {
+        let min = chance.floating({ min: -10994, max: 0 })
+        let depth = chance.depth({ min: min })
+        t.true(depth > min)
+        t.true(depth < 0)
+    })
+})
+
+test('depth() will accept a max and obey it', t => {
+    _.times(1000, () => {
+        let max = chance.floating({ min: -10994, max: 0 })
+        let depth = chance.depth({ max: max })
+        t.true(depth > -10994)
+        t.true(depth < max)
+    })
+})
+
+// chance.geohash
+test('geohash() looks right', t => {
+    let geohash = chance.geohash()
+    t.true(_.isString(geohash))
+    t.is(geohash.length, 7)
+})
+
+test('geohash() will accept a length and obey it', t => {
+    _.times(1000, () => {
+        let length = chance.d10()
+        let geohash = chance.geohash({ length: length })
+        t.is(geohash.length, length)
+    })
+})
+
+// chance.latitude()
+test('latitude() looks right', t => {
+    t.is(typeof chance.latitude(), 'number')
+})
+
+test('latitude() is in the right range', t => {
+    _.times(1000, () => {
+        let latitude = chance.latitude()
+        t.true(latitude >= -90)
+        t.true(latitude <= 90)
+    })
+})
+
+test('latitude() will accept a min and obey it', t => {
+    _.times(1000, () => {
+        let min = chance.floating({ min: -90, max: 90 })
+        let latitude = chance.latitude({ min: min })
+        t.true(latitude >= min)
+        t.true(latitude <= 90)
+    })
+})
+
+test('latitude() will accept a max and obey it', t => {
+    _.times(1000, () => {
+        let max = chance.floating({ min: -90, max: 90 })
+        let latitude = chance.latitude({ max: max })
+        t.true(latitude >= -90)
+        t.true(latitude <= max)
+    })
+})
+
+test('latitude() returns latitude in DD format as default', t => {
+    _.times(1000, () => {
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
+        
+        let latitude = chance.latitude()
+
+        t.is(typeof latitude, 'number')
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !latitude.toString().includes(char)))
+    })
+})
+
+test('latitude() will obey DD format', t => {
+    _.times(1000, () => {
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
+        
+        let latitude = chance.latitude({format: 'dd'})
+
+        t.is(typeof latitude, 'number')
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !latitude.toString().includes(char)))
+    })
+})
+
+test('latitude() will obey DDM format', t => {
+    _.times(1000, () => {
+        const CHARS_TO_CONTAIN = ['°']
+        const CHARS_NOT_TO_CONTAIN = ['’', '”']
+        
+        let latitude = chance.latitude({format: 'ddm'})
+
+        t.true(_.isString(latitude))
+        t.true(CHARS_TO_CONTAIN.every(char => latitude.includes(char)))
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !latitude.includes(char)))
+    })
+})
+
+test('latitude() will obey DMS format', t => {
+    _.times(1000, () => {
+        const CHARS_TO_CONTAIN = ['°', '’', '”']
+        
+        let latitude = chance.latitude({format: 'dms'})
+
+        t.true(_.isString(latitude))
+        t.true(CHARS_TO_CONTAIN.every(char => latitude.includes(char)))
+    })
+})
+
+// chance.longitude()
+test('longitude() looks right', t => {
+    t.is(typeof chance.longitude(), 'number')
+})
+
+test('longitude() is in the right range', t => {
+    _.times(1000, () => {
+        let longitude = chance.longitude()
+        t.true(longitude >= -180)
+        t.true(longitude <= 180)
+    })
+})
+
+test('longitude() will accept a min and obey it', t => {
+    _.times(1000, () => {
+        let min = chance.floating({ min: -180, max: 180 })
+        let longitude = chance.longitude({ min: min })
+        t.true(longitude >= min)
+        t.true(longitude <= 180)
+    })
+})
+
+test('longitude() will accept a max and obey it', t => {
+    _.times(1000, () => {
+        let max = chance.floating({ min: -180, max: 180 })
+        let longitude = chance.longitude({ max: max })
+        t.true(longitude >= -180)
+        t.true(longitude <= max)
+    })
+})
+
+test('longitude() returns longitude in DD format as default', t => {
+    _.times(1000, () => {
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
+        
+        let longitude = chance.longitude()
+
+        t.is(typeof longitude, 'number')
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !longitude.toString().includes(char)))
+    })
+})
+
+test('longitude() will obey DD format', t => {
+    _.times(1000, () => {
+        const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
+        
+        let longitude = chance.longitude({format: 'dd'})
+
+        t.is(typeof longitude, 'number')
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !longitude.toString().includes(char)))
+    })
+})
+
+test('longitude() will obey DDM format', t => {
+    _.times(1000, () => {
+        const CHARS_TO_CONTAIN = ['°']
+        const CHARS_NOT_TO_CONTAIN = ['’', '”']
+        
+        let longitude = chance.longitude({format: 'ddm'})
+
+        t.true(_.isString(longitude))
+        t.true(CHARS_TO_CONTAIN.every(char => longitude.includes(char)))
+        t.true(CHARS_NOT_TO_CONTAIN.every(char => !longitude.includes(char)))
+    })
+})
+
+test('longitude() will obey DMS format', t => {
+    _.times(1000, () => {
+        const CHARS_TO_CONTAIN = ['°', '’', '”']
+        
+        let longitude = chance.longitude({format: 'dms'})
+
+        t.true(_.isString(longitude))
+        t.true(CHARS_TO_CONTAIN.every(char => longitude.includes(char)))
+    })
+})
+
+// chance.phone()
+test('phone() returns a string', t => {
+    t.true(_.isString(chance.phone()))
+})
+
+test('phone() looks like an actual phone number', t => {
+    t.true(/^\(([2-9][0-8][0-9])\)?[\-. ]?([2-9][0-9]{2,2})[\-. ]?([0-9]{4,4})$/.test(chance.phone()))
+})
+
+test('phone() obeys formatted option', t => {
+    _.times(1000, () => {
+        let phone = chance.phone({ formatted: false })
+        t.true(_.isString(phone))
+        t.true(/^[2-9][0-8]\d[2-9]\d{6,6}$/.test(phone))
+    })
+})
+
+test('phone() obeys formatted option and parens option', t => {
+    _.times(1000, () => {
+        let phone = chance.phone({ formatted: false, parens: true })
+        t.true(_.isString(phone))
+        t.true(/^[2-9][0-8]\d[2-9]\d{6,6}$/.test(phone))
+    })
+})
+
+test("phone() obeys exampleNumber option", (t) => {
+  _.times(1000, () => {
+    let phone = chance.phone({ exampleNumber: true });
+    t.true(_.isString(phone));
+    t.true(/^\(555\)?[\-. ]?([2-9][0-9]{2,2})[\-. ]?([0-9]{4,4})$/.test(phone));
+  });
 });
+
+test("phone() obeys formatted option and exampleNumber option", (t) => {
+  _.times(1000, () => {
+    let phone = chance.phone({ exampleNumber: true, formatted: false });
+    t.true(_.isString(phone));
+    t.true(/^555[2-9]\d{6,6}$/.test(phone));
+  });
+});
+
+test('phone() with uk option works', t => {
+    t.true(_.isString(chance.phone({ country: 'uk' })))
+})
+
+test('phone() with uk option works and mobile option', t => {
+    t.true(_.isString(chance.phone({ country: 'uk', mobile: true })))
+})
+
+test('phone() with uk country looks right', t => {
+    t.true(phoneNumber.isValid(chance.phone({ country: 'uk' })))
+})
+
+test('phone() with uk country unformatted looks right', t => {
+    t.true(phoneNumber.isValid(phoneNumber.format(chance.phone({
+        country: 'uk',
+        formatted: false
+    }))))
+})
+
+test('phone() with uk country and mobile option looks right', t => {
+    _.times(1000, () => {
+        t.true(phoneNumber.isValid(chance.phone({
+            country: 'uk',
+            mobile: true
+        })))
+    })
+})
+
+test('phone() with uk country and mobile option unformatted looks right', t => {
+    _.times(1000, () => {
+        t.true(phoneNumber.isValid(phoneNumber.format(chance.phone({
+            country: 'uk',
+            mobile: true,
+            formatted: false
+        }))))
+    })
+})
+
+test('phone() with fr country works', t => {
+    t.true(_.isString(chance.phone({ country: 'fr' })))
+})
+
+test('phone() with fr country works with mobile option', t => {
+    t.true(_.isString(chance.phone({ country: 'fr', mobile: true })))
+})
+
+test('phone() with fr country looks right', t => {
+    _.times(1000, () => {
+        t.true(/0[123459] .. .. .. ../.test(chance.phone({ country: 'fr' })))
+    })
+})
+
+test('phone() with fr country looks right unformatted', t => {
+    _.times(1000, () => {
+        t.true(/0........./.test(chance.phone({
+            country: 'fr',
+            formatted: false
+        })))
+    })
+})
+
+test('phone() with fr country on mobile looks right', t => {
+    _.times(1000, () => {
+        t.true(/0[67] .. .. .. ../.test(chance.phone({
+            country: 'fr',
+            mobile: true
+        })))
+    })
+})
+
+test('phone() with fr country on mobile, unformatted looks right', t => {
+    _.times(1000, () => {
+        t.true(/0[67]......../.test(chance.phone({
+            country: 'fr',
+            mobile: true,
+            formatted: false
+        })))
+    })
+})
+
+test('phone() with br country option works', t => {
+    t.true(_.isString(chance.phone({ country: 'br' })))
+})
+
+test('phone() with br country and mobile option works', t => {
+    t.true(_.isString(chance.phone({ country: 'br', mobile: true })))
+})
+
+test('phone() with br country and formatted false option return a correct format', t => {
+    t.true(/([0-9]{2})([2-5]{1})([0-9]{3})([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: false,
+        formatted: false
+    })))
+})
+
+test('phone() with br country, formatted false and mobile option return a correct format', t => {
+    t.true(/([0-9]{2})\9([0-9]{4})([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: true,
+        formatted: false
+    })))
+})
+
+test('phone() with br country and formatted option apply the correct mask', t => {
+    t.true(/\(([0-9]{2})\) ([2-5]{1})([0-9]{3})\-([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: false,
+        formatted: true
+    })))
+})
+
+test('phone() with br country, formatted and mobile option apply the correct mask', t => {
+    t.true(/\(([0-9]{2})\) 9([0-9]{4})\-([0-9]{4})/.test(chance.phone({
+        country: 'br',
+        mobile: true,
+        formatted: true
+    })))
+})
+
+// chance.postal()
+test('postal() returns a valid basic postal code', t => {
+    _.times(1000, () => {
+        let postal = chance.postal()
+        t.is(postal.length, 7)
+        postal.split('').map((char) => {
+            t.is(char.toUpperCase(), char)
+        })
+    })
+})
+
+test('postcode() returns a valid basic postcode', t => {
+    _.times(10, () => {
+        let postcode = chance.postcode();
+        t.regex(postcode, /^[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}$/);
+    })
+})
+
+// chance.province()
+test('province() returns a random (short) province name', t => {
+    _.times(1000, () => t.true(chance.province().length < 3))
+})
+
+test('province() can return a long random province name', t => {
+    _.times(1000, () => t.true(chance.province({ full: true }).length > 2))
+})
+
+test('province() can return a random long "it" province', t => {
+    _.times(1000, () => {
+        t.true(chance.province({country: 'it', full: true }).length > 2)
+    })
+})
+
+// chance.provinces()
+test('provinces() returns an array of provinces', t => {
+    t.true(_.isArray(chance.provinces()))
+})
+
+test('provinces() supports internationalization', t => {
+    t.not(chance.provinces(), chance.provinces({ country: 'it' }))
+})
+
+// chance.state()
+test('state() returns a random (short) state name', t => {
+    _.times(1000, () => t.true(chance.state().length < 3))
+})
+
+test('state() can take a country and return a state', t => {
+    _.times(1000, () => t.true(chance.state({ country: 'it' }).length === 3))
+})
+
+test('state() can return full state name', t => {
+    _.times(1000, () => {
+        t.true(chance.state({
+            full: true
+        }).length > 2)
+    })
+})
+
+test('state() with country returns a long state name', t => {
+    _.times(1000, () => {
+        t.true(chance.state({
+            country: 'it',
+            full: true
+        }).length > 2)
+    })
+    _.times(1000, () => {
+        t.true(chance.state({
+            country: 'uk',
+            full: true
+        }).length > 2)
+    })
+})
+
+// chance.states()
+test('states() returns an array of states', t => {
+    t.true(_.isArray(chance.states()))
+})
+
+test('states() returns all 50 states and DC', t => {
+    t.is(chance.states().length, 51)
+})
+
+test('states() with territories returns 50 US states, DC, and 7 US territories', t => {
+    t.is(chance.states({
+        territories: true
+    }).length, 58)
+})
+
+test('states() without us states and dc returns 7 US territories', t => {
+    t.is(chance.states({
+        territories: true,
+        us_states_and_dc: false
+    }).length, 7)
+})
+
+test('states() with armed forces returns 50 states, DC, and 3 armed forces military states', t => {
+    t.is(chance.states({
+        armed_forces: true
+    }).length, 54)
+})
+
+test('states() with armed forces without states returns 3 armed forces states', t => {
+    t.is(chance.states({
+        armed_forces: true,
+        us_states_and_dc: false
+    }).length, 3)
+})
+
+test('states() with all options returns 61 items', t => {
+    t.is(chance.states({
+        territories: true,
+        armed_forces: true
+    }).length, 61)
+})
+
+test('states() without states returns 7 territories and 3 armed forces states', t => {
+    t.is(chance.states({
+        territories: true,
+        armed_forces: true,
+        us_states_and_dc: false
+    }).length, 10)
+})
+
+test('states() with country of "it" returns 20 regions', t => {
+    t.is(chance.states({
+        country: 'it'
+    }).length, 20)
+})
+
+test('states() with country of "uk" returns 129 UK counties', t => {
+    t.is(chance.states({
+        country: 'uk'
+    }).length, 129)
+})
+
+test('states() with country of "mx" returns 32 MX states', t => {
+    t.is(chance.states({
+        country: 'mx'
+    }).length, 32)
+})
+
+// chance.street()
+test('street() works', t => {
+    _.times(100, () => t.is(typeof chance.street(), 'string'))
+})
+
+test('street() works with it country', t => {
+    _.times(100, () => t.is(typeof chance.street({ country: 'it' }), 'string'))
+})
+
+// chance.street_suffix()
+test('street_suffix() returns a single suffix', t => {
+    _.times(1000, () => {
+        let suffix = chance.street_suffix()
+        t.is(typeof suffix, 'object')
+        t.is(typeof suffix.name, 'string')
+        t.is(typeof suffix.abbreviation, 'string')
+    })
+})
+
+// chance.street_suffixes()
+test('street_suffixes() returns the suffix array', t => {
+    let suffixes = chance.street_suffixes()
+    t.true(_.isArray(suffixes))
+    suffixes.map((suffix) => {
+        t.truthy(suffix.name)
+        t.truthy(suffix.abbreviation)
+    })
+})
+
+test('street_suffixes() are short', t => {
+    let suffixes = chance.street_suffixes()
+    suffixes.map((suffix) => {
+        t.true(suffix.abbreviation.length < 5)
+    })
+})
+
+test('street_suffixes() are longish', t => {
+    let suffixes = chance.street_suffixes()
+    suffixes.map((suffix) => {
+        t.true(suffix.name.length > 2)
+    })
+})
+
+// chance.zip()
+test('zip() returns a valid basic zip code', t => {
+    _.times(1000, () => {
+        let zip = chance.zip()
+        t.is(zip.length, 5)
+        t.true(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip))
+    })
+})
+
+test('zip() returns a valid zip+4 code', t => {
+    _.times(1000, () => {
+        let zip = chance.zip({ plusfour: true })
+        t.is(zip.length, 10)
+        t.true(/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip))
+    })
+})

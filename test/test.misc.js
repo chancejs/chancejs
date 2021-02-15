@@ -1,295 +1,298 @@
-/// <reference path="../chance.js" />
-/// <reference path="../node_modules/underscore/underscore-min.js" />
+import test from 'ava'
+import Chance from '../chance.js'
+import _ from 'lodash'
 
-var expect = chai.expect;
+const chance = new Chance()
 
-describe("Dice", function () {
-    var die, dice, chance = new Chance();
+// chance.coin()
+test('coin() returns a coin', t => {
+    _.times(1000, () => {
+        t.true(/(heads|tails)/.test(chance.coin()))
+    })
+})
 
-    it("returns a properly bounded d4", function () {
-        _(1000).times(function () {
-            die = chance.d4();
-            expect(die).to.be.within(1, 4);
-        });
-    });
+// chance.d4()
+test('d4() returns a properly bounded d4', t => {
+    _.times(1000, () => {
+        let die = chance.d4()
+        t.true(die >= 1)
+        t.true(die <= 4)
+    })
+})
 
-    it("returns a properly bounded d6", function () {
-        _(1000).times(function () {
-            die = chance.d6();
-            expect(die).to.be.within(1, 6);
-        });
-    });
+// chance.d6()
+test('d6() returns a properly bounded d6', t => {
+    _.times(1000, () => {
+        let die = chance.d6()
+        t.true(die >= 1)
+        t.true(die <= 6)
+    })
+})
 
-    it("returns a properly bounded d8", function () {
-        _(1000).times(function () {
-            die = chance.d8();
-            expect(die).to.be.within(1, 8);
-        });
-    });
+// chance.d8()
+test('d8() returns a properly bounded d8', t => {
+    _.times(1000, () => {
+        let die = chance.d8()
+        t.true(die >= 1)
+        t.true(die <= 8)
+    })
+})
 
-    it("returns a properly bounded d10", function () {
-        _(1000).times(function () {
-            die = chance.d10();
-            expect(die).to.be.within(1, 10);
-        });
-    });
+// chance.d10()
+test('d10() returns a properly bounded d10', t => {
+    _.times(1000, () => {
+        let die = chance.d10()
+        t.true(die >= 1)
+        t.true(die <= 10)
+    })
+})
 
-    it("returns a properly bounded d12", function () {
-        _(1000).times(function () {
-            die = chance.d12();
-            expect(die).to.be.within(1, 12);
-        });
-    });
+// chance.d12()
+test('d12() returns a properly bounded d12', t => {
+    _.times(1000, () => {
+        let die = chance.d12()
+        t.true(die >= 1)
+        t.true(die <= 12)
+    })
+})
 
-    it("returns a properly bounded d20", function () {
-        _(1000).times(function () {
-            die = chance.d20();
-            expect(die).to.be.within(1, 20);
-        });
-    });
+// chance.d20()
+test('d20() returns a properly bounded d20', t => {
+    _.times(1000, () => {
+        let die = chance.d20()
+        t.true(die >= 1)
+        t.true(die <= 20)
+    })
+})
 
-    it("returns a properly bounded d30", function () {
-        _(1000).times(function () {
-            die = chance.d30();
-            expect(die).to.be.within(1, 30);
-        });
-    });
+// chance.d30()
+test('d30() returns a properly bounded d30', t => {
+    _.times(1000, () => {
+        let die = chance.d30()
+        t.true(die >= 1)
+        t.true(die <= 30)
+    })
+})
 
-    it("returns a properly bounded d100", function () {
-        _(1000).times(function () {
-            die = chance.d100();
-            expect(die).to.be.within(1, 100);
-        });
-    });
+// chance.d100()
+test('d100() returns a properly bounded d100', t => {
+    _.times(1000, () => {
+        let die = chance.d100()
+        t.true(die >= 1)
+        t.true(die <= 100)
+    })
+})
 
-    it("rpg() appears to work as expected", function () {
-        _(1000).times(function () {
-            expect(function () { chance.rpg(); }).to.throw(Error);
-            expect(function () { chance.rpg("3"); }).to.throw(Error);
-            expect(function () { chance.rpg("hd23"); }).to.throw(Error);
-            expect(function () { chance.rpg("3d23d2"); }).to.throw(Error);
-            dice = chance.rpg('5d20');
-            expect(dice).to.be.an.array;
-            expect(dice).to.have.length(5);
-            _.map(dice, function (die) {
-                expect(die).to.be.within(1, 20);
-            });
-        });
-    });
 
-    it("rpg() will take and obey a sum", function () {
-        var rpg = 0;
-        _(1000).times(function () {
-            rpg = chance.rpg('4d20', {sum: true});
-            expect(rpg).to.be.a.number;
-            expect(rpg).to.be.within(4, 80);
-        });
-    });
+// chance.emotion()
+test('emotion() returns a random emotion', t => {
+    _.times(1000, () => {
+        let emotion = chance.emotion()
+        t.true(_.isString(emotion))
+        t.true(emotion.length >= 2)
+        t.true(emotion.length <= 30)
+    })
+})
 
-    it("rpg without a die roll throws an error", function () {
-        expect(function() { chance.rpg(); }).to.throw(RangeError);
-    });
-});
+// chance.guid()
+test('guid() returns a proper guid', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){8}(-([0-9a-fA-F]){4}){3}-([0-9a-fA-F]){12}/.test(chance.guid()))
+    })
+})
 
-describe("tv and radio", function() {
-    it("radio works", function() {
-        var radio;
-        _(1000).times(function () {
-            radio = chance.radio();
-            expect(radio).to.be.a.string;
-            expect(radio).to.have.length(4);
-            expect(radio).to.match(/^[KW][A-Z][A-Z][A-Z]/);
-        });
-    });
+test('guid() returns a proper version 1 guid', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-1([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/.test(chance.guid({ version: 1 })))
+    })
+})
 
-    it("radio accepts east", function() {
-        var radio;
-        _(1000).times(function () {
-            radio = chance.radio({ side: 'east' });
-            expect(radio).to.be.a.string;
-            expect(radio).to.have.length(4);
-            expect(radio).to.match(/^W[A-Z][A-Z][A-Z]/);
-        });
-    });
+test('guid() returns a proper version 2 guid', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-2([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/.test(chance.guid({ version: 2 })))
+    })
+})
 
-    it("radio accepts west", function() {
-        var radio;
-        _(1000).times(function () {
-            radio = chance.radio({ side: 'west' });
-            expect(radio).to.be.a.string;
-            expect(radio).to.have.length(4);
-            expect(radio).to.match(/^K[A-Z][A-Z][A-Z]/);
-        });
-    });
+test('guid() returns a proper version 3 guid', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-3([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/.test(chance.guid({ version: 3 })))
+    })
+})
 
-    it("tv works", function() {
-        var tv;
-        _(1000).times(function () {
-            tv = chance.tv();
-            expect(tv).to.be.a.string;
-            expect(tv).to.have.length(4);
-            expect(tv).to.match(/^[KW][A-Z][A-Z][A-Z]/);
-        });
-    });
-});
+test('guid() returns a proper version 4 guid', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-4([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/.test(chance.guid({ version: 4 })))
+    })
+})
 
-describe("Mac Address", function () {
-    var mac, chance = new Chance();
+test('guid() returns a proper version 5 guid', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-5([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/.test(chance.guid({ version: 5 })))
+    })
+})
 
-    it("returns a proper mac address", function () {
-        _(1000).times(function () {
-            mac = chance.mac_address();
-            expect(mac).to.match(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/);
-        });
-    });
+// chance.hash()
+test('hash() returns a proper hash', t => {
+    _.times(1000, () => {
+        let hash = chance.hash()
+        t.true(/([0-9a-f]){40}/.test(hash))
+        t.is(hash.length, 40)
+    })
+})
 
-    it("returns a proper colon separated mac address", function () {
-        _(1000).times(function () {
-            mac = chance.mac_address({separator: ":"});
-            expect(mac).to.match(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/);
-        });
-    });
+test('hash() obeys length, if supplied', t => {
+    _.times(1000, () => {
+        let length = chance.natural({ min: 1, max: 64 })
+        let hash = chance.hash({ length: length })
+        t.is(hash.length, length)
+    })
+})
 
-    it("returns a proper hyphen separated mac address", function () {
-        _(1000).times(function () {
-            mac = chance.mac_address({separator:"-"});
-            expect(mac).to.match(/([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}/);
-        });
-    });
+// chance.mac_address()
+test('mac_address() returns a proper mac address', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/.test(chance.mac_address()))
+    })
+})
 
-    it("returns a proper network version mac address", function () {
-        _(1000).times(function () {
-            mac = chance.mac_address({networkVersion:true});
-            expect(mac).to.match(/([0-9a-fA-F]){4}.([0-9a-fA-F]){4}.([0-9a-fA-F]){4}/);
-        });
-    });
+test('mac_address() returns a proper colon separated mac address', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}:([0-9a-fA-F]){2}/.test(chance.mac_address({ separator: ':' })))
+    })
+})
 
-});
+test('mac_address() returns a proper hyphen separated mac address', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}-([0-9a-fA-F]){2}/.test(chance.mac_address({ separator: '-' })))
+    })
+})
 
-describe("Guid", function () {
-    var guid, chance = new Chance();
+test('mac_address() returns a proper network version mac address', t => {
+    _.times(1000, () => {
+        t.true(/([0-9a-fA-F]){4}.([0-9a-fA-F]){4}.([0-9a-fA-F]){4}/.test(chance.mac_address({ networkVersion: true })))
+    })
+})
 
-    it("returns a proper guid", function () {
-        _(1000).times(function () {
-            guid = chance.guid();
-            expect(guid).to.match(/([0-9a-fA-F]){8}(-([0-9a-fA-F]){4}){3}-([0-9a-fA-F]){12}/);
-        });
-    });
-
-    it("returns a proper version 1 guid", function () {
-        _(1000).times(function () {
-            guid = chance.guid({version: 1});
-            expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-1([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
-        });
-    });
-
-    it("returns a proper version 2 guid", function () {
-        _(1000).times(function () {
-            guid = chance.guid({version: 2});
-            expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-2([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
-        });
-    });
-
-    it("returns a proper version 3 guid", function () {
-        _(1000).times(function () {
-            guid = chance.guid({version: 3});
-            expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-3([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
-        });
-    });
-
-    it("returns a proper version 4 guid", function () {
-        _(1000).times(function () {
-            guid = chance.guid({version: 4});
-            expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-4([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
-        });
-    });
-
-    it("returns a proper version 5 guid", function () {
-        _(1000).times(function () {
-            guid = chance.guid({version: 5});
-            expect(guid).to.match(/([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-5([0-9a-fA-F]){3}-([ab89])([0-9a-fA-F]){3}-([0-9a-fA-F]){12}/);
-        });
-    });
-});
-
-describe("Hash", function () {
-    var hash, length, chance = new Chance();
-
-    it("returns a proper hash", function () {
-        _(1000).times(function () {
-            hash = chance.hash();
-            expect(hash).to.match(/([0-9a-f]){40}/);
-            expect(hash).to.have.length(40);
-        });
-    });
-
-    it("obeys length, if supplied", function () {
-        _(1000).times(function () {
-            length = chance.natural({min: 1, max: 64});
-            hash = chance.hash({length: length});
-            expect(hash).to.have.length(length);
-        });
-    });
-});
-
-describe("Mixin", function () {
-    var chance = new Chance();
-    it("exists", function () {
-        expect(chance).to.have.property('mixin');
-    });
-
-    it("works with a simple function", function () {
-        chance.mixin({
-            'user': function () {
-                return {
-                    first: chance.first(),
-                    last: chance.last(),
-                    email: chance.email()
-                };
+// chance.mixin()
+test('mixin() works with a simple function', t => {
+    chance.mixin({
+        user: () => {
+            return {
+                first: chance.first(),
+                last: chance.last(),
+                email: chance.email()
             }
-        });
-        expect(chance).to.have.property('user');
-        _(1000).times(function () {
-            expect(chance.user()).to.be.ok;
-            expect(chance.user()).to.have.property('first');
-        });
-    });
+        }
+    })
+    t.truthy(chance.user)
+    _.times(1000, () => {
+        let user = chance.user()
+        t.truthy(user)
+        t.truthy(user.first)
+        t.true(_.isString(user.last))
+        t.true(_.isString(user.email))
+    })
+})
 
-    it("multiple mixins work, can call previously defined mixins", function () {
-        chance.mixin({
-            'user': function () {
-                return {
-                    first: chance.first(),
-                    last: chance.last(),
-                    email: chance.email()
-                };
-            },
-            'social_user': function () {
-                var user = chance.user();
-                user.network = chance.pick(['facebook', 'twitter']);
-                return user;
+test('mixin() multiple work, we can call previously defined mixins', t => {
+    chance.mixin({
+        user: () => {
+            return {
+                first: chance.first(),
+                last: chance.last(),
+                email: chance.email()
             }
-        });
-        expect(chance).to.have.property('social_user');
-        _(1000).times(function () {
-            expect(chance.social_user()).to.be.ok;
-            expect(chance.social_user()).to.have.property('first');
-            expect(chance.social_user()).to.have.property('network');
-        });
-    });
-});
+        },
+        social_user: () => {
+            let user = chance.user()
+            user.network = chance.pick(['facebook', 'twitter'])
+            return user
+        }
+    })
+    t.truthy(chance.user)
+    t.truthy(chance.social_user)
+    _.times(1000, () => {
+        let social_user = chance.social_user()
+        t.truthy(social_user)
+        t.truthy(social_user.first)
+        t.truthy(social_user.network)
+        t.true(social_user.network === 'facebook' ||
+               social_user.network === 'twitter')
+    })
+})
 
-describe("CNPJ", function () {
-    var chance = new Chance();
-    var cnpj;
+// chance.radio()
+test('radio() works as expected', t => {
+    _.times(1000, () => {
+        let radio = chance.radio()
+        t.true(_.isString(radio))
+        t.is(radio.length, 4)
+        t.true(/^[KW][A-Z][A-Z][A-Z]/.test(radio))
+    })
+})
 
-    it("returns a valid Brazil company ID (CNPJ)", function () {
-        _(1000).times(function () {
-            cnpj = chance.cnpj();
-            expect(cnpj).to.be.a('string');
-            expect(cnpj).to.match(/^\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}$/m);
-            expect(cnpj).to.have.length(18);
-        });
-    });
+test('radio() accepts east', t => {
+    _.times(1000, () => {
+        let radio = chance.radio({ side: 'east' })
+        t.true(_.isString(radio))
+        t.is(radio.length, 4)
+        t.true(/^[W][A-Z][A-Z][A-Z]/.test(radio))
+    })
+})
 
-});
+test('radio() accepts west', t => {
+    _.times(1000, () => {
+        let radio = chance.radio({ side: 'west' })
+        t.true(_.isString(radio))
+        t.is(radio.length, 4)
+        t.true(/^[K][A-Z][A-Z][A-Z]/.test(radio))
+    })
+})
+
+// chance.rpg()
+test('rpg() appears to work as expected', t => {
+    _.times(1000, () => {
+        let dice = chance.rpg('5d20')
+        t.true(_.isArray(dice))
+        t.is(dice.length, 5)
+        dice.map((die) => {
+            t.true(die >= 1)
+            t.true(die <= 20)
+        })
+    })
+})
+
+test('rpg() without a die roll throws an error', t => {
+    t.throws(() => chance.rpg(), 'Chance: A type of die roll must be included')
+})
+
+test('rpg() throws errors where it should', t => {
+    const errorFns = [
+        () => chance.rpg('3'),
+        () => chance.rpg('hd23'),
+        () => chance.rpg('3d23d2'),
+        () => chance.rpg('d20')
+    ]
+    errorFns.map((fn) => {
+        t.throws(fn, 'Chance: Invalid format provided. Please provide #d# where the first # is the number of dice to roll, the second # is the max of each die')
+    })
+})
+
+test('rpg() will take and obey a sum', t => {
+    _.times(1000, () => {
+        let rpg = chance.rpg('4d20', { sum: true })
+        t.true(_.isNumber(rpg))
+        t.true(rpg >= 4)
+        t.true(rpg <= 80)
+    })
+})
+
+// chance.tv()
+test('tv() works as expected', t => {
+    _.times(1000, () => {
+        let tv = chance.tv()
+        t.true(_.isString(tv))
+        t.is(tv.length, 4)
+        t.true(/^[KW][A-Z][A-Z][A-Z]/.test(tv))
+    })
+})

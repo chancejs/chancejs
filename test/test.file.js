@@ -1,174 +1,116 @@
-/// <reference path="../chance.js" />
-/// <reference path="../node_modules/underscore/underscore-min.js" />
+import test from 'ava'
+import Chance from '../chance.js'
+import _ from 'lodash'
 
-var expect = chai.expect;
+const chance = new Chance()
 
-describe("File", function () {
+const fileExtensions = {
+    "raster": [ "bmp", "gif", "gpl", "ico", "jpeg", "psd", "png", "psp", "raw",
+                "tiff" ],
+    "vector": [ "3dv", "amf", "awg", "ai", "cgm", "cdr", "cmx", "dxf", "e2d",
+                "egt", "eps", "fs", "odg", "svg", "xar" ],
+    "3d": [ "3dmf", "3dm", "3mf", "3ds", "an8", "aoi", "blend", "cal3d", "cob",
+            "ctm", "iob", "jas", "max", "mb", "mdx", "obj", "x", "x3d" ],
+    "document": [ "doc", "docx", "dot", "html", "xml", "odt", "odm", "ott", "csv",
+                  "rtf", "tex", "xhtml", "xps" ]
+}
 
-    var file,
-        chance = new Chance();
+// chance.file()
+test('file() returns random file length with random extension', t => {
+    _.times(1000, () => {
+        let file = chance.file()
+        t.true(_.isString(file))
+        t.is(file.split('.').length, 2)
+    })
+})
 
-    var fileExtension = {
-        "raster"    : ["bmp", "gif", "gpl", "ico", "jpeg", "psd", "png", "psp", "raw", "tiff"],
-        "vector"    : ["3dv", "amf", "awg", "ai", "cgm", "cdr", "cmx", "dxf", "e2d", "egt", "eps", "fs", "odg", "svg", "xar"],
-        "3d"        : ["3dmf", "3dm", "3mf", "3ds", "an8", "aoi", "blend", "cal3d", "cob", "ctm", "iob", "jas", "max", "mb", "mdx", "obj", "x", "x3d"],
-        "document"  : ["doc", "docx", "dot", "html", "xml", "odt", "odm", "ott", "csv", "rtf", "tex", "xhtml", "xps"]
-    };
+test('file() returns error if wrong fileType provided', t => {
+    _.times(1000, () => {
+        const fn = () => chance.file({ fileType: 'not_specified' })
+        t.throws(fn, 'Chance: Expect file type value to be \'raster\', \'vector\', \'3d\' or \'document\'')
+    })
+})
 
-    var arrayExtentionCollection = ["bmp", "3dv", "3dmf", "doc"];
+test('file() does not return error if legit fileType provided', t => {
+    _.times(1000, () => {
+        const fn = () => chance.file({ fileType: 'raster' })
+        t.notThrows(fn)
+    })
+})
 
-    var objectExtentionCollection = {
-        "one"   : ["extention_one_1", "extention_one_2", "extention_one_3"],
-        "two"   : ["extention_two_1", "extention_two_2", "extention_two_3" ],
-        "three" : ["extention_three_1", "extention_three_2", "extention_three_3"]
-    };
+test('file() returns filename with specific extension type', t => {
+    _.times(1000, () => {
+        let file = chance.file({ fileType: 'raster' })
+        t.true(_.isString(file))
+        let extension = file.split('.')[1]
+        t.true(fileExtensions['raster'].indexOf(extension) !== -1)
+    })
+})
 
+test('file() returns filename with specific extension', t => {
+    _.times(1000, () => {
+        let file = chance.file({ extension: 'doc' })
+        let extension = file.split('.')[1]
+        t.is(extension, 'doc')
+    })
+})
 
+test('file() can take a length and obey it', t => {
+    _.times(1000, () => {
+        let length = chance.d10()
+        let file = chance.file({ length: length })
+        let filename = file.split('.')[0]
+        t.is(filename.length, length)
+    })
+})
 
-    describe("file()", function() {
+test('file() can take a pool of extensions and obey them', t => {
+    _.times(1000, () => {
+        let extensions = [ 'bmp', '3dv', '3dmf', 'doc' ]
+        let file = chance.file({ extensions: extensions })
+        let extension = file.split('.')[1]
+        t.true(extensions.indexOf(extension) !== -1)
+    })
+})
 
-        it("return random file length with random extension", function () {
-            
-            _(1000).times(function () {
+test('file() can take pool of extensions by object collection and obey them', t => {
+    const objectExtensionCollection = {
+        "one": [ "extension_one_1", "extension_one_2", "extension_one_3" ],
+        "two": [ "extension_two_1", "extension_two_2", "extension_two_3" ],
+        "three": [ "extension_three_1", "extension_three_2", "extension_three_3" ]
+    }
 
-                file = chance.file();
-                expect(file).to.be.a('string');
-                expect(file.split('.').length).to.equal(2);
-            });
-        });
-
-        it("return error if wrong extension is provided", function () {
-
-            _(1000).times(function () {
-                expect(function() {
-                    chance.file({ fileType : 'not_specifaid'});
-                }).to.throw(Error);
-            });
-        });
-
-        it("does not return error if wrong extension is provided", function () {
-
-            _(1000).times(function () {
-                expect(function() {
-                    chance.file({ fileType : 'raster'});
-                }).to.not.throw(Error);
-            });
-        });
-
-        it("return filename with specific extension type", function () {
-
-            _(1000).times(function() {
-
-                var extentionTypeCollection = ['raster', 'vector', '3d', ''];
-                var firstExtentionType = extentionTypeCollection[0];
-
-                file = chance.file({fileType : firstExtentionType});
-                expect(file).to.be.a('string');
-                var fileExtention = file.split('.')[1];
-
-                expect(fileExtension[firstExtentionType]).to.contain(fileExtention);
-            });
-        });
-
-        it("returns filename with specific extension", function () {
-            _(1000).times(function () {
-
-                var specificExtention = 'doc';
-                var failTestExtention = 'xml';
-
-                file = chance.file({extention : specificExtention});
-                var fileExtention = file.split('.')[1];
-
-                expect(fileExtention).to.be.a('string');
-                expect(fileExtention).to.equal(specificExtention);
-                expect(fileExtention).to.not.equal(failTestExtention);
-            });
-        });
-
-        it("returns filename with specific length", function() {
-            
-            _(1000).times(function() {
-                
-                var expectedLength = 10;
-                var failTestLength = 7;
-
-                file = chance.file({length : expectedLength});
-                var fileName = file.split('.')[0];
-
-                expect(fileName.length).to.equal(expectedLength);
-                expect(fileName.length).to.not.equal(failTestLength);
-            });
-        });
-
-        it("returns filename with random extention provided by external array collection", function() {
-            
-            _(1000).times(function() {
-                
-                var arrayExtentionCollection = ["bmp", "3dv", "3dmf", "doc"];
-                file = chance.file({ extentions : arrayExtentionCollection});
-                var fileExtention = file.split('.')[1];
-
-                expect(arrayExtentionCollection).to.include(fileExtention);
-            });
-        });
-
-
-        it("returns filename with random extension provided by external object collection", function() {
-            
-            _(1000).times(function() {
-
-                file = chance.file({ extentions : objectExtentionCollection});
-                var fileExtention = file.split('.')[1];
-
-                var extentionCount = 0;
-                for(var index in objectExtentionCollection) {
-                    
-                    var collection = objectExtentionCollection[index];
-                    var length     = collection.length;
-                    var i = 0;
-
-                    for(i; i < length; i++) {
-                        if(collection[i] === fileExtention) {
-                            extentionCount++;    
-                        }
-                    }
+    _.times(1000, () => {
+        let file = chance.file({ extensions: objectExtensionCollection })
+        let extension = file.split('.')[1]
+        let extensionCount = 0
+        for (let key in objectExtensionCollection) {
+            let collection = objectExtensionCollection[key]
+            collection.map((ext) => {
+                if (ext === extension) {
+                    extensionCount++
                 }
+            })
+        }
+        t.is(extensionCount, 1)
+    })
+})
 
-                expect(fileExtention).to.be.a('string');
-                expect(extentionCount).to.be.equal(1);
-            });
-        });
+test('file() throws if bad extensions option provided', t => {
+    const fn = () => chance.file({ extensions: 10 })
+    t.throws(fn, 'Chance: Extensions must be an Array or Object')
+})
 
-        it("returns error if user provides wrong argument type to extentions property", function() {
-            
-            _(1000).times(function() {
-                
-                expect(function() {
-                    chance({ extentions : 10});    
-                }).to.throw(Error);
-            });  
-        });
+test('file() does not throw if good extensions option provided as array', t => {
+    _.times(1000, () => {
+        const fn = () => chance.file({ extensions: fileExtensions.document })
+        t.notThrows(fn)
+    })
+})
 
-        it("doesnot returns error if user provides correct array argument type to extentions property", function() {
-            
-            _(1000).times(function() {
-                
-                expect(function() {
-                    chance.file({ extentions : arrayExtentionCollection});
-                }).to.not.throw(Error);
-            });  
-        });        
-
-        it("doesnot returns error if user provides correct object argument type to extentions property", function() {
-            
-            _(1000).times(function() {
-                
-                expect(function() {
-                    chance.file({ extentions : objectExtentionCollection});
-                }).to.not.throw(Error);
-            });  
-        });                
-
-
-    });
-});
+test('file() does not throw if good extensions option provided as object', t => {
+    _.times(1000, () => {
+        const fn = () => chance.file({ extensions: fileExtensions })
+        t.notThrows(fn)
+    })
+})
