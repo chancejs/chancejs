@@ -148,9 +148,9 @@
 
     Chance.prototype.falsy = function (options) {
         // return a random falsy value
-        options = initOptions(options, {pool: [false, null, 0, NaN, '']})
+        options = initOptions(options, {pool: [false, null, 0, NaN, '', undefined]})
         var pool = options.pool,
-            index = this.integer({min: 0, max: pool.length}),
+            index = this.integer({min: 0, max: pool.length - 1}),
             value = pool[index];
 
         return value;
