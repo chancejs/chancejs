@@ -86,6 +86,11 @@ test('Chance() does not return repeatable results if no seed provided', async t 
     })
 })
 
+test('Chance() return generated seed if no seed provided', async t => {
+    let chance = new Chance()
+    t.not(chance.seed, undefined)
+})
+
 test('Chance() returns repeatable results if seed provided on the Chance object', t => {
     let seed = new Date().getTime()
     let chance1 = new Chance(seed)
