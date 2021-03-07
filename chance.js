@@ -74,6 +74,11 @@
 
     Chance.prototype.VERSION = "1.1.7";
 
+    function generateSeed() {
+        // kept random number same size as time used previously to ensure no unexpected results downstream
+        return Math.floor(Math.random() * Math.pow(10, 13));
+    }
+
     // Random helper functions
     function initOptions(options, defaults) {
         options = options || {};
@@ -7497,8 +7502,7 @@ options,
      */
     var MersenneTwister = function (seed) {
         if (seed === undefined) {
-            // kept random number same size as time used previously to ensure no unexpected results downstream
-            seed = Math.floor(Math.random()*Math.pow(10,13));
+            seed = generateSeed();
         }
         /* Period parameters */
         this.N = 624;
