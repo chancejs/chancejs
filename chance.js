@@ -1720,7 +1720,7 @@
 
     Chance.prototype.latitude = function (options) {
         // Constants - Formats
-        const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
+        var [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
 
         options = initOptions(
 options,
@@ -1729,7 +1729,7 @@ options,
             {fixed: 5, min: -90, max: 90, format: DD}
 );
 
-        const format = options.format.toLowerCase();
+        var format = options.format.toLowerCase();
 
         if (format === DDM || format === DMS) {
             testRange(options.min < 0 || options.min > 89, "Chance: Min specified is out of range. Should be between 0 - 89");
@@ -1756,7 +1756,7 @@ options,
 
     Chance.prototype.longitude = function (options) {
         // Constants - Formats
-        const [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
+        var [DDM, DMS, DD] = ['ddm', 'dms', 'dd'];
 
         options = initOptions(
 options,
@@ -1765,7 +1765,7 @@ options,
             {fixed: 5, min: -180, max: 180, format: DD}
 );
 
-        const format = options.format.toLowerCase();
+        var format = options.format.toLowerCase();
 
         if (format === DDM || format === DMS) {
             testRange(options.min < 0 || options.min > 179, "Chance: Min specified is out of range. Should be between 0 - 179");
