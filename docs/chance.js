@@ -482,13 +482,12 @@
             throw new RangeError("Chance: Cannot pickset() from an empty array");
         }
         if (count < 0) {
-            throw new RangeError("Chance: Count must be a positive number");
+            throw new RangeError("Chance: Count must be a non-negative number");
         }
         if (!count || count === 1) {
             return [ this.pickone(arr) ];
-        } else {
-            return this.shuffle(arr).slice(0, count);
-        }
+	}		
+	return this.shuffle(arr).slice(0, count);        
     };
 
     Chance.prototype.shuffle = function (arr) {
