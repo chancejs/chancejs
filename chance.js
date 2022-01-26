@@ -1010,7 +1010,7 @@
 
     Chance.prototype.mrz = function (options) {
         var checkDigit = function (input) {
-            var alpha = "<ABCDEFGHIJKLMNOPQRSTUVWXYXZ".split(''),
+            var alpha = "<ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(''),
                 multipliers = [ 7, 3, 1 ],
                 runningTotal = 0;
 
