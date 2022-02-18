@@ -5,7 +5,7 @@
 chance.timezone()
 ```
 
-Return a random timezone
+Return a random timezone.
 
 ```js
 chance.timezone();

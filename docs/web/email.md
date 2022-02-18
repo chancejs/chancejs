@@ -3,7 +3,7 @@
 ```js
 // usage
 chance.email()
-chance.email({domain: "example.com"})
+chance.email({ domain: "example.com" })
 ```
 
 Return a random email with a random domain.

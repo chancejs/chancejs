@@ -1,9 +1,9 @@
 # requirejs
 
-Load Chance with <a href="http://requirejs.org">RequireJS</a>
+Load Chance with <a href="http://requirejs.org">RequireJS</a>.
 
 ```js
-  require(['Chance'], function(Chance) {
+  require(['Chance'], function (Chance) {
     // Instantiate
     var chance = new Chance();
 

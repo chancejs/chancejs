@@ -18,6 +18,6 @@ Optionally specify raw to get the whole month object consisting of name,
 short_name, and numeric.
 
 ```js
-chance.month({raw: true});
-=> {name: 'October', short_name: 'Oct', numeric: '10'}
+chance.month({ raw: true });
+=> { name: 'October', short_name: 'Oct', numeric: '10' }
 ```

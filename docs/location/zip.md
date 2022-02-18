@@ -3,7 +3,7 @@
 ```js
 // usage
 chance.zip()
-chance.zip({plusfour: true})
+chance.zip({ plusfour: true })
 ```
 
 Generate a random (U.S.) zip code.
@@ -13,7 +13,7 @@ chance.zip();
 => '90210'
 ```
 
-Can optionally specify that it ought to return a [Zip+4][zip+4]:
+Can optionally specify that it ought to return a [Zip+4][zip+4].
 
 ```js
 chance.zip({plusfour: true});

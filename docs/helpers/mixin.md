@@ -25,13 +25,11 @@ For example, let's say I have a user object which consists of first, last,
 and email.
 
 ```js
-
 var user = {
-first: 'John',
-last: 'Smith',
-email: 'john@aol.com'
+  first: 'John',
+  last: 'Smith',
+  email: 'john@aol.com'
 };
-
 ```
 
 Let's say I want to be able to randomly generate these user objects.
@@ -48,19 +46,19 @@ For example, to create a `user` mixin:
 
 ```js
 chance.mixin({
-'user': function() {
-return {
-first: chance.first(),
-last: chance.last(),
-email: chance.email()
-};
-}
+  user: function() {
+    return {
+      first: chance.first(),
+      last: chance.last(),
+      email: chance.email()
+    };
+  }
 });
 
 // Then you can call your mixin
 chance.user();
 
-=> {first: 'Eli', last: 'Benson', email: 'gembibuj@dugesan.com'}
+=> { first: 'Eli', last: 'Benson', email: 'gembibuj@dugesan.com' }
 ```
 
 Mixins can even include other mixins!
@@ -68,18 +66,18 @@ Mixins can even include other mixins!
 For example, to "extend" the user object:
 ```js
 chance.mixin({
-'user': function () {
-return {
-first: chance.first(),
-last: chance.last(),
-email: chance.email()
-};
-},
-'social_user': function () {
-var user = chance.user();
-user.network = chance.pick(['facebook', 'twitter']);
-return user;
-}
+  user: function () {
+    return {
+      first: chance.first(),
+      last: chance.last(),
+      email: chance.email()
+    };
+  },
+  social_user: function () {
+    var user = chance.user();
+    user.network = chance.pick(['facebook', 'twitter']);
+    return user;
+  }
 });
 ```
 

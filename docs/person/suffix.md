@@ -6,7 +6,7 @@ chance.suffix()
 chance.suffix({ full: true })
 ```
 
-Generate a random name suffix
+Generate a random name suffix.
 
 ```js
 chance.suffix();

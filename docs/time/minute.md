@@ -5,7 +5,7 @@
 chance.minute()
 ```
 
-Generate a random minute
+Generate a random minute.
 
 ```js
 chance.minute();

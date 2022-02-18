@@ -5,7 +5,7 @@
 chance.city()
 ```
 
-Generate a random city name
+Generate a random city name.
 
 ```js
 chance.city();

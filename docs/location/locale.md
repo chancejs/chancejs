@@ -3,20 +3,20 @@
 ```js
 // usage
 chance.locale()
-chance.locale({region: true})
+chance.locale({ region: true })
 ```
 
-Generate a random ISO-639-1 language code
+Generate a random ISO-639-1 language code.
 
 ```js
 chance.locale();
 => 'ca'
 ```
 
-Generate a random IETF region code
+Generate a random IETF region code.
 
 ```js
-chance.locale({region: true});
+chance.locale({ region: true });
 => 'es-EA'
 ```
 

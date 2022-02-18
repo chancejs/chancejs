@@ -16,43 +16,42 @@ Generate a random name
   => 'Dafi Vatemi'
 ```
 
-Optionally include the middle name
+Optionally include the middle name.
 
 ```js
   chance.name({ middle: true });
   => 'Nelgatwu Powuku Heup'
 ```
 
-
-Optionally include the middle initial
+Optionally include the middle initial.
 
 ```js
   chance.name({ middle_initial: true });
   => 'Ezme I Iza'
 ```
 
-Optionally include the prefix
+Optionally include the prefix.
 
 ```js
   chance.name({ prefix: true });
   => 'Doctor Suosat Am'
 ```
 
-Optionally include the suffix
+Optionally include the suffix.
 
 ```js
   chance.name({ suffix: true });
   => 'Fanny Baker Esq.'
 ```
 
-Optionally specify a gender
+Optionally specify a gender.
 
 ```js
   chance.name({ gender: 'male' });
   => "Patrick Copeland"
 ```
 
-Optionally specify a nationality
+Optionally specify a nationality.
 
 ```js
   chance.name({ nationality: 'it' });
@@ -60,4 +59,3 @@ Optionally specify a nationality
 ```
 
 Note, currently support for nationality is limited to: `'en', 'it'`.
-

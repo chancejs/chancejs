@@ -5,7 +5,7 @@
 chance.areacode()
 ```
 
-Generate a random area code
+Generate a random area code.
 
 ```js
 chance.areacode()

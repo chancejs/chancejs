@@ -19,11 +19,11 @@ Optionally specify the comparator used to determine whether a generated item is 
 
 ```js
 chance.unique(chance.currency, 2, {
-comparator: function(arr, val) {
-return arr.reduce(function(acc, item) {
-return acc || (item.code === val.code);
-}, false);
-}
+  comparator: function (arr, val) {
+    return arr.reduce(function (acc, item) {
+      return acc || (item.code === val.code);
+    }, false);
+  }
 });
 => [{ code: "KYF", name: "Cayman Islands Dollar" }, { code: "CDF", name: "Congo/Kinshasa Franc" }]
 ```
@@ -33,7 +33,7 @@ You can also specify any arbitrary options in this third argument and they'll be
 For example, let's say you want to retrieve 10 unique integers between 0 and 100. This is easily achievable by specifying `chance.integer` as hte function, 10 as the number to retrieve, and a min/max in the options.
 
 ```js
-chance.unique(chance.integer, 10, {min: 0, max: 100});
+chance.unique(chance.integer, 10, { min: 0, max: 100 });
 => [78, 49, 7, 87, 59, 89, 84, 62, 60, 63]
 ```
 
@@ -43,5 +43,3 @@ Note, there could be cases where it is impossible to generate the unique number.
 chance.unique(chance.state, 55);
 => RangeError: Chance: num is likely too large for sample set
 ```
-
-

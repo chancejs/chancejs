@@ -25,9 +25,9 @@ naturals - just natural notes
 all - naturals, sharps and flats
 
 ```js
-chance.note({notes: 'flats' });
+chance.note({ notes: 'flats' });
 => 'A'
 
-chance.note({notes: 'sharps' });
+chance.note({ notes: 'sharps' });
 => 'F♯'
 ```

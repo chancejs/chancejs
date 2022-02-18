@@ -5,7 +5,7 @@
 chance.millisecond()
 ```
 
-Generate a random millisecond
+Generate a random millisecond.
 
 ```js
 chance.millisecond();
