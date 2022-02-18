@@ -3,10 +3,10 @@
 ```js
 // usage
 chance.euro()
-chance.euro({max: 250})
+chance.euro({ max: 250 })
 ```
 
-Return a random euro amount. Formatting depends on the current locale (samples are displayed with european formatting)
+Return a random euro amount. Formatting depends on the current locale (samples are displayed with European formatting).
 
 ```js
 chance.euro();
@@ -20,9 +20,9 @@ By default returns euro amount no larger than 10000. Optionally specify
 the max to make it larger (or smaller).
 
 ```js
-chance.euro({max: 20});
+chance.euro({ max: 20 });
 => "15,23€"
 
-chance.euro({max: 10000000})
+chance.euro({ max: 10000000 })
 => "5.051.205,49€"
 ```

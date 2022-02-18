@@ -3,7 +3,7 @@
 ```js
 // usage
 chance.rpg('#d#')
-chance.rpg('#d#', {sum: true})
+chance.rpg('#d#', { sum: true })
 ```
 
 Given an input looking like #d#, where the first # is the number of dice to

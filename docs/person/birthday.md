@@ -19,7 +19,7 @@ By default, returns an actual JavaScript [Date][Date] object.
 Optionally specify it be returned as a string.
 
 ```js
-chance.birthday({string: true});
+chance.birthday({ string: true });
 => '4/1/1968'
 ```
 
@@ -35,7 +35,7 @@ For more complex date formats, use the [Moment][Moment] library.
 Can also specify the type, same types as with [age](#age).
 
 ```js
-chance.birthday({type: 'child'});
+chance.birthday({ type: 'child' });
 => Sat Sep 08 2001 00:00:00 GMT-0400 (EDT)
 ```
 

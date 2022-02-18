@@ -3,8 +3,8 @@
 ```js
 // usage
 chance.normal()
-chance.normal({mean: 100})
-chance.normal({mean: 100, dev: 15})
+chance.normal({ mean: 100 })
+chance.normal({ mean: 100, dev: 15 })
 ```
 
 Return a normally-distributed random variate.

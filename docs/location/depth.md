@@ -7,7 +7,7 @@ chance.depth({ fixed: 2 })
 chance.depth({ min: -1000 })
 ```
 
-Generate a random depth, in meters. Depths are always negative
+Generate a random depth, in meters. Depths are always negative.
 
 ```js
 chance.depth()

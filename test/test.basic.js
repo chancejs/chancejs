@@ -198,12 +198,12 @@ test('floating() can take both a max and min and obey them both', t => {
 
 test('floating() will not take fixed + min that would be out of range', t => {
     const fn = () => chance.floating({ fixed: 13, min: -9007199254740992 })
-    t.throws(fn, "Chance: Min specified is out of range with fixed. Min should be, at least, -900.7199254740992")
+    t.throws(fn, "Chance: Min is out of range with fixed. Min should be, at least, -900.7199254740992")
 })
 
 test('floating() will not take fixed + max that would be out of range', t => {
     const fn = () => chance.floating({ fixed: 13, max: 9007199254740992 })
-    t.throws(fn, "Chance: Max specified is out of range with fixed. Max should be, at most, 900.7199254740992")
+    t.throws(fn, "Chance: Max is out of range with fixed. Max should be, at most, 900.7199254740992")
 })
 
 test('floating() obeys the fixed parameter, when present', t => {

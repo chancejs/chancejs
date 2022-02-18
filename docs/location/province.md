@@ -3,8 +3,8 @@
 ```js
 // usage
 chance.province()
-chance.province({full: true})
-chance.province({full: true})
+chance.province({ full: true })
+chance.province({ full: true })
 ```
 
 Return a random province.
@@ -14,19 +14,19 @@ chance.province();
 => 'ON'
 ```
 
-By default, returns only the 2 letter abbreviation for province.
+By default, returns only the 2 letter abbreviation for a Canadian province.
 
 Optionally specify that it ought to return a full province name.
 
 ```js
-chance.province({full: true});
+chance.province({ full: true });
 => 'Nova Scotia'
 ```
 
 Optionally specify the country from which it should return the province name.
 
 ```js
-chance.province({country: 'it', full: true});
+chance.province({ country: 'it', full: true });
 => 'Vicenza'
 ```
 

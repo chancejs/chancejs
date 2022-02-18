@@ -6,7 +6,7 @@ chance.last()
 chance.last({ nationality: 'en' })
 ```
 
-Generate a random last name
+Generate a random last name.
 
 ```js
 Chance.last();

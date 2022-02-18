@@ -4,7 +4,7 @@ Instead of providing a seed, which will be used to seed our [Mersenne Twister](h
 you can also specify an arbitrary function to generate random numbers which the
 rest of the library will utilize when generating everything else.
 
-A rather simple example, simply using Math.random() instead of our Mersenne Twister
+A rather simple example, simply using `Math.random()` instead of our Mersenne Twister
 
 ```js
 // Use Math.random() instead of our Mersenne Twister
@@ -12,7 +12,7 @@ var chance = new Chance(Math.random);
 
 chance.address()
 => '131 Asmun Pike'
-chance.address() 
+chance.address()
 => '261 Pawnaf Highway'
 ```
 

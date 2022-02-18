@@ -5,7 +5,7 @@
 chance.wp8_anid2()
 ```
 
-Return a random Windows Phone 8 ANID2
+Return a random Windows Phone 8 ANID2.
 
 ```js
 chance.wp8_anid2()

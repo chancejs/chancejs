@@ -3,10 +3,10 @@
 ```js
 // usage
 chance.weekday()
-chance.weekday({weekday_only: true})
+chance.weekday({ weekday_only: true })
 ```
 
-Return a weekday
+Return a weekday.
 
 ```js
 chance.weekday();

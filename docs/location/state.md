@@ -17,7 +17,7 @@ chance.state();
 => 'AK'
 ```
 
-By default, returns only the 2 letter abbreviation for state.
+By default, returns only the 2 letter abbreviation for a U.S. state.
 
 Optionally specify that it ought to return a full state name.
 

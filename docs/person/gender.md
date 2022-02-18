@@ -5,14 +5,14 @@
 chance.gender()
 ```
 
-Generate a random gender
+Generate a random gender.
 
 ```js
   Chance.gender();
   => 'Female'
 ```
 
-Extra genders can be provided using the `extraGenders` key in the optional options argument:
+Extra genders can be provided using the `extraGenders` key in the optional options argument.
 
 ```js
   Chance.gender({

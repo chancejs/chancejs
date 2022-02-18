@@ -5,7 +5,7 @@
 chance.second()
 ```
 
-Generate a random second
+Generate a random second.
 
 ```js
 chance.second();

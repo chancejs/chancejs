@@ -3,7 +3,7 @@
 ```js
 // usage
 chance.exp_month()
-chance.exp_month({future: true})
+chance.exp_month({ future: true })
 ```
 
 Generate a random credit card expiration month.
@@ -16,7 +16,7 @@ chance.exp_month();
 Optionally specify that it must be a later month than the current month.
 
 ```js
-chance.exp_month({future: true});
+chance.exp_month({ future: true });
 => '10'
 ```
 

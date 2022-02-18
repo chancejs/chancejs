@@ -5,7 +5,7 @@
 chance.bb_pin()
 ```
 
-Return a random BlackBerry Device PIN
+Return a random BlackBerry Device PIN.
 
 ```js
 chance.bb_pin()

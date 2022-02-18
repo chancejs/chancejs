@@ -3,9 +3,9 @@
 ```js
 // usage
 chance.color()
-chance.color({format: 'hex'})
-chance.color({grayscale: true})
-chance.color({casing: 'upper'})
+chance.color({ format: 'hex' })
+chance.color({ grayscale: true })
+chance.color({c asing: 'upper' })
 ```
 
 Return a random color.
@@ -20,29 +20,29 @@ Colors have four base types: `hex`, `shorthex`, `rgb`, `0x`
 These are the kinds usable in HTML or CSS. The type can optionally be specified
 
 ```js
-chance.color({format: 'hex'})
+chance.color({ format: 'hex' })
 => '#d67118'
 
-chance.color({format: 'shorthex'})
+chance.color({ format: 'shorthex' })
 => '#60f'
 
-chance.color({format: 'rgb'})
+chance.color({ format: 'rgb' })
 => 'rgb(110,52,164)'
 
-chance.color({format: '0x'})
+chance.color({ format: '0x' })
 => '0x67ae0b'
 ```
 
-Can optionally specify that only grayscale colors be generated
+Can optionally specify that only grayscale colors be generated.
 
 ```js
-chance.color({grayscale: true})
+chance.color({ grayscale: true })
 => '#e2e2e2'
 ```
 
-Optionally specify casing to get only uppercase letters in the color
+Optionally specify casing to get only uppercase letters in the color.
 
 ```js
-chance.color({casing: 'upper'})
+chance.color({ casing: 'upper' })
 => '#29CFA7'
 ```

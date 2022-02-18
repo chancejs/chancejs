@@ -15,7 +15,7 @@ chance.letter();
 
 By default it will return a random lowercase letter.
 
-<p class="pullquote">Note, wanted to call this option just <strong>case</strong> instead of <strong>casing</strong> but unfortunately that's a reserved word in JavaScript for use in a switch statement</p>
+<p class="pullquote">Note, wanted to call this option just <strong>case</strong> instead of <strong>casing</strong> but unfortunately that's a reserved word in JavaScript for use in a switch statement.</p>
 
 It's possible to specify upper case
 

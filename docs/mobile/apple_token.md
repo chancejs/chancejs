@@ -5,7 +5,7 @@
 chance.apple_token()
 ```
 
-Return a random Apple Push Token
+Return a random Apple Push Token.
 
 ```js
 chance.apple_token()

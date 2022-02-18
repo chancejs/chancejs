@@ -3,10 +3,10 @@
 ```js
 // usage
 chance.hour()
-chance.hour({twentyfour: true})
+chance.hour({ twentyfour: true })
 ```
 
-Generate a random hour
+Generate a random hour.
 
 ```js
 chance.hour();
@@ -15,10 +15,10 @@ chance.hour();
 
 By default, returns an hour from 1 to 12 for a standard [12-hour clock][12h].
 
-Can optionally specify a full twenty-four.
+Can optionally specify a full twenty-four hour.
 
 ```js
-chance.hour({twentyfour: true});
+chance.hour({ twentyfour: true });
 => 21
 ```
 

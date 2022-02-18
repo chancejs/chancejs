@@ -8,25 +8,21 @@ chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3, 4])
 
 Provide an array of items, and another array of items specifying the relative weights and **Chance** will select one of those items, obeying the specified weight.
 
-For example, the following code:
-
+For example, the following code
 ```js
 chance.weighted(['a', 'b'], [100, 1]);
 => 'a'
 ```
-
-Will generate `'a'` 100 times more often than `'b'` but still choose one or the other randomly.
+will generate `'a'` 100 times more often than `'b'` but still choose one or the other randomly.
 
 The weights are all relative, so if you have more than just two it will ensure that all items are generated relative to all of the weights.
 
-For example, the following code:
-
+For example, the following code
 ```js
 chance.weighted(['a', 'b', 'c', 'd'], [1, 2, 3, 4]);
 => 'c'
 ```
-
-Will generate a letter from the array but will pick `'b'` twice as often as it picks `'a'` and will pick `'c'` three times as often as it picks `'a'` and will pick `'d'` four times as often as it will pick `'a'` and will pick `'d'` two times as often as it will pick `'b'`.
+will generate a letter from the array but will pick `'b'` twice as often as it picks `'a'` and will pick `'c'` three times as often as it picks `'a'` and will pick `'d'` four times as often as it will pick `'a'` and will pick `'d'` two times as often as it will pick `'b'`.
 
 The weights can be whole numbers as shown above or fractions.
 

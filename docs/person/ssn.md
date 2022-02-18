@@ -7,21 +7,21 @@ chance.ssn({ ssnFour: true })
 chance.ssn({ dashes: false })
 ```
 
-Generate a random social security number.
+Generate a random U.S. social security number.
 
 ```js
 chance.ssn();
 => '411-90-0070'
 ```
 
-Optionally provide option of getting only the last four
+Optionally provide option of getting only the last four digits.
 
 ```js
 chance.ssn({ ssnFour: true });
 => '2938'
 ```
 
-Optionally specify dashes be removed
+Optionally specify dashes be removed.
 
 ```js
 chance.ssn({ dashes: false });

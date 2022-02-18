@@ -5,7 +5,7 @@
 chance.wp7_anid()
 ```
 
-Return a random Windows Phone 7 ANID
+Return a random Windows Phone 7 ANID.
 
 ```js
 chance.wp7_anid()

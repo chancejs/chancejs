@@ -16,14 +16,14 @@ chance.aadhar();
 => '8506 7820 9696'
 ```
 
-Optionally provide option of getting only the last four
+Optionally provide option of getting only the last four digits.
 
 ```js
 chance.aadhar({ onlyLastFour: true });
 => '1851'
 ```
 
-Optionally specify dashes be removed
+Optionally specify separators be removed.
 
 ```js
 chance.aadhar({ separatedByWhiteSpace: false });

@@ -6,7 +6,7 @@ chance.year()
 chance.year({min: 1900, max: 2100})
 ```
 
-Generate a random year
+Generate a random year.
 
 ```js
 chance.year();
@@ -26,6 +26,6 @@ parseInt(chance.year());
 Optionally specify min, max, or both to limit the range.
 
 ```js
-chance.year({min: 1900, max: 2100});
+chance.year({ min: 1900, max: 2100 });
 => '1983'
 ```

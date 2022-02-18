@@ -1,12 +1,12 @@
 # node
 
-It can also be used in [Node.js](http://nodejs.org)
+It can also be used in [Node.js](http://nodejs.org).
 
 ```bash
 npm install chance
 ```
 
-then in your app
+then in your app:
 
 ```js
 // Load Chance
@@ -20,7 +20,7 @@ var my_random_string = chance.string();
 ```
 
 As of version 0.5.5, the following is also offered as a convenience for getting
-an instance of Chance
+an instance of Chance.
 
 ```js
 // Load and instantiate Chance
