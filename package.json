@@ -1,10 +1,19 @@
 {
   "name": "chance",
-  "main": "./chance.js",
-  "version": "1.1.8",
+  "version": "2.0.0",
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "type": "module",
+  "files": [
+    "lib/"
+  ],
+  "engines": {
+    "yarn": ">=1",
+    "node": ">=14"
+  },
   "bugs": {
     "url": "https://github.com/chancejs/chancejs/issues"
   },
@@ -14,32 +23,22 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.19.1",
-    "babel-eslint": "^7.2.3",
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.2",
-    "dirty-chai": "^1.2.2",
-    "docpress": "0.7.1",
-    "eslint": "^6.3.0",
-    "git-update-ghpages": "1.3.0",
-    "gulp": "^4.0.0",
-    "gulp-ava": "^0.17.1",
-    "gulp-eslint": "^3.0.1",
-    "gulp-jshint": "^2.0.4",
-    "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^2.6.1",
-    "gulp-uglify": "^3.0.0",
-    "jshint-stylish": "^2.2.1",
-    "lodash": "^4.17.4",
-    "nyc": "^10.3.2",
-    "pump": "^1.0.2"
+    "@ava/typescript": "^3.0.1",
+    "@types/jest": "^27.4.1",
+    "ava": "^4.2.0",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
   },
   "scripts": {
     "coverage": "nyc npm test && nyc report --reporter=text-lcov --report-dir=./coverage > ./coverage/lcov.info",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
     "lint": "eslint --ignore-path .gitignore chance.js",
-    "test": "ava"
+    "test": "jest",
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "prepublish": "npm run tsc"
   },
   "keywords": [
     "chance",
@@ -52,7 +51,7 @@
     "dice"
   ],
   "jam": {
-    "main": "chance.js"
+    "main": "lib/cjs/index.js"
   },
   "github": "https://github.com/chancejs/chancejs",
   "maintainers": [
@@ -63,7 +62,7 @@
     }
   ],
   "spm": {
-    "main": "chance.js",
+    "main": "lib/cjs/index.js",
     "ignore": [
       "test"
     ]
