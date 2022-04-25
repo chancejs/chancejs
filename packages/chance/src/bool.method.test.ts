@@ -1,4 +1,4 @@
-import Chance from "src/Chance";
+import Chance from ".";
 
 describe("bool method", () => {
   let chance: Chance;

@@ -4,11 +4,9 @@
   "description": "Chance - Utility library to generate anything random",
   "homepage": "http://chancejs.com",
   "author": "Victor Quinn <mail@victorquinn.com>",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "type": "module",
-  "files": [
-    "lib/"
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
   "engines": {
     "yarn": ">=1",
@@ -22,24 +20,6 @@
     "url": "https://github.com/chancejs/chancejs.git"
   },
   "license": "MIT",
-  "devDependencies": {
-    "@ava/typescript": "^3.0.1",
-    "@types/jest": "^27.4.1",
-    "ava": "^4.2.0",
-    "jest": "^27.5.1",
-    "ts-jest": "^27.1.4",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.3"
-  },
-  "scripts": {
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov --report-dir=./coverage > ./coverage/lcov.info",
-    "docs": "docpress build",
-    "docs:publish": "git-update-ghpages -e",
-    "lint": "eslint --ignore-path .gitignore chance.js",
-    "test": "jest",
-    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "prepublish": "npm run tsc"
-  },
   "keywords": [
     "chance",
     "random",
@@ -50,9 +30,6 @@
     "address",
     "dice"
   ],
-  "jam": {
-    "main": "lib/cjs/index.js"
-  },
   "github": "https://github.com/chancejs/chancejs",
   "maintainers": [
     {
@@ -61,12 +38,6 @@
       "web": "https://www.victorquinn.com"
     }
   ],
-  "spm": {
-    "main": "lib/cjs/index.js",
-    "ignore": [
-      "test"
-    ]
-  },
   "docpress": {
     "scripts": [
       "chance.js",

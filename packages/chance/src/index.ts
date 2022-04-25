@@ -5,9 +5,9 @@
  * Chance may be freely distributed or modified under the MIT license.
  */
 
-import { MersenneTwister } from "./utils/MersenneTwister";
-import { BlueImpMD5 } from "./utils/BlueImpMD5";
-import { BooleanOptions, generateBool } from "./basic/bool";
+import { MersenneTwister } from "@chancejs/mersenne-twister/src";
+import { BlueImpMD5 } from "@chancejs/blue-imp-md5";
+import { BooleanOptions, generateBool } from "@chancejs/bool";
 
 /**
  * Borrowed from the @types/chance type definitions.
@@ -16,10 +16,6 @@ import { BooleanOptions, generateBool } from "./basic/bool";
 type Seed = number | string;
 
 export default class Chance {
-  /**
-   * The current version of this class.
-   */
-  public VERSION = "2.0.0" as const;
   /**
    * An instance of the MersenneTwister class.
    */

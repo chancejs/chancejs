@@ -1,4 +1,4 @@
-import { bool } from "./bool";
+import { bool } from ".";
 
 describe("bool", () => {
   it("returns a random boolean", () => {

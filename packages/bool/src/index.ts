@@ -1,4 +1,4 @@
-import { MersenneTwister } from "../utils/MersenneTwister";
+import { MersenneTwister } from "@chancejs/mersenne-twister";
 
 export interface BooleanOptions {
   /**

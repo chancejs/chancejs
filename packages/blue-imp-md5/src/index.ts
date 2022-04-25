@@ -3,11 +3,6 @@
  */
 export class BlueImpMD5 {
   /**
-   * The current version of this class.
-   */
-  public VERSION = "2.0.0" as const;
-
-  /**
    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
    * to work around bugs in some JS interpreters.
    *
