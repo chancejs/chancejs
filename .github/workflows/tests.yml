@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [14.x]
 
     steps:
       - uses: actions/checkout@v1
@@ -18,6 +18,6 @@ jobs:
       - name: yarn install and test
         run: |
           yarn
-          yarn run test
+          yarn workspaces run test
         env:
           CI: true

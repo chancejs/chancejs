@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "lint": "eslint",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "prepublish": "npm run tsc"
   },
