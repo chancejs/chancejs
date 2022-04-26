@@ -14,8 +14,8 @@ jobs:
       - name: install and coverage
         run: |
           yarn
-          yarn workspaces run tsc
-          yarn workspaces run coverage
+          yarn tsc
+          yarn coverage
         env:
           CI: true
 

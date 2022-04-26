@@ -10,6 +10,7 @@
     "lib"
   ],
   "scripts": {
+    "clean": "rm -rf ./node_modules ./lib ./coverage",
     "lint": "eslint",
     "test": "jest",
     "coverage": "yarn test --coverage",

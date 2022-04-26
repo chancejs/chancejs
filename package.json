@@ -6,7 +6,10 @@
   "author": "Victor Quinn <mail@victorquinn.com>",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/mersenne-twister",
+    "packages/blue-imp-md5",
+    "packages/bool",
+    "packages/chance"
   ],
   "engines": {
     "yarn": ">=1",
@@ -25,6 +28,11 @@
     "git-update-ghpages": "1.3.0"
   },
   "scripts": {
+    "clean": "yarn workspaces run clean",
+    "lint": "yarn workspaces run lint",
+    "tsc": "yarn workspaces run tsc",
+    "test": "yarn workspaces run test",
+    "coverage": "yarn workspaces run coverage",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e"
   },
