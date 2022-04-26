@@ -9,6 +9,7 @@
   "scripts": {
     "lint": "eslint",
     "test": "jest",
+    "coverage": "yarn test --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "prepublish": "npm run tsc"
   },
