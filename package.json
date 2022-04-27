@@ -25,14 +25,15 @@
   "license": "MIT",
   "devDependencies": {
     "docpress": "0.7.1",
-    "git-update-ghpages": "1.3.0"
+    "git-update-ghpages": "1.3.0",
+    "nyc": "^15.1.0"
   },
   "scripts": {
     "clean": "yarn workspaces run clean",
     "lint": "yarn workspaces run lint",
     "tsc": "yarn workspaces run tsc",
     "test": "yarn workspaces run test",
-    "coverage": "yarn workspaces run coverage",
+    "coverage": "./scripts/aggregate-coverage.sh",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e"
   },
