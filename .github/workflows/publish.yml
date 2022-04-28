@@ -19,7 +19,7 @@ jobs:
       - name: install and test
         run: |
           yarn
-          yarn run test
+          yarn test
 
   publish-npm:
     needs: build

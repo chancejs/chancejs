@@ -15,3 +15,6 @@ _docpress
 
 # Ignore package-lock.json because we are using Yarn
 package-lock.json
+
+# Ignore build artifacts from version control
+lib
