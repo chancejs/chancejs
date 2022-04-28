@@ -414,7 +414,7 @@
     Chance.prototype.string = function (options) {
         options = initOptions(options, { min: 5, max: 20 });
 
-        if (!options.length) {
+        if (options.length !== 0 && !options.length) {
             options.length = this.natural({ min: options.min, max: options.max })
         }
 
