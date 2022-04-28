@@ -1,8 +1,8 @@
 {
-  "name": "@chancejs/bool",
+  "name": "@chancejs/integer",
   "version": "1.0.0",
-  "description": "Generate a random boolean with Chance.js.",
-  "homepage": "https://chancejs.com/basics/bool.html",
+  "description": "Generate a random integer with Chance.js.",
+  "homepage": "https://chancejs.com/basics/integer.html",
   "author": "Victor Quinn <mail@victorquinn.com>",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",

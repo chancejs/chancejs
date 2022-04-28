@@ -1,8 +1,8 @@
 {
-  "name": "@chancejs/bool",
+  "name": "@chancejs/natural",
   "version": "1.0.0",
-  "description": "Generate a random boolean with Chance.js.",
-  "homepage": "https://chancejs.com/basics/bool.html",
+  "description": "Generate a random natural number with Chance.js.",
+  "homepage": "https://chancejs.com/basics/natural.html",
   "author": "Victor Quinn <mail@victorquinn.com>",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
@@ -31,6 +31,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@chancejs/generator": "1.0.0"
+    "@chancejs/generator": "1.0.0",
+    "@chancejs/integer": "1.0.0"
   }
 }

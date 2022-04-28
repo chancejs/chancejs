@@ -8,7 +8,10 @@
   "workspaces": [
     "packages/mersenne-twister",
     "packages/blue-imp-md5",
+    "packages/generator",
     "packages/bool",
+    "packages/integer",
+    "packages/natural",
     "packages/chance"
   ],
   "engines": {

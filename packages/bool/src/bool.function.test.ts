@@ -1,4 +1,5 @@
-import { bool } from ".";
+import { bool } from "./bool.function";
+import { BooleanLiklihoodRangeException } from "./exceptions";
 
 describe("bool", () => {
   it("returns a random boolean", () => {
@@ -46,10 +47,14 @@ describe("bool", () => {
   });
 
   it("throws an error if likelihood < 0", () => {
-    expect(() => bool({ likelihood: -23 })).toThrow(RangeError);
+    expect(() => bool({ likelihood: -23 })).toThrow(
+      BooleanLiklihoodRangeException
+    );
   });
 
   it("throws an error if likelihood > 100", () => {
-    expect(() => bool({ likelihood: 7933 })).toThrow(RangeError);
+    expect(() => bool({ likelihood: 7933 })).toThrow(
+      BooleanLiklihoodRangeException
+    );
   });
 });
