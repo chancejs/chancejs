@@ -5,39 +5,29 @@
  * Chance may be freely distributed or modified under the MIT license.
  */
 
-import { MersenneTwister } from "@chancejs/mersenne-twister/src";
-import { BlueImpMD5 } from "@chancejs/blue-imp-md5";
-import { BooleanOptions, generateBool } from "@chancejs/bool";
+import { BooleanGenerator, BooleanOptions } from "@chancejs/bool";
+import { ChanceOptions, IChance, Seed } from "./interfaces";
+import { RandomNumberGenerator } from "@chancejs/generator";
 
-/**
- * Borrowed from the @types/chance type definitions.
- * [Link](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/chance/index.d.ts)
- */
-type Seed = number | string;
+export class Chance implements IChance {
+  private randomNumberGenerator: RandomNumberGenerator;
+  private booleanGenerator: BooleanGenerator;
 
-export default class Chance {
-  /**
-   * An instance of the MersenneTwister class.
-   */
-  private mt: MersenneTwister;
-  /**
-   * An instance of the BlueImpMD5 class.
-   */
-  private bimd5: BlueImpMD5;
-
-  /**
-   * The class constructor accepts an abitrary number of seeds as arguments.
-   *
-   * @param seeds Some number (including zero) of generator seeds.
-   */
-  constructor(...seeds: Seed[]) {
-    this.bimd5 = new BlueImpMD5();
-    if (seeds.length) {
-      const seed = this._hashSeeds(seeds);
-      this.mt = new MersenneTwister(seed);
-    } else {
-      this.mt = new MersenneTwister();
+  constructor(options?: ChanceOptions) {
+    let seed: number | undefined = undefined;
+    // If seed provided is an array of seeds
+    if (typeof options?.seed === "object") {
+      seed = this._hashSeeds(options.seed);
+    } else if (options?.seed) {
+      seed = this._hashSeeds([options.seed]);
     }
+    const randomNumberGenerator = new RandomNumberGenerator({
+      seed,
+      generator: options?.generator,
+    });
+    this.randomNumberGenerator = randomNumberGenerator;
+    const generator = randomNumberGenerator.random.bind(this);
+    this.booleanGenerator = new BooleanGenerator({ seed, generator });
   }
 
   /**
@@ -64,15 +54,13 @@ export default class Chance {
     return seed;
   }
 
-  /**
-   * Return a random boolean, either true or false.
-   *
-   * @param {BooleanOptions} [options={ likelihood: 50 }] Alter the likelihood of
-   * receiving a true or false value back.
-   * @throws {RangeError} if
-   * @return {boolean} Either true or false.
-   */
-  public bool(options?: BooleanOptions): boolean {
-    return generateBool(this.mt.random.bind(this.mt), options);
+  random(): number {
+    return this.randomNumberGenerator.random();
+  }
+
+  bool(options?: BooleanOptions): boolean {
+    return this.booleanGenerator.bool(options);
   }
 }
+
+export default Chance;

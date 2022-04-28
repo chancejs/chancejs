@@ -31,8 +31,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@chancejs/blue-imp-md5": "1.0.0",
     "@chancejs/bool": "1.0.0",
-    "@chancejs/mersenne-twister": "1.0.0"
+    "@chancejs/generator": "1.0.0"
   }
 }
