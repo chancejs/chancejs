@@ -516,6 +516,10 @@ test('string() can take just a max and obey it', t => {
     })
 })
 
+test('string() returns an empty string with zero length', t => {
+    t.is(chance.string({length: 0}), '')
+})
+
 test('falsy() should return a falsy value', t => {
     _.times(1000, () => {
         const value = chance.falsy()
