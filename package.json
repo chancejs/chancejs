@@ -12,6 +12,7 @@
     "packages/bool",
     "packages/integer",
     "packages/natural",
+    "packages/character",
     "packages/chance"
   ],
   "engines": {
