@@ -41,6 +41,7 @@
     "coverage": "./scripts/aggregate-coverage.sh",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
+    "package:create": "plop --plopfile ./scripts/create-package/plopfile.js",
     "generator:create": "plop --plopfile ./scripts/create-generator/plopfile.js"
   },
   "keywords": [
