@@ -5,13 +5,19 @@
  * Chance may be freely distributed or modified under the MIT license.
  */
 
-import { BooleanGenerator, BooleanOptions } from "@chancejs/bool";
-import { ChanceOptions, IChance, Seed } from "./interfaces";
 import { RandomNumberGenerator } from "@chancejs/generator";
+import { BooleanGenerator, BooleanOptions } from "@chancejs/bool";
+import { IntegerGenerator, IntegerOptions } from "@chancejs/integer";
+import { NaturalGenerator, NaturalOptions } from "@chancejs/natural";
+import { CharacterGenerator, CharacterOptions } from "@chancejs/character";
+import { ChanceOptions, IChance, Seed } from "./interfaces";
 
 export class Chance implements IChance {
   private randomNumberGenerator: RandomNumberGenerator;
   private booleanGenerator: BooleanGenerator;
+  private integerGenerator: IntegerGenerator;
+  private naturalGenerator: NaturalGenerator;
+  private characterGenerator: CharacterGenerator;
 
   constructor(options?: ChanceOptions) {
     let seed: number | undefined = undefined;
@@ -21,13 +27,12 @@ export class Chance implements IChance {
     } else if (options?.seed) {
       seed = this._hashSeeds([options.seed]);
     }
-    const randomNumberGenerator = new RandomNumberGenerator({
-      seed,
-      generator: options?.generator,
-    });
-    this.randomNumberGenerator = randomNumberGenerator;
-    const generator = randomNumberGenerator.random.bind(this);
+    const generator = options?.generator;
+    this.randomNumberGenerator = new RandomNumberGenerator({ seed, generator });
     this.booleanGenerator = new BooleanGenerator({ seed, generator });
+    this.integerGenerator = new IntegerGenerator({ seed, generator });
+    this.naturalGenerator = new NaturalGenerator({ seed, generator });
+    this.characterGenerator = new CharacterGenerator({ seed, generator });
   }
 
   /**
@@ -60,6 +65,18 @@ export class Chance implements IChance {
 
   bool(options?: BooleanOptions): boolean {
     return this.booleanGenerator.bool(options);
+  }
+
+  integer(options?: IntegerOptions): number {
+    return this.integerGenerator.integer(options);
+  }
+
+  natural(options?: NaturalOptions): number {
+    return this.naturalGenerator.natural(options);
+  }
+
+  character(options?: CharacterOptions): string {
+    return this.characterGenerator.character(options);
   }
 }
 
