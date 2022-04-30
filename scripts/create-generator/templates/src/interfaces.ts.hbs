@@ -1,0 +1,19 @@
+export interface {{pascalCase name}}Options {}
+
+export interface {{pascalCase name}}GeneratorFunction {
+  /**
+   * Return a random {{type}}.
+   *
+   * @param {BooleanOptions} [options={}]
+   * @param {number} [seed] A numeric seed to pass to the pseudo-random number generator.
+   * @return { {{type}} }
+   * @example
+   * // returns {{type}}
+   * {{camelCase name}}()
+   */
+  (options?: {{pascalCase name}}Options, seed?: number): {{type}};
+}
+
+export interface I{{pascalCase name}}Generator {
+  {{camelCase name}}: {{pascalCase name}}GeneratorFunction;
+}

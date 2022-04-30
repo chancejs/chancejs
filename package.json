@@ -30,7 +30,8 @@
   "devDependencies": {
     "docpress": "0.7.1",
     "git-update-ghpages": "1.3.0",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "plop": "^3.1.0"
   },
   "scripts": {
     "clean": "yarn workspaces run clean",
@@ -39,7 +40,8 @@
     "test": "yarn workspaces run test",
     "coverage": "./scripts/aggregate-coverage.sh",
     "docs": "docpress build",
-    "docs:publish": "git-update-ghpages -e"
+    "docs:publish": "git-update-ghpages -e",
+    "generator:create": "plop --plopfile ./scripts/create-generator/plopfile.js"
   },
   "keywords": [
     "chance",
