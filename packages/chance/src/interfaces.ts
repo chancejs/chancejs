@@ -1,3 +1,4 @@
+// plop-interface-imports
 import { IBooleanGenerator } from "@chancejs/bool";
 import {
   IRandomNumberGenerator,
@@ -23,4 +24,6 @@ export interface ChanceOptions {
   generator?: RandomNumberGeneratorFunction;
 }
 
-export type IChance = IRandomNumberGenerator & IBooleanGenerator;
+export type IChance = IRandomNumberGenerator &
+  // plop-interface-union
+  IBooleanGenerator;

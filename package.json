@@ -12,6 +12,7 @@
     "packages/bool",
     "packages/integer",
     "packages/natural",
+    "packages/falsy",
     "packages/character",
     "packages/chance"
   ],
@@ -42,7 +43,8 @@
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
     "package:create": "plop --plopfile ./scripts/create-package/plopfile.js",
-    "generator:create": "plop --plopfile ./scripts/create-generator/plopfile.js"
+    "generator:create": "plop --plopfile ./scripts/create-generator/plopfile.js",
+    "method:add": "plop --plopfile ./scripts/add-method/plopfile.js"
   },
   "keywords": [
     "chance",

@@ -5,19 +5,23 @@
  * Chance may be freely distributed or modified under the MIT license.
  */
 
+// plop-imports
+import { ChanceOptions, IChance, Seed } from "./interfaces";
 import { RandomNumberGenerator } from "@chancejs/generator";
 import { BooleanGenerator, BooleanOptions } from "@chancejs/bool";
 import { IntegerGenerator, IntegerOptions } from "@chancejs/integer";
 import { NaturalGenerator, NaturalOptions } from "@chancejs/natural";
 import { CharacterGenerator, CharacterOptions } from "@chancejs/character";
-import { ChanceOptions, IChance, Seed } from "./interfaces";
+import { FalsyGenerator, FalsyOptions, Falsy } from "@chancejs/falsy";
 
 export class Chance implements IChance {
+  // plop-class-fields
   private randomNumberGenerator: RandomNumberGenerator;
   private booleanGenerator: BooleanGenerator;
   private integerGenerator: IntegerGenerator;
   private naturalGenerator: NaturalGenerator;
   private characterGenerator: CharacterGenerator;
+  private falsyGenerator: FalsyGenerator;
 
   constructor(options?: ChanceOptions) {
     let seed: number | undefined = undefined;
@@ -28,11 +32,13 @@ export class Chance implements IChance {
       seed = this._hashSeeds([options.seed]);
     }
     const generator = options?.generator;
+    // plop-constructor
     this.randomNumberGenerator = new RandomNumberGenerator({ seed, generator });
     this.booleanGenerator = new BooleanGenerator({ seed, generator });
     this.integerGenerator = new IntegerGenerator({ seed, generator });
     this.naturalGenerator = new NaturalGenerator({ seed, generator });
     this.characterGenerator = new CharacterGenerator({ seed, generator });
+    this.falsyGenerator = new FalsyGenerator({ seed, generator });
   }
 
   /**
@@ -59,6 +65,7 @@ export class Chance implements IChance {
     return seed;
   }
 
+  // plop-class-methods
   random(): number {
     return this.randomNumberGenerator.random();
   }
@@ -77,6 +84,10 @@ export class Chance implements IChance {
 
   character(options?: CharacterOptions): string {
     return this.characterGenerator.character(options);
+  }
+
+  falsy(options?: FalsyOptions): Falsy {
+    return this.falsyGenerator.falsy(options);
   }
 }
 
