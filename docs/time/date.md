@@ -15,7 +15,7 @@ chance.date();
 => Sat Apr 09 2072 00:00:00 GMT-0400 (EDT)
 ```
 
-By default, returns an actual [Date][Date] object
+By default, returns an actual [Date] object
 
 Can optionally specify that a date be returned as a string
 
@@ -40,7 +40,7 @@ chance.date({string: true, american: false});
 ```
 
 If you want richer control over date format, strongly suggest using the
-[Moment][Moment] library. Our formatting is very minimalist, and it's out of our
+[Moment] library. Our formatting is very minimalist, and it's out of our
 core competency to offer dates in a myriad of formats.
 
 Can optionally specify defaults for any of day, month, or year.
@@ -48,6 +48,9 @@ Can optionally specify defaults for any of day, month, or year.
 ```js
 chance.date({year: 1983});
 => Wed May 04 1983 00:00:00 GMT-0400 (EDT)
+
+chance.date({year: {min: 2020, max: 2022}});
+=> Fri Oct 07 2022 05:45:17 GMT-0300 (BST)
 
 chance.date({month: 0});
 => Tue Jan 18 2084 00:00:00 GMT-0500 (EST)
@@ -59,7 +62,7 @@ chance.date({day: 21});
 A random date is generated, but the default you specify is kept constant.
 
 Note, month is 0-indexed. This is a carryover from the core JavaScript
-[Date][Date] object which we use internally to generate the date. We
+[Date] object which we use internally to generate the date. We
 considered
 
 [Date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
