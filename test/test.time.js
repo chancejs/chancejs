@@ -88,6 +88,41 @@ test('date() can return a string date', t => {
     })
 })
 
+test('date() returns a date between a given min year and max year', t => {
+    _.times(1000, () => {
+        const years = {min: 2020, max: 2022};
+        let date = chance.date({ year: years  })
+        t.true(date.getFullYear() >= years.min && date.getFullYear() <= years.max)
+    })
+})
+
+test('date() returns a date with given min year', t => {
+    _.times(1000, () => {
+        const years = {min: 2001};
+        let date = chance.date({ year: years  })
+        t.true(_.isDate(date))
+        t.true(date.getFullYear() >= years.min)
+    })
+})
+
+test('date() returns a date with given max year', t => {
+    _.times(1000, () => {
+        const years = {max: 2030};
+        let date = chance.date({ year: years  })
+        t.true(_.isDate(date))
+        t.true(date.getFullYear() <= years.max)
+    })
+})
+
+test('date() returns a date with given empty object for year', t => {
+    _.times(1000, () => {
+        const years = {};
+        let date = chance.date({ year: years  })
+        t.true(_.isDate(date))
+        t.truthy(date.getTime())
+    })
+})
+
 // chance.hammertime()
 test('hammertime() works', t => {
     _.times(1000, () => {
