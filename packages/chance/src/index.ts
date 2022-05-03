@@ -6,6 +6,7 @@
  */
 
 // plop-imports
+import { FloatingGenerator, FloatingOptions } from "@chancejs/floating";
 import { ChanceOptions, IChance, Seed } from "./interfaces";
 import { RandomNumberGenerator } from "@chancejs/generator";
 import { BooleanGenerator, BooleanOptions } from "@chancejs/bool";
@@ -16,6 +17,7 @@ import { FalsyGenerator, FalsyOptions, Falsy } from "@chancejs/falsy";
 
 export class Chance implements IChance {
   // plop-class-fields
+  private floatingGenerator: FloatingGenerator;
   private randomNumberGenerator: RandomNumberGenerator;
   private booleanGenerator: BooleanGenerator;
   private integerGenerator: IntegerGenerator;
@@ -33,6 +35,7 @@ export class Chance implements IChance {
     }
     const generator = options?.generator;
     // plop-constructor
+    this.floatingGenerator = new FloatingGenerator({ seed, generator });
     this.randomNumberGenerator = new RandomNumberGenerator({ seed, generator });
     this.booleanGenerator = new BooleanGenerator({ seed, generator });
     this.integerGenerator = new IntegerGenerator({ seed, generator });
@@ -66,6 +69,10 @@ export class Chance implements IChance {
   }
 
   // plop-class-methods
+  floating(options?: FloatingOptions): number {
+    return this.floatingGenerator.floating(options);
+  }
+
   random(): number {
     return this.randomNumberGenerator.random();
   }

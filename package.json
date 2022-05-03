@@ -11,6 +11,7 @@
     "packages/generator",
     "packages/bool",
     "packages/integer",
+    "packages/floating",
     "packages/natural",
     "packages/falsy",
     "packages/character",

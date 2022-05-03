@@ -1,7 +1,7 @@
 {
-  "name": "@chancejs/chance",
+  "name": "@chancejs/floating",
   "version": "1.0.0",
-  "description": "Chance - Utility library to generate anything random.",
+  "description": "Generate a random floating with Chance.js.",
   "homepage": "https://chancejs.com/",
   "author": "Victor Quinn <mail@victorquinn.com>",
   "main": "./lib/cjs/index.js",
@@ -33,12 +33,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@chancejs/bool": "1.0.0",
-    "@chancejs/character": "1.0.0",
-    "@chancejs/falsy": "1.0.0",
-    "@chancejs/floating": "1.0.0",
     "@chancejs/generator": "1.0.0",
-    "@chancejs/integer": "1.0.0",
-    "@chancejs/natural": "1.0.0"
+    "@chancejs/integer": "1.0.0"
   }
 }

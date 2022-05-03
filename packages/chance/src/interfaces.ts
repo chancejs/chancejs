@@ -1,4 +1,5 @@
 // plop-interface-imports
+import { IFloatingGenerator } from "@chancejs/floating";
 import { IBooleanGenerator } from "@chancejs/bool";
 import {
   IRandomNumberGenerator,
@@ -26,4 +27,5 @@ export interface ChanceOptions {
 
 export type IChance = IRandomNumberGenerator &
   // plop-interface-union
+  IFloatingGenerator &
   IBooleanGenerator;
