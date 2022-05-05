@@ -9,7 +9,7 @@ interface NumberValidationOptions {
   /**
    * @description
    */
-  range?: Range;
+  range?: Partial<Range>;
 }
 
 export const validateNumber = (
