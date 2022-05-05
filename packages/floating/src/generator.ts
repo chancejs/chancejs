@@ -1,10 +1,6 @@
 import { Generator, GeneratorOptions } from "@chancejs/generator";
 import { IntegerGenerator } from "@chancejs/integer";
-import {
-  FloatingInvalidMaxException,
-  FloatingInvalidMinException,
-  FloatingOptionsException,
-} from "./exceptions";
+import { FloatingOptionsException } from "./exceptions";
 import { FloatingOptions, IFloatingGenerator } from "./interfaces";
 
 export class FloatingGenerator extends Generator implements IFloatingGenerator {
@@ -30,11 +26,15 @@ export class FloatingGenerator extends Generator implements IFloatingGenerator {
     const min = -max;
 
     if (options?.min && options?.fixed && options?.min < min) {
-      throw new FloatingInvalidMinException(min);
+      throw new FloatingOptionsException(
+        `Chance: Min specified is out of range with fixed. Min should be, at least, ${min}.`
+      );
     }
 
     if (options?.max && options?.fixed && options?.max > max) {
-      throw new FloatingInvalidMaxException(max);
+      throw new FloatingOptionsException(
+        `Chance: Max specified is out of range with fixed. Max should be, at most, ${max}.`
+      );
     }
 
     // Todo - Make this work!

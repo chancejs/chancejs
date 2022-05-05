@@ -1,4 +1,4 @@
-import { wait } from "./utils";
+import { wait, times } from "./utils";
 import { RandomNumberGenerator } from "./random-number.generator";
 
 describe("RandomNumberGenerator", () => {
@@ -21,25 +21,24 @@ describe("RandomNumberGenerator", () => {
     const prng1 = new RandomNumberGenerator();
     await wait();
     const prng2 = new RandomNumberGenerator();
-    for (let i = 0; i < 1000; i++) {
+    times(1000, () => {
       expect(prng1.random()).not.toEqual(prng2.random());
-    }
+    });
   });
 
   it("returns repeatable results if seed provided", () => {
     const seed = new Date().getTime();
     const prng1 = new RandomNumberGenerator({ seed });
     const prng2 = new RandomNumberGenerator({ seed });
-
-    for (let i = 0; i < 1000; i++) {
+    times(1000, () => {
       expect(prng1.random()).toEqual(prng2.random());
-    }
+    });
   });
 
   it("will take an arbitrary function for the seed and use it", () => {
     let prng = new RandomNumberGenerator({ generator: () => 123 });
-    for (let i = 0; i < 1000; i++) {
+    times(1000, () => {
       expect(prng.random()).toEqual(123);
-    }
+    });
   });
 });

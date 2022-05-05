@@ -7,8 +7,8 @@ const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER;
  * Validates the range.
  * @throws {RangeError} If the min is out of range, the max is out of range,
  * or the min is greater than the max.
- * @param {Range} range The range to validate.
- * @param {Range} bounds Upper and lower inclusive bounds for the range.
+ * @param {Partial<Range>} range The range to validate.
+ * @param {Partial<Range>} bounds Upper and lower inclusive bounds for the range.
  * @returns {Range} The validated range.
  * @example
  * // returns { min: -5, max: 5 }
@@ -17,7 +17,10 @@ const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER;
  * // throws RangeError since range is out of bounds
  * // validateRange({ min: -5, max: 5 }, { min: 0, max: 5 })
  */
-export const validateRange = (range?: Range, bounds?: Range): Range => {
+export const validateRange = (
+  range?: Partial<Range>,
+  bounds?: Partial<Range>
+): Range => {
   // Initialize min, max, lowerBound, and upperBound from options
   const lowerBound: number =
     typeof bounds?.min === "undefined" ? MIN_SAFE_INTEGER : bounds.min;

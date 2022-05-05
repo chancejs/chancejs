@@ -15,7 +15,8 @@
     "packages/natural",
     "packages/falsy",
     "packages/character",
-    "packages/chance"
+    "packages/chance",
+    "packages/hex"
   ],
   "engines": {
     "yarn": ">=1",

@@ -1,7 +1,6 @@
 import {
   NaturalExcludeException,
   NaturalNumeralsRangeException,
-  NaturalRangeException,
 } from "@chancejs/natural";
 import Chance from "..";
 
@@ -16,7 +15,7 @@ describe("natural method", () => {
   });
 
   it("throws an error if min < 0", () => {
-    expect(() => chance.natural({ min: -23 })).toThrow(NaturalRangeException);
+    expect(() => chance.natural({ min: -23 })).toThrow(RangeError);
   });
 
   it("is always positive or zero", () => {
@@ -94,9 +93,7 @@ describe("natural method", () => {
   });
 
   it("throws an error if min > max", () => {
-    expect(() => chance.natural({ min: 1000, max: 500 })).toThrow(
-      NaturalRangeException
-    );
+    expect(() => chance.natural({ min: 1000, max: 500 })).toThrow(RangeError);
   });
 
   it("throws an error if numerals is less than 1", () => {

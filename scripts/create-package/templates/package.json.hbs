@@ -6,6 +6,9 @@
   "author": "Victor Quinn <mail@victorquinn.com>",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "clean": "rm -rf ./node_modules ./lib ./coverage",
     "lint": "eslint",
@@ -13,7 +16,7 @@
     "coverage": "yarn test --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "prepublish": "yarn build",
-    "build": "yarn tsc",
+    "build": "yarn clean && yarn tsc",
     "prepare": "yarn build"
   },
   "repository": {

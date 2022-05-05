@@ -1,3 +1,4 @@
+import { times } from "@chancejs/generator";
 import { FloatingOptionsException } from "./exceptions";
 import { floating } from "./function";
 
@@ -7,11 +8,11 @@ describe("floating function", () => {
   });
 
   it("can take both a max and min and obey them both", () => {
-    for (let i = 0; i < 1000; i++) {
+    times(1000, () => {
       let n = floating({ min: 90, max: 100 });
       expect(n).toBeGreaterThan(89);
       expect(n).toBeLessThan(101);
-    }
+    });
   });
 
   it("will not take fixed + min that would be out of range", () => {
@@ -27,19 +28,19 @@ describe("floating function", () => {
   });
 
   it("obeys the fixed parameter, when present", () => {
-    for (let i = 0; i < 1000; i++) {
+    times(1000, () => {
       let n = floating({ fixed: 4 });
       let decimals = n.toString().split(".")[1] || "";
       expect(decimals.length).toBeLessThan(5);
-    }
+    });
   });
 
   it("can take fixed and obey it", () => {
-    for (let i = 0; i < 1000; i++) {
+    times(1000, () => {
       let n = floating({ fixed: 3 });
       let parsed = parseFloat(n.toFixed(3));
       expect(n).toBe(parsed);
-    }
+    });
   });
 
   it("will not take both fixed and precision", () => {

@@ -1,8 +1,8 @@
 {
-  "name": "@chancejs/natural",
+  "name": "@chancejs/hex",
   "version": "1.0.0",
-  "description": "Generate a random natural number with Chance.js.",
-  "homepage": "https://chancejs.com/basics/natural.html",
+  "description": "Generate a random hex with Chance.js.",
+  "homepage": "https://chancejs.com/",
   "author": "Victor Quinn <mail@victorquinn.com>",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
@@ -37,6 +37,6 @@
   },
   "dependencies": {
     "@chancejs/generator": "1.0.0",
-    "@chancejs/integer": "1.0.0"
+    "@chancejs/natural": "1.0.0"
   }
 }

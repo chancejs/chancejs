@@ -1,4 +1,3 @@
-import { IntegerRangeException } from "@chancejs/integer";
 import Chance from "..";
 
 describe("integer method", () => {
@@ -56,8 +55,6 @@ describe("integer method", () => {
   });
 
   it("throws an error when min > max", () => {
-    expect(() => chance.integer({ min: 1000, max: 500 })).toThrow(
-      IntegerRangeException
-    );
+    expect(() => chance.integer({ min: 1000, max: 500 })).toThrow(RangeError);
   });
 });
