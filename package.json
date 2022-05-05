@@ -15,8 +15,8 @@
     "packages/natural",
     "packages/falsy",
     "packages/character",
-    "packages/chance",
-    "packages/hex"
+    "packages/hex",
+    "packages/chance"
   ],
   "engines": {
     "yarn": ">=1",
@@ -40,6 +40,7 @@
     "clean": "yarn workspaces run clean",
     "lint": "yarn workspaces run lint",
     "tsc": "yarn workspaces run tsc",
+    "build": "yarn clean && yarn tsc",
     "test": "yarn workspaces run test",
     "coverage": "./scripts/aggregate-coverage.sh",
     "docs": "docpress build",
