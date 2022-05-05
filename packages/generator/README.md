@@ -30,4 +30,4 @@ Then you can generate the boilerplate code to add the generator as a method:
 $ yarn method:add
 ```
 
-Now you can use your generator as method on the `Chance` class.
+Now you can use your generator as a method on the `Chance` class.
