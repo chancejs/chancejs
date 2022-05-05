@@ -15,6 +15,7 @@
     "packages/natural",
     "packages/falsy",
     "packages/character",
+    "packages/letter",
     "packages/hex",
     "packages/chance"
   ],

@@ -1,6 +1,6 @@
 import { Generator, GeneratorOptions } from "@chancejs/generator";
 import { NaturalGenerator } from "@chancejs/natural";
-import { CHARS_LOWER, CHARS_UPPER, NUMBERS, SYMBOLS } from "./constants";
+import { LETTERS, LETTERS_UPPERCASE, NUMBERS, SYMBOLS } from "./constants";
 import { CharacterOptions, ICharacterGenerator } from "./interfaces";
 
 export class CharacterGenerator
@@ -17,11 +17,11 @@ export class CharacterGenerator
     let letters: string, pool: string;
 
     if (options?.casing === "lower") {
-      letters = CHARS_LOWER;
+      letters = LETTERS;
     } else if (options?.casing === "upper") {
-      letters = CHARS_UPPER;
+      letters = LETTERS_UPPERCASE;
     } else {
-      letters = CHARS_LOWER + CHARS_UPPER;
+      letters = LETTERS + LETTERS_UPPERCASE;
     }
 
     if (options?.pool) {
