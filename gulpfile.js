@@ -3,7 +3,7 @@ const ava = require('gulp-ava')
 const eslint = require('gulp-eslint')
 const rename = require('gulp-rename')
 const sourcemaps = require('gulp-sourcemaps')
-const uglify = require('gulp-uglify')
+const uglify = require('gulp-uglify-es').default
 const pump = require('pump')
 
 gulp.task('lint', () => gulp.src(['**/*.js', '!docs/**', '!node_modules/**', '!dist/**', '!test/helpers/**/*.js'])
