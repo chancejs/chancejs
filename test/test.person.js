@@ -140,8 +140,8 @@ test('birthday() can have an age range specified for a senior', t => {
     })
 })
 
-// chance.cnpj()
-test('cnpj() returns a random cnpj', t => {
+// chance.HIDN()
+test('HIDN() returns a random HIDN', t => {
     _.times(1000, () => {
         let hidn = chance.HIDN()
         t.true(_.isString(hidn))
