@@ -224,6 +224,28 @@ test('shuffle() does not destroy original array', t => {
     })
 })
 
+// chance.symmetricShuffle()
+test('symmetricShuffle() returns arrays that have been shuffled the same way', t => {
+    let arr = ['a', 'b', 'c', 'd', 'e']
+    _.times(1000, () => {
+        let shuffled = chance.symmetricShuffle(_.clone(arr),_.clone(arr),_.clone(arr))
+        t.deepEqual(shuffled[0], shuffled[1])
+        t.deepEqual(shuffled[0], shuffled[2])
+    })
+})
+
+test('symmetricShuffle() does not destroy original arrays', t => {
+    let arr1 = ['a1', 'b1', 'c1', 'd1', 'e1']
+    let arr2 = ['a2', 'b2', 'c2', 'd2', 'e2']
+    _.times(1000, () => {
+        let cloned1 = _.clone(arr1)
+        let cloned2 = _.clone(arr2)
+        chance.symmetricShuffle(arr1,arr2)
+        t.deepEqual(cloned1, arr1)
+        t.deepEqual(cloned2, arr2)
+    })
+})
+
 // chance.unique()
 test('unique() gives a unique array of the selected function', t => {
     _.times(500, () => {
