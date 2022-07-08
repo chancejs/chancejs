@@ -6,6 +6,8 @@
  */
 
 // plop-imports
+import { StringGenerator, StringOptions } from "@chancejs/string";
+import { Picker } from "@chancejs/pick";
 import { LetterGenerator, LetterOptions } from "@chancejs/letter";
 import { HexGenerator, HexOptions } from "@chancejs/hex";
 import { FloatingGenerator, FloatingOptions } from "@chancejs/floating";
@@ -19,6 +21,8 @@ import { FalsyGenerator, FalsyOptions, Falsy } from "@chancejs/falsy";
 
 export class Chance implements IChance {
   // plop-class-fields
+  private stringGenerator: StringGenerator;
+  private picker: Picker;
   private letterGenerator: LetterGenerator;
   private hexGenerator: HexGenerator;
   private floatingGenerator: FloatingGenerator;
@@ -39,6 +43,8 @@ export class Chance implements IChance {
     }
     const generator = options?.generator;
     // plop-constructor
+    this.stringGenerator = new StringGenerator({ seed, generator });
+    this.picker = new Picker({ seed, generator });
     this.letterGenerator = new LetterGenerator({ seed, generator });
     this.hexGenerator = new HexGenerator({ seed, generator });
     this.floatingGenerator = new FloatingGenerator({ seed, generator });
@@ -75,6 +81,18 @@ export class Chance implements IChance {
   }
 
   // plop-class-methods
+  string(options?: StringOptions): string {
+    return this.stringGenerator.string(options);
+  }
+
+  public pickOne<T>(array: T[]): T {
+    return this.picker.pickOne(array);
+  }
+
+  public pickSet<T>(array: T[], count: number): T[] {
+    return this.picker.pickSet(array, count);
+  }
+
   letter(options?: LetterOptions): string {
     return this.letterGenerator.letter(options);
   }

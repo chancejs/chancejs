@@ -1,4 +1,6 @@
 // plop-interface-imports
+import { IStringGenerator } from "@chancejs/string";
+import { IPicker } from "@chancejs/pick";
 import { ILetterGenerator } from "@chancejs/letter";
 import { IHexGenerator } from "@chancejs/hex";
 import { IFloatingGenerator } from "@chancejs/floating";
@@ -33,6 +35,8 @@ export interface ChanceOptions {
 
 export type IChance = IRandomNumberGenerator &
   // plop-interface-union
+  IStringGenerator &
+  IPicker &
   ILetterGenerator &
   IHexGenerator &
   IFloatingGenerator &

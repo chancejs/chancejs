@@ -1,0 +1,13 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "globals": {
+    "ts-jest": {
+      "tsconfig": "tsconfig.test.json"
+    }
+  },
+  "modulePathIgnorePatterns": ["lib/*"],
+  "moduleNameMapper": {
+    "src/(.*)": "<rootDir>/src/$1"
+  }
+}
