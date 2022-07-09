@@ -140,6 +140,14 @@ test('birthday() can have an age range specified for a senior', t => {
     })
 })
 
+test('birthday() can return a date as a string without milliseconds', t => {
+    _.times(1000, () => {
+        let birthday = chance.birthday({ hasMilliseconds: false })
+        t.true(_.isString(birthday))
+        t.false(_.isDate(birthday))
+    })
+})
+
 // chance.cnpj()
 test('cnpj() returns a random cnpj', t => {
     _.times(1000, () => {
