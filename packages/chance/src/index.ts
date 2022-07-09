@@ -6,6 +6,7 @@
  */
 
 // plop-imports
+import { PrimeGenerator, PrimeOptions } from "@chancejs/prime";
 import { StringGenerator, StringOptions } from "@chancejs/string";
 import { Picker } from "@chancejs/pick";
 import { LetterGenerator, LetterOptions } from "@chancejs/letter";
@@ -21,6 +22,7 @@ import { FalsyGenerator, FalsyOptions, Falsy } from "@chancejs/falsy";
 
 export class Chance implements IChance {
   // plop-class-fields
+  private primeGenerator: PrimeGenerator;
   private stringGenerator: StringGenerator;
   private picker: Picker;
   private letterGenerator: LetterGenerator;
@@ -43,6 +45,7 @@ export class Chance implements IChance {
     }
     const generator = options?.generator;
     // plop-constructor
+    this.primeGenerator = new PrimeGenerator({ seed, generator });
     this.stringGenerator = new StringGenerator({ seed, generator });
     this.picker = new Picker({ seed, generator });
     this.letterGenerator = new LetterGenerator({ seed, generator });
@@ -81,6 +84,10 @@ export class Chance implements IChance {
   }
 
   // plop-class-methods
+  prime(options?: PrimeOptions): number {
+    return this.primeGenerator.prime(options);
+  }
+
   string(options?: StringOptions): string {
     return this.stringGenerator.string(options);
   }

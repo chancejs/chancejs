@@ -19,6 +19,7 @@
     "packages/hex",
     "packages/pick",
     "packages/string",
+    "packages/prime",
     "packages/chance"
   ],
   "engines": {
