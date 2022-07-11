@@ -142,9 +142,10 @@ test('birthday() can have an age range specified for a senior', t => {
 
 test('birthday() can return a date as a string without milliseconds', t => {
     _.times(1000, () => {
-        let birthday = chance.birthday({ hasMilliseconds: false })
+        let birthday = chance.birthday({ roundSeconds: true })
         t.true(_.isString(birthday))
         t.false(_.isDate(birthday))
+        t.true(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])T([01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)$/m.test(birthday))
     })
 })
 

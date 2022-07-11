@@ -932,15 +932,14 @@
             });
         }
 
-        if (options.hasMilliseconds === false) {
-            console.log(this.formatDateNoMilliseconds(this.date(options)))
-            return 'ASd'
+        if (options.roundSeconds === true) {
+            return this.formatDateRoundSeconds(this.date(options));
         } 
 
         return this.date(options);
     };
 
-    Chance.prototype.formatDateNoMilliseconds = function (options) {
+    Chance.prototype.formatDateRoundSeconds = function (options) {
         const year = options.getFullYear();
         const month = this.padTo2Digits(options.getMonth() + 1);
         const day = this.padTo2Digits(options.getDate());
