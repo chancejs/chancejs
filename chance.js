@@ -932,8 +932,26 @@
             });
         }
 
+        if (options.roundSeconds === true) {
+            return this.formatDateRoundSeconds(this.date(options));
+        } 
+
         return this.date(options);
     };
+
+    Chance.prototype.formatDateRoundSeconds = function (options) {
+        const year = options.getFullYear();
+        const month = this.padTo2Digits(options.getMonth() + 1);
+        const day = this.padTo2Digits(options.getDate());
+        const hour = this.padTo2Digits(options.getHours());
+        const minute = this.padTo2Digits(options.getMinutes());
+        const second = this.padTo2Digits(options.getSeconds());
+        return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+    }
+
+    Chance.prototype.padTo2Digits = function (options) {
+        return options > 9 ? `${options}` : `0${options}`;
+    }
 
     // CPF; ID to identify taxpayers in Brazil
     Chance.prototype.cpf = function (options) {
