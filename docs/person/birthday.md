@@ -31,10 +31,10 @@ chance.birthday({string: true, american: false});
 => '28/6/1993'
 ```
 
-If you want a response with no milliseconds you can specify this parameter as a flag, it is useful if you want to save this date as a string on a database:
+If you want a response with seconds rounded, without milliseconds you can specify this parameter as a flag, it is useful if you want to save this date as a string on a database:
 
 ```js
-chance.birthday({hasMilliseconds: false});
+chance.birthday({roundSeconds: true});
 => '1963-01-04T07:33:47'
 ```
 
