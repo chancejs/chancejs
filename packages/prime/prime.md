@@ -1,0 +1,1 @@
+../../docs/basics/prime.md
