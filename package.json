@@ -20,6 +20,7 @@
     "packages/pick",
     "packages/string",
     "packages/prime",
+    "packages/template",
     "packages/chance"
   ],
   "engines": {
