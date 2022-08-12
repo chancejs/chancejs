@@ -16,5 +16,14 @@ _docpress
 # Ignore package-lock.json because we are using Yarn
 package-lock.json
 
+# Yarn Berry .gitignore suggestion from https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # Ignore build artifacts from version control
 lib

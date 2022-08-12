@@ -6,22 +6,7 @@
   "author": "Victor Quinn <mail@victorquinn.com>",
   "private": true,
   "workspaces": [
-    "packages/mersenne-twister",
-    "packages/blue-imp-md5",
-    "packages/generator",
-    "packages/bool",
-    "packages/integer",
-    "packages/floating",
-    "packages/natural",
-    "packages/falsy",
-    "packages/character",
-    "packages/letter",
-    "packages/hex",
-    "packages/pick",
-    "packages/string",
-    "packages/prime",
-    "packages/template",
-    "packages/chance"
+    "packages/**"
   ],
   "engines": {
     "yarn": ">=1",
@@ -42,11 +27,6 @@
     "plop": "^3.1.0"
   },
   "scripts": {
-    "clean": "yarn workspaces run clean",
-    "lint": "yarn workspaces run lint",
-    "tsc": "yarn workspaces run tsc",
-    "build": "yarn clean && yarn tsc",
-    "test": "yarn workspaces run test",
     "coverage": "./scripts/aggregate-coverage.sh",
     "docs": "docpress build",
     "docs:publish": "git-update-ghpages -e",
@@ -82,5 +62,6 @@
     "css": [
       "docs/chance.css"
     ]
-  }
+  },
+  "packageManager": "yarn@3.2.2"
 }
