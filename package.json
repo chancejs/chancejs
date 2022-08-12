@@ -9,8 +9,8 @@
     "packages/**"
   ],
   "engines": {
-    "yarn": ">=1",
-    "node": ">=14"
+    "yarn": ">=3",
+    "node": ">=18"
   },
   "bugs": {
     "url": "https://github.com/chancejs/chancejs/issues"
