@@ -914,7 +914,8 @@
 
     Chance.prototype.birthday = function (options) {
         var age = this.age(options);
-        var currentYear = new Date().getFullYear();
+        var now = new Date()
+        var currentYear = now.getFullYear();
 
         if (options && options.type) {
             var min = new Date();
@@ -926,6 +927,22 @@
                 min: min,
                 max: max
             });
+        } if (options && (options.minAge || options.maxAge)) {
+            testRange(options.minAge > options.maxAge, "Chance: minAge cannot be greater than maxAge.");
+
+            var minAge = typeof options.minAge !== "undefined" ? options.minAge : 1;
+            var maxAge = typeof options.maxAge !== "undefined" ? options.maxAge : 100;
+
+            var minDate = new Date(now.getFullYear() - maxAge - 1, now.getMonth(), now.getDate());
+            var maxDate = new Date(now.getFullYear() - minAge, now.getMonth(), now.getDate());
+
+            maxDate.setDate(maxDate.getDate() +1);
+            maxDate.setMilliseconds(maxDate.getMilliseconds() -1);
+
+            options = initOptions(options, {
+                min: minDate,
+                max: maxDate
+          });
         } else {
             options = initOptions(options, {
                 year: currentYear - age
