@@ -933,8 +933,8 @@
             var minAge = typeof options.minAge !== "undefined" ? options.minAge : 1;
             var maxAge = typeof options.maxAge !== "undefined" ? options.maxAge : 100;
 
-            var minDate = new Date(now.getFullYear() - maxAge - 1, now.getMonth(), now.getDate());
-            var maxDate = new Date(now.getFullYear() - minAge, now.getMonth(), now.getDate());
+            var minDate = new Date(currentYear - maxAge - 1, now.getMonth(), now.getDate());
+            var maxDate = new Date(currentYear - minAge, now.getMonth(), now.getDate());
 
             maxDate.setDate(maxDate.getDate() +1);
             maxDate.setMilliseconds(maxDate.getMilliseconds() -1);
