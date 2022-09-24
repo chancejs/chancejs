@@ -927,14 +927,17 @@
                 min: min,
                 max: max
             });
-        } else if (options && (options.minAge || options.maxAge)) {
-            testRange(options.minAge > options.maxAge, "Chance: minAge cannot be greater than maxAge.");
+        } else if (options && ((options.minAge !== undefined) || (options.maxAge != undefined))) {
+            testRange(options.minAge < 0, "Chance: MinAge cannot be less than zero.");
+            testRange(options.minAge > options.maxAge, "Chance: MinAge cannot be greater than MaxAge.");
 
-            var minAge = typeof options.minAge !== "undefined" ? options.minAge : 1;
-            var maxAge = typeof options.maxAge !== "undefined" ? options.maxAge : 100;
+            var minAge = options.minAge !== undefined ? options.minAge : 0;
+            var maxAge = options.maxAge !== undefined ? options.maxAge : 100;
 
             var minDate = new Date(currentYear - maxAge - 1, now.getMonth(), now.getDate());
             var maxDate = new Date(currentYear - minAge, now.getMonth(), now.getDate());
+
+            minDate.setDate(minDate.getDate() +1);
 
             maxDate.setDate(maxDate.getDate() +1);
             maxDate.setMilliseconds(maxDate.getMilliseconds() -1);
@@ -948,6 +951,8 @@
                 year: currentYear - age
             });
         }
+
+        // console.debug(options)
 
         return this.date(options);
     };
