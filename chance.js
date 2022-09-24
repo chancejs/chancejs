@@ -927,7 +927,7 @@
                 min: min,
                 max: max
             });
-        } if (options && (options.minAge || options.maxAge)) {
+        } else if (options && (options.minAge || options.maxAge)) {
             testRange(options.minAge > options.maxAge, "Chance: minAge cannot be greater than maxAge.");
 
             var minAge = typeof options.minAge !== "undefined" ? options.minAge : 1;
