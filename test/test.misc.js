@@ -296,3 +296,40 @@ test('tv() works as expected', t => {
         t.true(/^[KW][A-Z][A-Z][A-Z]/.test(tv))
     })
 })
+
+
+// chance.license_plate()
+test('license_plate() returns a random Brazilian valid license plate by default', t => {
+    _.times(1000, () => {
+        let plate = chance.license_plate()
+        t.true(_.isString(plate))
+        t.true(/^\S{3}\d\S\d{2}$/m.test(plate))
+        t.is(plate.length, 7)
+    })
+})
+
+test('license_plate() returns a random valid license plate that match the pattern', t => {
+    _.times(1000, () => {
+        let plate = chance.license_plate({pattern: "LLL NNNN-LNL"})
+        t.true(_.isString(plate))
+        t.true(/^\S{3}\s\d{4}-\S\d\S$/m.test(plate))
+        t.is(plate.length, 12)
+    })
+})
+
+test('license_plate() throws errors where it should', t => {
+    const errorFns = [
+        () => chance.license_plate({pattern: 3}),
+        () => chance.license_plate({pattern: [1,2,3]}),
+        () => chance.license_plate({pattern: 1.2}),
+        () => chance.license_plate({pattern: {}}),
+        () => chance.license_plate({pattern: null}),
+    ]
+    errorFns.map((fn) => {
+        t.throws(fn, 'Chance: Pattern must be a string')
+    })
+})
+
+test('license_plate() throws errors if includes any character regardless case but "N", "L", spaces or hyphens', t => {
+    t.throws(() => chance.license_plate({pattern: "A"}), "Chance: Pattern accepts only 'N' for numbers, 'L' for letters. Case does not matter. Spaces or hyphens will be kept.")
+})
