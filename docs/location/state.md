@@ -8,6 +8,7 @@ chance.state({ territories: true })
 chance.state({ armed_forces: true })
 chance.state({ us_states_and_dc: false })
 chance.state({ country: 'us' })
+chance.state({ country: 'br' })
 ```
 
 Return a random state.
