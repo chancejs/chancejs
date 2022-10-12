@@ -51,7 +51,7 @@ chance.birthday({ year: chance.year({ min: 1450, max: 1500 }) });
 => Fri Nov 26 1469 09:17:13 GMT-0500 (EST)
 ```
 
-Can specify maxAge and/or minAge. This will return a date which yields to an age beteween the given range. Attention on limits: the full day of birthdays are considered to be part of the allowed range (from the first milisecond of the minimun date to the last second of the maximun date).
+Can specify maxAge and/or minAge. This will return a date which yields to an age between the given range. Attention on limits: the full day of birthdays are considered to be part of the allowed range (from the first millisecond of the minimum date to the last second of the maximum date).
 
 ```js
 chance.birthday({minAge: 18, maxAge: 21});

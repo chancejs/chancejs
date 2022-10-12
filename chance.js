@@ -952,8 +952,6 @@
             });
         }
 
-        // console.debug(options)
-
         return this.date(options);
     };
 
