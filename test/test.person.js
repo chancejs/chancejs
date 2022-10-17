@@ -16,7 +16,19 @@ const SENIOR_AGE_MAX = 100
 const AGE_MIN = 0
 const AGE_MAX = 100
 
-const currentYear = new Date().getFullYear()
+const now = Object.freeze(new Date())
+const currentYear = now.getFullYear()
+
+// helper functions
+const ymd = dt => ({y: dt.getFullYear(), m: dt.getMonth(), d: dt.getDate()})
+const today = ymd(now)
+const age = dt => {
+    // - uses the format returned by ymd, instead of Date -- improves speed between 30% and 60%
+    // - uses `today` as a closure -- considers current date constant, each time the test suit runs
+    const dob = ymd(dt)
+    const completed = (today.m > dob.m || (today.m === dob.m && today.d >= dob.d))
+    return (today.y - dob.y) - (completed ? 0 : 1)
+}
 
 // chance.age()
 test('age() returns a random age within expected bounds', t => {
@@ -138,6 +150,45 @@ test('birthday() can have an age range specified for a senior', t => {
         t.true(birthday.getTime() >= min)
         t.true(birthday.getTime() <= max)
     })
+})
+
+test('birthday() can have an age range specified by minAge only', t => {
+    for(let minAge=0; minAge < 100; minAge++)
+        _.times(10, () => {
+            let birthday = chance.birthday({ minAge })
+            const calculated = age(birthday)
+            t.true(calculated >= minAge, JSON.stringify({birthday, calculated}))
+        })
+})
+
+test('birthday() can have an age range specified by maxAge only', t => {
+    for(let maxAge=0; maxAge < 100; maxAge++)
+        _.times(10, () => {
+            let birthday = chance.birthday({ maxAge })
+            const calculated = age(birthday)
+            t.true(calculated <= maxAge, JSON.stringify({birthday, calculated}))
+        })
+})
+
+test('birthday() can have an age range specified by minAge and maxAge', t => {
+    for(let minAge=0; minAge < 100; minAge++)
+    for(let maxAge=minAge; maxAge < 100; maxAge++)
+        _.times(10, () => {
+            let birthday = chance.birthday({ minAge, maxAge })
+            const calculated = age(birthday)
+            t.true(calculated >= minAge, JSON.stringify({birthday, calculated}))
+            t.true(calculated <= maxAge, JSON.stringify({birthday, calculated}))
+        })
+})
+
+test('birthday() throws an error if minAge < 0', t => {
+    const fn = () => chance.birthday({ minAge: -1 })
+    t.throws(fn, 'Chance: MinAge cannot be less than zero.')
+})
+
+test('birthday() throws an error if minAge > maxAge', t => {
+    const fn = () => chance.birthday({ minAge: 30, maxAge: 10 })
+    t.throws(fn, 'Chance: MinAge cannot be greater than MaxAge.')
 })
 
 // chance.cnpj()
