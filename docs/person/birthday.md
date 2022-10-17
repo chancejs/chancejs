@@ -32,14 +32,14 @@ chance.birthday({string: true, american: false});
 
 For more complex date formats, use the [Moment][Moment] library.
 
-Can also specify the type, same types as with [age](#age).
+Can specify the type, same types as with [age](#age).
 
 ```js
 chance.birthday({type: 'child'});
 => Sat Sep 08 2001 00:00:00 GMT-0400 (EDT)
 ```
 
-You can also compose with `chance.year` for interesting combinations. For example, let's say we want to get the birthdays of some renaissance artists (born between 1450 and 1500). We can generate a year and then get a birthday from that year:
+You can compose with `chance.year` for interesting combinations. For example, let's say we want to get the birthdays of some renaissance artists (born between 1450 and 1500). We can generate a year and then get a birthday from that year:
 
 ```js
 var year = chance.year({ min: 1450, max: 1500 });
@@ -50,6 +50,14 @@ chance.birthday({ year: year });
 chance.birthday({ year: chance.year({ min: 1450, max: 1500 }) });
 => Fri Nov 26 1469 09:17:13 GMT-0500 (EST)
 ```
+
+Can specify maxAge and/or minAge. This will return a date which yields to an age between the given range. Attention on limits: the full day of birthdays are considered to be part of the allowed range (from the first millisecond of the minimum date to the last second of the maximum date).
+
+```js
+chance.birthday({minAge: 18, maxAge: 21});
+=> Thu Apr 18 2002 13:48:34 GMT-0400 (EDT)
+```
+
 
 [Date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 [Moment]: http://momentjs.com
