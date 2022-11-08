@@ -15,6 +15,16 @@ test("fileWithContent() returns a random filename but extention of .gif", (t) =>
   });
 });
 
+test("fileWithContent() returns a file with a distinct name", (t) => {
+  _.times(1, () => {
+    const file = chance.fileWithContent({
+      fileSize: 2048,
+      fileName: "coolFileName",
+    });
+    t.is(file.fileName.split(".")[0], "coolFileName");
+  });
+});
+
 test("fileWithContent() returns a file of distinct size", (t) => {
   _.times(1, () => {
     const file = chance.fileWithContent({ fileSize: 2048 });
