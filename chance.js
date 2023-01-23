@@ -927,7 +927,7 @@
                 min: min,
                 max: max
             });
-        } else if (options && ((options.minAge !== undefined) || (options.maxAge != undefined))) {
+        } else if (options && ((options.minAge !== undefined) || (options.maxAge !== undefined))) {
             testRange(options.minAge < 0, "Chance: MinAge cannot be less than zero.");
             testRange(options.minAge > options.maxAge, "Chance: MinAge cannot be greater than MaxAge.");
 
@@ -1271,6 +1271,13 @@
         var nationality = this.pick(this.nationalities());
         return nationality.name;
     };
+
+     // Generate random zodiac sign
+     Chance.prototype.zodiac = function () {
+        const zodiacSymbols = ["Ram","Bull","Twins","Crab","Lion","Virgin","Balance","Scorpion","Archer","Goat","Water-Bearer","Fish"];
+        return zodiacSymbols[Math.floor(Math.random() * zodiacSymbols.length)];
+    };
+
 
     // -- End Person --
 
