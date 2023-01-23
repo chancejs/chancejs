@@ -496,3 +496,12 @@ test('mrz() should return a valid random passport number when not given any inpu
     t.is(mrz.length, 88)
     t.true(/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/.test(mrz.substr(44)))
 })
+
+test('zodiac() return a random zodiac symbol', t => {
+    _.times(1000, () => {
+        const zodiacSymbols = ["Ram","Bull","Twins","Crab","Lion","Virgin","Balance","Scorpion","Archer","Goat","Water-Bearer","Fish"];
+        let symbol = chance.zodiac()
+        t.true(_.isString(symbol))
+        t.true(zodiacSymbols.includes(symbol))
+    })
+})
