@@ -1274,7 +1274,7 @@
 
      // Generate random zodiac sign
      Chance.prototype.zodiac = function () {
-        const zodiacSymbols = ["Ram","Bull","Twins","Crab","Lion","Virgin","Balance","Scorpion","Archer","Goat","Water-Bearer","Fish"];
+        const zodiacSymbols = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
         return zodiacSymbols[Math.floor(Math.random() * zodiacSymbols.length)];
     };
 

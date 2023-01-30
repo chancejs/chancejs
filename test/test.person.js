@@ -499,7 +499,7 @@ test('mrz() should return a valid random passport number when not given any inpu
 
 test('zodiac() return a random zodiac symbol', t => {
     _.times(1000, () => {
-        const zodiacSymbols = ["Ram","Bull","Twins","Crab","Lion","Virgin","Balance","Scorpion","Archer","Goat","Water-Bearer","Fish"];
+        const zodiacSymbols = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
         let symbol = chance.zodiac()
         t.true(_.isString(symbol))
         t.true(zodiacSymbols.includes(symbol))
