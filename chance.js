@@ -561,7 +561,7 @@
 
     Chance.prototype.mixin = function (obj) {
         for (var func_name in obj) {
-            Chance.prototype[func_name] = obj[func_name];
+            this[func_name] = obj[func_name];
         }
         return this;
     };
