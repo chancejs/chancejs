@@ -33,7 +33,7 @@ chance.phone({ country: 'fr' });
 
 Note, at current we only have support for `'us'`, `'uk'`, `'fr'` or `'it'` for countries.
 
-For `uk` and `fr`, optionally specify a mobile phone.
+For `uk`, `fr` and `it`, optionally specify a mobile phone.
 
 ```js
 chance.phone({ country: 'uk', mobile: true });
