@@ -8,5 +8,5 @@ Generate a random zodiac signs.
 
 ```js
 chance.zodiac();
-=> 'Bull'
+=> 'Aries'
 ```
