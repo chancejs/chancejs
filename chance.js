@@ -2819,6 +2819,31 @@ options,
         return (fileName + '.' + fileExtension);
     };
 
+    /**
+     * Generates file data of random bytes using the chance.file method for the file name
+     *
+     * @param {object}
+     * fileName: String
+     * fileExtention: String
+     * fileSize: Number      <- in bytes
+     * @returns {object} fileName: String, fileData: Buffer
+     */
+    Chance.prototype.fileWithContent = function (options){
+            var fileOptions = options || {};
+            var fileName = 'fileName' in fileOptions ? fileOptions.fileName : this.file().split(".")[0];
+            fileName += "." + ('fileExtension' in fileOptions ? fileOptions.fileExtension : this.file().split(".")[1]);
+
+
+            if (typeof fileOptions.fileSize !== "number") {
+                throw new Error('File size must be an integer')
+            }
+            var file = {
+              fileData: this.buffer({length: fileOptions.fileSize}),
+              fileName: fileName,
+            };
+        return file;
+   }
+
     var data = {
 
         firstNames: {
