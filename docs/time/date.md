@@ -59,8 +59,7 @@ chance.date({day: 21});
 A random date is generated, but the default you specify is kept constant.
 
 Note, month is 0-indexed. This is a carryover from the core JavaScript
-[Date][Date] object which we use internally to generate the date. We
-considered
+[Date][Date] object which we use internally to generate the date.
 
 [Date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 [FB]: https://developers.facebook.com/docs/reference/api/user/
