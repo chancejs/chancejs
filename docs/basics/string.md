@@ -9,6 +9,7 @@ chance.string({ max: 50 })
 chance.string({ min: 5, max: 20 })
 chance.string({ pool: 'abcde' })
 chance.string({ alpha: true })
+chance.string({ numeric: true })
 chance.string({ casing: 'lower' })
 chance.string({ symbols: true })
 ```
