@@ -78,7 +78,7 @@
       "docs/chance.css"
     ]
   },
-  "dependencies": {
+  "devDependencies": {
     "gulp-uglify-es": "^3.0.0"
   }
 }
