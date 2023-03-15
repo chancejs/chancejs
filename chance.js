@@ -1724,6 +1724,9 @@
     Chance.prototype.country = function (options) {
         options = initOptions(options);
         var country = this.pick(this.countries());
+        if (options.alpha3 && country.alpha3 === undefined) {
+          return this.country(options);
+        }
         return options.raw ? country : options.full ? country.name : options.alpha3 ? country.alpha3 : country.abbreviation;
     };
 
