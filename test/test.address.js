@@ -90,7 +90,7 @@ test('coordinates() looks right', t => {
 test('coordinates() returns coordinates in DD format as default', t => {
     _.times(1000, () => {
         const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
-
+        
         let coordinates = chance.coordinates()
         let [ latitude, longitude ] = coordinates.split(',')
 
