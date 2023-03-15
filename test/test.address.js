@@ -104,7 +104,7 @@ test('coordinates() returns coordinates in DD format as default', t => {
 test('coordinates() will obey DD format', t => {
     _.times(1000, () => {
         const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
-
+        
         let coordinates = chance.coordinates({format: 'dd'})
         let [ latitude, longitude ] = coordinates.split(',')
 
@@ -119,7 +119,7 @@ test('coordinates() will obey DDM format', t => {
     _.times(1000, () => {
         const CHARS_TO_CONTAIN = ['°']
         const CHARS_NOT_TO_CONTAIN = ['’', '”']
-
+        
         let coordinates = chance.coordinates({format: 'ddm'})
         let [ latitude, longitude ] = coordinates.split(',')
 
@@ -135,7 +135,7 @@ test('coordinates() will obey DDM format', t => {
 test('coordinates() will obey DMS format', t => {
     _.times(1000, () => {
         const CHARS_TO_CONTAIN = ['°', '’', '”']
-
+        
         let coordinates = chance.coordinates({format: 'dms'})
         let [ latitude, longitude ] = coordinates.split(',')
 
@@ -278,7 +278,7 @@ test('latitude() will accept a max and obey it', t => {
 test('latitude() returns latitude in DD format as default', t => {
     _.times(1000, () => {
         const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
-
+        
         let latitude = chance.latitude()
 
         t.is(typeof latitude, 'number')
@@ -289,7 +289,7 @@ test('latitude() returns latitude in DD format as default', t => {
 test('latitude() will obey DD format', t => {
     _.times(1000, () => {
         const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
-
+        
         let latitude = chance.latitude({format: 'dd'})
 
         t.is(typeof latitude, 'number')
@@ -301,7 +301,7 @@ test('latitude() will obey DDM format', t => {
     _.times(1000, () => {
         const CHARS_TO_CONTAIN = ['°']
         const CHARS_NOT_TO_CONTAIN = ['’', '”']
-
+        
         let latitude = chance.latitude({format: 'ddm'})
 
         t.true(_.isString(latitude))
@@ -355,7 +355,7 @@ test('longitude() will accept a max and obey it', t => {
 test('longitude() returns longitude in DD format as default', t => {
     _.times(1000, () => {
         const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
-
+        
         let longitude = chance.longitude()
 
         t.is(typeof longitude, 'number')
@@ -366,7 +366,7 @@ test('longitude() returns longitude in DD format as default', t => {
 test('longitude() will obey DD format', t => {
     _.times(1000, () => {
         const CHARS_NOT_TO_CONTAIN = ['°', '’', '”']
-
+        
         let longitude = chance.longitude({format: 'dd'})
 
         t.is(typeof longitude, 'number')
@@ -378,7 +378,7 @@ test('longitude() will obey DDM format', t => {
     _.times(1000, () => {
         const CHARS_TO_CONTAIN = ['°']
         const CHARS_NOT_TO_CONTAIN = ['’', '”']
-
+        
         let longitude = chance.longitude({format: 'ddm'})
 
         t.true(_.isString(longitude))
@@ -390,7 +390,7 @@ test('longitude() will obey DDM format', t => {
 test('longitude() will obey DMS format', t => {
     _.times(1000, () => {
         const CHARS_TO_CONTAIN = ['°', '’', '”']
-
+        
         let longitude = chance.longitude({format: 'dms'})
 
         t.true(_.isString(longitude))
