@@ -313,7 +313,7 @@ test('latitude() will obey DDM format', t => {
 test('latitude() will obey DMS format', t => {
     _.times(1000, () => {
         const CHARS_TO_CONTAIN = ['°', '’', '”']
-
+        
         let latitude = chance.latitude({format: 'dms'})
 
         t.true(_.isString(latitude))
