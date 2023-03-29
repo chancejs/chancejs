@@ -293,6 +293,23 @@ test('integer() can take a min with absolute value less than max and return in r
     t.true(count < 900)
 })
 
+test('integer() returns an integer when min and max are float', t => {
+    _.times(1000, () => {
+        let min = chance.floating()
+        let max = chance.floating({min})
+        let integer = chance.integer({ min, max })
+        t.true(min <= integer && integer <= max && Math.round(integer) === integer)
+    })
+})
+
+test('integer() returns the exact number when min and max are equal', t => {
+    _.times(1000, () => {
+        let border = chance.integer()
+        let integer = chance.integer({ min: border, max: border })
+        t.true(integer === border)
+    })
+})
+
 test('integer() throws an error when min > max', t => {
     const fn = () => chance.integer({ min: 1000, max: 500 })
     t.throws(fn, 'Chance: Min cannot be greater than Max.')
