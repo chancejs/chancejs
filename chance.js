@@ -997,6 +997,51 @@
         return options.formatted ? cnpj : cnpj.replace(/\D/g,'');
     };
 
+    // NIF: ID to identify persons in Spain
+    function getNifLetter(digits) {
+        const letterArray = 'TRWAGMYFPDXBNJZSQVHLCKE';
+        return letterArray.charAt(digits % 23);
+    }
+
+    Chance.prototype.nif = function (options) {
+        options = initOptions(options);
+        const digits = this.pad(this.integer({ min: 0, max: 99999999 }), 8);
+        const letter = getNifLetter(digits);
+        return `${digits}${options.separator || ''}${letter}`;
+    };
+
+    // NIE: ID to identify foreign persons in Spain
+    function getNiePrefix(digits) {
+        const letterArray = 'XYZ';
+        return letterArray.charAt(digits % 23);
+    }
+
+    Chance.prototype.nie = function (options) {
+        options = initOptions(options);
+        const prefix = this.integer({ min: 0, max: 2 });
+        const digits = this.pad(this.integer({ min: 0, max: 9999999 }), 7);
+        const prefixLetter = getNiePrefix(prefix);
+        const letter = getNifLetter(`${prefix}${digits}`);
+        return `${prefixLetter}${options.separator || ''}${digits}${options.separator || ''}${letter}`;
+    };
+
+    // spPassport: Spanish passport
+    function getPassportChars(integerGenerator, count) {
+        const letterArray = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let prefix = '';
+        for (let i = 0; i < count; i++) {
+        prefix = prefix.concat(letterArray.charAt(integerGenerator({ min: 0, max: letterArray.length - 1 })));
+        }
+        return prefix;
+    }
+
+    Chance.prototype.spPassport = function () {
+        const prefix = getPassportChars(this.integer.bind(this), 3)
+        const digits = this.pad(this.integer({ min: 0, max: 999999 }), 6);
+        const suffix = this.bool() && getPassportChars(this.integer.bind(this), 1);
+        return `${prefix}${digits}${suffix || ''}`;
+    };
+
     Chance.prototype.first = function (options) {
         options = initOptions(options, {gender: this.gender(), nationality: 'en'});
         return this.pick(this.get("firstNames")[options.gender.toLowerCase()][options.nationality.toLowerCase()]);

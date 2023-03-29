@@ -1,6 +1,6 @@
 import test from 'ava'
-import Chance from '../chance.js'
 import _ from 'lodash'
+import Chance from '../chance.js'
 
 const chance = new Chance()
 
@@ -217,6 +217,53 @@ test('cpf() returns a random valid taxpayer number for Brazil citizens (CPF)', t
         t.is(cpf.length, 14)
     })
 })
+
+//chance.nif()
+test('nif() returns a random valid NIF number for spanish citizens (NIF)', (t) => {
+_.times(1000, () => {
+    let nif = chance.nif();
+    t.true(_.isString(nif));
+    t.true(/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nif));
+    t.is(nif.length, 9);
+});
+});
+
+test('nif() returns a random valid NIF number for spanish citizens (NIF) using separator', (t) => {
+_.times(1000, () => {
+    let nif = chance.nif({ separator: '-' });
+    t.true(_.isString(nif));
+    t.true(/^[0-9]{8}[-][TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nif));
+    t.is(nif.length, 10);
+});
+});
+
+//chance.nie()
+test('nie() returns a random valid NIE number for foreign citizens in Spain (NIE)', (t) => {
+_.times(1000, () => {
+    let nie = chance.nie();
+    t.true(_.isString(nie));
+    t.true(/^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie));
+    t.is(nie.length, 9);
+});
+});
+
+test('nie() returns a random valid NIE number for foreign citizens in Spain (NIE) using separator', (t) => {
+_.times(1000, () => {
+    let nie = chance.nie({ separator: '-' });
+    t.true(_.isString(nie));
+    t.true(/^[XYZ][-][0-9]{7}[-][TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie));
+    t.is(nie.length, 11);
+});
+});
+
+//chance.spPassport()
+test('spPassport() returns a random valid Passport number for spanish citizens', (t) => {
+_.times(1000, () => {
+    let passport = chance.spPassport();
+    t.true(_.isString(passport));
+    t.true(/^[a-z]{3}[0-9]{6}[a-z]?$/i.test(passport));
+});
+});
 
 // chance.first()
 test('first() returns a random first name', t => {
