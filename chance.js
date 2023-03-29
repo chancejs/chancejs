@@ -531,6 +531,29 @@
             .join('');
     };
 
+    /*** Symmetric Shuffle */
+
+    function symmetricShuffle(x , y){
+        let x_new = []
+        let y_new = []
+        let indexes = []
+    
+        for(var i = 0 ; i < x.length ; i++){
+            indexes[i] = i;
+        }
+    
+        indexes.sort( () => .5 - Math.random() );
+        for(var i = 0 ; i < x.length ; i++){
+            x_new[i] = x[indexes[i]]
+            y_new[i] = y[indexes[i]]
+        }
+        return [x_new , y_new]
+    }
+    
+    console.log(symmetricShuffle([1 , 2 , 3 ,4] , [10 , 20 , 30 , 40]))   " ---> Tested And Worked Correctly"
+    console.log(symmetricShuffle(['a' , 'b' , 'c' ,'d' , 'e'] , ['aa' , 'bb' , 'cc' , 'dd' , 'ee'])) "---> Tested And Worked Correctly"
+    
+
 
     /**
      *  Return a random buffer
