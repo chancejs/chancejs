@@ -5,7 +5,7 @@
 chance.tld()
 ```
 
-Return a random tld ([Top Level Domain][tld]) from the set:
+Return a random tld ([Top Level Domain][tld]) from the list of 2-letter country tld list plus the following set:
 
 ```js
 ['com', 'org', 'edu', 'gov', 'uk', 'net', 'io']
