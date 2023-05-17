@@ -11,7 +11,7 @@
     var NUMBERS = '0123456789';
     var CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
     var CHARS_UPPER = CHARS_LOWER.toUpperCase();
-    var HEX_POOL  = NUMBERS + "abcdef";
+    var HEX_POOL = NUMBERS + "abcdef";
 
     // Errors
     function UnsupportedError(message) {
