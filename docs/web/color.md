@@ -8,7 +8,7 @@ chance.color({grayscale: true})
 chance.color({casing: 'upper'})
 ```
 
-Return a random color.
+Return a random color in a random format.
 
 ```js
 chance.color()
