@@ -1284,7 +1284,7 @@
     let nin ;
     if(options.nationality === ("us"|| "uk")) nin = this.string({ pool: '0123456789', length: 9})
     else if(options.nationality ===("br" ||"gr")) nin = this.string({ pool: '0123456789', length: 11})
-    else if(options.nationality ===("jp" ||"ca")) nin = this.string({ pool: '0123456789', length: 12})
+    else if(options.nationality ===("jp" ||"ca"||"in")) nin = this.string({ pool: '0123456789', length: 12})
     else if(options.nationality ==="ru") nin = this.string({ pool: '0123456789', length: 14})
     else if(options.nationality ==="it") nin = this.string({ pool: '0123456789', length: 16})
     else if(options.nationality ==="ch") nin = this.string({ pool: '0123456789', length: 18})
