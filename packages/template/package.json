@@ -4,7 +4,7 @@
   "description": "Generate a random template with Chance.js.",
   "homepage": "https://chancejs.com/",
   "author": "Victor Quinn <mail@victorquinn.com>",
-  "main": "./lib/cjs/index.js",
+  "main": "./src/index.tss",
   "module": "./lib/esm/index.js",
   "files": [
     "lib"

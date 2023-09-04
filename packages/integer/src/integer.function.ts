@@ -1,6 +1,5 @@
 import { IntegerGenerator } from "./integer.generator";
 import { IntegerGeneratorFunction, IntegerOptions } from "./interfaces";
-
 export const integer: IntegerGeneratorFunction = (
   options?: IntegerOptions,
   seed?: number
