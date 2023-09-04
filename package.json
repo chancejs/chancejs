@@ -6,7 +6,7 @@
   "author": "Victor Quinn <mail@victorquinn.com>",
   "private": true,
   "workspaces": [
-    "packages/**"
+    "packages/*"
   ],
   "engines": {
     "yarn": ">=3",
