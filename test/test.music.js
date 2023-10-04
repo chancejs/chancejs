@@ -1,6 +1,10 @@
-import test from 'ava'
-import Chance from '../chance.js'
-import _ from 'lodash'
+// import test from 'ava'
+// import Chance from '../chance.js'
+// import _ from 'lodash'
+
+const test = require('ava');
+const Chance = require('../chance.js');
+const _ = require('lodash');
 
 const chance = new Chance()
 
@@ -50,3 +54,16 @@ test('tempo() returns a valid tempo between 40 and 320', t => {
         t.true(tempo <= 320)
     })
 })
+
+//chance.music_genre()
+test('music_genre() returns a valid genre for general category', t => {
+    const randomGenre = chance.music_genre('general');
+    t.true(typeof randomGenre === 'string');
+    t.log(`Actual genre: ${randomGenre}`)
+});
+
+test('music_genre() returns a valid genre for alternative category', t => {
+    const randomGenre = chance.music_genre('alternative');
+    t.true(typeof randomGenre === 'string');
+    t.log(`Actual genre: ${randomGenre}`)
+});

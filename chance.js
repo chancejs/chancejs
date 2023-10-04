@@ -2528,6 +2528,17 @@ options,
 
     // -- Music --
 
+    Chance.prototype.music_genre = function (genre = 'general') {
+        if (!(genre in data.music_genres)) {
+            throw new Error(`Unsupported genre: ${genre}`);
+        }
+
+        const genres = data.music_genres[genre];
+        const randomIndex = this.integer({ min: 0, max: genres.length - 1 });
+
+        return genres[randomIndex];
+    };
+
     Chance.prototype.note = function(options) {
       // choices for 'notes' option:
       // flatKey - chromatic scale with flat notes (default)
@@ -7311,6 +7322,104 @@ options,
             "sadness",
             "fear"
         ],
+        music_genres: {
+            'general': [
+                'Rock',
+                'Pop',
+                'Hip-Hop',
+                'Rap',
+                'Jazz',
+                'Classical',
+                'Electronic',
+                'Country',
+                'R&B',
+                'Reggae',
+                'Blues',
+                'Metal',
+                'Folk',
+                'Alternative',
+                'Punk',
+                'Disco',
+                'Funk',
+                'Soul',
+                'Techno',
+                'Indie',
+                'Gospel',
+                'Dance',
+                'Children\'s',
+                'World'
+            ],
+            'alternative': [
+                'Art Punk',
+                'Alternative Rock',
+                'Britpunk',
+                'College Rock',
+                'Crossover Thrash',
+                'Crust Punk',
+                'Emo / Emocore',
+                'Experimental Rock',
+                'Folk Punk',
+                'Goth / Gothic Rock',
+                'Grunge',
+                'Hardcore Punk',
+                'Hard Rock',
+                'Indie Rock',
+                'Lo-fi',
+                'Musique Concrète',
+                'New Wave',
+                'Progressive Rock',
+                'Punk',
+                'Shoegaze',
+                'Steampunk',
+            ], 'blues': [
+                'Acoustic Blues',
+                'African Blues',
+                'Blues Rock',
+                'Blues Shouter',
+                'British Blues',
+                'Canadian Blues',
+                'Chicago Blues',
+                'Classic Blues',
+                'Classic Female Blues',
+                'Contemporary Blues',
+                'Country Blues',
+                'Dark Blues',
+                'Delta Blues',
+                'Detroit Blues',
+                'Doom Blues',
+                'Electric Blues',
+                'Folk Blues',
+                'Gospel Blues',
+                'Harmonica Blues',
+                'Hill Country Blues',
+                'Hokum Blues',
+                'Jazz Blues',
+                'Jump Blues',
+                'Kansas City Blues',
+                'Louisiana Blues',
+                'Memphis Blues',
+                'Modern Blues',
+                'New Orlean Blues',
+                'NY Blues',
+                'Piano Blues',
+                'Piedmont Blues',
+                'Punk Blues',
+                'Ragtime Blues',
+                'Rhythm Blues',
+                'Soul Blues',
+                'St.Louis Blues',
+                'Soul Blues',
+                'Swamp Blues',
+                'Texas Blues',
+                'Urban Blues',
+                'Vandeville',
+                'West Coast Blues',
+            ], 'children\'s': [
+                'Lullabies',
+                'Sing - Along',
+                'Stories'
+            ]
+        },
     };
 
     var o_hasOwnProperty = Object.prototype.hasOwnProperty;
