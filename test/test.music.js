@@ -56,14 +56,42 @@ test('tempo() returns a valid tempo between 40 and 320', t => {
 })
 
 //chance.music_genre()
+
+const music_genres = [
+    'Rock',
+    'Pop',
+    'Hip-Hop',
+    'Jazz',
+    'Classical',
+    'Electronic',
+    'Country',
+    'R&B',
+    'Reggae',
+    'Blues',
+    'Metal',
+    'Folk',
+    'Alternative',
+    'Punk',
+    'Disco',
+    'Funk',
+    'Techno',
+    'Indie',
+    'Gospel',
+    'Dance',
+    'Children\'s',
+    'World'
+]
+
 test('music_genre() returns a valid genre for general category', t => {
     const randomGenre = chance.music_genre('general');
     t.true(typeof randomGenre === 'string');
-    t.log(`Actual genre: ${randomGenre}`)
+    t.log(`Actual genre in General category: ${randomGenre}`)
 });
 
-test('music_genre() returns a valid genre for alternative category', t => {
-    const randomGenre = chance.music_genre('alternative');
-    t.true(typeof randomGenre === 'string');
-    t.log(`Actual genre: ${randomGenre}`)
-});
+music_genres.forEach(category => {
+    test(`music_genre() returns a valid genre in the ${category} category`, t => {
+        const genre = chance.music_genre(category.toLowerCase());
+        t.true(typeof genre === 'string');
+        t.log(`Actual genre in ${category} category: ${genre}`);
+    });
+})
