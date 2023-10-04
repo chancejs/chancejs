@@ -1,10 +1,6 @@
-// import test from 'ava'
-// import Chance from '../chance.js'
-// import _ from 'lodash'
-
-const test = require('ava');
-const Chance = require('../chance.js');
-const _ = require('lodash');
+import test from 'ava'
+import Chance from '../chance.js'
+import _ from 'lodash'
 
 const chance = new Chance()
 

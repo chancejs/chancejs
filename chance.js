@@ -2532,7 +2532,7 @@ options,
     // Rock,Pop,Hip-Hop,Jazz,Classical,Electronic,Country,R&B,Reggae,
     // Blues,Metal,Folk,Alternative,Punk,Disco,Funk,Techno,
     // Indie,Gospel,Dance,Children's,World
-    
+
     Chance.prototype.music_genre = function (genre = 'general') {
         if (!(genre.toLowerCase() in data.music_genres)) {
             throw new Error(`Unsupported genre: ${genre}`);
