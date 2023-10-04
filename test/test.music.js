@@ -82,6 +82,12 @@ const music_genres = [
     'World'
 ]
 
+test('music_genre() returns an error if category given is invalid', t => {
+    t.throws(() => {
+        chance.music_genre('UnknownGenre');
+    }, { instanceOf: Error, message: 'Unsupported genre: UnknownGenre' });
+})
+
 test('music_genre() returns a valid genre for general category', t => {
     const randomGenre = chance.music_genre('general');
     t.true(typeof randomGenre === 'string');
@@ -95,3 +101,4 @@ music_genres.forEach(category => {
         t.log(`Actual genre in ${category} category: ${genre}`);
     });
 })
+
