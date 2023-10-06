@@ -1685,7 +1685,14 @@
 
     Chance.prototype.address = function (options) {
         options = initOptions(options);
-        return this.natural({min: 5, max: 2000}) + ' ' + this.street(options);
+        return this.random() < 0.0001 ? this.natural({min: 1, max: 999999}) + ' ' + this.street(options) : 
+		this.random() < 0.0005 ? this.natural({min: 1, max: 500000}) + ' ' + this.street(options) : 
+		this.random() < 0.002 ? this.natural({min: 1, max: 100000}) + ' ' + this.street(options) : 
+		this.random() < 0.01 ? this.natural({min: 1, max: 50000}) + ' ' + this.street(options) : 
+		this.random() < 0.1 ? this.natural({min: 1, max: 25000}) + ' ' + this.street(options) : 
+		this.random() < 0.2 ? this.natural({min: 1, max: 10000}) + ' ' + this.street(options) : 
+		this.random() < 0.4 ? this.natural({min: 1, max: 5000}) + ' ' + this.street(options) :
+		this.natural({min: 1, max: 2000}) + ' ' + this.street(options);
     };
 
     Chance.prototype.altitude = function (options) {
