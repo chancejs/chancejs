@@ -29,6 +29,7 @@ gulp.task('lint', () => gulp.src(['**/*.js', '!docs/**', '!node_modules/**', '!d
 gulp.task('test', () => gulp.src('test/**/*.js')
           .pipe(ava({ verbose: true })))
 
+
 gulp.task('watch', () => {
     gulp.watch(['chance.js', 'gulpfile.js', 'test/**/*.js'], ['lint', 'test'])
 })
