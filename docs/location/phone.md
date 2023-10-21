@@ -31,9 +31,9 @@ chance.phone({ country: 'fr' });
 => '01 60 44 92 67'
 ```
 
-Note, at current we only have support for `'us'`, `'uk'`, or `'fr'` for countries.
+Note, at current we only have support for `'us'`, `'uk'`, `'de'` or `'fr'` for countries.
 
-For `uk` and `fr`, optionally specify a mobile phone.
+For `uk`, `de` and `fr`, optionally specify a mobile phone.
 
 ```js
 chance.phone({ country: 'uk', mobile: true });
