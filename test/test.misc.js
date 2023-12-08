@@ -131,6 +131,69 @@ test('guid() returns a proper version 5 guid', t => {
     })
 })
 
+// chance.mac()
+test('mac() returns a proper MAC', t => {
+    _.times(1000, () => {
+        t.true(/(([0-9A-F]){2}:){5}([0-9A-F]){2}/.test(chance.mac()))
+    })
+})
+
+test('mac() receives empty delimiter as option', t => {
+    _.times(1000, () => {
+        t.true(/([0-9A-F]){6}/.test(chance.mac({ delimiter: "" })))
+    })
+})
+
+test('mac() receives custom delimiter as option', t => {
+    _.times(1000, () => {
+        t.true(/(([0-9A-F]){2}-){5}([0-9A-F]){2}/.test(chance.mac({ delimiter: "-" })))
+        t.true(/(([0-9A-F]){2}\.){5}([0-9A-F]){2}/.test(chance.mac({ delimiter: "." })))
+    })
+})
+
+test('mac() receives custom oui as option', t => {
+    _.times(1000, () => {
+        t.true(/A0:A1:A2:(([0-9A-F]){2}:){2}([0-9A-F]){2}/.test(chance.mac({ oui: "A0:A1:A2" })))
+    })
+})
+
+test('mac() receives custom oui as option', t => {
+    _.times(1000, () => {
+        t.true(/A0:A1:A2:(([0-9A-F]){2}:){2}([0-9A-F]){2}/.test(chance.mac({ oui: "A0:A1:A2:" })))
+    })
+})
+
+test('mac() receives custom oui and custom delimiter as option', t => {
+    _.times(1000, () => {
+        t.true(/A0-A1-A2-(([0-9A-F]){2}-){2}([0-9A-F]){2}/.test(chance.mac({ oui: "A0-A1-A2", delimiter: "-" })))
+    })
+})
+
+test('mac() receives upperCase option as false', t => {
+    _.times(1000, () => {
+        t.true(/(([0-9a-f]){2}:){5}([0-9a-f]){2}/.test(chance.mac({ upperCase: false })))
+    })
+})
+
+test('mac() throws illegal custom delimiter', t => {
+    t.throws(() => { chance.mac({ delimiter: [1] }) });
+    t.throws(() => { chance.mac({ delimiter: {} }) });
+    t.throws(() => { chance.mac({ delimiter: 1 }) });
+    t.throws(() => { chance.mac({ delimiter: true }) });
+})
+
+test('mac() throws illegal custom oui', t => {
+    t.throws(() => { chance.mac({ oui: [1] }) });
+    t.throws(() => { chance.mac({ oui: {} }) });
+    t.throws(() => { chance.mac({ oui: 1 }) });
+    t.throws(() => { chance.mac({ oui: true }) });
+    t.throws(() => { chance.mac({ oui: "true" }) });
+    t.throws(() => { chance.mac({ oui: "AA:AA:AA::" }) });
+    t.throws(() => { chance.mac({ oui: "AA:AA:AA", delimiter: "-" }) });
+    t.throws(() => { chance.mac({ oui: "AA:AA:AA", upperCase: false }) });
+})
+
+
 // chance.hash()
 test('hash() returns a proper hash', t => {
     _.times(1000, () => {
