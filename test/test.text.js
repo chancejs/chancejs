@@ -123,44 +123,38 @@ test('paragraph) will obey line breaks', t => {
 })
 
 test('emoji() will return a single emoji by default', t => {
-    _.times(100, () => {
-        let emoji = chance.emoji();
+    let emoji = chance.emoji();
 
-        t.true(_.isString(emoji))
-        t.is(emoji.length, 1)
-    })
+    t.true(_.isString(emoji));
+    t.is(emoji.length, 1);
 })
 
 test('emoji() will return as many emojis as you tell it to', t => {
     _.times(100, () => {
         let rand = _.random(1, 50);
-        let emoji = chance.emoji({ length: rand })
+        let emoji = chance.emoji({ length: rand });
 
-        t.true(_.isString(emoji))
+        t.true(_.isString(emoji));
         t.is(emoji.length, rand);
     })
 })
 
 test('emoji() will throw an error when category is unrecognised', t => {
-    _.times(100, () => {
-        let fn = () => chance.emoji({ category: 'something-incorrect' })
-
-        t.throws(fn, "Chance: Unrecognised emoji category: [something-incorrect].")
-    })
+    let fn = () => chance.emoji({ category: 'something-incorrect' });
+    t.throws(fn, "Chance: Unrecognised emoji category: [something-incorrect].");
 })
 
 test('emoji() will throw an error when length is 0', t => {
-    _.times(100, () => {
-        let fn = () => chance.emoji({ length: 0 })
-
-        t.throws(fn, "Chance: cannot specify length less than 1")
-    })
+    let fn = () => chance.emoji({ length: 0 });
+    t.throws(fn, "Chance: length must be between 1 and 9007199254740992");
 })
 
 test('emoji() will throw an error when length is negative', t => {
-    _.times(100, () => {
-        let fn = () => chance.emoji({ length: -1 })
+    let fn = () => chance.emoji({ length: -1 });
+    t.throws(fn, "Chance: length must be between 1 and 9007199254740992");
+})
 
-        t.throws(fn, "Chance: cannot specify length less than 1")
-    })
+test('emoji() will throw an error when length is greater than 9007199254740992', t => {
+    let fn = () => chance.emoji({ length: 9007199254740993 });
+    t.throws(fn, "Chance: length must be between 1 and 9007199254740992");
 })

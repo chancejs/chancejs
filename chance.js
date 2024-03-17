@@ -881,34 +881,30 @@
     };
 
     Chance.prototype.emoji = function (options) {
-        options = initOptions(options, { type: "all", length: 1 });
+        options = initOptions(options, { category: "all", length: 1 });
 
         testRange(
-            options.length < 1,
-            "Chance: cannot specify length less than 1"
+            options.length < 1 || options.length > MAX_INT,
+            "Chance: length must be between 1 and " + MAX_INT
         );
 
         var emojis = this.get("emojis");
 
-        if (options.type === "all") {
-            options.type = this.pickone(Object.keys(emojis));
+        if (options.category === "all") {
+            options.category = this.pickone(Object.keys(emojis));
         }
 
-        var emojisForCategory = emojis[options.type];
+        var emojisForCategory = emojis[options.category];
 
         testRange(
             emojisForCategory === undefined,
-            "Chance: Unrecognised emoji category: [" + options.type + "]."
+            "Chance: Unrecognised emoji category: [" + options.category + "]."
         );
 
-        var randomEmojis = this.pickset(emojisForCategory, options.length),
-            emojiString;
-
-        for (var i = 0; i < randomEmojis.length; i++) {
-            emojiString += String.fromCodePoint(randomEmojis[i]);
-        }
-
-        return emojiString;
+        return this.pickset(emojisForCategory, options.length)
+            .map(function (codePoint) {
+                return String.fromCodePoint(codePoint)
+            }).join("");
     };
 
     // -- End Text --
