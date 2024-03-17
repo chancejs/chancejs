@@ -903,7 +903,7 @@
 
         return this.pickset(emojisForCategory, options.length)
             .map(function (codePoint) {
-                return String.fromCodePoint(codePoint)
+                return String.fromCodePoint(codePoint);
             }).join("");
     };
 
