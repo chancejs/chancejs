@@ -11,7 +11,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 16
       - name: eslint
         uses: reviewdog/action-eslint@v1
         with:
