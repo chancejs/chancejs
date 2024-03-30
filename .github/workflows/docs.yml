@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 16
       - name: build and deploy
         if: github.event_name == 'pull_request' && github.event.pull_request.merged == 'true'
         run: |
