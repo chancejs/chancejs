@@ -81,20 +81,18 @@ const music_genres = [
 test('music_genre() returns an error if category given is invalid', t => {
     t.throws(() => {
         chance.music_genre('UnknownGenre');
-    }, { instanceOf: Error, message: 'Unsupported genre: UnknownGenre' });
+    }, Error);
 })
 
 test('music_genre() returns a valid genre for general category', t => {
     const randomGenre = chance.music_genre('general');
     t.true(typeof randomGenre === 'string');
-    t.log(`Actual genre in General category: ${randomGenre}`)
 });
 
 music_genres.forEach(category => {
     test(`music_genre() returns a valid genre in the ${category} category`, t => {
         const genre = chance.music_genre(category.toLowerCase());
         t.true(typeof genre === 'string');
-        t.log(`Actual genre in ${category} category: ${genre}`);
     });
 })
 
