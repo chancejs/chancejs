@@ -16,9 +16,7 @@
   "devDependencies": {
     "ava": "^0.19.1",
     "babel-eslint": "^7.2.3",
-    "chai": "^3.5.0",
     "coveralls": "^2.11.2",
-    "dirty-chai": "^1.2.2",
     "docpress": "0.7.1",
     "eslint": "^6.3.0",
     "git-update-ghpages": "1.3.0",
@@ -28,7 +26,6 @@
     "gulp-jshint": "^2.0.4",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.1",
-    "jshint-stylish": "^2.2.1",
     "lodash": "^4.17.4",
     "nyc": "^10.3.2",
     "pump": "^1.0.2",
