@@ -47,9 +47,6 @@
     "address",
     "dice"
   ],
-  "jam": {
-    "main": "chance.js"
-  },
   "github": "https://github.com/chancejs/chancejs",
   "maintainers": [
     {
@@ -58,12 +55,6 @@
       "web": "https://www.victorquinn.com"
     }
   ],
-  "spm": {
-    "main": "chance.js",
-    "ignore": [
-      "test"
-    ]
-  },
   "docpress": {
     "scripts": [
       "chance.js",
