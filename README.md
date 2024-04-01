@@ -49,8 +49,10 @@ THANK YOU!
 
 Be a part of this project! You can run the test using the following.
 
-1. Install dependencies from package.json by running `npm install`
-2. Run the test via `npm test`
+**Note: Make sure you have Yarn installed globally**
+
+1. Install dependencies from package.json by running ```yarn```
+2. Run the test suite via ```yarn test```
 3. Make some fun new modules!
 
 This project is licensed under the [MIT License](http://en.wikipedia.org/wiki/MIT_License) so feel free to hack away :)
