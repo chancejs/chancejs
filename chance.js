@@ -884,8 +884,8 @@
         options = initOptions(options, { category: "all", length: 1 });
 
         testRange(
-            options.length < 1 || options.length > MAX_INT,
-            "Chance: length must be between 1 and " + MAX_INT
+            options.length < 1 || BigInt(options.length) > BigInt(MAX_INT),
+            "Chance: length must be between 1 and " + String(MAX_INT)
         );
 
         var emojis = this.get("emojis");

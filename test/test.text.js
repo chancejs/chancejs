@@ -126,7 +126,7 @@ test('emoji() will return a single emoji by default', t => {
     let emoji = chance.emoji();
 
     t.true(_.isString(emoji));
-    t.is(emoji.length, 1);
+    t.is([...emoji].length, 1);
 })
 
 test('emoji() will return as many emojis as you tell it to', t => {
@@ -135,7 +135,7 @@ test('emoji() will return as many emojis as you tell it to', t => {
         let emoji = chance.emoji({ length: rand });
 
         t.true(_.isString(emoji));
-        t.is(emoji.length, rand);
+        t.is([...emoji].length, rand);
     })
 })
 
@@ -155,6 +155,6 @@ test('emoji() will throw an error when length is negative', t => {
 })
 
 test('emoji() will throw an error when length is greater than 9007199254740992', t => {
-    let fn = () => chance.emoji({ length: 9007199254740993 });
+    let fn = () => chance.emoji({ length: BigInt('9007199254740993') });
     t.throws(fn, "Chance: length must be between 1 and 9007199254740992");
 })
