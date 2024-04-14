@@ -1,0 +1,10 @@
+import { {{pascalCase name}}Generator } from "./generator";
+import { {{pascalCase name}}GeneratorFunction, {{pascalCase name}}Options } from "./interfaces";
+
+export const {{camelCase name}}: {{pascalCase name}}GeneratorFunction = (
+  options?: {{pascalCase name}}Options,
+  seed?: number
+): {{type}} => {
+  const {{camelCase name}}Generator = new {{pascalCase name}}Generator({ seed });
+  return {{camelCase name}}Generator.{{camelCase name}}(options);
+};

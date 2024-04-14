@@ -1,0 +1,9 @@
+import { Generator } from "@chancejs/generator";
+import { {{pascalCase name}}Options, I{{pascalCase name}}Generator } from "./interfaces";
+
+export class {{pascalCase name}}Generator extends Generator implements I{{pascalCase name}}Generator {
+  public {{camelCase name}}(options?: {{pascalCase name}}Options): {{type}} {
+    // Function body goes here.
+    // You should have access to your pseudo-random number generator via `this.generator()`.
+  }
+}

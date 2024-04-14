@@ -1,0 +1,1 @@
+../../docs/basics/character.md

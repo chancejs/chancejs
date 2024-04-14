@@ -1,0 +1,43 @@
+{
+  "name": "@chancejs/prime",
+  "version": "1.0.0",
+  "description": "Generate a random prime with Chance.js.",
+  "homepage": "https://chancejs.com/",
+  "author": "Victor Quinn <mail@victorquinn.com>",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "clean": "rm -rf ./node_modules ./lib ./coverage",
+    "lint": "eslint",
+    "test": "jest",
+    "coverage": "yarn test --coverage",
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "prepublish": "yarn build",
+    "build": "yarn clean && yarn tsc",
+    "prepare": "yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chancejs/chancejs.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chancejs/chancejs/issues"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@types/node": "^18.7.2",
+    "eslint": "^8.14.0",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "@chancejs/generator": "1.0.0",
+    "@chancejs/pick": "1.0.0"
+  }
+}
