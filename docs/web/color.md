@@ -8,14 +8,14 @@ chance.color({grayscale: true})
 chance.color({casing: 'upper'})
 ```
 
-Return a random color in a random format.
+Return a random color.
 
 ```js
 chance.color()
 => '#79c157'
 ```
 
-Colors have six base types: `hex`, `shorthex`, `rgb`, `rgba`, `0x`, `name`
+Colors have four base types: `hex`, `shorthex`, `rgb`, `0x`
 
 These are the kinds usable in HTML or CSS. The type can optionally be specified
 
@@ -29,14 +29,8 @@ chance.color({format: 'shorthex'})
 chance.color({format: 'rgb'})
 => 'rgb(110,52,164)'
 
-chance.color({ format:'rgba' })
-=> 'rgba(76,11,110,0.1284)'
-
 chance.color({format: '0x'})
 => '0x67ae0b'
-
-chance.color({ format:'name' })
-=> 'DarkOrange' 
 ```
 
 Can optionally specify that only grayscale colors be generated
