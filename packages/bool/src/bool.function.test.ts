@@ -6,6 +6,8 @@ describe("bool", () => {
   it("returns a random boolean", () => {
     const boolean = bool();
     expect(typeof boolean).toEqual("boolean");
+    expect(boolean === true || boolean === false).toBeTruthy();
+
   });
 
   it("is within the bounds of what we would call random", () => {

@@ -2566,7 +2566,7 @@
                 {name: 'County Down'},
                 {name: 'County Durham'},
                 {name: 'County Fermanagh'},
-                {name: 'County Londonderry'},
+                {name: 'County Derry'},
                 {name: 'County Tyrone'},
                 {name: 'Cumbria'},
                 {name: 'Darlington'},

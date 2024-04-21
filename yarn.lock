@@ -415,6 +415,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@chancejs/animal@workspace:packages/animal":
+  version: 0.0.0-use.local
+  resolution: "@chancejs/animal@workspace:packages/animal"
+  dependencies:
+    "@types/jest": ^27.4.1
+    "@types/node": ^18.7.2
+    eslint: ^8.14.0
+    jest: ^27.5.1
+    ts-jest: ^27.1.4
+    ts-node: ^10.7.0
+    typescript: ^4.6.3
+  languageName: unknown
+  linkType: soft
+
 "@chancejs/blue-imp-md5@workspace:packages/blue-imp-md5":
   version: 0.0.0-use.local
   resolution: "@chancejs/blue-imp-md5@workspace:packages/blue-imp-md5"
