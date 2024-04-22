@@ -123,5 +123,6 @@
   * [tv](miscellaneous/tv.md)
   * [unique](miscellaneous/unique.md)
   * [weighted](miscellaneous/weighted.md)
+  * [mongo_objectid](miscellaneous/mongo_objectid.md)
 
 <script type="text/javascript" src="chance.js"></script>
