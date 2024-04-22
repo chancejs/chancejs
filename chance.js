@@ -774,6 +774,91 @@
         return chosen;
     };
 
+    /*
+     randomly pickes n elements from arr according to weights.
+     if replace is false every picked element will be removed from arr, thus every element may be picked at most once.
+     but if replace is true every element may be picked any numbers.
+     ** if weight of an element is 0, it can't be picked.
+    */
+    Chance.prototype.sample=function(arr_ ,weights_ ,n ,replace=true){
+        if (arr_.length !== weights_.length) {
+            throw new RangeError("Chance: Length of array and weights must match");
+        }
+
+        let arr=[];
+        let weights=[];
+        // coping inputs into new lists so they won't change during function calculation
+        for (let index = 0; index < arr_.length; index++) {
+            arr.push(arr_[index]);
+            weights.push(weights_[index]);
+        }
+
+        let sum=0.0;
+        let cumulative_weights=[];
+        let valid_weights=[];
+        let valid_elements=[];
+        // removing elements which have weight 0 and making cumulative_weights array
+        for (let weightIndex = 0; weightIndex < weights.length; weightIndex++) {
+            if(isNaN(weights[weightIndex])){
+                throw new RangeError('Chance: All weights must be numbers, weight at index '+weightIndex+' isn\'t a number.');
+            }
+            if(weights[weightIndex]<0){
+                throw new RangeError('Chance: All weights must be non-negative, weight at index '+weightIndex+' is negative.');
+            }
+            if(weights[weightIndex]>0){
+                sum+=weights[weightIndex];
+                valid_elements.push(arr[weightIndex]);
+                valid_weights.push(weights[weightIndex]);
+                cumulative_weights.push(sum);
+            }
+        }
+
+        arr=valid_elements;
+        weights=valid_weights;
+
+        if (arr.length !== weights.length) {
+            throw new RangeError("Chance: Length of array and weights must match");
+        }
+        if (!replace && arr.length < n){
+            throw new RangeError("Chance: replace is false and array length is lower than n.")
+        }
+
+        let sampleList=[]
+
+        while(n>0){
+            let selected=Math.random()*sum;
+
+            var lastGoodIdx = -1;
+            var chosenIdx;
+            for (weightIndex = 0; weightIndex < weights.length; ++weightIndex) {
+                if (selected <= cumulative_weights[weightIndex]) {
+                    chosenIdx = weightIndex;
+                    break;
+                }
+                lastGoodIdx = weightIndex;
+            
+                // handle any possible rounding error comparison to ensure something is picked
+                if (weightIndex === (weights.length - 1)) {
+                    chosenIdx = lastGoodIdx;
+                }
+            }
+
+            sampleList.push(arr[chosenIdx]);
+
+            // remove selected element if replace is false
+            if(!replace){
+                arr.splice(chosenIdx,1);
+                sum-=weights[chosenIdx];
+                cumulative_weights.splice(chosenIdx,1);
+                weights.splice(chosenIdx,1);
+            }
+
+            n--;
+        }
+
+        return sampleList;
+    }
+
     // -- End Helpers --
 
     // -- Text --
