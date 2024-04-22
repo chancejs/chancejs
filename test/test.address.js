@@ -553,6 +553,48 @@ test('phone() with br country, formatted and mobile option apply the correct mas
     })))
 })
 
+test('phone() with it country works', t => {
+    t.true(_.isString(chance.phone({ country: 'it' })))
+})
+
+test('phone() with it country works with mobile option', t => {
+    t.true(_.isString(chance.phone({ country: 'it', mobile: true })))
+})
+
+test('phone() with it country looks right', t => {
+    _.times(1000, () => {
+        t.true(/0[123456789].. ....../.test(chance.phone({ country: 'it' })))
+    })
+})
+
+test('phone() with it country looks right unformatted', t => {
+    _.times(1000, () => {
+        t.true(/0[123456789]......../.test(chance.phone({
+            country: 'it',
+            formatted: false
+        })))
+    })
+})
+
+test('phone() with it country on mobile looks right', t => {
+    _.times(1000, () => {
+        t.true(/3[234579]. ... ..../.test(chance.phone({
+            country: 'it',
+            mobile: true
+        })))
+    })
+})
+
+test('phone() with it country on mobile, unformatted looks right', t => {
+    _.times(1000, () => {
+        t.true(/3[234579]......../.test(chance.phone({
+            country: 'it',
+            mobile: true,
+            formatted: false
+        })))
+    })
+})
+
 // chance.postal()
 test('postal() returns a valid basic postal code', t => {
     _.times(1000, () => {
