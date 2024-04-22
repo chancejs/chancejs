@@ -1875,7 +1875,7 @@ options,
                         { area: '018' + this.pick(['27','37','84','97']) + ' ', sections: [6] },
                         { area: '019' + this.pick(['00','05','35','46','49','63','95']) + ' ', sections: [6] }
                     ]);
-                    phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(' ', '', 'g');
+                    phone = options.formatted ? ukNum(numPick) : ukNum(numPick).replace(/ /g, '', );
                 } else {
                     numPick = this.pick([
                         { area: '07' + this.pick(['4','5','7','8','9']), sections: [2,6] },
