@@ -20,4 +20,4 @@ Chance.last({ nationality: 'it' });
 => 'Giovannini'
 ```
 
-Note, currently support for nationality is limited to: `'en', 'it', 'nl', 'uk', 'de', 'jp', 'es', 'fr'`.
+Note, currently support for nationality is limited to: `'en', 'it', 'nl', 'uk', 'de', 'jp', 'es', 'fr', 'bg'`.
