@@ -280,7 +280,7 @@
         options = initOptions(options, {min: MIN_INT, max: MAX_INT});
         testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
 
-        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
+        return Math.floor(this.random() * (options.max - options.min + 1)) + Math.ceil(options.min);
     };
 
     /**
