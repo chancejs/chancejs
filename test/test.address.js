@@ -553,6 +553,24 @@ test('phone() with br country, formatted and mobile option apply the correct mas
     })))
 })
 
+test('phone() returns a random phone with unformatted international code', t => {
+    const regex = new RegExp(/^\+44\d/);
+    _.times(1000, () => {
+        const phone = chance.phone({ country: 'uk', intlCode: true, formatted: false })
+        t.true(_.isString(phone))
+        t.true(regex.test(phone));
+    })
+})
+
+test('phone() returns a random phone with formatted international code', t => {
+    const regex = new RegExp(/^\+33 /);
+    _.times(1000, () => {
+        const phone = chance.phone({ country: 'fr', intlCode: true })
+        t.true(_.isString(phone))
+        t.true(regex.test(phone));
+    })
+})
+
 // chance.postal()
 test('postal() returns a valid basic postal code', t => {
     _.times(1000, () => {
