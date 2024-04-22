@@ -84,7 +84,7 @@ test('date() can return a string date', t => {
     _.times(1000, () => {
         let date = chance.date({ string: true })
         t.true(_.isString(date))
-        t.true(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m.test(date))
+        t.true(/^[0-9]{2}?\/[0-9]{2}?\/[0-9]{4}/m.test(date))
     })
 })
 

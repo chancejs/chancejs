@@ -102,7 +102,7 @@ test('birthday() can have a string returned', t => {
         let birthday = chance.birthday({ string: true })
         t.true(_.isString(birthday))
         t.false(_.isDate(birthday))
-        t.true(/^[0-9][0-9]?\/[0-9][0-9]?\/[0-9]{4}/m.test(birthday))
+        t.true(/^[0-9]{2}?\/[0-9]{2}?\/[0-9]{4}/m.test(birthday))
     })
 })
 
