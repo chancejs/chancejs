@@ -4,6 +4,7 @@
 // usage
 chance.integer()
 chance.integer({ min: -20, max: 20 })
+chance.integer({ min: -20, max: 20, step: 5 })
 ```
 
 <p class="pullquote">9007199254740991 is 2^53 - 1 and is the largest number value in JavaScript</p>
@@ -19,11 +20,19 @@ chance.integer();
 => -1293235
 ```
 
-Can optionally provide min and max.
+Can optionally provide min and max and step.
 
 ```js
 chance.integer({ min: -20, max: 20 })
 => -7
+```
+Adding step rounds the integer up or down to the nearest step. Default = 1.
+```js
+chance.integer({ min: 1, max: 20, step: 5 })
+=> 5
+=> 10
+=> 15
+=> 20
 ```
 
 
