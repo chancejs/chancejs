@@ -215,6 +215,34 @@
 
         return pool.charAt(this.natural({max: (pool.length - 1)}));
     };
+    /**
+     *  Return a matrix of random floating point numbers
+     *
+     *  @param {Object} [options={}] can specify a fixed precision, min, max
+     *  @param {Number} number of rows
+     *  @param {Number} number of columns
+     *  @returns {Number} a 2D array of floating point numbers
+     *  @throws {RangeError} Can only specify fixed or precision, not both. Also
+     *    min cannot be greater than max
+     */
+    Chance.prototype.floating_matrix = function (n, m, options) {
+         testRange(n <= 0, 'Chance: Number of rows must be greater than zero');
+         testRange(m <= 0, 'Chance: Number of columns must be greater than zero');
+
+         if (m === 1) {
+               return this.n(function() { return this.floating(options) }, n);
+         }
+
+         if (n === 1) {
+               return this.n(function() { return this.floating(options) }, m);
+         }
+
+         return this.n(function() {
+                 return this.n(function() {
+                       return this.floating(options);
+               }, m)
+         }, n);
+}
 
     // Note, wanted to use "float" or "double" but those are both JS reserved words.
 
@@ -387,11 +415,11 @@
     Chance.prototype.hex = function (options) {
         options = initOptions(options, {min: 0, max: MAX_INT, casing: 'lower'});
         testRange(options.min < 0, "Chance: Min cannot be less than zero.");
-		var integer = this.natural({min: options.min, max: options.max});
-		if (options.casing === 'upper') {
-			return integer.toString(16).toUpperCase();
-		}
-		return integer.toString(16);
+                var integer = this.natural({min: options.min, max: options.max});
+                if (options.casing === 'upper') {
+                        return integer.toString(16).toUpperCase();
+                }
+                return integer.toString(16);
     };
 
     Chance.prototype.letter = function(options) {
