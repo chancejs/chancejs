@@ -2371,19 +2371,74 @@ options,
     };
 
     /**
-     * Generate a string matching IBAN pattern (https://en.wikipedia.org/wiki/International_Bank_Account_Number).
-     * No country-specific formats support (yet)
+     * Generate IBAN for countries that supports them.
+     * More information https://www.iban.com/
+     * Country specific account checksums are not implemented due to complexity
+     * https://docs.oracle.com/cd/E18727_01/doc.121/e13483/T359831T498954.htm
      */
     Chance.prototype.iban = function () {
+
+        var ibanCountrySettings = this.pickone(this.get('ibanCountries'));
+        
+        var checksumMap = { 'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15, 'G': 16, 'H': 17, 'I': 18, 'J': 19, 'K': 20, 'L': 21, 'M': 22, 'N': 23, 'O': 24, 'P': 25, 'Q': 26, 'R': 27, 'S': 28, 'T': 29, 'U': 30, 'V': 31, 'W': 32, 'X': 33, 'Y': 34, 'Z': 35 };
         var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        var alphanum = alpha + '0123456789';
+        var nums = '0123456789';
+        var alphanum = alpha + nums;
+
+        // set IBAN country
+        var ibanCC = ibanCountrySettings.cc;
+
+        // generate BBAN part
+        var bban = "";
+        var rule = ibanCountrySettings.ibanStruct;
+
+        // remove iban structure country code and checksum pair leaving only
+        // BBAN structure.
+        var pairs = rule.substring(5, rule.length).match(/\d+!\D/g);
+
+        // BBAN consists of multiple pairs that is length and format separate
+        // by exclamation mark. Example of two pairs 2!n3!a that could
+        // translate to 12ABC
+        //
+        // format:
+        // n - number
+        // a - letters only
+        // c - letters and numbers
+        for (const p of pairs) {
+            var len = p.split('!')[0];
+            var format = p.split('!')[1];
+            switch (format) {
+                case "n":
+                    bban = bban + this.string({ length: len, pool: nums });
+                    break;
+                case "a":
+                    bban = bban + this.string({ length: len, pool: alpha });
+                    break;
+                default:
+                    bban = bban + this.string({ length: len, pool: alphanum });
+                    break;
+            }
+        }
+
+        // two digits after first two letters are a checksum of BBAN. If BBAN
+        // contains any letters, they are translated to numbers. in order to
+        // calculate checksum
+        var bbanNumbers = bban + ibanCC + '00';
+        for (var i = 0; i < bbanNumbers.length; i++) {
+            if (checksumMap[bbanNumbers[i]]) {
+                bbanNumbers = bbanNumbers.replace(bbanNumbers[i], checksumMap[bbanNumbers[i]]);
+            }
+        }
+
+        // checksum calculation by official rules.
+        var ibanChecksum = this.pad((BigInt(98) - (BigInt(bbanNumbers) % BigInt(97))), 2);
+
         var iban =
-            this.string({ length: 2, pool: alpha }) +
-            this.pad(this.integer({ min: 0, max: 99 }), 2) +
-            this.string({ length: 4, pool: alphanum }) +
-            this.pad(this.natural(), this.natural({ min: 6, max: 26 }));
-        return iban;
-    };
+            ibanCC +
+            ibanChecksum +
+            bban;
+        return iban
+    }
 
     // -- End Finance
 
@@ -2907,6 +2962,87 @@ options,
 
         // Data taken from https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
         countries: [{"name":"Afghanistan","abbreviation":"AF"},{"name":"Åland Islands","abbreviation":"AX"},{"name":"Albania","abbreviation":"AL"},{"name":"Algeria","abbreviation":"DZ"},{"name":"American Samoa","abbreviation":"AS"},{"name":"Andorra","abbreviation":"AD"},{"name":"Angola","abbreviation":"AO"},{"name":"Anguilla","abbreviation":"AI"},{"name":"Antarctica","abbreviation":"AQ"},{"name":"Antigua and Barbuda","abbreviation":"AG"},{"name":"Argentina","abbreviation":"AR"},{"name":"Armenia","abbreviation":"AM"},{"name":"Aruba","abbreviation":"AW"},{"name":"Australia","abbreviation":"AU"},{"name":"Austria","abbreviation":"AT"},{"name":"Azerbaijan","abbreviation":"AZ"},{"name":"Bahamas","abbreviation":"BS"},{"name":"Bahrain","abbreviation":"BH"},{"name":"Bangladesh","abbreviation":"BD"},{"name":"Barbados","abbreviation":"BB"},{"name":"Belarus","abbreviation":"BY"},{"name":"Belgium","abbreviation":"BE"},{"name":"Belize","abbreviation":"BZ"},{"name":"Benin","abbreviation":"BJ"},{"name":"Bermuda","abbreviation":"BM"},{"name":"Bhutan","abbreviation":"BT"},{"name":"Plurinational State of Bolivia","abbreviation":"BO"},{"name":"Bonaire, Sint Eustatius and Saba","abbreviation":"BQ"},{"name":"Bosnia and Herzegovina","abbreviation":"BA"},{"name":"Botswana","abbreviation":"BW"},{"name":"Bouvet Island","abbreviation":"BV"},{"name":"Brazil","abbreviation":"BR"},{"name":"British Indian Ocean Territory","abbreviation":"IO"},{"name":"Brunei Darussalam","abbreviation":"BN"},{"name":"Bulgaria","abbreviation":"BG"},{"name":"Burkina Faso","abbreviation":"BF"},{"name":"Burundi","abbreviation":"BI"},{"name":"Cabo Verde","abbreviation":"CV"},{"name":"Cambodia","abbreviation":"KH"},{"name":"Cameroon","abbreviation":"CM"},{"name":"Canada","abbreviation":"CA"},{"name":"Cayman Islands","abbreviation":"KY"},{"name":"Central African Republic","abbreviation":"CF"},{"name":"Chad","abbreviation":"TD"},{"name":"Chile","abbreviation":"CL"},{"name":"China","abbreviation":"CN"},{"name":"Christmas Island","abbreviation":"CX"},{"name":"Cocos (Keeling) Islands","abbreviation":"CC"},{"name":"Colombia","abbreviation":"CO"},{"name":"Comoros","abbreviation":"KM"},{"name":"Congo","abbreviation":"CG"},{"name":"Democratic Republic of the Congo","abbreviation":"CD"},{"name":"Cook Islands","abbreviation":"CK"},{"name":"Costa Rica","abbreviation":"CR"},{"name":"Côte d'Ivoire","abbreviation":"CI"},{"name":"Croatia","abbreviation":"HR"},{"name":"Cuba","abbreviation":"CU"},{"name":"Curaçao","abbreviation":"CW"},{"name":"Cyprus","abbreviation":"CY"},{"name":"Czechia","abbreviation":"CZ"},{"name":"Denmark","abbreviation":"DK"},{"name":"Djibouti","abbreviation":"DJ"},{"name":"Dominica","abbreviation":"DM"},{"name":"Dominican Republic","abbreviation":"DO"},{"name":"Ecuador","abbreviation":"EC"},{"name":"Egypt","abbreviation":"EG"},{"name":"El Salvador","abbreviation":"SV"},{"name":"Equatorial Guinea","abbreviation":"GQ"},{"name":"Eritrea","abbreviation":"ER"},{"name":"Estonia","abbreviation":"EE"},{"name":"Eswatini","abbreviation":"SZ"},{"name":"Ethiopia","abbreviation":"ET"},{"name":"Falkland Islands (Malvinas)","abbreviation":"FK"},{"name":"Faroe Islands","abbreviation":"FO"},{"name":"Fiji","abbreviation":"FJ"},{"name":"Finland","abbreviation":"FI"},{"name":"France","abbreviation":"FR"},{"name":"French Guiana","abbreviation":"GF"},{"name":"French Polynesia","abbreviation":"PF"},{"name":"French Southern Territories","abbreviation":"TF"},{"name":"Gabon","abbreviation":"GA"},{"name":"Gambia","abbreviation":"GM"},{"name":"Georgia","abbreviation":"GE"},{"name":"Germany","abbreviation":"DE"},{"name":"Ghana","abbreviation":"GH"},{"name":"Gibraltar","abbreviation":"GI"},{"name":"Greece","abbreviation":"GR"},{"name":"Greenland","abbreviation":"GL"},{"name":"Grenada","abbreviation":"GD"},{"name":"Guadeloupe","abbreviation":"GP"},{"name":"Guam","abbreviation":"GU"},{"name":"Guatemala","abbreviation":"GT"},{"name":"Guernsey","abbreviation":"GG"},{"name":"Guinea","abbreviation":"GN"},{"name":"Guinea-Bissau","abbreviation":"GW"},{"name":"Guyana","abbreviation":"GY"},{"name":"Haiti","abbreviation":"HT"},{"name":"Heard Island and McDonald Islands","abbreviation":"HM"},{"name":"Holy See","abbreviation":"VA"},{"name":"Honduras","abbreviation":"HN"},{"name":"Hong Kong","abbreviation":"HK"},{"name":"Hungary","abbreviation":"HU"},{"name":"Iceland","abbreviation":"IS"},{"name":"India","abbreviation":"IN"},{"name":"Indonesia","abbreviation":"ID"},{"name":"Islamic Republic of Iran","abbreviation":"IR"},{"name":"Iraq","abbreviation":"IQ"},{"name":"Ireland","abbreviation":"IE"},{"name":"Isle of Man","abbreviation":"IM"},{"name":"Israel","abbreviation":"IL"},{"name":"Italy","abbreviation":"IT"},{"name":"Jamaica","abbreviation":"JM"},{"name":"Japan","abbreviation":"JP"},{"name":"Jersey","abbreviation":"JE"},{"name":"Jordan","abbreviation":"JO"},{"name":"Kazakhstan","abbreviation":"KZ"},{"name":"Kenya","abbreviation":"KE"},{"name":"Kiribati","abbreviation":"KI"},{"name":"Democratic People's Republic of Korea","abbreviation":"KP"},{"name":"Republic of Korea","abbreviation":"KR"},{"name":"Kuwait","abbreviation":"KW"},{"name":"Kyrgyzstan","abbreviation":"KG"},{"name":"Lao People's Democratic Republic","abbreviation":"LA"},{"name":"Latvia","abbreviation":"LV"},{"name":"Lebanon","abbreviation":"LB"},{"name":"Lesotho","abbreviation":"LS"},{"name":"Liberia","abbreviation":"LR"},{"name":"Libya","abbreviation":"LY"},{"name":"Liechtenstein","abbreviation":"LI"},{"name":"Lithuania","abbreviation":"LT"},{"name":"Luxembourg","abbreviation":"LU"},{"name":"Macao","abbreviation":"MO"},{"name":"Madagascar","abbreviation":"MG"},{"name":"Malawi","abbreviation":"MW"},{"name":"Malaysia","abbreviation":"MY"},{"name":"Maldives","abbreviation":"MV"},{"name":"Mali","abbreviation":"ML"},{"name":"Malta","abbreviation":"MT"},{"name":"Marshall Islands","abbreviation":"MH"},{"name":"Martinique","abbreviation":"MQ"},{"name":"Mauritania","abbreviation":"MR"},{"name":"Mauritius","abbreviation":"MU"},{"name":"Mayotte","abbreviation":"YT"},{"name":"Mexico","abbreviation":"MX"},{"name":"Federated States of Micronesia","abbreviation":"FM"},{"name":"Republic of Moldova","abbreviation":"MD"},{"name":"Monaco","abbreviation":"MC"},{"name":"Mongolia","abbreviation":"MN"},{"name":"Montenegro","abbreviation":"ME"},{"name":"Montserrat","abbreviation":"MS"},{"name":"Morocco","abbreviation":"MA"},{"name":"Mozambique","abbreviation":"MZ"},{"name":"Myanmar","abbreviation":"MM"},{"name":"Namibia","abbreviation":"NA"},{"name":"Nauru","abbreviation":"NR"},{"name":"Nepal","abbreviation":"NP"},{"name":"Kingdom of the Netherlands","abbreviation":"NL"},{"name":"New Caledonia","abbreviation":"NC"},{"name":"New Zealand","abbreviation":"NZ"},{"name":"Nicaragua","abbreviation":"NI"},{"name":"Niger","abbreviation":"NE"},{"name":"Nigeria","abbreviation":"NG"},{"name":"Niue","abbreviation":"NU"},{"name":"Norfolk Island","abbreviation":"NF"},{"name":"North Macedonia","abbreviation":"MK"},{"name":"Northern Mariana Islands","abbreviation":"MP"},{"name":"Norway","abbreviation":"NO"},{"name":"Oman","abbreviation":"OM"},{"name":"Pakistan","abbreviation":"PK"},{"name":"Palau","abbreviation":"PW"},{"name":"State of Palestine","abbreviation":"PS"},{"name":"Panama","abbreviation":"PA"},{"name":"Papua New Guinea","abbreviation":"PG"},{"name":"Paraguay","abbreviation":"PY"},{"name":"Peru","abbreviation":"PE"},{"name":"Philippines","abbreviation":"PH"},{"name":"Pitcairn","abbreviation":"PN"},{"name":"Poland","abbreviation":"PL"},{"name":"Portugal","abbreviation":"PT"},{"name":"Puerto Rico","abbreviation":"PR"},{"name":"Qatar","abbreviation":"QA"},{"name":"Réunion","abbreviation":"RE"},{"name":"Romania","abbreviation":"RO"},{"name":"Russian Federation","abbreviation":"RU"},{"name":"Rwanda","abbreviation":"RW"},{"name":"Saint Barthélemy","abbreviation":"BL"},{"name":"Saint Helena, Ascension and Tristan da Cunha","abbreviation":"SH"},{"name":"Saint Kitts and Nevis","abbreviation":"KN"},{"name":"Saint Lucia","abbreviation":"LC"},{"name":"Saint Martin (French part)","abbreviation":"MF"},{"name":"Saint Pierre and Miquelon","abbreviation":"PM"},{"name":"Saint Vincent and the Grenadines","abbreviation":"VC"},{"name":"Samoa","abbreviation":"WS"},{"name":"San Marino","abbreviation":"SM"},{"name":"Sao Tome and Principe","abbreviation":"ST"},{"name":"Saudi Arabia","abbreviation":"SA"},{"name":"Senegal","abbreviation":"SN"},{"name":"Serbia","abbreviation":"RS"},{"name":"Seychelles","abbreviation":"SC"},{"name":"Sierra Leone","abbreviation":"SL"},{"name":"Singapore","abbreviation":"SG"},{"name":"Sint Maarten (Dutch part)","abbreviation":"SX"},{"name":"Slovakia","abbreviation":"SK"},{"name":"Slovenia","abbreviation":"SI"},{"name":"Solomon Islands","abbreviation":"SB"},{"name":"Somalia","abbreviation":"SO"},{"name":"South Africa","abbreviation":"ZA"},{"name":"South Georgia and the South Sandwich Islands","abbreviation":"GS"},{"name":"South Sudan","abbreviation":"SS"},{"name":"Spain","abbreviation":"ES"},{"name":"Sri Lanka","abbreviation":"LK"},{"name":"Sudan","abbreviation":"SD"},{"name":"Suriname","abbreviation":"SR"},{"name":"Svalbard and Jan Mayen","abbreviation":"SJ"},{"name":"Sweden","abbreviation":"SE"},{"name":"Switzerland","abbreviation":"CH"},{"name":"Syrian Arab Republic","abbreviation":"SY"},{"name":"Taiwan, Province of China","abbreviation":"TW"},{"name":"Tajikistan","abbreviation":"TJ"},{"name":"United Republic of Tanzania","abbreviation":"TZ"},{"name":"Thailand","abbreviation":"TH"},{"name":"Timor-Leste","abbreviation":"TL"},{"name":"Togo","abbreviation":"TG"},{"name":"Tokelau","abbreviation":"TK"},{"name":"Tonga","abbreviation":"TO"},{"name":"Trinidad and Tobago","abbreviation":"TT"},{"name":"Tunisia","abbreviation":"TN"},{"name":"Türkiye","abbreviation":"TR"},{"name":"Turkmenistan","abbreviation":"TM"},{"name":"Turks and Caicos Islands","abbreviation":"TC"},{"name":"Tuvalu","abbreviation":"TV"},{"name":"Uganda","abbreviation":"UG"},{"name":"Ukraine","abbreviation":"UA"},{"name":"United Arab Emirates","abbreviation":"AE"},{"name":"United Kingdom of Great Britain and Northern Ireland","abbreviation":"GB"},{"name":"United States Minor Outlying Islands","abbreviation":"UM"},{"name":"United States of America","abbreviation":"US"},{"name":"Uruguay","abbreviation":"UY"},{"name":"Uzbekistan","abbreviation":"UZ"},{"name":"Vanuatu","abbreviation":"VU"},{"name":"Bolivarian Republic of Venezuela","abbreviation":"VE"},{"name":"Viet Nam","abbreviation":"VN"},{"name":"Virgin Islands (British)","abbreviation":"VG"},{"name":"Virgin Islands (U.S.)","abbreviation":"VI"},{"name":"Wallis and Futuna","abbreviation":"WF"},{"name":"Western Sahara","abbreviation":"EH"},{"name":"Yemen","abbreviation":"YE"},{"name":"Zambia","abbreviation":"ZM"},{"name":"Zimbabwe","abbreviation":"ZW"}],
+
+        // Data taken from  https://www.mobilefish.com/services/random_iban_generator/random_iban_generator.php
+        ibanCountries : [
+            { cc: "AD", ibanStruct: "AD2!n4!n4!n12!c", ibanLength: 24 },
+            { cc: "AE", ibanStruct: "AE2!n3!n16!n", ibanLength: 23 },
+            { cc: "AL", ibanStruct: "AL2!n8!n16!c", ibanLength: 28 },
+            { cc: "AT", ibanStruct: "AT2!n5!n11!n", ibanLength: 20 },
+            { cc: "AZ", ibanStruct: "AZ2!n4!a20!c", ibanLength: 28 },
+            { cc: "BA", ibanStruct: "BA2!n3!n3!n8!n2!n", ibanLength: 20 },
+            { cc: "BE", ibanStruct: "BE2!n3!n7!n2!n", ibanLength: 16 },
+            { cc: "BG", ibanStruct: "BG2!n4!a4!n2!n8!c", ibanLength: 22 },
+            { cc: "BH", ibanStruct: "BH2!n4!a14!c", ibanLength: 22 },
+            { cc: "BR", ibanStruct: "BR2!n8!n5!n10!n1!a1!c", ibanLength: 29 },
+            { cc: "BY", ibanStruct: "BY2!n4!c4!n16!c", ibanLength: 28 },
+            { cc: "CH", ibanStruct: "CH2!n5!n12!c", ibanLength: 21 },
+            { cc: "CR", ibanStruct: "CR2!n4!n14!n", ibanLength: 22 },
+            { cc: "CY", ibanStruct: "CY2!n3!n5!n16!c", ibanLength: 28 },
+            { cc: "CZ", ibanStruct: "CZ2!n4!n6!n10!n", ibanLength: 24 },
+            { cc: "DE", ibanStruct: "DE2!n8!n10!n ", ibanLength: 22 },
+            { cc: "DK", ibanStruct: "DK2!n4!n9!n1!n", ibanLength: 18 },
+            { cc: "DO", ibanStruct: "DO2!n4!c20!n", ibanLength: 28 },
+            { cc: "EE", ibanStruct: "EE2!n2!n2!n11!n1!n", ibanLength: 20 },
+            { cc: "EG", ibanStruct: "EG2!n4!n4!n17!n", ibanLength: 29 },
+            { cc: "ES", ibanStruct: "ES2!n4!n4!n1!n1!n10!n", ibanLength: 24 },
+            { cc: "FI", ibanStruct: "FI2!n3!n11", ibanLength: 18 },
+            { cc: "FO", ibanStruct: "FO2!n4!n9!n1!n", ibanLength: 18 },
+            { cc: "FR", ibanStruct: "FR2!n5!n5!n11!c2!n", ibanLength: 27 },
+            { cc: "GB", ibanStruct: "GB2!n4!a6!n8!n", ibanLength: 22 },
+            { cc: "GE", ibanStruct: "GE2!n2!a16!n", ibanLength: 22 },
+            { cc: "GI", ibanStruct: "GI2!n4!a15!c", ibanLength: 23 },
+            { cc: "GL", ibanStruct: "GL2!n4!n9!n1!n", ibanLength: 18 },
+            { cc: "GR", ibanStruct: "GR2!n3!n4!n16!c ", ibanLength: 27 },
+            { cc: "GT", ibanStruct: "GT2!n4!c20!c", ibanLength: 28 },
+            { cc: "HR", ibanStruct: "HR2!n7!n10!n", ibanLength: 21 },
+            { cc: "HU", ibanStruct: "HU2!n3!n4!n1!n15!n1!n", ibanLength: 28 },
+            { cc: "IE", ibanStruct: "IE2!n4!a6!n8!n", ibanLength: 22 },
+            { cc: "IL", ibanStruct: "IL2!n3!n3!n13!n", ibanLength: 23 },
+            { cc: "IQ", ibanStruct: "IQ2!n4!a3!n12!n", ibanLength: 23 },
+            { cc: "IS", ibanStruct: "IS2!n4!n2!n6!n10!n", ibanLength: 26 },
+            { cc: "IT", ibanStruct: "IT2!n1!a5!n5!n12!c", ibanLength: 27 },
+            { cc: "JO", ibanStruct: "JO2!n4!a4!n18!c", ibanLength: 30 },
+            { cc: "KW", ibanStruct: "KW2!n4!a22!c", ibanLength: 30 },
+            { cc: "KZ", ibanStruct: "KZ2!n3!n13!c", ibanLength: 20 },
+            { cc: "LB", ibanStruct: "LB2!n4!n20!c", ibanLength: 28 },
+            { cc: "LC", ibanStruct: "LC2!n4!a24!c", ibanLength: 32 },
+            { cc: "LI", ibanStruct: "LI2!n5!n12!c", ibanLength: 21 },
+            { cc: "LT", ibanStruct: "LT2!n5!n11!n", ibanLength: 20 },
+            { cc: "LU", ibanStruct: "LU2!n3!n13!c", ibanLength: 20 },
+            { cc: "LV", ibanStruct: "LV2!n4!a13!c", ibanLength: 21 },
+            { cc: "MC", ibanStruct: "MC2!n5!n5!n11!c2!n", ibanLength: 27 },
+            { cc: "MD", ibanStruct: "MD2!n2!c18!c", ibanLength: 24 },
+            { cc: "ME", ibanStruct: "ME2!n3!n13!n2!n ", ibanLength: 22 },
+            { cc: "MK", ibanStruct: "MK2!n3!n10!c2!n", ibanLength: 19 },
+            { cc: "MR", ibanStruct: "MR2!n5!n5!n11!n2!n", ibanLength: 27 },
+            { cc: "MT", ibanStruct: "MT2!n4!a5!n18!c", ibanLength: 31 },
+            { cc: "MU", ibanStruct: "MU2!n4!a2!n2!n12!n3!n3!a", ibanLength: 30 },
+            { cc: "NL", ibanStruct: "NL2!n4!a10!n", ibanLength: 18 },
+            { cc: "NO", ibanStruct: "NO2!n4!n6!n1!n", ibanLength: 15 },
+            { cc: "PK", ibanStruct: "PK2!n4!a16!c", ibanLength: 24 },
+            { cc: "PL", ibanStruct: "PL2!n8!n16!n", ibanLength: 28 },
+            { cc: "PS", ibanStruct: "PS2!n4!a21!c", ibanLength: 29 },
+            { cc: "PT", ibanStruct: "PT2!n4!n4!n11!n2!n", ibanLength: 25 },
+            { cc: "QA", ibanStruct: "QA2!n4!a21!c", ibanLength: 29 },
+            { cc: "RO", ibanStruct: "RO2!n4!a16!c", ibanLength: 24 },
+            { cc: "RS", ibanStruct: "RS2!n3!n13!n2!n", ibanLength: 22 },
+            { cc: "SA", ibanStruct: "SA2!n2!n18!c", ibanLength: 24 },
+            { cc: "SC", ibanStruct: "SC2!n4!a2!n2!n16!n3!a", ibanLength: 31 },
+            { cc: "SE", ibanStruct: "SE2!n3!n16!n1!n", ibanLength: 24 },
+            { cc: "SI", ibanStruct: "SI2!n5!n8!n2!n", ibanLength: 19 },
+            { cc: "SK", ibanStruct: "SK2!n4!n6!n10!n", ibanLength: 24 },
+            { cc: "SM", ibanStruct: "SM2!n1!a5!n5!n12!c", ibanLength: 27 },
+            { cc: "ST", ibanStruct: "ST2!n4!n4!n11!n2!n", ibanLength: 25 },
+            { cc: "SV", ibanStruct: "SV2!n4!a20!n", ibanLength: 28 },
+            { cc: "TL", ibanStruct: "TL2!n3!n14!n2!n", ibanLength: 23 },
+            { cc: "TN", ibanStruct: "TN2!n2!n3!n13!n2!n", ibanLength: 24 },
+            { cc: "TR", ibanStruct: "TR2!n5!n1!c16!c", ibanLength: 26 },
+            { cc: "UA", ibanStruct: "UA2!n6!n19!c", ibanLength: 29 },
+            { cc: "VA", ibanStruct: "VA2!n3!n15!n", ibanLength: 22 },
+            { cc: "VG", ibanStruct: "VG2!n4!a16!n", ibanLength: 24 },
+            { cc: "XK", ibanStruct: "XK2!n4!n10!n2!n", ibanLength: 20 },
+        ],
 
                 counties: {
             // Data taken from http://www.downloadexcelfiles.com/gb_en/download-excel-file-list-counties-uk
