@@ -279,8 +279,10 @@
         // See: http://vq.io/132sa2j
         options = initOptions(options, {min: MIN_INT, max: MAX_INT});
         testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
-
-        return Math.floor(this.random() * (options.max - options.min + 1) + options.min);
+        const options_min = Math.ceil(options.min);
+        const options_max = Math.floor(options.max);
+        testRange(options_min > options_max, "Chance: Min or Max aren't integer and caused an error")
+        return Math.floor(this.random() * (options_max - options_min + 1) + options_min);
     };
 
     /**
