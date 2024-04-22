@@ -86,6 +86,9 @@
             }
         }
 
+        options.max = Math.floor(options.max);
+        options.min = Math.ceil(options.min);
+
         return options;
     }
 
