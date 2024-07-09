@@ -121,3 +121,40 @@ test('paragraph) will obey line breaks', t => {
         t.is(len, rand);
     })
 })
+
+test('emoji() will return a single emoji by default', t => {
+    let emoji = chance.emoji();
+
+    t.true(_.isString(emoji));
+    t.is([...emoji].length, 1);
+})
+
+test('emoji() will return as many emojis as you tell it to', t => {
+    _.times(100, () => {
+        let rand = _.random(1, 50);
+        let emoji = chance.emoji({ length: rand });
+
+        t.true(_.isString(emoji));
+        t.is([...emoji].length, rand);
+    })
+})
+
+test('emoji() will throw an error when category is unrecognised', t => {
+    let fn = () => chance.emoji({ category: 'something-incorrect' });
+    t.throws(fn, "Chance: Unrecognised emoji category: [something-incorrect].");
+})
+
+test('emoji() will throw an error when length is 0', t => {
+    let fn = () => chance.emoji({ length: 0 });
+    t.throws(fn, "Chance: length must be between 1 and 9007199254740992");
+})
+
+test('emoji() will throw an error when length is negative', t => {
+    let fn = () => chance.emoji({ length: -1 });
+    t.throws(fn, "Chance: length must be between 1 and 9007199254740992");
+})
+
+test('emoji() will throw an error when length is greater than 9007199254740992', t => {
+    let fn = () => chance.emoji({ length: BigInt('9007199254740993') });
+    t.throws(fn, "Chance: length must be between 1 and 9007199254740992");
+})
