@@ -123,5 +123,6 @@
   * [tv](miscellaneous/tv.md)
   * [unique](miscellaneous/unique.md)
   * [weighted](miscellaneous/weighted.md)
+  * [split_integer_to_n_parts](miscellaneous/split_integer_to_n_parts.md)
 
 <script type="text/javascript" src="chance.js"></script>

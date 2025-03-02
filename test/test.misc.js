@@ -296,3 +296,69 @@ test('tv() works as expected', t => {
         t.true(/^[KW][A-Z][A-Z][A-Z]/.test(tv))
     })
 })
+
+
+// chance.split_integer_to_n_parts()
+test("split_integer_to_n_parts returns a valid numbers", (t) => {
+  _.times(1000, () => {
+    let note = chance.split_integer_to_n_parts(-3, 3, { min: -2, max: -1 });
+    t.is(note.length, 3);
+    t.true(note.every((_) => _ === -1));
+  });
+});
+
+test("split_integer_to_n_parts returns valid numbers between provided range", (t) => {
+  _.times(1000, () => {
+    let note = chance.split_integer_to_n_parts(100, 20, { min: -2, max: 7 });
+    t.is(note.length, 20);
+    t.true(Math.min(...note) >= -2);
+    t.true(Math.max(...note) <= 7);
+    t.is(
+      note.reduce((a, b) => a + b),
+      100
+    );
+  });
+});
+
+test("split_integer_to_n_parts() throws an error when Min > Max", (t) => {
+  const fn = () => chance.split_integer_to_n_parts(100, 20, { min: -2, max: -3 });
+  t.throws(fn, "Chance: Min cannot be greater than Max.");
+});
+
+test("split_integer_to_n_parts() throws an error when Min does not include the minimum possible value", (t) => {
+  const fn = () => chance.split_integer_to_n_parts(100, 20, { min: 6 });
+  t.throws(fn, "Chance: Range does not include Min possible number: 5.");
+});
+
+test("split_integer_to_n_parts() throws an error when Max does not include the minimum possible value", (t) => {
+  const fn = () => chance.split_integer_to_n_parts(100, 20, { max: 3 });
+  t.throws(fn, "Chance: Range does not include Min possible number: 5.");
+});
+
+test("split_integer_to_n_parts() default values for Min and Max", (t) => {
+  _.times(1000, () => {
+    let note = chance.split_integer_to_n_parts(3, 3);
+    t.is(note.length, 3);
+    t.true(Math.min(...note) >= 0);
+    t.true(Math.max(...note) <= 3);
+  });
+});
+
+test("split_integer_to_n_parts() - edge case with n=1", (t) => {
+  let note = chance.split_integer_to_n_parts(100, 1);
+  t.is(note.length, 1);
+  t.is(note[0], 100);
+});
+
+test("split_integer_to_n_parts() - edge case with negative number", (t) => {
+  _.times(1000, () => {
+    let note = chance.split_integer_to_n_parts(-10, 3, { min: -9, max: 9 });
+    t.is(note.length, 3);
+    t.true(Math.min(...note) >= -9);
+    t.true(Math.max(...note) <= 9);
+    t.is(
+      note.reduce((a, b) => a + b),
+      -10
+    );
+  });
+});

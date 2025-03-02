@@ -284,6 +284,46 @@
     };
 
     /**
+     * Returns the list of n random integers whose sum is given number
+     *
+     * NOTE the max and min are INCLUDED in the range. So:
+     * chance.splitIntegerToNParts(10, 5);
+     * would return list of 5 integers ranging between 0 and 10
+     * and
+     * chance.splitIntegerToNParts(10, 5, {min: 1, max: 6});
+     * would return list of 5 integers ranging between 1 and 6
+     *
+     * @param {Number} number a single random integer number
+     * @param {Number} n size of array to return whose sum is of given number
+     * @param {*} options can specify a min and/or max
+     * @returns {Number[]} list of n random numbers whose sum is of given number
+     * @throws {RangeError} min cannot be greater than max and range must include possible number
+     */
+    Chance.prototype.split_integer_to_n_parts = function(number, n, options){
+        options = initOptions(options, {min: 0, max: number});
+        testRange(options.min > options.max, "Chance: Min cannot be greater than Max.");
+        testRange((options.min * n > number) || (options.max * n < number), `Chance: Range does not include Min possible number: ${number/n}.`);
+
+        var modifiedMin = options.min;
+        var modifiedMax = options.max
+        var tillNow = 0
+
+        return [
+            ...Array.from({ length: n - 1 }).map((_, index) => {
+                modifiedMax = Math.min(number - tillNow - modifiedMin * (n - 1 - index), modifiedMax);
+                modifiedMin = Math.max(number - tillNow - modifiedMax * (n - 1 - index), modifiedMin);
+                const part = this.integer({
+                    min: modifiedMin,
+                    max: modifiedMax,
+                });
+                tillNow += part;
+                return part;
+            }),
+            number - tillNow,
+        ];
+    }
+
+    /**
      *  Return a random natural
      *
      *  NOTE the max and min are INCLUDED in the range. So:
