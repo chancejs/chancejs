@@ -553,6 +553,52 @@ test('phone() with br country, formatted and mobile option apply the correct mas
     })))
 })
 
+test('phone() with it option (landline, formatted) is a string', t => {
+    const phone = chance.phone({ country: 'it', mobile: false, formatted: true });
+    t.true(_.isString(phone));
+});
+
+test('phone() with it option (landline, unformatted) is a string', t => {
+    const phone = chance.phone({ country: 'it', mobile: false, formatted: false });
+    t.true(_.isString(phone));
+});
+
+test('phone() with it option (mobile, formatted) is a string', t => {
+    const phone = chance.phone({ country: 'it', mobile: true, formatted: true });
+    t.true(_.isString(phone));
+});
+
+test('phone() with it option (mobile, unformatted) is a string', t => {
+    const phone = chance.phone({ country: 'it', mobile: true, formatted: false });
+    t.true(_.isString(phone));
+});
+
+
+test('phone() with it option unformatted landline number for IT matches expected pattern', t => {
+    const number = chance.phone({ country: 'it', mobile: false, formatted: false });
+    t.regex(number, /^0\d{1,3}\d{6,8}$/);
+});
+
+test('phone() with it option formatted landline number for IT matches expected pattern', t => {
+    const number = chance.phone({ country: 'it', mobile: false, formatted: true });
+    t.regex(number, /^0\d{1,3} \d{3} \d{3,4}$/);
+});
+
+test('phone() with it option landline number for IT has correct length', t => {
+    const number = chance.phone({ country: 'it', mobile: false, formatted: false });
+    t.is(number.length, 10, 'Landline number should have exactly 10 digits');
+});
+
+test('phone() with it option unformatted mobile number for IT matches expected pattern', t => {
+    const number = chance.phone({ country: 'it', mobile: true, formatted: false });
+    t.regex(number, /^3\d{2}\d{7}$/);
+});
+
+test('phone() with it option formatted mobile number for IT matches expected pattern', t => {
+    const number = chance.phone({ country: 'it', mobile: true, formatted: true });
+    t.regex(number, /^3\d{2} \d{3} \d{4}$/);
+});
+
 // chance.postal()
 test('postal() returns a valid basic postal code', t => {
     _.times(1000, () => {
