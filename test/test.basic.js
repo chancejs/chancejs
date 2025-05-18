@@ -379,6 +379,16 @@ test('natural() works with excluded numbers', t => {
     })
 })
 
+test('natural() works with excluded numbers with double digits', t => {
+    _.times(1000, () => {
+        let natural = chance.natural({ min: 3, max: 20, exclude: [9, 18] })
+        t.true(natural <= 20)
+        t.true(natural >= 3)
+        t.true(natural !== 9)
+        t.true(natural !== 18)
+    })
+})
+
 test('natural() works within empty exclude option', t => {
     _.times(1000, () => {
         let natural = chance.natural({ min: 1, max: 5, exclude: [] })

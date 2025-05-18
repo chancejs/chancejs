@@ -311,7 +311,7 @@
             }
 
             var random = options.min + this.natural({max: options.max - options.min - options.exclude.length})
-            var sortedExclusions = options.exclude.sort();
+            var sortedExclusions = options.exclude.sort((a, b) => a - b);
             for (var sortedExclusionIndex in sortedExclusions) {
                 if (random < sortedExclusions[sortedExclusionIndex]) {
                     break
