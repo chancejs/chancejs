@@ -72,7 +72,7 @@
         return this;
     }
 
-    Chance.prototype.VERSION = "1.1.12";
+    Chance.prototype.VERSION = "1.1.13";
 
     // Random helper functions
     function initOptions(options, defaults) {
