@@ -2145,12 +2145,16 @@ options,
             date = new Date(options.year, options.month, options.day, options.hour, options.minute, options.second, options.millisecond);
         }
 
+        var month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+        var dayOfTheMonth = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+        var fullYear = date.getFullYear();
+
         if (options.american) {
             // Adding 1 to the month is necessary because Date() 0-indexes
             // months but not day for some odd reason.
-            date_string = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+            date_string = month + '/' + dayOfTheMonth + '/' + fullYear;
         } else {
-            date_string = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+            date_string = dayOfTheMonth + '/' + month + '/' + fullYear;
         }
 
         return options.string ? date_string : date;
