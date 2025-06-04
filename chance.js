@@ -11219,7 +11219,10 @@ options,
     };
 
     // ID number for Brazil companies
-    Chance.prototype.cnpj = function () {
+    Chance.prototype.cnpj = function (options) {
+        options = initOptions(options, {
+            formatted: true
+        });
         var n = this.n(this.natural, 8, { max: 9 });
         var d1 = 2+n[7]*6+n[6]*7+n[5]*8+n[4]*9+n[3]*2+n[2]*3+n[1]*4+n[0]*5;
         d1 = 11 - (d1 % 11);
@@ -11231,7 +11234,12 @@ options,
         if (d2>=10){
             d2 = 0;
         }
-        return ''+n[0]+n[1]+'.'+n[2]+n[3]+n[4]+'.'+n[5]+n[6]+n[7]+'/0001-'+d1+d2;
+        var out =  ''+n[0]+n[1]+'.'+n[2]+n[3]+n[4]+'.'+n[5]+n[6]+n[7]+'/0001-'+d1+d2; // 79.112.224/0001-45 // 63420712000180
+        if(options.formatted) {
+            return out;
+        } else {
+            return out.replace(/\D/g,'');
+        }
     };
 
     Chance.prototype.emotion = function () {
