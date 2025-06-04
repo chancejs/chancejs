@@ -11685,7 +11685,7 @@ options,
     // if there is a importsScrips object define chance for worker
     // allows worker to use full Chance functionality with seed
     if (typeof importScripts !== 'undefined') {
-        chance = new Chance();
+        self.chance = new Chance();
         self.Chance = Chance;
     }
 
