@@ -28,8 +28,12 @@
     // Constructor
     function Chance (seed) {
         if (!(this instanceof Chance)) {
-            if (!seed) { seed = null; } // handle other non-truthy seeds, as described in issue #322
-            return seed === null ? new Chance() : new Chance(seed);
+            return new Chance(seed);
+        }
+
+        if (!seed) { // handle other non-truthy seeds, as described in issue #322
+            seed = generateSeed();
+            return new Chance(seed)
         }
 
         // if user has provided a function, use that as the generator
@@ -73,6 +77,11 @@
     }
 
     Chance.prototype.VERSION = "1.1.13";
+
+    function generateSeed() {
+        // kept random number same size as time used previously to ensure no unexpected results downstream
+        return Math.floor(Math.random() * Math.pow(10, 13));
+    }
 
     // Random helper functions
     function initOptions(options, defaults) {
@@ -11293,8 +11302,7 @@ options,
      */
     var MersenneTwister = function (seed) {
         if (seed === undefined) {
-            // kept random number same size as time used previously to ensure no unexpected results downstream
-            seed = Math.floor(Math.random()*Math.pow(10,13));
+            seed = generateSeed();
         }
         /* Period parameters */
         this.N = 624;
