@@ -551,6 +551,39 @@
         return Buffer.from(content);
     };
 
+    /**
+     *  Return a random json object
+     *
+     *  @param {Object} [options={}] can specify a depth, number of items, an array of labels and an array of objects
+     *  @returns {Json} a Json
+     */
+    Chance.prototype.json = function (options) {
+        options = initOptions(options, {nested:false, layer : 1, number: 5, arrLabels: [], arrObjects: []});
+        var obj = {};
+        for(var i = 0; i < options.number; i++) {
+          var title;
+          if(options.arrLabels.length>=1){
+            title=this.pickone(options.arrLabels);
+          }
+          else{
+            title=this.string();
+          }
+          if(options.nested && options.layer>=2){
+            var newOptions=options;
+            newOptions.layer-=1;
+            obj[title] = this.json(newOptions);
+          } else {
+              if(options.arrLabels.length>=1){
+                obj[title]=this.pickone(options.arrObjects);
+              }
+              else{
+                obj[title]=this.string();
+              }
+          }
+        }
+        return JSON.stringify(obj);
+    };
+
     // -- End Basics --
 
     // -- Helpers --
