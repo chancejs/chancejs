@@ -1181,9 +1181,11 @@ base@^0.11.1:
     pascalcase "^0.1.1"
 
 basic-auth-connect@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/basic-auth-connect/-/basic-auth-connect-1.0.0.tgz#fdb0b43962ca7b40456a7c2bb48fe173da2d2122"
-  integrity sha512-kiV+/DTgVro4aZifY/hwRwALBISViL5NP4aReaR2EVJEObpbUBHIkdJh/YpcoEiYt7nBodZ6U2ajZeZvSxUCCg==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/basic-auth-connect/-/basic-auth-connect-1.1.0.tgz#b44af37d5b3bd7561b56491e58cf26ae1578f0c7"
+  integrity sha512-rKcWjfiRZ3p5WS9e5q6msXa07s6DaFAMXoyowV+mb2xQG+oYdw2QEUyKi0Xp95JvXzShlM+oGy5QuqSK6TfC1Q==
+  dependencies:
+    tsscmp "^1.0.6"
 
 basic-auth@~2.0.1:
   version "2.0.1"
@@ -8946,6 +8948,11 @@ tryor@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/tryor/-/tryor-0.1.2.tgz#8145e4ca7caff40acde3ccf946e8b8bb75b4172b"
   integrity sha512-2+ilNA00DGvbUYYbRrm3ux+snbo7I6uPXMw8I4p/QMl7HUOWBBZFbk+Mpr8/IAPDQE+LQ8vOdlI6xEzjc+e/BQ==
+
+tsscmp@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/tsscmp/-/tsscmp-1.0.6.tgz#85b99583ac3589ec4bfef825b5000aa911d605eb"
+  integrity sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==
 
 tty-browserify@~0.0.0:
   version "0.0.1"
