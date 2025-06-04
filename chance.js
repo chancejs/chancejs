@@ -2152,7 +2152,12 @@ options,
         } else {
             date_string = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
         }
-
+	    
+        if(options.sqlFormat){
+            // -- Ensure proper date formatting if the parameter is provided, as SQL accepts this date format.
+            date.setMilliseconds(0);
+            return date.toISOString().replace(".000Z","").replace("T"," ");
+        }
         return options.string ? date_string : date;
     };
 
