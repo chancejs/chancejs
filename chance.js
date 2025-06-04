@@ -11238,6 +11238,51 @@ options,
         return this.pick(this.get("emotions"));
     };
 
+    // License Plate
+    Chance.prototype.license_plate = function (options) {
+        options = initOptions(options, {pattern: "LLLNLNN"});
+
+        testRange(
+            typeof options.pattern !== 'string',
+            "Chance: Pattern must be a string"
+        );
+
+        var digits = options.pattern
+            .toUpperCase()
+            .split("")
+
+        testRange(
+            !digits.every((c) => ["L", "N", " ", "-"].includes(c)),
+            "Chance: Pattern accepts only 'N' for numbers, 'L' for letters. Case does not matter. Spaces or hyphens will be kept."
+        );
+
+        var number_of_letters = digits.filter((c) => c === "L").length
+        var number_of_numbers = digits.filter((c) => c === "N").length
+
+        if (!number_of_letters && !number_of_numbers) {
+            return ""
+        }
+
+        var letters = this.n(this.letter, number_of_letters, {casing: "upper"})
+        var numbers = this.n(this.natural, number_of_numbers, {max: 9})
+
+        let number_index = 0
+        let letter_index = 0
+
+        return digits
+            .map((d) => {
+                switch (d) {
+                    case "L":
+                        return letters[letter_index++]
+                    case "N":
+                        return numbers[number_index++]
+                    default:
+                        return d
+                }
+            })
+            .join("")
+    };
+
     // -- End Miscellaneous --
 
     Chance.prototype.mersenne_twister = function (seed) {
