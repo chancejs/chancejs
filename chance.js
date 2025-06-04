@@ -1954,6 +1954,22 @@ options,
                 var mcdu = self.string({ pool: '0123456789', length: 4});
                 phone = options.formatted ? '(' + areaCode + ') ' + prefix + '-' + mcdu : areaCode + prefix + mcdu;
                 break;
+            case 'it':
+                if (!options.mobile) {
+                    numPick = '0' + self.character({ pool: '123456789'}) + self.string({ pool: '0123456789', length: 8});
+                    phone = options.formatted ? numPick.replace(/(\d{4})(\d{6})/, "$1 $2") : numPick;
+                } else {
+                    numPick = this.pick([
+                        '32' + this.pick(['0', '3', '7', '8', '9']) + self.string({ pool: '0123456789', length: 7}),
+                        '33' + this.pick(['0', '1', '3', '4', '5', '6', '7', '8', '9']) + self.string({ pool: '0123456789', length: 7}),
+                        '34' + this.pick(['0', '2', '5', '6', '7', '8', '9']) + self.string({ pool: '0123456789', length: 7}),
+                        '35' + this.pick(['0', '1', '2', '3']) + self.string({ pool: '0123456789', length: 7}),
+                        '37' + this.pick(['0', '1', '3', '5', '6', '7', '8', '9']) + self.string({ pool: '0123456789', length: 7}),
+                        '39' + this.pick(['0', '1', '2', '3', '7']) + self.string({ pool: '0123456789', length: 7}),
+                    ]);
+                    phone = options.formatted ? numPick.replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3") : numPick;
+                }
+                break;
         }
         return phone;
     };
