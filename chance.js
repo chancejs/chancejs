@@ -1920,7 +1920,7 @@ options,
                        '04' + this.pick(['1', '2', '3', '4', '5','6','7', '8','9']) + self.string({ pool: '0123456789', length: 7}),
                        '05' + this.pick(['1', '3', '4', '6', '7', '8']) + self.string({ pool: '0123456789', length: 7}),
                     ]);
-                    phone = options.formatted || numPick;
+                    phone = numPick;
                 } else {
                     numPick = this.pick([
                         '060' + this.pick(['3','4','5','6','7','8','9']) + self.string({ pool: '0123456789', length: 6}),
@@ -1930,7 +1930,7 @@ options,
                         '07'  + this.pick(['2','3','4','6','7','8','9']) + self.string({ pool: '0123456789', length: 7}),
                         '08'  + this.pick(['0','1','2','3','4','5']) + self.string({ pool: '0123456789', length: 7}),
                     ]);
-                    phone = options.formatted || numPick;
+                    phone = numPick;
                 }
                 break;
             case 'us':
