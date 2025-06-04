@@ -298,6 +298,34 @@ test('integer() throws an error when min > max', t => {
     t.throws(fn, 'Chance: Min cannot be greater than Max.')
 })
 
+test('integer() can take a step and obey it, step of 5', t => {
+    _.times(1000, () => {
+        let integer = chance.integer({ min: -100, max: 100, step: 5 })
+        t.true( integer % 5 === 0)
+    })
+})
+
+test('integer() can take a step and obey it, step of 10', t => {
+    _.times(1000, () => {
+        let integer = chance.integer({ min: -100, max: 100, step: 10 })
+        t.true( integer % 10 === 0)
+    })
+})
+
+test('integer() can take a step and obey it, step of 2', t => {
+    _.times(1000, () => {
+        let integer = chance.integer({ min: -100, max: 100, step: 2 })
+        t.true( integer % 2 === 0)
+    })
+})
+
+test('integer() can take a step and obey it, step of 3', t => {
+    _.times(1000, () => {
+        let integer = chance.integer({ min: -100, max: 100, step: 3 })
+        t.true( integer % 3 === 0)
+    })
+})
+
 test('letter() returns a letter', t => {
     _.times(1000, () => {
         let letter = chance.letter()
