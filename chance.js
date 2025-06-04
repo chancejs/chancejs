@@ -11248,6 +11248,18 @@ options,
         return new BlueImpMD5();
     };
 
+    Chance.prototype.vin = function () {
+        var symbols = "ABCDEFGHJKLMNPRSTUVWXYZ";
+        var numbers = "0123456789";
+        return this.string({
+            pool: symbols + numbers,
+            length: 9
+        }) + this.string({
+            pool: numbers,
+            length: 4
+        });
+    };
+
     // Mersenne Twister from https://gist.github.com/banksean/300494
     /*
        A C-program for MT19937, with initialization improved 2002/1/26.
