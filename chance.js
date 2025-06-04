@@ -1860,13 +1860,16 @@ options,
             country: 'us',
             mobile: false,
             exampleNumber: false,
+            intlCode: false,
         });
         if (!options.formatted) {
             options.parens = false;
         }
         var phone;
+        var intlCode;
         switch (options.country) {
             case 'fr':
+                intlCode = '+33';
                 if (!options.mobile) {
                     numPick = this.pick([
                         // Valid zone and département codes.
@@ -1884,6 +1887,7 @@ options,
                 }
                 break;
             case 'uk':
+                intlCode = '+44';
                 if (!options.mobile) {
                     numPick = this.pick([
                         //valid area codes of major cities/counties followed by random numbers in required format.
@@ -1912,6 +1916,7 @@ options,
                 }
                 break;
             case 'za':
+                intlCode = '+27';
                 if (!options.mobile) {
                     numPick = this.pick([
                        '01' + this.pick(['0', '1', '2', '3', '4', '5', '6', '7', '8']) + self.string({ pool: '0123456789', length: 7}),
@@ -1934,6 +1939,7 @@ options,
                 }
                 break;
             case 'us':
+                intlCode = '+1';
                 var areacode = this.areacode(options).toString();
                 var exchange = this.natural({ min: 2, max: 9 }).toString() +
                     this.natural({ min: 0, max: 9 }).toString() +
@@ -1942,6 +1948,7 @@ options,
                 phone = options.formatted ? areacode + ' ' + exchange + '-' + subscriber : areacode + exchange + subscriber;
                 break;
             case 'br':
+                intlCode = '+55';
                 var areaCode = this.pick(["11", "12", "13", "14", "15", "16", "17", "18", "19", "21", "22", "24", "27", "28", "31", "32", "33", "34", "35", "37", "38", "41", "42", "43", "44", "45", "46", "47", "48", "49", "51", "53", "54", "55", "61", "62", "63", "64", "65", "66", "67", "68", "69", "71", "73", "74", "75", "77", "79", "81", "82", "83", "84", "85", "86", "87", "88", "89", "91", "92", "93", "94", "95", "96", "97", "98", "99"]);
                 var prefix;
                 if (options.mobile) {
@@ -1955,6 +1962,12 @@ options,
                 phone = options.formatted ? '(' + areaCode + ') ' + prefix + '-' + mcdu : areaCode + prefix + mcdu;
                 break;
         }
+
+        // Prepend the phone number with the international code, if required
+        if (options.intlCode) {
+            phone = [intlCode, phone].join(options.formatted ? ' ' : '');
+        }
+        
         return phone;
     };
 
