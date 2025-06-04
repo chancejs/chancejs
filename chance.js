@@ -11238,6 +11238,13 @@ options,
         return this.pick(this.get("emotions"));
     };
 
+    Chance.prototype.mongo_objectid = function() {
+        const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+        return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {
+            return (Math.random() * 16 | 0).toString(16);
+        }).toLowerCase();
+    };
+
     // -- End Miscellaneous --
 
     Chance.prototype.mersenne_twister = function (seed) {
