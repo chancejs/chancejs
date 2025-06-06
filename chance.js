@@ -2294,6 +2294,28 @@ options,
         return this.pick(this.currency_types());
     };
 
+    // return random world amount of currency
+    Chance.prototype.amount = function (options) {
+        options = initOptions(options, { min: 0, max: 10000, fixed: 2 });
+        var amount = this.floating({
+                min: options.min,
+                max: options.max,
+                fixed: options.fixed,
+            }).toString(),
+            cents = amount.split(".")[1];
+        const currencyCode =  this.pick(this.currency_types()).code;
+        if (cents === undefined) {
+            amount += ".00";
+        } else if (cents.length < 2) {
+            amount = amount + "0";
+        }
+        if (amount < 0) {
+            amount = "-" + amount.replace("-", "");
+        }
+
+        return currencyCode + " " + amount;
+    };
+
     // return all timezones available
     Chance.prototype.timezones = function () {
         return this.get("timezones");
@@ -7356,27 +7378,27 @@ options,
         ],
         music_genres: {
             'general': [
-                'Rock', 
-                'Pop', 
-                'Hip-Hop', 
-                'Jazz', 
-                'Classical', 
-                'Electronic', 
-                'Country', 
-                'R&B', 
-                'Reggae', 
-                'Blues', 
-                'Metal', 
-                'Folk', 
-                'Alternative', 
+                'Rock',
+                'Pop',
+                'Hip-Hop',
+                'Jazz',
+                'Classical',
+                'Electronic',
+                'Country',
+                'R&B',
+                'Reggae',
+                'Blues',
+                'Metal',
+                'Folk',
+                'Alternative',
                 'Punk',
-                'Disco', 
-                'Funk', 
+                'Disco',
+                'Funk',
                 'Techno',
                 'Indie',
-                'Gospel', 
-                'Dance', 
-                'Children\'s', 
+                'Gospel',
+                'Dance',
+                'Children\'s',
                 'World'
             ],
             'alternative': [
