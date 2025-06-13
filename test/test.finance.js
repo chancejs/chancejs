@@ -218,3 +218,30 @@ test('iban() returns an iban', t => {
     t.true(_.isString(iban))
     t.true(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{1,26}$/.test(iban))
 })
+
+// chance.amount()
+test('amount() returns a properly formatted currency amount', t => {
+    _.times(1000, () => {
+        let amount = chance.amount()
+        t.true(_.isString(amount))
+        t.true(/^[A-Z]{3} -?[0-9]+(\.[0-9]{2})?$/.test(amount))
+    })
+})
+
+test('amount() handles negative values correctly', t => {
+    _.times(1000, () => {
+        let amount = chance.amount({ min: -100, max: -1 })
+        let value = parseFloat(amount.split(" ")[1])
+        t.true(value <= -1)
+        t.true(value >= -100)
+    })
+})
+
+test('amount() includes a valid currency code', t => {
+    _.times(1000, () => {
+        let amount = chance.amount()
+        let currencyCode = amount.split(" ")[0]
+        t.true(_.isString(currencyCode))
+        t.is(currencyCode.length, 3)
+    })
+})
