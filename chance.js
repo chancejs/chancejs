@@ -2294,6 +2294,34 @@ options,
         return this.pick(this.currency_types());
     };
 
+    // return random world amount of currency
+    Chance.prototype.amount = function (options) {
+        options = initOptions(options, { min: 0, max: 10000, fixed: 2, currency: null });
+        var amount = this.floating({
+                min: options.min,
+                max: options.max,
+                fixed: options.fixed,
+            }).toString(),
+            cents = amount.split(".")[1];
+        let currency = options.currency;
+        if (currency) {
+            currency = this.currency_types().find((c) => c.code === currency);
+        } else {
+            currency = this.pick(this.currency_types());
+        }
+        const currencyCode =  currency.code;
+        if (cents === undefined) {
+            amount += ".00";
+        } else if (cents.length < 2) {
+            amount = amount + "0";
+        }
+        if (amount < 0) {
+            amount = "-" + amount.replace("-", "");
+        }
+
+        return currencyCode + " " + amount;
+    };
+
     // return all timezones available
     Chance.prototype.timezones = function () {
         return this.get("timezones");
