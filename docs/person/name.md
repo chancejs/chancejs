@@ -59,5 +59,5 @@ Optionally specify a nationality
   => "Roberta Mazzetti"
 ```
 
-Note, currently support for nationality is limited to: `'en', 'it'`.
+Note, currently support for nationality is limited to: `'en', 'it', 'nl', 'fr', 'bg'`.
 
