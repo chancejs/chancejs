@@ -90,7 +90,11 @@
     }
 
     function range(size) {
-        return Array.apply(null, Array(size)).map(function (_, i) {return i;});
+        var indexes = new Array(size);
+        for (var i = 0; i < size; i++) {
+            indexes[i] = i;
+        }
+        return indexes;
     }
 
     function testRange(test, errorMessage) {
@@ -7356,27 +7360,27 @@ options,
         ],
         music_genres: {
             'general': [
-                'Rock', 
-                'Pop', 
-                'Hip-Hop', 
-                'Jazz', 
-                'Classical', 
-                'Electronic', 
-                'Country', 
-                'R&B', 
-                'Reggae', 
-                'Blues', 
-                'Metal', 
-                'Folk', 
-                'Alternative', 
+                'Rock',
+                'Pop',
+                'Hip-Hop',
+                'Jazz',
+                'Classical',
+                'Electronic',
+                'Country',
+                'R&B',
+                'Reggae',
+                'Blues',
+                'Metal',
+                'Folk',
+                'Alternative',
                 'Punk',
-                'Disco', 
-                'Funk', 
+                'Disco',
+                'Funk',
                 'Techno',
                 'Indie',
-                'Gospel', 
-                'Dance', 
-                'Children\'s', 
+                'Gospel',
+                'Dance',
+                'Children\'s',
                 'World'
             ],
             'alternative': [
