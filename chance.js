@@ -35,6 +35,7 @@
         // if user has provided a function, use that as the generator
         if (typeof seed === 'function') {
             this.random = seed;
+            this.bimd5 = this.blueimp_md5();
             return this;
         }
 
@@ -7356,27 +7357,27 @@ options,
         ],
         music_genres: {
             'general': [
-                'Rock', 
-                'Pop', 
-                'Hip-Hop', 
-                'Jazz', 
-                'Classical', 
-                'Electronic', 
-                'Country', 
-                'R&B', 
-                'Reggae', 
-                'Blues', 
-                'Metal', 
-                'Folk', 
-                'Alternative', 
+                'Rock',
+                'Pop',
+                'Hip-Hop',
+                'Jazz',
+                'Classical',
+                'Electronic',
+                'Country',
+                'R&B',
+                'Reggae',
+                'Blues',
+                'Metal',
+                'Folk',
+                'Alternative',
                 'Punk',
-                'Disco', 
-                'Funk', 
+                'Disco',
+                'Funk',
                 'Techno',
                 'Indie',
-                'Gospel', 
-                'Dance', 
-                'Children\'s', 
+                'Gospel',
+                'Dance',
+                'Children\'s',
                 'World'
             ],
             'alternative': [
